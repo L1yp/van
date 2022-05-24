@@ -1,5 +1,4 @@
-import {ComponentPropsOptions} from "@vue/runtime-core";
-import {PropType} from "vue";
+import {ComponentPropsOptions, PropType} from "vue";
 
 
 export const UserSelectorModelProps: ComponentPropsOptions<any> = {

@@ -26,8 +26,19 @@
     </el-tabs>
   </div>
 
-  <v-dialog v-model="completeVisible">
-    <v-form :scheme="completeFormScheme"></v-form>
+  <v-dialog
+    v-model="completeVisible"
+    :title="outcome?.name"
+    :width="outcome?.page?.process_model_node_page?.page_width"
+    draggable
+    @confirm="handleConfirmComplete"
+    @cancel="completeVisible = false"
+  >
+    <v-form-pro
+      :form-attr="{ labelWidth: outcome?.page?.process_model_node_page?.label_width }"
+      :scheme="completeScheme"
+      v-model="completePageModel">
+    </v-form-pro>
   </v-dialog>
 
 </template>
@@ -38,7 +49,6 @@ import {computed, inject, onBeforeMount, onMounted, provide, reactive, Ref, ref,
 import {asideWidthKey, mainHeightKey, processInstanceDetailInfoKey, themeKey, userInfoKey } from "@/config/app.keys";
 import {ElTabs, ElTabPane, ElButton, ElScrollbar, ElMessage} from "element-plus"
 import * as ProcessApi from "@/api/sys/process"
-import VForm from "@/components/form/VForm.vue";
 import { getDeviceType } from "@/utils/common";
 import ProcessDiagramViewer from "@/views/sys/process/manage/detail/ProcessDiagramViewer.vue";
 import VDialog from "@/components/dialog/VDialog.vue";
@@ -87,34 +97,52 @@ async function loadData() {
 
 const completeVisible = ref<boolean>(false) // 表单对话框
 const completeFormScheme = ref<PageFieldScheme[]>()
-async function handleComplete(outcome: ProcessOutcomeView) {
-  if (!outcome.page || // 没配页面
-    !outcome.page.process_model_node_page || // 没配页面
-    outcome.page.process_model_node_page.comment === 0 // 无需评论
+const completePageModel = ref<Record<string, any>>({
+
+})
+const outcome = ref<ProcessOutcomeView>()
+async function handleComplete(item: ProcessOutcomeView) {
+  outcome.value = item
+  if (!item.page || // 没配页面
+    !item.page.process_model_node_page || // 没配页面
+    item.page.process_model_node_page.comment === 0 // 无需评论
   ) {
-    // complete
-    const param: ProcessTaskCompleteParam = {
-      process_key: key,
-      process_instance_id: processInfo.value.process_instance_id,
-      device,
-      outcome: outcome.name,
-      comment: undefined,
-      params: null
-    }
-    try {
-      await ProcessApi.completeTask(param)
-      ElMessage.success("审批成功")
-      router.go(0)
-    } catch (e) {
-      console.error(e)
-      ElMessage.error(e?.message || "审批失败")
-    }
-
+    await doComplete()
   } else {
-    if (outcome.page.process_model_node_page) {
-
+    if (item.page.process_model_node_page) {
+      completeFormScheme.value = item.page.process_model_page_scheme_view[device]
+      buildFormModel(completeFormScheme.value, completePageModel)
+      completeVisible.value = true
     }
   }
+}
+
+async function doComplete() {
+  // complete
+  const param: ProcessTaskCompleteParam = {
+    process_key: key,
+    process_instance_id: processInfo.value.process_instance_id,
+    device,
+    outcome: outcome.value.name,
+    comment: undefined,
+    params: completeVisible.value ? rebuildFormModel(completePageModel) : null
+  }
+  try {
+    await ProcessApi.completeTask(param)
+    ElMessage.success(`${outcome.value.name}成功`)
+    router.go(0)
+  } catch (e) {
+    console.error(e)
+    ElMessage.error(e?.message || `${outcome.value.name}失败`)
+  } finally {
+    if (completeVisible.value) {
+      completeVisible.value = false
+    }
+  }
+}
+
+function handleConfirmComplete() {
+  doComplete()
 }
 
 const pageModel = ref<Record<string, any>>({
@@ -126,25 +154,34 @@ watch(() => processInfo.value, () => {
     return
   }
   const pageScheme: PageFieldScheme[] = processInfo.value?.page_info?.process_model_page_scheme_view[device]
+  buildFormModel(pageScheme, pageModel)
+})
+
+function buildFormModel(pageScheme: PageFieldScheme[], formModel: Ref<Record<string, any>>) {
   for (let elem of pageScheme) {
     const name = elem.field.name
     if (elem.writeable === 1) {
       if (elem.field.component_type === 3) {
-        const val = processInfo.value[name] as DictValue
-        pageModel.value[name] = val.val
+        if (elem.writeable === 1) {
+          formModel.value[name] = (processInfo.value[name] as DictValue).id
+        } else {
+          formModel.value[name] = (processInfo.value[name] as DictValue)
+        }
       } else if (elem.field.component_type === 4) {
-        const val = processInfo.value[name] as DictValue[]
-        pageModel.value[name] = val.map(it => it.id)
+        if (elem.writeable === 1) {
+          formModel.value[name] = (processInfo.value[name] as DictValue[]).map(it => it.id) as number[]
+        } else {
+          formModel.value[name] = (processInfo.value[name] as DictValue[])
+        }
       } else {
-        pageModel.value[name] = processInfo.value[name]
+        formModel.value[name] = processInfo.value[name]
       }
     } else {
-      pageModel.value[name] = processInfo.value[name]
+      formModel.value[name] = processInfo.value[name]
     }
 
   }
-})
-
+}
 
 const scheme = computed<FormScheme[][]>(() => {
   if (!processInfo.value) {
@@ -177,6 +214,64 @@ const scheme = computed<FormScheme[][]>(() => {
   }
   return rows
 })
+
+const completeScheme = computed<FormScheme[][]>(() => {
+  if (!processInfo.value) {
+    return []
+  }
+  const pageScheme: PageFieldScheme[] = completeFormScheme.value
+  let spans = 0
+  let container: FormScheme[] = []
+  const rows: FormScheme[][] = []
+  for (let elem of pageScheme) {
+    if (spans + elem.span > 24) {
+      rows.push(container)
+      container = []
+      spans = 0
+    }
+    const component = getComponent(elem)
+    container.push({
+      name: elem.field.name,
+      label: elem.field.label,
+      component: component.name,
+      span: elem.span,
+      writeable: elem.writeable === 1,
+      componentAttrs: component.attrs
+    })
+    spans = spans + elem.span
+  }
+
+  if (container && container.length > 0) {
+    rows.push(container)
+  }
+  return rows
+})
+
+function rebuildFormModel(formModel: Ref<Record<string, any>>) {
+  const keys = Object.keys(formModel.value)
+  const fieldMap = new Map<string, number>(processInfo.value.field_definition.map(it => [it.name, it.component_type]))
+  for (const key of keys) {
+    const componentType = fieldMap.get(key)
+    if (componentType === 6) {
+      const user = formModel.value[key] as UserView
+      formModel.value[key] = user.id
+    } else if (componentType === 7) {
+      const users = formModel.value[key] as UserView[]
+      formModel.value[key] = users.map(it => it.id)
+    } else if (componentType === 9) {
+      const dept = formModel.value[key] as DeptView
+      formModel.value[key] = dept.id
+    } else if (componentType === 100) {
+      const depts = formModel.value[key] as DeptView[]
+      formModel.value[key] = depts.map(it => it.id)
+    } else {
+      // TODO: other types
+    }
+  }
+
+  return formModel.value
+
+}
 
 function getComponent(scheme: PageFieldScheme): ComponentInfo {
   const componentType = scheme.field.component_type

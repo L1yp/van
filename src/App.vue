@@ -12,20 +12,22 @@ const zIndex = 3000;
 </template>
 
 <style>
-body {
+html, body {
   margin: 0;
-  height: 100vh;
-  min-height: 100vh;
-  box-sizing: border-box;
+  padding: 0;
+}
+
+body {
+  display: flex;
 }
 
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  height: 100%;
-  box-sizing: border-box;
+  height: 100vh;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
 }
+
 
 .el-form-item__label {
   color: #606266;

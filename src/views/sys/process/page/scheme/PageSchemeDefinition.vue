@@ -212,7 +212,7 @@ watch(scheme.value, () => {
  */
 function handleWriteableChange(row: PageFieldScheme, val: number) {
   for (let i = 0; i < scheme.value.length; i++) {
-    if (scheme.value[i].id === row.id) {
+    if (scheme.value[i].field_id === row.field_id) {
       scheme.value[i].writeable = val
       return
     }
