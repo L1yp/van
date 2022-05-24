@@ -5,7 +5,8 @@
 ## Project Setup
 
 ```sh
-npm install
+npm install -g pnpm # 安装pnpm
+pnpm install # 安装依赖
 ```
 
 ### Compile and Hot-Reload for Development
