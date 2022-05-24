@@ -40,19 +40,14 @@
 </template>
 
 <script lang="ts" setup>
-import {useRoute, useRouter} from "vue-router"
-import {computed, inject, onMounted, reactive, Ref, ref, unref,} from "vue"
-import {asideWidthKey, mainHeightKey, themeKey, userInfoKey} from "@/config/app.keys";
+import { useRoute, useRouter } from "vue-router"
+import { computed, inject, onMounted, Ref, ref, } from "vue"
+import { asideWidthKey, mainHeightKey, themeKey, userInfoKey } from "@/config/app.keys";
 import {
-  ElTable, ElTableColumn, ElButton, ElPopconfirm, ElTooltip, ElDialog, ElForm, ElFormItem,
-  ElRadioGroup, ElRadio, ElMessage, ElInputNumber, ElInput, ElRow, ElCol, ElSelect, ElOption,
-  ElCascader,
+  ElTable, ElTableColumn, ElButton,
 } from "element-plus"
 import * as ProcessApi from "@/api/sys/process"
 import SVGIcon from "@/components/common/SVGIcon.vue"
-import {
-  ProcessTaskView
-} from "@/api/sys/process";
 
 
 const route = useRoute()
@@ -77,16 +72,6 @@ const dictTableHeight = computed(() => {
 
 
 const userInfo = inject<Ref<UserInfo>>(userInfoKey)
-
-async function complete(row: ProcessTaskView) {
-  await ProcessApi.completeTasks(row.id, userInfo.value.username)
-  ElMessage({
-    message: "办理成功",
-    type: "success"
-  })
-  await loadTableData()
-
-}
 
 async function loadTableData() {
   let param = key as string
