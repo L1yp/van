@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" targetNamespace="http://www.flowable.org/processdef" exporter="Flowable Open Source Modeler" exporterVersion="6.7.2">
+    <process id="change_budget" name="预算调整流程" isExecutable="true">
+        <documentation>1</documentation>
+        <startEvent id="startEvent1" name="开始" flowable:formFieldValidation="true" flowable:initiator="creator" />
+        <userTask id="sid-F99CA3CA-785B-46CF-BB2B-8DB534AE3FAF" name="填写调整信息" flowable:formFieldValidation="true" flowable:assignee="${creator}">
+            <incoming>Flow_060o6tr</incoming>
+            <incoming>Flow_1x21u3i</incoming>
+            <incoming>Flow_05ts1h1</incoming>
+            <outgoing>Flow_0sqem18</outgoing>
+        </userTask>
+        <sequenceFlow id="sid-6EAD1BDB-F5EE-4F18-ACD2-88719DF05575" name="填写详细信息" sourceRef="startEvent1" targetRef="sid-F99CA3CA-785B-46CF-BB2B-8DB534AE3FAF" />
+        <exclusiveGateway id="sid-2BBA5DE3-01EE-4644-828F-4257CB7F9EF3">
+            <outgoing>Flow_06pyim2</outgoing>
+            <outgoing>Flow_0ofzj1m</outgoing>
+        </exclusiveGateway>
+        <sequenceFlow id="sid-ACD912CD-5F25-459B-8683-B63991F2D6EC" name="提交" sourceRef="sid-F99CA3CA-785B-46CF-BB2B-8DB534AE3FAF" targetRef="sid-2BBA5DE3-01EE-4644-828F-4257CB7F9EF3">
+            <conditionExpression xsi:type="tFormalExpression">${outcome="提交"}</conditionExpression>
+        </sequenceFlow>
+        <userTask id="sid-1F5A6456-402F-4760-9E14-FF44A176F7A5" name="调整会签" flowable:formFieldValidation="true" flowable:assignee="${psr.read(&#39;change_budget&#39;, &#39;sub_finance&#39;, execution)}">
+            <incoming>Flow_0ofzj1m</incoming>
+            <outgoing>Flow_060o6tr</outgoing>
+        </userTask>
+        <userTask id="sid-E7C3221C-7839-459D-A54C-DEDD5852329C" name="月结调整" flowable:formFieldValidation="true" flowable:assignee="${psr.read(&#39;change_budget&#39;, &#39;sub_high_leader&#39;, execution)}">
+            <incoming>Flow_06pyim2</incoming>
+            <outgoing>Flow_10ckl5d</outgoing>
+        </userTask>
+        <userTask id="sid-C49483FE-9DD9-4DDD-A341-7EAFCA809FEC" name="调整审核" flowable:formFieldValidation="true" flowable:assignee="${psr.read(&#39;change_budget&#39;, &#39;sub_high_leader&#39;, execution)}">
+            <incoming>Flow_10ckl5d</incoming>
+            <outgoing>Flow_1x21u3i</outgoing>
+        </userTask>
+        <sequenceFlow id="sid-4889166D-2091-42A2-83CC-EACE1250842C" name="提交" sourceRef="sid-1F5A6456-402F-4760-9E14-FF44A176F7A5" targetRef="sid-C49483FE-9DD9-4DDD-A341-7EAFCA809FEC">
+            <conditionExpression xsi:type="tFormalExpression">${outcome="提交"}</conditionExpression>
+        </sequenceFlow>
+        <userTask id="sid-85B02690-DD15-4842-8A02-8B3D7F960041" name="调整批准" flowable:formFieldValidation="true" flowable:assignee="${psr.read(&#39;change_budget&#39;, &#39;hq_high_leader&#39;, execution)}">
+            <outgoing>Flow_05ts1h1</outgoing>
+        </userTask>
+        <sequenceFlow id="sid-FA58C054-45D4-4889-A89F-21AB5D802EBD" name="提交" sourceRef="sid-C49483FE-9DD9-4DDD-A341-7EAFCA809FEC" targetRef="sid-85B02690-DD15-4842-8A02-8B3D7F960041">
+            <conditionExpression xsi:type="tFormalExpression">${outcome="提交"}</conditionExpression>
+        </sequenceFlow>
+        <userTask id="sid-99757E3C-BB86-46AC-9328-64C7362EB7F3" name="调整确认" flowable:formFieldValidation="true" flowable:assignee="${psr.read(&#39;change_budget&#39;, &#39;hq_finance&#39;, execution)}" />
+        <sequenceFlow id="sid-DC6E5EB4-FAF3-4B9C-8CF9-D61F71758695" name="提交" sourceRef="sid-85B02690-DD15-4842-8A02-8B3D7F960041" targetRef="sid-99757E3C-BB86-46AC-9328-64C7362EB7F3">
+            <conditionExpression xsi:type="tFormalExpression">${outcome="提交"}</conditionExpression>
+        </sequenceFlow>
+        <endEvent id="sid-7D7875DA-09BC-4720-ABC6-398E6B62790F" name="归档" />
+        <sequenceFlow id="sid-7A5ABFED-018D-483A-B416-81426A2EC752" name="归档" sourceRef="sid-99757E3C-BB86-46AC-9328-64C7362EB7F3" targetRef="sid-7D7875DA-09BC-4720-ABC6-398E6B62790F" />
+        <sequenceFlow id="sid-F2D7D89A-F103-42ED-87AA-EE45E0F8D4CD" name="预算同步调减" sourceRef="sid-E7C3221C-7839-459D-A54C-DEDD5852329C" targetRef="sid-99757E3C-BB86-46AC-9328-64C7362EB7F3">
+            <conditionExpression xsi:type="tFormalExpression">${outcome="预算同步调减"}</conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow id="Flow_06pyim2" name="是" sourceRef="sid-2BBA5DE3-01EE-4644-828F-4257CB7F9EF3" targetRef="sid-E7C3221C-7839-459D-A54C-DEDD5852329C">
+            <conditionExpression xsi:type="tFormalExpression">${psr.read("change_budget","end_monthly", execution) == 1}</conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow id="Flow_10ckl5d" name="提交" sourceRef="sid-E7C3221C-7839-459D-A54C-DEDD5852329C" targetRef="sid-C49483FE-9DD9-4DDD-A341-7EAFCA809FEC">
+            <conditionExpression xsi:type="tFormalExpression">${outcome="提交"}</conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow id="Flow_060o6tr" name="驳回" sourceRef="sid-1F5A6456-402F-4760-9E14-FF44A176F7A5" targetRef="sid-F99CA3CA-785B-46CF-BB2B-8DB534AE3FAF">
+            <conditionExpression xsi:type="tFormalExpression">${outcome="驳回"}</conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow id="Flow_1x21u3i" name="驳回" sourceRef="sid-C49483FE-9DD9-4DDD-A341-7EAFCA809FEC" targetRef="sid-F99CA3CA-785B-46CF-BB2B-8DB534AE3FAF">
+            <conditionExpression xsi:type="tFormalExpression">${outcome="驳回"}</conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow id="Flow_05ts1h1" name="驳回" sourceRef="sid-85B02690-DD15-4842-8A02-8B3D7F960041" targetRef="sid-F99CA3CA-785B-46CF-BB2B-8DB534AE3FAF">
+            <conditionExpression xsi:type="tFormalExpression">${outcome="驳回"}</conditionExpression>
+        </sequenceFlow>
+        <endEvent id="Event_0cfphnc" name="流程取消">
+            <incoming>Flow_0sqem18</incoming>
+        </endEvent>
+        <sequenceFlow id="Flow_0sqem18" sourceRef="sid-F99CA3CA-785B-46CF-BB2B-8DB534AE3FAF" targetRef="Event_0cfphnc">
+            <conditionExpression xsi:type="tFormalExpression">${outcome="取消流程"}</conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow id="Flow_0ofzj1m" name="否" sourceRef="sid-2BBA5DE3-01EE-4644-828F-4257CB7F9EF3" targetRef="sid-1F5A6456-402F-4760-9E14-FF44A176F7A5">
+            <conditionExpression xsi:type="tFormalExpression">${psr.read("change_budget","end_monthly", execution) == 0}</conditionExpression>
+        </sequenceFlow>
+    </process>
+    <bpmndi:BPMNDiagram id="BPMNDiagram_change_budget">
+        <bpmndi:BPMNPlane id="BPMNPlane_change_budget" bpmnElement="change_budget">
+            <bpmndi:BPMNEdge id="Flow_0ofzj1m_di" bpmnElement="Flow_0ofzj1m">
+                <omgdi:waypoint x="250" y="165" />
+                <omgdi:waypoint x="375" y="165" />
+                <bpmndi:BPMNLabel>
+                    <omgdc:Bounds x="307" y="147" width="11" height="14" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="Flow_0sqem18_di" bpmnElement="Flow_0sqem18">
+                <omgdi:waypoint x="35" y="205" />
+                <omgdi:waypoint x="35" y="310" />
+                <omgdi:waypoint x="-192" y="310" />
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="Flow_05ts1h1_di" bpmnElement="Flow_05ts1h1">
+                <omgdi:waypoint x="828" y="125" />
+                <omgdi:waypoint x="828" y="-50" />
+                <omgdi:waypoint x="35" y="-50" />
+                <omgdi:waypoint x="35" y="125" />
+                <bpmndi:BPMNLabel>
+                    <omgdc:Bounds x="421" y="-68" width="21" height="14" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="Flow_1x21u3i_di" bpmnElement="Flow_1x21u3i">
+                <omgdi:waypoint x="620" y="125" />
+                <omgdi:waypoint x="620" y="20" />
+                <omgdi:waypoint x="35" y="20" />
+                <omgdi:waypoint x="35" y="125" />
+                <bpmndi:BPMNLabel>
+                    <omgdc:Bounds x="317" y="2" width="21" height="14" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="Flow_060o6tr_di" bpmnElement="Flow_060o6tr">
+                <omgdi:waypoint x="425" y="125" />
+                <omgdi:waypoint x="425" y="80" />
+                <omgdi:waypoint x="35" y="80" />
+                <omgdi:waypoint x="35" y="125" />
+                <bpmndi:BPMNLabel>
+                    <omgdc:Bounds x="219" y="62" width="21" height="14" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="Flow_10ckl5d_di" bpmnElement="Flow_10ckl5d">
+                <omgdi:waypoint x="475" y="290" />
+                <omgdi:waypoint x="620" y="290" />
+                <omgdi:waypoint x="620" y="205" />
+                <bpmndi:BPMNLabel>
+                    <omgdc:Bounds x="609" y="293" width="22" height="14" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="Flow_06pyim2_di" bpmnElement="Flow_06pyim2">
+                <omgdi:waypoint x="230" y="185" />
+                <omgdi:waypoint x="230" y="310" />
+                <omgdi:waypoint x="375" y="310" />
+                <bpmndi:BPMNLabel>
+                    <omgdc:Bounds x="224" y="322" width="11" height="14" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="BPMNEdge_sid-F2D7D89A-F103-42ED-87AA-EE45E0F8D4CD" bpmnElement="sid-F2D7D89A-F103-42ED-87AA-EE45E0F8D4CD" flowable:sourceDockerX="50.0" flowable:sourceDockerY="40.0" flowable:targetDockerX="50.0" flowable:targetDockerY="79.0">
+                <omgdi:waypoint x="475" y="320" />
+                <omgdi:waypoint x="1010" y="320" />
+                <omgdi:waypoint x="1010" y="205" />
+                <bpmndi:BPMNLabel>
+                    <omgdc:Bounds x="977" y="332" width="66" height="14" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="BPMNEdge_sid-7A5ABFED-018D-483A-B416-81426A2EC752" bpmnElement="sid-7A5ABFED-018D-483A-B416-81426A2EC752" flowable:sourceDockerX="50.0" flowable:sourceDockerY="40.0" flowable:targetDockerX="14.0" flowable:targetDockerY="14.0">
+                <omgdi:waypoint x="1060" y="165" />
+                <omgdi:waypoint x="1136" y="165" />
+                <bpmndi:BPMNLabel>
+                    <omgdc:Bounds x="1087" y="140" width="23" height="14" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="BPMNEdge_sid-DC6E5EB4-FAF3-4B9C-8CF9-D61F71758695" bpmnElement="sid-DC6E5EB4-FAF3-4B9C-8CF9-D61F71758695" flowable:sourceDockerX="50.0" flowable:sourceDockerY="40.00000000000001" flowable:targetDockerX="50.0" flowable:targetDockerY="40.0">
+                <omgdi:waypoint x="878" y="165" />
+                <omgdi:waypoint x="960" y="165" />
+                <bpmndi:BPMNLabel>
+                    <omgdc:Bounds x="908" y="147" width="22" height="14" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="BPMNEdge_sid-FA58C054-45D4-4889-A89F-21AB5D802EBD" bpmnElement="sid-FA58C054-45D4-4889-A89F-21AB5D802EBD" flowable:sourceDockerX="50.0" flowable:sourceDockerY="40.0" flowable:targetDockerX="50.0" flowable:targetDockerY="40.00000000000001">
+                <omgdi:waypoint x="670" y="165" />
+                <omgdi:waypoint x="778" y="165" />
+                <bpmndi:BPMNLabel>
+                    <omgdc:Bounds x="713" y="147" width="22" height="14" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="BPMNEdge_sid-4889166D-2091-42A2-83CC-EACE1250842C" bpmnElement="sid-4889166D-2091-42A2-83CC-EACE1250842C" flowable:sourceDockerX="50.0" flowable:sourceDockerY="40.0" flowable:targetDockerX="50.0" flowable:targetDockerY="40.0">
+                <omgdi:waypoint x="475" y="165" />
+                <omgdi:waypoint x="570" y="165" />
+                <bpmndi:BPMNLabel>
+                    <omgdc:Bounds x="512" y="140" width="22" height="14" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="BPMNEdge_sid-ACD912CD-5F25-459B-8683-B63991F2D6EC" bpmnElement="sid-ACD912CD-5F25-459B-8683-B63991F2D6EC" flowable:sourceDockerX="50.0" flowable:sourceDockerY="40.0" flowable:targetDockerX="20.5" flowable:targetDockerY="20.5">
+                <omgdi:waypoint x="84.94999999999226" y="165.1277493606138" />
+                <omgdi:waypoint x="210.44871794871796" y="165.44871794871796" />
+                <bpmndi:BPMNLabel>
+                    <omgdc:Bounds x="137" y="147" width="22" height="14" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="BPMNEdge_sid-6EAD1BDB-F5EE-4F18-ACD2-88719DF05575" bpmnElement="sid-6EAD1BDB-F5EE-4F18-ACD2-88719DF05575" flowable:sourceDockerX="15.0" flowable:sourceDockerY="15.0" flowable:targetDockerX="50.0" flowable:targetDockerY="40.0">
+                <omgdi:waypoint x="-195.05000030455395" y="165" />
+                <omgdi:waypoint x="-15" y="165" />
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNShape id="BPMNShape_startEvent1" bpmnElement="startEvent1">
+                <omgdc:Bounds x="-225" y="150" width="30" height="30" />
+                <bpmndi:BPMNLabel>
+                    <omgdc:Bounds x="-221" y="180" width="22" height="14" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="BPMNShape_sid-F99CA3CA-785B-46CF-BB2B-8DB534AE3FAF" bpmnElement="sid-F99CA3CA-785B-46CF-BB2B-8DB534AE3FAF">
+                <omgdc:Bounds x="-15" y="125" width="100" height="80" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="BPMNShape_sid-2BBA5DE3-01EE-4644-828F-4257CB7F9EF3" bpmnElement="sid-2BBA5DE3-01EE-4644-828F-4257CB7F9EF3" isMarkerVisible="true">
+                <omgdc:Bounds x="210" y="145" width="40" height="40" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="BPMNShape_sid-1F5A6456-402F-4760-9E14-FF44A176F7A5" bpmnElement="sid-1F5A6456-402F-4760-9E14-FF44A176F7A5">
+                <omgdc:Bounds x="375" y="125" width="100" height="80" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="BPMNShape_sid-E7C3221C-7839-459D-A54C-DEDD5852329C" bpmnElement="sid-E7C3221C-7839-459D-A54C-DEDD5852329C">
+                <omgdc:Bounds x="375" y="270" width="100" height="80" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="BPMNShape_sid-C49483FE-9DD9-4DDD-A341-7EAFCA809FEC" bpmnElement="sid-C49483FE-9DD9-4DDD-A341-7EAFCA809FEC">
+                <omgdc:Bounds x="570" y="125" width="100" height="80" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="BPMNShape_sid-85B02690-DD15-4842-8A02-8B3D7F960041" bpmnElement="sid-85B02690-DD15-4842-8A02-8B3D7F960041">
+                <omgdc:Bounds x="777.7777754884362" y="124.99999999999999" width="100" height="80.00000000000001" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="BPMNShape_sid-99757E3C-BB86-46AC-9328-64C7362EB7F3" bpmnElement="sid-99757E3C-BB86-46AC-9328-64C7362EB7F3">
+                <omgdc:Bounds x="960" y="125" width="100" height="80" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="BPMNShape_sid-7D7875DA-09BC-4720-ABC6-398E6B62790F" bpmnElement="sid-7D7875DA-09BC-4720-ABC6-398E6B62790F">
+                <omgdc:Bounds x="1136" y="151" width="28" height="28" />
+                <bpmndi:BPMNLabel>
+                    <omgdc:Bounds x="1139" y="179" width="23" height="14" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="Event_0cfphnc_di" bpmnElement="Event_0cfphnc">
+                <omgdc:Bounds x="-228" y="292" width="36" height="36" />
+                <bpmndi:BPMNLabel>
+                    <omgdc:Bounds x="-231" y="335" width="43" height="14" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNShape>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+</definitions>

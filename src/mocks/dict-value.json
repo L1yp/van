@@ -1,0 +1,15 @@
+{
+  "id": 40,
+  "scope": "global",
+  "ident": "yesno",
+  "label": "否",
+  "val": 0,
+  "order_no": 2,
+  "status": 0,
+  "remark": "",
+  "update_by": "admin",
+  "update_time": "2022-04-25 22:44:31",
+  "create_time": "2022-04-24 22:02:18",
+  "pid": 0,
+  "meta": "{\"type\":\"success\",\"effect\":\"light\",\"size\":\"default\"}"
+}

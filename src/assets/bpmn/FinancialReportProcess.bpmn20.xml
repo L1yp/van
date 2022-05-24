@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:activiti="http://activiti.org/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:flowable="http://flowable.org/bpmn" id="definitions" targetNamespace="http://activiti.org/bpmn20">
+    <process id="financialReport" name="月度财务汇报流程">
+        <startEvent id="Start" flowable:formKey="financial-report-create-form" />
+        <sequenceFlow id="prepareReport" name="准备财务报告" sourceRef="Start" targetRef="writeReportTask" />
+        <userTask id="writeReportTask" name="准备财务报告" flowable:candidateUsers="${finance}">
+            <documentation>财务人员 准备 财务报告1</documentation>
+            <documentation>财务人员 准备 财务报告2</documentation>
+            <documentation>财务人员 准备 财务报告3</documentation>
+            <multiInstanceLoopCharacteristics isSequential="true" activiti:collection="assigneeUserIdList" activiti:elementVariable="assignee">
+                <loopCardinality xsi:type="tFormalExpression">12</loopCardinality>
+                <completionCondition xsi:type="tFormalExpression">${nrOfCompletedInstances/nrOfInstances&gt;=0.6}</completionCondition>
+            </multiInstanceLoopCharacteristics>
+        </userTask>
+        <sequenceFlow id="verifyReport" name="审核财务报告" sourceRef="writeReportTask" targetRef="verifyReportTask" />
+        <userTask id="verifyReportTask" name="审核财务月度报告" flowable:candidateUsers="${manager}">
+            <documentation>高层领导审核报告内容，然后发送给所有股东</documentation>
+            <potentialOwner>
+                <resourceAssignmentExpression>
+                    <formalExpression>management</formalExpression>
+                </resourceAssignmentExpression>
+            </potentialOwner>
+        </userTask>
+        <sequenceFlow id="flow3" sourceRef="verifyReportTask" targetRef="End" />
+        <endEvent id="End" />
+    </process>
+    <bpmndi:BPMNDiagram>
+        <bpmndi:BPMNPlane bpmnElement="financialReport">
+            <bpmndi:BPMNEdge bpmnElement="flow3">
+                <omgdi:waypoint x="430" y="240" />
+                <omgdi:waypoint x="480" y="240" />
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="verifyReport">
+                <omgdi:waypoint x="265" y="240" />
+                <omgdi:waypoint x="330" y="240" />
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="prepareReport">
+                <omgdi:waypoint x="105" y="240" />
+                <omgdi:waypoint x="165" y="240" />
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNShape bpmnElement="Start">
+                <omgdc:Bounds x="75" y="225" width="30" height="30" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="writeReportTask">
+                <omgdc:Bounds x="165" y="200" width="100" height="80" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="verifyReportTask">
+                <omgdc:Bounds x="330" y="200" width="100" height="80" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="End">
+                <omgdc:Bounds x="480" y="226" width="28" height="28" />
+            </bpmndi:BPMNShape>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+</definitions>
