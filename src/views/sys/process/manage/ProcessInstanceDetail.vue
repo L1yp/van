@@ -45,7 +45,7 @@
 
 <script lang="ts" setup>
 import {useRoute, useRouter} from "vue-router"
-import {computed, inject, onBeforeMount, onMounted, provide, reactive, Ref, ref, unref, watch,} from "vue"
+import {computed, inject, onBeforeMount, onMounted, provide, reactive, Ref, ref, toRaw, unref, watch,} from "vue"
 import {asideWidthKey, mainHeightKey, processInstanceDetailInfoKey, themeKey, userInfoKey } from "@/config/app.keys";
 import {ElTabs, ElTabPane, ElButton, ElScrollbar, ElMessage} from "element-plus"
 import * as ProcessApi from "@/api/sys/process"
@@ -248,28 +248,30 @@ const completeScheme = computed<FormScheme[][]>(() => {
 })
 
 function rebuildFormModel(formModel: Ref<Record<string, any>>) {
-  const keys = Object.keys(formModel.value)
+  const data = {}
+  Object.assign(data, toRaw(formModel.value))
+  const keys = Object.keys(data)
   const fieldMap = new Map<string, number>(processInfo.value.field_definition.map(it => [it.name, it.component_type]))
   for (const key of keys) {
     const componentType = fieldMap.get(key)
     if (componentType === 6) {
-      const user = formModel.value[key] as UserView
-      formModel.value[key] = user.id
+      const user = data[key] as UserView
+      data[key] = user.id
     } else if (componentType === 7) {
-      const users = formModel.value[key] as UserView[]
-      formModel.value[key] = users.map(it => it.id)
+      const users = data[key] as UserView[]
+      data[key] = users.map(it => it.id)
     } else if (componentType === 9) {
-      const dept = formModel.value[key] as DeptView
-      formModel.value[key] = dept.id
+      const dept = data[key] as DeptView
+      data[key] = dept.id
     } else if (componentType === 100) {
-      const depts = formModel.value[key] as DeptView[]
-      formModel.value[key] = depts.map(it => it.id)
+      const depts = data[key] as DeptView[]
+      data[key] = depts.map(it => it.id)
     } else {
       // TODO: other types
     }
   }
 
-  return formModel.value
+  return data
 
 }
 
