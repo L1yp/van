@@ -113,6 +113,7 @@ declare interface ProcessInstanceInfoView {
 }
 
 declare interface ProcessPageInfo {
+  fields: ProcessFieldDefinition[]
   process_model_node_page: ProcessModelNodePageView
   process_model_page_scheme_view: ProcessModelPageSchemeView
 }

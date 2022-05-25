@@ -250,3 +250,14 @@ export function listMyHistoryTask(): Promise<ProcessTODOTaskView[]> {
     url: '/process/task/history/list'
   })
 }
+
+/**
+ * 获取启动表单
+ */
+export function getStartFormPage(processKey: string): Promise<ProcessPageInfo> {
+  return request<ProcessPageInfo>({
+    method: 'get',
+    url: `/process/start/form`,
+    params: { processKey }
+  })
+}
