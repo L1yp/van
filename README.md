@@ -1,6 +1,6 @@
 # Van
 ## 项目介绍
-用于学习前端技术的demo项目
+用于学习前端技术的demo项目，每个界面都严格控制了高度，基本不会有全局滚动条~
 
 ## Project Setup
 
@@ -102,7 +102,7 @@ interface DeptSelectorInputProps {
 
 ![弹框选择部门](docs/images/dept-selector-dropdown-search.png)
 
-### UserSelectorInput部门选择器组件
+### UserSelectorInput用户选择器组件
 #### 示例
 ```vue
   <user-selector-input style="width: 100%" v-model="selectedElems" multiple></user-selector-input>

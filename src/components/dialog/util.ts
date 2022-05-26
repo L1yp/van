@@ -1,5 +1,5 @@
 import {PropType} from "vue";
-import {ComponentPropsOptions} from "@vue/runtime-core";
+import {ComponentPropsOptions} from "vue";
 
 export const VDialogProps: ComponentPropsOptions<any> = {
   modelValue: Boolean as PropType<boolean>,
