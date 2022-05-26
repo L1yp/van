@@ -40,6 +40,7 @@ import DictInput from "@/components/dict/DictInput.vue";
 import UserSelectorInput from "@/components/common/selector/user/UserSelectorInput.vue"
 import UserViewer from "@/components/common/viewer/user/UserViewer.vue";
 import { FormScheme } from "@/components/form/types";
+import VSelect from "@/components/form/components/select/VSelect.vue";
 
 interface ElFormProps extends Record<string, any> {
 
@@ -54,7 +55,7 @@ export default defineComponent({
   emits: ['update:modelValue'],
   components: {
     ElRow, ElCol, DictTag, DictInput, ElInput, ElSelect, UserSelectorInput,
-    ElForm, ElFormItem, UserViewer,
+    ElForm, ElFormItem, UserViewer, VSelect
   },
   setup(props, { emit: emits }){
 

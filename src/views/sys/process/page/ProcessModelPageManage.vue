@@ -4,6 +4,9 @@
       <el-button size="default" plain style="vertical-align: middle;" type="primary" @click="addRow">
         <SVGIcon style="width: 1em; height: 1em" name="Plus"/><span style="margin-left: 4px;">新增</span>
       </el-button>
+      <el-button size="default" plain style="vertical-align: middle;" type="primary" @click.stop="configStartForm()">
+        <SVGIcon style="width: 1em; height: 1em" name="config"/><span style="margin-left: 4px;">配置启动表单</span>
+      </el-button>
       <el-popconfirm
         title="确定删除?"
         confirmButtonText="确定"
@@ -136,6 +139,17 @@
 
   </v-dialog>
 
+  <v-dialog
+    v-model="startDialogInfo.visible"
+    :title="startDialogInfo.title"
+  >
+    <v-form-pro
+      :scheme="startDialogInfo.scheme"
+      v-model="startDialogInfo.formData"
+    ></v-form-pro>
+
+  </v-dialog>
+
 </template>
 
 <script lang="ts" setup>
@@ -152,6 +166,8 @@ import VDialog from "@/components/dialog/VDialog.vue";
 import * as ProcessPageApi from "@/api/sys/process/page"
 import * as ProcessApi from "@/api/sys/process"
 import PageSchemeDefinition from "./scheme/PageSchemeDefinition.vue"
+import {FormScheme} from "@/components/form/types";
+import VFormPro from "@/components/form/VFormPro.vue";
 
 interface TableInfo {
   tableLoading: boolean;
@@ -208,6 +224,7 @@ async function loadTableData() {
   try {
     tableInfo.value.tableLoading = true
     tableInfo.value.tableData = await ProcessPageApi.listProcessPage(processKey)
+    startDialogInfo.value.scheme[0][1].componentAttrs.options = tableInfo.value.tableData
   } catch (e) {
     ElMessage.error(e?.message || "加载失败")
   } finally {
@@ -227,6 +244,20 @@ function addRow(row?: ProcessModelPageView) {
     dialogInfo.value.formData.remark = row.remark
   }
   dialogInfo.value.visible = true
+}
+
+async function configStartForm(row: ProcessModelPageView) {
+  startDialogInfo.value.visible = true
+}
+
+async function confirmBindStartForm() {
+
+  try {
+    // await ProcessApi.bindStartFormPage()
+  } catch (e) {
+    console.log(e)
+    ElMessage.error(e?.message || '配置失败')
+  }
 }
 
 async function configPageScheme(row: ProcessModelPageView) {
@@ -314,7 +345,51 @@ const dialogInfo = ref<DialogInfo>({
   }
 })
 
+interface StartFormDialogInfo {
+  visible: boolean
+  title: string
+  formData: Record<string, any>
+  scheme: FormScheme[][]
+}
 
+const startDialogInfo = ref<StartFormDialogInfo>({
+  visible: false,
+  title: '绑定启动表单',
+  formData: {
+
+  },
+  scheme: [
+    [
+      {
+        name: 'process_key',
+        label: '流程标识',
+        span: 12,
+        component: 'el-input',
+        writeable: false,
+        componentAttrs: {
+          disabled: true,
+          value: processKey,
+        }
+      },
+      {
+        name: 'process_model_page_id',
+        label: '页面',
+        span: 12,
+        component: 'v-select',
+        writeable: true,
+        componentAttrs: {
+          options: tableInfo.value.tableData,
+          keyField: 'id',
+          labelField: 'name',
+          valueField: 'id',
+          selectAttrs: {
+            clearable: true
+          }
+        }
+      }
+    ]
+  ]
+})
 
 </script>
 

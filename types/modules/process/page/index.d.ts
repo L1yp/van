@@ -62,3 +62,10 @@ declare interface BindProcessModelNodePageParam {
   label_width: string
   comment: number
 }
+
+declare interface BindProcessStartFormParam {
+  process_key: string
+  process_model_page_id: number
+  page_width: string
+  label_width: string
+}
