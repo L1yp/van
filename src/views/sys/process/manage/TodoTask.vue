@@ -45,7 +45,6 @@ import {
 } from "element-plus"
 import * as ProcessApi from "@/api/sys/process"
 import SVGIcon from "@/components/common/SVGIcon.vue"
-import {ProcessTaskView} from "@/api/sys/process";
 import {useRouter} from "vue-router";
 import UserViewer from "@/components/common/viewer/user/UserViewer.vue";
 

@@ -50,7 +50,7 @@
     @cancel="visible = false"
     title="发起流程"
   >
-    <v-form-pro :formAttr="{ labelWidth: startPageInfo.process_model_node_page.label_width }"
+    <v-form-pro :formAttr="{ labelWidth: startPageInfo?.process_model_node_page?.label_width }"
                 :scheme="scheme"
                 v-model="formModel">
     </v-form-pro>
