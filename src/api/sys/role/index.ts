@@ -70,8 +70,8 @@ export function batchDelRole(ids: string) {
  * @param {number} roleId
  * @returns {Promise<number[]>}
  */
-export function menuBound(roleId: number): Promise<void> {
-  return request<void>({
+export function menuBound(roleId: number): Promise<number[]> {
+  return request<number[]>({
     method: 'get',
     url: `/role/menu/bound?roleId=${roleId}`
   })
@@ -97,8 +97,8 @@ export function bindMenu(role_id: number, menu_ids: number[]): Promise<void> {
  * @param {number} roleId
  * @returns {Promise<number[]>}
  */
-export function permissionBound(roleId: number): Promise<void> {
-  return request<void>({
+export function permissionBound(roleId: number): Promise<number[]> {
+  return request<number[]>({
     method: 'get',
     url: `/role/permission/bound?roleId=${roleId}`,
   })

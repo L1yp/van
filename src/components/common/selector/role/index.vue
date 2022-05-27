@@ -54,8 +54,8 @@ import {
 } from "element-plus"
 import * as RoleApi from "@/api/sys/role"
 
-const tableRef = ref(null);
-const loading = ref(true);
+const tableRef = ref<InstanceType<typeof ElTable>>(null);
+const loading = ref<boolean>(true);
 const props = defineProps({
   tableHeight: {
     type: String,

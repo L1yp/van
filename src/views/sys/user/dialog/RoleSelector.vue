@@ -44,7 +44,6 @@ import {ref, computed, watch,} from "vue"
 import {
   ElDialog, ElTable, ElTableColumn, ElTag, ElButton, ElScrollbar
 } from "element-plus"
-import {RoleView} from "@/api/sys/role";
 
 interface Props {
   roleData: RoleView[];

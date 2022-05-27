@@ -1,8 +1,7 @@
-import {createRouter, createWebHistory, RouteRecordRaw, RouterOptions,} from 'vue-router'
+import {createRouter, createWebHistory, RouteRecordRaw, RouterOptions, } from 'vue-router'
 import {read} from "@/utils/storage"
-import App from '@/App.vue'
 import * as UserApi from "@/api/sys/user"
-import {Component} from "vue";
+import {Component, App} from "vue";
 
 const Layout: Component = () => import("../layouts/TopLeft.vue");
 const Home: Component = () => import("@/views/app/Home.vue");

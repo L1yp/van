@@ -256,8 +256,8 @@ function delRole(role) {
 
 /* 角色关联操作开始  */
 const menuDialogVisible = ref(false); // 由于props传值会把普通类型 消除 响应式 因此需要包装成对象传值
-const boundMenus = ref([]);
-const menuOptions = ref([]);
+const boundMenus = ref<number[]>([]);
+const menuOptions = ref<MenuConfig[]>([]);
 const curRoleId = ref(0);
 const roleMenuDialogTitle = ref<string>("");
 async function relateMenu(role) {
