@@ -2,6 +2,7 @@
   <el-select
     v-model="selectedElems"
     remote
+    clearable
     filterable
     collapse-tags
     collapse-tags-tooltip
@@ -14,6 +15,7 @@
     placeholder="双击选择部门"
     value-key="id"
     v-bind="$attrs"
+    @change="handleSelectChanged"
   >
     <el-option
       v-for="item in options"
@@ -135,8 +137,13 @@ export default defineComponent({
         }
         else {
           const elem = selectedElems.value as DeptView
-          const result = data.filter(it => it.id !== elem.id)
-          options.value = [elem, ...result]
+          if (elem) {
+            const result = data.filter(it => it.id !== elem.id)
+            options.value = [elem, ...result]
+          } else {
+            options.value = data
+          }
+
         }
       } catch (e) {
         console.error(e)
@@ -144,6 +151,11 @@ export default defineComponent({
         loading.value = false
       }
     }
+
+    function handleSelectChanged() {
+      emits('update:modelValue', selectedElems.value)
+    }
+
 
     const deptSelectorRef = ref<InstanceType<typeof DeptSelectorModal>>()
 
@@ -153,6 +165,7 @@ export default defineComponent({
 
     return {
       updateModelValue, loading, selectedElems, options, handleSearch, deptSelectorRef, handleDblClick,
+      handleSelectChanged
     }
   },
 })

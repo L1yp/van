@@ -3,6 +3,7 @@
     v-model="selectedElems"
     remote
     filterable
+    clearable
     collapse-tags
     collapse-tags-tooltip
     fit-input-width
@@ -14,6 +15,7 @@
     placeholder="双击选择用户"
     value-key="id"
     v-bind="$attrs"
+    @change="handleSelectChanged"
   >
     <el-option
       v-for="item in options"
@@ -142,8 +144,13 @@ export default defineComponent({
         }
         else {
           const elem = selectedElems.value as UserView
-          const result = data.filter(it => it.id !== elem.id)
-          options.value = [elem, ...result]
+          if (elem) {
+            const result = data.filter(it => it.id !== elem.id)
+            options.value = [elem, ...result]
+          } else {
+            options.value = data
+          }
+
         }
       } catch (e) {
         console.error(e)
@@ -158,8 +165,13 @@ export default defineComponent({
       userSelectorRef.value.open()
     }
 
+    function handleSelectChanged() {
+      emits('update:modelValue', selectedElems.value)
+    }
+
     return {
-      updateModelValue, loading, selectedElems, options, handleSearch, userSelectorRef, handleDblClick
+      updateModelValue, loading, selectedElems, options, handleSearch,
+      userSelectorRef, handleDblClick, handleSelectChanged
     }
 
   },
