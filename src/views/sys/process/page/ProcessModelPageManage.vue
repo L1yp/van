@@ -141,9 +141,13 @@
 
   <v-dialog
     v-model="startDialogInfo.visible"
+    draggable
     :title="startDialogInfo.title"
+    @confirm="confirmBindStartForm"
+    @cancel="startDialogInfo.visible = false"
   >
     <v-form-pro
+      :formAttr="{labelWidth: '120px'}"
       :scheme="startDialogInfo.scheme"
       v-model="startDialogInfo.formData"
     ></v-form-pro>
@@ -208,6 +212,7 @@ function handleCurrentChange(newRow, oldRow) {
 
 const processFields = shallowRef<ProcessFieldDefinition[]>([])
 onBeforeMount(async () => {
+  await loadStartFormInfo()
   await loadProcessFields()
   await loadTableData()
 })
@@ -232,6 +237,18 @@ async function loadTableData() {
   }
 }
 
+async function loadStartFormInfo() {
+  try {
+    const data = await ProcessApi.getStartFormPage(processKey)
+    startDialogInfo.value.formData.page_width = data.process_model_node_page.page_width
+    startDialogInfo.value.formData.label_width = data.process_model_node_page.label_width
+    startDialogInfo.value.formData.process_model_page_id = data.process_model_node_page.process_model_page_id
+  } catch (e) {
+    console.error(e?.message || '加载启动表单失败')
+  }
+
+}
+
 function deleteRows() {
 
 }
@@ -253,7 +270,9 @@ async function configStartForm(row: ProcessModelPageView) {
 async function confirmBindStartForm() {
 
   try {
-    // await ProcessApi.bindStartFormPage()
+    await ProcessApi.bindStartFormPage(startDialogInfo.value.formData)
+    ElMessage.success('配置成功')
+    startDialogInfo.value.visible = false
   } catch (e) {
     console.log(e)
     ElMessage.error(e?.message || '配置失败')
@@ -348,7 +367,7 @@ const dialogInfo = ref<DialogInfo>({
 interface StartFormDialogInfo {
   visible: boolean
   title: string
-  formData: Record<string, any>
+  formData: BindProcessStartFormParam
   scheme: FormScheme[][]
 }
 
@@ -356,7 +375,10 @@ const startDialogInfo = ref<StartFormDialogInfo>({
   visible: false,
   title: '绑定启动表单',
   formData: {
-
+    page_width: '850px',
+    label_width: '120px',
+    process_key: processKey,
+    process_model_page_id: 0
   },
   scheme: [
     [
@@ -365,10 +387,9 @@ const startDialogInfo = ref<StartFormDialogInfo>({
         label: '流程标识',
         span: 12,
         component: 'el-input',
-        writeable: false,
+        writeable: true,
         componentAttrs: {
           disabled: true,
-          value: processKey,
         }
       },
       {
@@ -387,6 +408,28 @@ const startDialogInfo = ref<StartFormDialogInfo>({
           }
         }
       }
+    ],
+    [
+      {
+        name: 'page_width',
+        label: '页面宽度',
+        span: 12,
+        component: 'el-input',
+        writeable: true,
+        componentAttrs: {
+
+        }
+      },
+      {
+        name: 'label_width',
+        label: '标签宽度',
+        span: 12,
+        component: 'el-input',
+        writeable: true,
+        componentAttrs: {
+
+        }
+      },
     ]
   ]
 })

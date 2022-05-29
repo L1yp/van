@@ -266,10 +266,10 @@ export function getStartFormPage(processKey: string): Promise<ProcessPageInfo> {
 /**
  * 绑定启动表单
  */
-export function bindStartFormPage(processKey: string, pageId: number): Promise<void> {
+export function bindStartFormPage(data: BindProcessStartFormParam): Promise<void> {
   return request<void>({
     method: 'post',
     url: `/process/model/page/start/config`,
-    params: { processKey }
+    data
   })
 }

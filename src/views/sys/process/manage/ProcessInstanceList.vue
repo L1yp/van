@@ -187,7 +187,7 @@ async function handleConfirmCreateProcess() {
     ElMessage.success("创建成功")
   } catch (e) {
     console.error(e)
-    ElMessage.error("创建失败")
+    ElMessage.error(e?.message || '创建失败')
   } finally {
     visible.value = false
   }

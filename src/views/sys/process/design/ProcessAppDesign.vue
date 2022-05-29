@@ -211,7 +211,7 @@ async function handleCheckBPMN() {
 
 async function handleUpdateBpmnXML() {
   try {
-    const { xml } = await bpmnModeler.value.saveXML({ format: true });
+    const { xml } = await bpmnModeler.value.saveXML({ format: false });
     await ProcessModelApi.persistProcessModelXML(bpmnId, xml)
     ElMessage.success("保存成功")
   } catch (e) {
