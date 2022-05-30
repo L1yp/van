@@ -1,5 +1,4 @@
-import {PropType} from "vue";
-import {ComponentPropsOptions} from "@vue/runtime-core";
+import {PropType, ComponentPropsOptions} from "vue";
 
 export const DictTagProps: ComponentPropsOptions<any> = {
   multiple: {

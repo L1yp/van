@@ -94,7 +94,7 @@ function searchRoleList() {
     roles.value = data;
   }).catch((e) => {
     ElMessage.error("新增失败：" + e.message);
-  }).finally(_ => loading.value = false);
+  }).finally(() => loading.value = false);
 }
 
 

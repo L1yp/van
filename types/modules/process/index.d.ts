@@ -52,6 +52,19 @@ declare interface AddProcessFieldDefinitionParam {
   dict_ident?: string;
 }
 
+declare interface AddWFColumnParam {
+  process_key: string
+  column_name: string
+  label: string
+  db_type: string
+  default_val: string
+  nullable: number
+  comment: string
+  component_type: number
+  dict_scope: string
+  dict_ident: string
+}
+
 declare interface AddProcessModelDefinitionParam {
   process_key: string;
   code_prefix: string;

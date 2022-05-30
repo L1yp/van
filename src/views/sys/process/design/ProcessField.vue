@@ -4,9 +4,6 @@
       <el-button size="default" plain style="vertical-align: middle;" type="primary" @click.stop="addItem">
         <SVGIcon style="width: 1em; height: 1em" name="Plus"/><span style="margin-left: 4px;">新增</span>
       </el-button>
-      <el-button size="default" plain style="vertical-align: middle" type="success" @click.stop="syncTable">
-        <SVGIcon style="width: 1em; height: 1em" name="Sync"/><span style="margin-left: 6px">同步</span>
-      </el-button>
       <el-button size="default" plain style="vertical-align: middle" type="warning" @click.stop="exportTable">
         <SVGIcon style="width: 1em; height: 1em" name="Download"/><span style="margin-left: 4px;">导出</span>
       </el-button>
@@ -34,10 +31,10 @@
         <el-table-column label="描述" prop="description" width="300" align="center"/>
         <el-table-column fixed="right" label="操作" width="200">
           <template #default="scope">
-            <el-button size="small" plain style="vertical-align: middle" text @click.stop="addItem(scope.row)">
+            <el-button size="small" v-show="!protectedFields.has(scope.row.name)" plain style="vertical-align: middle" text @click.stop="addItem(scope.row)">
               <SVGIcon style="width: 1em; height: 1em" name="Plus"/><span style="margin-left: 6px">新增</span>
             </el-button>
-            <el-button size="small" plain style="vertical-align: middle" text @click.stop="editItem(scope.row)">
+            <el-button size="small" v-show="!protectedFields.has(scope.row.name) && false" plain style="vertical-align: middle" text @click.stop="editItem(scope.row)">
               <SVGIcon style="width: 1em; height: 1em" name="Edit"/><span style="margin-left: 6px">编辑</span>
             </el-button>
 
@@ -123,6 +120,22 @@
     </template>
   </el-dialog>
 
+  <v-dialog
+    v-model="dialogInfo.visible"
+    draggable
+    :title="dialogInfo.title"
+    @cancel="dialogInfo.visible = false"
+    @confirm="handleConfirmAddColumn"
+  >
+    <v-form-pro
+      :form-attr="{labelWidth: '120px'}"
+      :scheme="dialogInfo.scheme"
+      v-model="dialogInfo.formData"
+    >
+
+    </v-form-pro>
+  </v-dialog>
+
 </template>
 
 <script lang="ts" setup>
@@ -133,10 +146,13 @@ import {
   ElInput, ElInputNumber, ElRow, ElCol, ElSelect, ElOption, ElMessage,
 } from "element-plus"
 import SVGIcon from "@/components/common/SVGIcon.vue"
-import {mainHeightKey, themeKey} from "@/config/app.keys";
+import {dictInfosKey, mainHeightKey, themeKey} from "@/config/app.keys";
 import * as ProcessApi from "@/api/sys/process";
 import DictInput from "@/components/dict/DictInput.vue"
 import DictTag from "@/components/dict/DictTag.vue"
+import VDialog from "@/components/dialog/VDialog.vue";
+import VFormPro from "@/components/form/VFormPro.vue";
+import {FormScheme} from "@/components/form/types";
 
 const route = useRoute()
 const processKey = route.params.processKey as string
@@ -202,23 +218,34 @@ function handleRowClick(row, column, event) {
   tableRef.value.toggleRowExpansion(row, undefined)
 }
 
-function addItem(row: ProcessFieldDefinition) {
-  dialogTitle.value = "新增字段"
-  if (row && !(row instanceof Event)) {
-    Object.assign(dialogFormData.value, row)
-    console.log(dialogFormData.value)
-  } else {
-    dialogFormData.value = {
-      process_key: processKey,
-      name: "",
-      order_no: 1,
-      label: "",
-      component_type: 1,
-      db_field_type: "varchar(64)",
-    } as AddProcessFieldDefinitionParam
-  }
+function addItem(row?: ProcessFieldDefinition) {
+  dialogInfo.value.title = '新增字段'
 
-  dialogVisible.value = true
+  dialogInfo.value.formData.column_name = row.name
+  dialogInfo.value.formData.label = row.label
+  dialogInfo.value.formData.db_type = row.db_field_type
+  dialogInfo.value.formData.default_val = row.db_default_value
+  dialogInfo.value.formData.column_name = row.name
+  dialogInfo.value.formData.column_name = row.name
+
+  dialogInfo.value.visible = true
+
+  // dialogTitle.value = "新增字段"
+  // if (row && !(row instanceof Event)) {
+  //   Object.assign(dialogFormData.value, row)
+  //   console.log(dialogFormData.value)
+  // } else {
+  //   dialogFormData.value = {
+  //     process_key: processKey,
+  //     name: "",
+  //     order_no: 1,
+  //     label: "",
+  //     component_type: 1,
+  //     db_field_type: "varchar(64)",
+  //   } as AddProcessFieldDefinitionParam
+  // }
+  //
+  // dialogVisible.value = true
 
 }
 
@@ -228,9 +255,166 @@ function editItem(row) {
   dialogVisible.value = true
 }
 
-function syncTable(row) { }
-
 function exportTable() {}
+
+
+const protectedFields = new Set<string>([
+  "id", "process_bpmn_id", "process_definition_id", "process_instance_id", "name",
+  "creator", "update_by", "update_time", "create_time"
+])
+
+interface DialogInfo {
+  visible: boolean
+  title: string
+  formData: AddWFColumnParam
+  scheme: FormScheme[][]
+}
+const dictInfos = inject(dictInfosKey)
+const scopes = Array.from(new Set(dictInfos.value.map(it => it.scope))).map(it => {return {scope: it}})
+
+const idents = computed(() => {
+  return dictInfos.value.filter(it => it.scope === dialogInfo.value.formData.dict_scope).map(it => {return {ident: it.ident}})
+})
+
+const dialogInfo = ref<DialogInfo>({
+  title: '新增字段',
+  visible: false,
+  formData: {
+    process_key: processKey,
+    column_name: '',
+    label: '',
+    db_type: 'int',
+    default_val: '0',
+    nullable: 0,
+    comment: '',
+    component_type: 1,
+    dict_scope: 'global',
+    dict_ident: null
+  },
+  scheme: [
+    [
+      {
+        name: 'column_name',
+        label: '标识',
+        component: 'el-input',
+        span: 8,
+        writeable: true,
+      },
+      {
+        name: 'label',
+        label: '名称',
+        component: 'el-input',
+        span: 8,
+        writeable: true,
+      },
+      {
+        name: 'comment',
+        label: '备注',
+        component: 'el-input',
+        span: 8,
+        writeable: true,
+      },
+    ],
+    [
+      {
+        name: 'db_type',
+        label: '数据库类型',
+        component: 'el-input',
+        span: 8,
+        writeable: true,
+      },
+      {
+        name: 'default_val',
+        label: '数据库默认值',
+        component: 'el-input',
+        span: 8,
+        writeable: true,
+      },
+      {
+        name: 'nullable',
+        label: '可空',
+        component: 'dict-input',
+        span: 8,
+        writeable: true,
+        componentAttrs: {
+          multiple: false,
+          scope: 'global',
+          ident: 'yesno',
+          valType: 'value',
+        }
+      },
+    ],
+    [
+      {
+        name: 'component_type',
+        label: '组件类型',
+        component: 'dict-input',
+        span: 8,
+        writeable: true,
+        componentAttrs: {
+          multiple: false,
+          scope: 'global',
+          ident: 'component_type',
+          valType: 'value',
+        }
+      },
+      {
+        name: 'dict_scope',
+        label: '字典范围',
+        component: 'v-select',
+        span: 8,
+        writeable: true,
+        componentAttrs: {
+          options: scopes,
+          keyField: 'scope',
+          labelField: 'scope',
+          valueField: 'scope',
+          selectAttrs: {
+            clearable: true,
+          },
+
+
+        }
+      },
+      {
+        name: 'dict_ident',
+        label: '字典标识',
+        component: 'v-select',
+        span: 8,
+        writeable: true,
+        componentAttrs: {
+          options: idents,
+          keyField: 'ident',
+          labelField: 'ident',
+          valueField: 'ident',
+          selectAttrs: {
+            clearable: true,
+          },
+
+
+        }
+      },
+    ],
+
+  ]
+})
+
+async function handleConfirmAddColumn() {
+  const command = dialogInfo.value.title.substring(0, 2)
+  try {
+    if (command === "新增") {
+      await ProcessApi.createProcessFieldDefinition(dialogInfo.value.formData)
+    } else if (command === "编辑") {
+      await ProcessApi.updateProcessFieldDefinition(dialogFormData.value as UpdateProcessFieldDefinitionParam)
+    }
+    ElMessage.success(`${command}成功`)
+  } catch (e) {
+    ElMessage.error(`${command}失败，错误信息: ${e}`)
+  } finally {
+    await loadTableData()
+    dialogInfo.value.visible = false
+  }
+}
 
 </script>
 

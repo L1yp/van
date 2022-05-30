@@ -114,12 +114,13 @@ export function listProcessModel(): Promise<ProcessModelTreeView[]> {
 
 /**
  * 创建流程模型
- * @param param 参数
+ * @param data 参数
  */
-export function createProcessModel(param: AddProcessModelDefinitionParam): Promise<void> {
+export function createProcessModel(data: AddProcessModelDefinitionParam): Promise<void> {
   return request<void>({
     method: 'post',
-    url: `/process/model/definition/create`
+    url: `/process/model/definition/create`,
+    data
   })
 }
 
