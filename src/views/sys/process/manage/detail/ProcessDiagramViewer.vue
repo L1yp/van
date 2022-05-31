@@ -102,6 +102,7 @@ const tableData = computed<TableModel[]>(() => {
       tableItem.duration = toReadableDuration(duration)
     }
     else if (source.type === 'bpmn:UserTask'){
+      //TODO:  会签 分组处理
       tableItem.state = source.businessObject?.name // source label
       tableItem.operation = elem.businessObject?.name // label
       let taskItem = historyData.filter(it => !usedTaskSet.has(it.id)).find(it => it.activity_id === source.id)// 查询任务节点的历史条目

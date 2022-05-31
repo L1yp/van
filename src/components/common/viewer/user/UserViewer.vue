@@ -6,10 +6,11 @@
       width="200px"
     >
       <template #reference>
-        <div class="user-trigger" v-text="user?.nickname"></div>
+        <span class="user-trigger" v-text="user?.nickname"></span>
       </template>
       <UserContent :user="user"></UserContent>
     </el-popover>
+
   </template>
   <template v-else>
     <el-popover
@@ -52,5 +53,8 @@ export default defineComponent({
 .user-trigger {
   cursor: pointer;
   text-decoration: underline;
+}
+.user-trigger + .user-trigger {
+  margin-left: 6px;
 }
 </style>
