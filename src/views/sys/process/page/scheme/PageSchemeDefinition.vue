@@ -282,7 +282,7 @@ function getComponent(scheme: PageFieldScheme): ComponentInfo {
     }
   }
   else if (componentType === 5) {
-    return writeable === 1 ? {name: 'el-input-number'} : null;
+    return writeable === 1 ? {name: 'el-input-number'} : {name: 'el-input-number', attrs: {disabled: true}};
   }
   else if (componentType === 6) {
     return writeable === 1 ?

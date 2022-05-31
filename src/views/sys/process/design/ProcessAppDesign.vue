@@ -199,7 +199,7 @@ const previewVisible = ref<boolean>(false)
 const previewCode = ref("")
 async function handleViewBPMNXML() {
   const { xml } = await bpmnModeler.value.saveXML({ format: true });
-  // console.log("export xml", xml)
+  console.log("export xml", xml)
   previewCode.value = xml
   previewVisible.value = true
 

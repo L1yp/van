@@ -2,7 +2,7 @@
   <div class="container">
     <div class="field-item">
       <label>字段:&nbsp;</label>
-      <el-select v-model="expression" @change="handleInputChange" value-key="id">
+      <el-select v-model="expression" @change="handleInputChange" value-key="id" clearable>
         <el-option
           v-for="item in options"
           :key="item.id"
@@ -39,7 +39,7 @@ const dictValues = inject(dictValuesKey)
 
 const options = ref<SelectModel[]>([])
 
-console.log("approverConfig setup init processModelFields", processModelFields.value)
+console.log("approveConfig setup init processModelFields", processModelFields.value)
 let valMap = null;
 watch(processModelFields, () => {
   if (!processModelFields.value || processModelFields.value.length === 0) {
@@ -102,10 +102,29 @@ watch(bpmnSelectedElem, () => {
   const selectedElem = toRaw(bpmnSelectedElem.value)
   const bo = toRaw(selectedElem?.businessObject)
   initExtOptions()
+  let elementVariable = ''
+  if (bo?.loopCharacteristics) {
+    elementVariable = BpmnUtil.getAttrIgnorePrefix(bo.loopCharacteristics?.$attrs, "elementVariable")
+    const multiInstance = options.value.find(it => it.id === -2)
+    if (multiInstance) {
+      multiInstance.label = `会签审核(${elementVariable})`
+      multiInstance.value = "${" + elementVariable + "}"
+    } else {
+      options.value.push({
+        id: -2,
+        label: `会签审核(${elementVariable})`,
+        value: "${" + elementVariable + "}"
+      })
+    }
+  }
   if (!bo || !bo?.$attrs || Object.keys(bo?.$attrs).length === 0) {
     expression.value = null
     return
   }
+
+
+
+
 
   if (BpmnUtil.hasAttrIgnorePrefix(bo?.$attrs, "assignee")) {
     const val = BpmnUtil.getAttrIgnorePrefix(bo?.$attrs, "assignee")
@@ -128,13 +147,23 @@ watch(bpmnSelectedElem, () => {
         }
       }
       console.log("field", field)
-    } else {
+    }
+    else {
       // creator multi instance config
-      expression.value = {
-        id: -1,
-        label: `流程创建者`,
-        value: val as string
+      if (val === ("${" + elementVariable + "}")) {
+        expression.value = {
+          id: -2,
+          label: `会签审核(${elementVariable})`,
+          value: val as string
+        }
+      } else {
+        expression.value = {
+          id: -1,
+          label: `流程创建者`,
+          value: val as string
+        }
       }
+
     }
   }
 

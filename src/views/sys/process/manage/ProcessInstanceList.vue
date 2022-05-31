@@ -182,7 +182,6 @@ const scheme = computed<FormScheme[][]>(() => {
 async function handleConfirmCreateProcess() {
   try {
     const model = rebuildFormModel(formModel)
-    model.name = `预算调整${Date.now()}`
     await ProcessApi.createProcess(key, model)
     await loadTableData()
     ElMessage.success("创建成功")
@@ -228,10 +227,10 @@ function getComponent(scheme: PageFieldScheme): ComponentInfo {
   const writeable = scheme.writeable
   const name = scheme.field.name
   if (componentType === 1) {
-    return writeable === 1 ? {name: 'el-input'} : null;
+    return writeable === 1 ? {name: 'el-input'} : {name: 'el-input', attrs: { disabled: true }};
   }
   else if (componentType === 2) {
-    return writeable === 1 ? {name: 'el-input', attrs: {type: 'textarea'}} : null;
+    return writeable === 1 ? {name: 'el-input', attrs: {type: 'textarea'}} : {name: 'el-input', attrs: {type: 'textarea', disabled: true}};
   }
   else if (componentType === 3) {
     // const val = processInfo.value[name] as DictValue // TODO: 后期通过默认取值策略返回默认值
@@ -298,7 +297,8 @@ function getComponent(scheme: PageFieldScheme): ComponentInfo {
           // data: pageModel.value[name] // TODO: 后期通过默认取值策略返回默认值
         }
       };
-  } else if (componentType === 7) {
+  }
+  else if (componentType === 7) {
     return writeable === 1 ?
       {
         name: 'user-selector-input',

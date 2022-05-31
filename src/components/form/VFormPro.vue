@@ -33,7 +33,7 @@
   </div>
 </template>
 <script lang="ts">
-import {ElRow, ElCol, ElInput, ElSelect, ElForm, ElFormItem } from "element-plus"
+import {ElRow, ElCol, ElInput, ElSelect, ElForm, ElFormItem, ElInputNumber } from "element-plus"
 import {defineComponent, onBeforeUpdate, PropType, ref} from "vue"
 import DictTag from "@/components/dict/DictTag.vue";
 import DictInput from "@/components/dict/DictInput.vue";
@@ -54,7 +54,7 @@ export default defineComponent({
   },
   emits: ['update:modelValue'],
   components: {
-    ElRow, ElCol, DictTag, DictInput, ElInput, ElSelect, UserSelectorInput,
+    ElRow, ElCol, DictTag, DictInput, ElInput, ElInputNumber, ElSelect, UserSelectorInput,
     ElForm, ElFormItem, UserViewer, VSelect
   },
   setup(props, { emit: emits }){

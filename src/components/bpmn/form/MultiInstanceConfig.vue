@@ -17,7 +17,14 @@
     </div>
     <div v-show="formData.type !== 1" class="field-item">
       <label>循环集合:&nbsp;</label>
-      <el-input @change="val => handleChangeInput('collection', val)" v-model="formData.collection"></el-input>
+      <el-select v-model="formData.collection" @change="val => handleChangeInput('collection', val)" value-key="id">
+        <el-option
+          v-for="item in collectionOptions"
+          :key="item.id"
+          :label="item.label"
+          :value="item"
+        ></el-option>
+      </el-select>
     </div>
     <div v-show="formData.type !== 1" class="field-item">
       <label>元素变量:&nbsp;</label>
@@ -48,19 +55,52 @@
 // 会签配置
 import {ref, watch, computed, inject, toRaw} from "vue"
 import {ElSelect, ElOption, ElInput, ElAlert} from "element-plus"
-import {bpmnModelerKey, bpmnSelectedElemKey} from "@/config/app.keys";
+import {bpmnModelerKey, bpmnSelectedElemKey, dictValuesKey, processModelFieldKey} from "@/config/app.keys";
 import {BpmnUtil} from "@/components/bpmn/form/util";
+import {useRoute} from "vue-router";
+
+const route = useRoute()
+const processKey = route.query.processKey as string
+
 
 interface FormModel {
   type: number;
   loopCount?: string;
-  collection?: string;
+  collection?: SelectModel;
   item?: string;
   condition?: string;
 }
 
+interface SelectModel {
+  id: number;
+  label: string;
+  value?: ProcessFieldDefinition | string;
+}
+
 const formData = ref<FormModel>({
   type: 1
+})
+
+const collectionOptions = ref<SelectModel[]>([])
+
+const dictValues = inject(dictValuesKey)
+const processModelFields = inject(processModelFieldKey)
+let valMap = null;
+watch(processModelFields, () => {
+  if (!processModelFields.value || processModelFields.value.length === 0) {
+    return;
+  }
+  valMap = new Map<number, string>(toRaw(dictValues.value).filter(it => it.scope === "global" && it.ident === "component_type").map(it => [it.val, it.label]));
+  collectionOptions.value = toRaw(processModelFields.value)
+    .filter(it => it.component_type === 7)
+    .map(it => {
+      return {
+        id: it.id,
+        label: it.label + `(${valMap.get(it.component_type)})`,
+        value: it
+      }
+    }) as SelectModel[]
+  console.log("toRaw collectionOptions", toRaw(collectionOptions.value))
 })
 
 const bpmnSelectedElem = inject(bpmnSelectedElemKey)
@@ -79,9 +119,29 @@ watch(bpmnSelectedElem, () => {
         formData.value.type = 2
       }
       if (BpmnUtil.hasAttrIgnorePrefix(bo.loopCharacteristics?.$attrs, "collection")) {
-        formData.value.collection = BpmnUtil.getAttrIgnorePrefix(bo.loopCharacteristics?.$attrs, "collection")
+        const val = BpmnUtil.getAttrIgnorePrefix(bo.loopCharacteristics?.$attrs, "collection")
+        if (val.startsWith("${psr.read")) {
+          // custom field
+          const idx = val.indexOf("', '")
+          const lastIdx = val.indexOf("'", idx + 4);
+          const field = val.substring(idx + 4, lastIdx)
+          if (processModelFields.value) {
+            const fields = toRaw(processModelFields.value)
+            for (let item of fields) {
+              if (item.name === field) {
+                formData.value.collection = {
+                  id: item.id,
+                  label: item.label + `(${valMap?.get(item.component_type)})`,
+                  value: item
+                }
+                break;
+              }
+            }
+          }
+          console.log("field", field)
+        }
       } else {
-        formData.value.collection = ""
+        formData.value.collection = null
       }
       if (BpmnUtil.hasAttrIgnorePrefix(bo.loopCharacteristics?.$attrs, "elementVariable")) {
         formData.value.item = BpmnUtil.getAttrIgnorePrefix(bo.loopCharacteristics?.$attrs, "elementVariable")
@@ -158,7 +218,7 @@ function handleChangeInput(type: string, val: number | string) {
 
   modeling.updateModdleProperties(selectedElem, multiInstanceLoopCharacteristics, {
     "flowable:elementVariable": formData.value.item,
-    "flowable:collection": formData.value.collection,
+    "flowable:collection": "${psr.read('" + processKey + "', '" + (formData.value.collection.value as ProcessFieldDefinition).name + "', execution)}" ,
   })
 
 }
