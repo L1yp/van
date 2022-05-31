@@ -44,82 +44,6 @@
     </div>
   </div>
 
-  <el-dialog v-model="dialogVisible" :title="dialogTitle" :draggable="true" custom-class="user-ext-dialog" width="600px">
-    <el-form ref="dialogFormRef" :model="dialogFormData" status-icon size="default" label-width="100px">
-      <el-row :gutter="10">
-        <el-col :span="12">
-          <el-form-item label="名称" prop="name" required>
-            <el-input v-model="dialogFormData.name"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="序号" prop="order_no" required>
-            <el-input-number v-model="dialogFormData.order_no"></el-input-number>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="10">
-        <el-col :span="12">
-          <el-form-item label="标签" prop="label" required>
-            <el-input v-model="dialogFormData.label"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="类型" prop="component_type" required>
-            <dict-input
-              scope="global"
-              ident="component_type"
-              :type="1"
-              :multiple="false"
-              placeholder="控件类型"
-              v-model="dialogFormData.component_type"
-              check-strictly
-            >
-            </dict-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="10" v-show="[3,4].includes(dialogFormData.component_type)">
-        <el-col :span="12">
-          <el-form-item label="字典范围" prop="dict_scope">
-            <el-input v-model="dialogFormData.dict_scope"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="字典标识" prop="dict_ident">
-            <el-input v-model="dialogFormData.dict_ident"></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="10">
-        <el-col :span="12">
-          <el-form-item label="数据库类型" prop="db_field_type" required>
-            <el-input v-model="dialogFormData.db_field_type"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="默认值" prop="db_default_value" required>
-            <el-input v-model="dialogFormData.db_default_value"></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="24">
-          <el-form-item label="描述" prop="description">
-            <el-input type="textarea" v-model="dialogFormData.description"></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-
-    </el-form>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button size="default" @click="dialogVisible = false">取消</el-button>
-        <el-button size="default" type="primary" @click="handleDialogConfirm">确定</el-button>
-      </span>
-    </template>
-  </el-dialog>
-
   <v-dialog
     v-model="dialogInfo.visible"
     draggable
@@ -174,36 +98,6 @@ const tableHeight = computed(() => {
   return `calc(${mainHeight.value} - ${theme.value.mainPadding * 2 + 42 + 20}px)`
 })
 
-
-const dialogVisible = ref(false)
-const dialogTitle = ref("")
-const dialogFormData = ref<AddProcessFieldDefinitionParam | UpdateProcessFieldDefinitionParam>({
-  process_key: processKey,
-  name: "",
-  order_no: 1,
-  label: "",
-  component_type: 1,
-  db_field_type: "varchar(64)",
-})
-
-async function handleDialogConfirm() {
-  const command = dialogTitle.value.substring(0, 2)
-  try {
-    if (command === "新增") {
-      await ProcessApi.createProcessFieldDefinition(dialogFormData.value as AddProcessFieldDefinitionParam)
-    } else if (command === "编辑") {
-      await ProcessApi.updateProcessFieldDefinition(dialogFormData.value as UpdateProcessFieldDefinitionParam)
-    }
-    ElMessage.success(`${command}成功`)
-  } catch (e) {
-    ElMessage.error(`${command}失败，错误信息: ${e}`)
-  } finally {
-    await loadTableData()
-    dialogVisible.value = false
-  }
-
-}
-
 onMounted(() => {
   loadTableData()
 })
@@ -221,38 +115,25 @@ function handleRowClick(row, column, event) {
 function addItem(row?: ProcessFieldDefinition) {
   dialogInfo.value.title = '新增字段'
 
-  dialogInfo.value.formData.column_name = row.name
-  dialogInfo.value.formData.label = row.label
-  dialogInfo.value.formData.db_type = row.db_field_type
-  dialogInfo.value.formData.default_val = row.db_default_value
-  dialogInfo.value.formData.column_name = row.name
-  dialogInfo.value.formData.column_name = row.name
+  if (row && !(row instanceof Event)) {
+    Object.assign(dialogInfo.value.formData, row)
+  } else {
+    dialogInfo.value.formData = {
+      process_key: processKey,
+      name: '',
+      label: '',
+      db_field_type: 'int',
+      db_default_value: '0',
+      nullable: 0,
+      description: '',
+      component_type: 1,
+      dict_scope: 'global',
+      dict_ident: null
+    }
+  }
 
   dialogInfo.value.visible = true
 
-  // dialogTitle.value = "新增字段"
-  // if (row && !(row instanceof Event)) {
-  //   Object.assign(dialogFormData.value, row)
-  //   console.log(dialogFormData.value)
-  // } else {
-  //   dialogFormData.value = {
-  //     process_key: processKey,
-  //     name: "",
-  //     order_no: 1,
-  //     label: "",
-  //     component_type: 1,
-  //     db_field_type: "varchar(64)",
-  //   } as AddProcessFieldDefinitionParam
-  // }
-  //
-  // dialogVisible.value = true
-
-}
-
-function editItem(row) {
-  dialogTitle.value = "编辑字段"
-  Object.assign(dialogFormData.value, row)
-  dialogVisible.value = true
 }
 
 function exportTable() {}
@@ -266,7 +147,7 @@ const protectedFields = new Set<string>([
 interface DialogInfo {
   visible: boolean
   title: string
-  formData: AddWFColumnParam
+  formData: AddProcessFieldDefinitionParam
   scheme: FormScheme[][]
 }
 const dictInfos = inject(dictInfosKey)
@@ -281,12 +162,12 @@ const dialogInfo = ref<DialogInfo>({
   visible: false,
   formData: {
     process_key: processKey,
-    column_name: '',
+    name: '',
     label: '',
-    db_type: 'int',
-    default_val: '0',
+    db_field_type: 'int',
+    db_default_value: '0',
     nullable: 0,
-    comment: '',
+    description: '',
     component_type: 1,
     dict_scope: 'global',
     dict_ident: null
@@ -294,7 +175,7 @@ const dialogInfo = ref<DialogInfo>({
   scheme: [
     [
       {
-        name: 'column_name',
+        name: 'name',
         label: '标识',
         component: 'el-input',
         span: 8,
@@ -308,7 +189,7 @@ const dialogInfo = ref<DialogInfo>({
         writeable: true,
       },
       {
-        name: 'comment',
+        name: 'description',
         label: '备注',
         component: 'el-input',
         span: 8,
@@ -317,14 +198,14 @@ const dialogInfo = ref<DialogInfo>({
     ],
     [
       {
-        name: 'db_type',
+        name: 'db_field_type',
         label: '数据库类型',
         component: 'el-input',
         span: 8,
         writeable: true,
       },
       {
-        name: 'default_val',
+        name: 'db_default_value',
         label: '数据库默认值',
         component: 'el-input',
         span: 8,
@@ -405,7 +286,7 @@ async function handleConfirmAddColumn() {
     if (command === "新增") {
       await ProcessApi.createProcessFieldDefinition(dialogInfo.value.formData)
     } else if (command === "编辑") {
-      await ProcessApi.updateProcessFieldDefinition(dialogFormData.value as UpdateProcessFieldDefinitionParam)
+
     }
     ElMessage.success(`${command}成功`)
   } catch (e) {

@@ -8,7 +8,7 @@
           :data="leftData"
           height="calc(100vh - 64px - 40px - 54px)"
         >
-          <el-table-column label="_" prop="id" width="40" align="center" header-align="center" :resizable="false"></el-table-column>
+          <el-table-column label="_" prop="id" width="50" align="center" header-align="center" :resizable="false"></el-table-column>
           <el-table-column label="字段" prop="label" width="120"></el-table-column>
           <el-table-column width="40" align="center" header-align="center" :resizable="false">
             <template #header>
@@ -42,7 +42,7 @@
             </span>
             </template>
           </el-table-column>
-          <el-table-column label="_" prop="field_id" width="40" align="center" header-align="center" :resizable="false"></el-table-column>
+          <el-table-column label="_" prop="field_id" width="50" align="center" header-align="center" :resizable="false"></el-table-column>
           <el-table-column label="字段" prop="field_label" width="120"></el-table-column>
           <el-table-column label="宽度" prop="span" width="112" :resizable="false">
             <template #default="scope">
@@ -227,10 +227,10 @@ function getComponent(scheme: PageFieldScheme): ComponentInfo {
   const writeable = scheme.writeable
   const name = scheme.field.name
   if (componentType === 1) {
-    return writeable === 1 ? {name: 'el-input'} : null;
+    return writeable === 1 ? {name: 'el-input'} : { name: 'el-input', attrs: { disabled: true} };
   }
   else if (componentType === 2) {
-    return writeable === 1 ? {name: 'el-input', attrs: {type: 'textarea'}} : null;
+    return writeable === 1 ? {name: 'el-input', attrs: {type: 'textarea'}} : { name: 'el-input', attrs: { disabled: true} };
   }
   else if (componentType === 3) {
     const val = processInfo[name] as DictValue

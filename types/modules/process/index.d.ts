@@ -23,6 +23,7 @@ declare interface ProcessFieldDefinition {
   update_time?: string;
   create_time?: string;
   sort?: number;
+  nullable: number
 }
 
 
@@ -42,12 +43,12 @@ declare interface UpdateProcessFieldDefinitionParam {
 declare interface AddProcessFieldDefinitionParam {
   process_key: string;
   name: string;
-  order_no: number;
   label: string;
   description?: string;
   component_type: number;
   db_field_type: string;
   db_default_value?: string;
+  nullable: number
   dict_scope?: string;
   dict_ident?: string;
 }

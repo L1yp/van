@@ -20,7 +20,8 @@
         current-row-key="id"
         row-key="id"
       >
-        <el-table-column label="#" prop="id" width="150"/>
+        <el-table-column label="#" prop="id" width="50"/>
+        <el-table-column label="编号" prop="code" width="150" show-overflow-tooltip/>
         <el-table-column label="标题" prop="name" width="150" show-overflow-tooltip/>
         <el-table-column label="责任人" width="150" align="center">
           <template #default="scope">
@@ -87,7 +88,7 @@ const dictInfoTableData = ref<ProcessInstanceView[]>([])
 
 const dictInfoTableWidth = computed(() => {
   const padding = 20;
-  const tableWidth = 800;
+  const tableWidth = 850;
   return (padding + tableWidth) + "px";
 })
 const dictTableHeight = computed(() => {
