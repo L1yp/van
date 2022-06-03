@@ -168,8 +168,8 @@ async function createNewDiagram(xml: string) {
     const result = await bpmnModeler.value.importXML(xml);
     const { warnings } = result;
     console.log(warnings);
-    const canvas = bpmnModeler.value.get('canvas')
-    canvas.zoom("fit-viewport", true);
+    // const canvas = bpmnModeler.value.get('canvas')
+    // canvas.zoom("fit-viewport", true);
 
     console.log("elementRegistry", bpmnModeler.value.get("elementRegistry"))
     console.log("elem all", bpmnModeler.value.get("elementRegistry").getAll())

@@ -103,9 +103,9 @@ const completePageModel = ref<Record<string, any>>({
 const outcome = ref<ProcessOutcomeView>()
 async function handleComplete(item: ProcessOutcomeView) {
   outcome.value = item
-  if (!item.page || // 没配页面
-    !item.page.process_model_node_page || // 没配页面
-    item.page.process_model_node_page.comment === 0 // 无需评论
+  if ((!item?.page || // 没配页面
+      !item?.page?.process_model_node_page) && // 没配页面
+    (!item.page || item?.page?.process_model_node_page?.comment === 0) // 无需评论
   ) {
     await doComplete()
   } else {
@@ -163,13 +163,13 @@ function buildFormModel(pageScheme: PageFieldScheme[], formModel: Ref<Record<str
     if (elem.writeable === 1) {
       if (elem.field.component_type === 3) {
         if (elem.writeable === 1) {
-          formModel.value[name] = (processInfo.value[name] as DictValue).id
+          formModel.value[name] = (processInfo.value[name] as DictValue)?.id
         } else {
           formModel.value[name] = (processInfo.value[name] as DictValue)
         }
       } else if (elem.field.component_type === 4) {
         if (elem.writeable === 1) {
-          formModel.value[name] = (processInfo.value[name] as DictValue[]).map(it => it.id) as number[]
+          formModel.value[name] = (processInfo.value[name] as DictValue[])?.map(it => it.id) as number[]
         } else {
           formModel.value[name] = (processInfo.value[name] as DictValue[])
         }

@@ -35,7 +35,7 @@
 <script lang="ts" setup>
 import {ref, computed, shallowRef, onMounted, inject, onUpdated, toRaw, watch,} from "vue"
 import { ElTable, ElTableColumn, ElPopover, ElScrollbar } from "element-plus"
-import BpmnViewer from 'bpmn-js/lib/Viewer'
+import BpmnViewer from 'bpmn-js/lib/NavigatedViewer'
 import {asideWidthKey, mainHeightKey, processInstanceDetailInfoKey, themeKey} from "@/config/app.keys";
 import 'bpmn-js/dist/assets/diagram-js.css';
 import 'bpmn-js/dist/assets/bpmn-font/css/bpmn.css';
@@ -159,8 +159,8 @@ async function initViewerDiagram(xml: string) {
     defs.appendChild(conditionalMarker)
   }
 
-  const canvas2 = viewer.value.get("canvas");
-  canvas2.zoom("fit-viewport", true);
+  // const canvas2 = viewer.value.get("canvas");
+  // canvas2.zoom("fit-viewport", true);
 
   tableLoading.value = true
   histories.value = await ProcessModelApi.readProcessHistory(processInfo.value.process_instance_id)
