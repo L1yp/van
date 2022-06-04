@@ -38,11 +38,14 @@ watch(bpmnSelectedElem, () => {
 function handleInputChange(val: string) {
   const selectedElem = toRaw(bpmnSelectedElem.value)
   const bo = toRaw(selectedElem.businessObject)
-  if (!bo || !bo.conditionExpression) {
-    const bpmnFactory = bpmnModeler.value.get("bpmnFactory")
-    bo.conditionExpression = bpmnFactory.create('bpmn:FormalExpression');
-  }
-  bo.conditionExpression.body = val
+  const bpmnFactory = bpmnModeler.value.get("bpmnFactory")
+  const expression = bpmnFactory.create('bpmn:FormalExpression');
+  expression.body = val
+
+  const modeling = bpmnModeler.value.get("modeling")
+  modeling.updateProperties(selectedElem, {
+    conditionExpression: expression
+  })
 }
 
 

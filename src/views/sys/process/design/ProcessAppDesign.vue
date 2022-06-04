@@ -2,7 +2,14 @@
   <div class="container">
     <div id="canvas" ref="canvas"></div>
     <div class="property-panel-container">
-      <property-panel v-show="!collapsed" :selected-elem="selectedElem" class="property-panel" :height="panelHeight"></property-panel>
+      <property-panel
+        v-show="!collapsed"
+        :selected-elem="selectedElem"
+        class="property-panel"
+        :height="panelHeight"
+        ref="panelRef"
+      >
+      </property-panel>
 
       <div class="collapse-property-panel" @click.stop="handleCollapsePanel">
         <s-v-g-icon style="width: 1em; height: 1em" :name="collapseIconName"></s-v-g-icon>
@@ -12,6 +19,12 @@
       <el-button-group>
         <el-button type="primary" @click="handleViewBPMNXML" title="预览XML">
           <s-v-g-icon name="View" style="width: 1em; height: 1em"/>
+        </el-button>
+        <el-button type="primary" @click="handleZoomExpand" title="放大">
+          <s-v-g-icon name="Plus" style="width: 1em; height: 1em"/>
+        </el-button>
+        <el-button type="primary" @click="handleZoomShrink" title="缩小">
+          <s-v-g-icon name="Subtract" style="width: 1em; height: 1em"/>
         </el-button>
         <el-button type="primary" @click="handleCheckBPMN" title="校验">
           <s-v-g-icon name="Check" style="width: 1em; height: 1em"/>
@@ -26,10 +39,10 @@
       <input type="file" accept="application/xml" ref="fileInputRef" style="display: none" @change="handleFileChange">
     </div>
   </div>
-  <XmlEditor v-model:visible="previewVisible" :code="previewCode">
+  <XmlEditor ref="editorRef" v-model:visible="previewVisible" :code="previewCode">
     <template #footer>
       <div class="dialog-footer">
-        <el-button size="default" type="primary">保存</el-button>
+        <el-button size="default" type="primary" @click="handleSaveXml">保存</el-button>
       </div>
     </template>
   </XmlEditor>
@@ -85,13 +98,14 @@ const panelWidth = computed(() => collapsed.value ? "40px" : "400px")
 
 const collapsed = ref(false)
 const collapseIconName = computed(() => collapsed.value ? "double-left" : "double-right")
+const panelRef = ref<InstanceType<typeof PropertyPanel>>()
 
 function handleCollapsePanel() {
   collapsed.value = !collapsed.value
 }
 
 const canvas = shallowRef<HTMLDivElement>()
-
+const scale = ref<number>(1)
 const bpmnModeler = shallowRef<BpmnModeler>()
 const boundPages = ref<ProcessModelNodePageView[]>([])
 const selectedElem = shallowRef()
@@ -106,15 +120,14 @@ provide(processNodePageListKey, boundPages)
 async function init() {
   bpmnModeler.value = new BpmnModeler({
     container: canvas.value,
-    // keyboard: {
-    //   bindTo: window
-    // },
+    keyboard: {
+      bindTo: window
+    },
     additionalModules: [
       {
         // 禁用滚轮滚动
         zoomScroll: ["value", ""],
-        // 禁止拖动线
-        // bendpoints: ["value", ""],
+
       }
     ],
     moddleExtensions: {
@@ -132,7 +145,13 @@ async function init() {
   bpmnModeler.value.on("element.changed", e => {
     console.info("element.change", e)
     const { element } = e
-    // selectedElem.value = element
+    if (element.type === 'bpmn:SequenceFlow') {
+      panelRef.value.recalculateShowConditionSeqFlow()
+      if (!!element.businessObject?.conditionExpression) {
+        // 显示条件配置
+      }
+    }
+    selectedElem.value = element
   })
 
   bpmnModeler.value.on("element.click", e => {
@@ -168,8 +187,9 @@ async function createNewDiagram(xml: string) {
     const result = await bpmnModeler.value.importXML(xml);
     const { warnings } = result;
     console.log(warnings);
-    // const canvas = bpmnModeler.value.get('canvas')
-    // canvas.zoom("fit-viewport", true);
+    const canvas = bpmnModeler.value.get('canvas')
+    canvas.zoom("fit-viewport", true);
+    canvas.zoom(scale.value);
 
     console.log("elementRegistry", bpmnModeler.value.get("elementRegistry"))
     console.log("elem all", bpmnModeler.value.get("elementRegistry").getAll())
@@ -195,28 +215,108 @@ onMounted(() =>{
   init()
 })
 
+const editorRef = ref<InstanceType<typeof XmlEditor>>()
 const previewVisible = ref<boolean>(false)
 const previewCode = ref("")
 async function handleViewBPMNXML() {
   const { xml } = await bpmnModeler.value.saveXML({ format: true });
-  console.log("export xml", xml)
+  // console.log("export xml", xml)
   previewCode.value = xml
   previewVisible.value = true
 
 }
 
-async function handleCheckBPMN() {
+function handleCheckBPMN() {
+  checkBPMN()
+}
 
+function checkBPMN(): boolean {
+  const registry = bpmnModeler.value.get("elementRegistry")
+  const userTasks = registry.filter(it => it.type === 'bpmn:UserTask' && it.outgoing.length > 1)
+  console.log('userTasks', userTasks)
+  const modeling = bpmnModeler.value.get('modeling');
+  let result = true
+  for (let userTask of userTasks) {
+    const outgoings = userTask.outgoing
+    for (let outgoing of outgoings) {
+      const name = outgoing?.businessObject?.name
+      if (!name) {
+        modeling.setColor([ outgoing ], {
+          stroke: 'red',
+          fill: 'red'
+        });
+        result = false
+      } else {
+        modeling.setColor([ outgoing ], {
+          stroke: 'black',
+          fill: 'black'
+        });
+      }
+
+      if (!outgoing?.businessObject?.conditionExpression && name) {
+        const bpmnFactory = bpmnModeler.value.get("bpmnFactory")
+        const expression = bpmnFactory.create('bpmn:FormalExpression');
+        expression.body = '${outcome == "' + name + '"}'
+        const modeling = bpmnModeler.value.get("modeling")
+        modeling.updateProperties(outgoing, {
+          conditionExpression: expression
+        })
+      }
+    }
+  }
+  return result
+}
+
+function handleZoomExpand() {
+  const canvas = bpmnModeler.value.get('canvas')
+  scale.value = scale.value + 0.1
+  canvas.zoom(scale.value);
+  // const newScale = !radio ? 1.0 : this.scale + radio;
+  // this.bpmnModeler.get("canvas").zoom(newScale);
+}
+
+function handleZoomShrink() {
+  const canvas = bpmnModeler.value.get('canvas')
+  scale.value = scale.value - 0.1
+  canvas.zoom(scale.value);
 }
 
 async function handleUpdateBpmnXML() {
   try {
+    const success = checkBPMN()
+    if (!success) {
+      ElMessage.error('BPMN结构尚未完成, 请在红线上填写标题')
+      return
+    }
     const { xml } = await bpmnModeler.value.saveXML({ format: false });
     await ProcessModelApi.persistProcessModelXML(bpmnId, xml)
     ElMessage.success("保存成功")
   } catch (e) {
     console.error(e)
     ElMessage.error(e?.message || '保存失败')
+  }
+}
+
+async function handleSaveXml() {
+  const text = editorRef.value.view.state.doc.toString()
+  try {
+    await createNewDiagram(text)
+    const { xml } = await bpmnModeler.value.saveXML({ format: false });
+
+    const success = checkBPMN()
+    if (!success) {
+      ElMessage.error('BPMN结构尚未完成, 请在红线上填写标题')
+      return
+    }
+
+    previewVisible.value = false
+    await ProcessModelApi.persistProcessModelXML(bpmnId, xml)
+    ElMessage.success("保存成功")
+  } catch (e) {
+    console.error(e)
+    ElMessage.error(e?.message || '保存失败')
+  }finally {
+
   }
 }
 

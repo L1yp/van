@@ -69,7 +69,7 @@
 
 <script lang="ts" setup>
 import {ElCard, ElCollapse, ElCollapseItem, ElScrollbar} from "element-plus"
-import {computed, inject, onMounted, provide, ref, toRaw, watch} from "vue";
+import {computed, inject, onMounted, provide, ref, toRaw, getCurrentInstance } from "vue";
 import ExecutionListener from "@/components/bpmn/form/ExecutionListener.vue";
 import TaskListener from "@/components/bpmn/form/TaskListener.vue";
 import GlobalListener from "@/components/bpmn/form/GlobalListener.vue";
@@ -113,11 +113,23 @@ const showConditionSeqFlow = computed<boolean>(() => {
   return !!bo?.conditionExpression;
 })
 
+/**
+ * <b>bpmnSelectedElem</b>是ShallowRef浅层响应式
+ * 当sequenceFlow变成Condition SequenceFlow不会触发computed重新计算
+ * 因此暴漏此方法手动触发
+ */
+function recalculateShowConditionSeqFlow() {
+  showConditionSeqFlow.effect.scheduler()
+}
+
 const pageConfigRef = ref<InstanceType<typeof PageConfig>>()
 function handleClickPageConfig() {
   pageConfigRef.value.open()
 }
 
+defineExpose({
+  recalculateShowConditionSeqFlow
+})
 
 </script>
 

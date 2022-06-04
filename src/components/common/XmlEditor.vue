@@ -67,24 +67,23 @@ export default defineComponent({
     })
 
     function handleDialogOpened() {
-      if (!state.value) {
-        console.log("props.code", props.code)
-        state.value = EditorState.create({
-          doc: props.code,
-          extensions: [
-            basicSetup,
-            language.of(xml()),
-            tabSize.of(EditorState.tabSize.of(4))
-          ]
-        })
+      if(view.value) {
+        view.value.destroy()
       }
 
-      if (!view.value) {
-        view.value = new EditorView({
-          state: toRaw(state.value),
-          parent: editorRef.value
-        })
-      }
+      state.value = EditorState.create({
+        doc: props.code,
+        extensions: [
+          basicSetup,
+          language.of(xml()),
+          tabSize.of(EditorState.tabSize.of(4))
+        ]
+      })
+      view.value = new EditorView({
+        state: toRaw(state.value),
+        parent: editorRef.value
+      })
+
     }
 
     function handleDialogClosed() {
@@ -92,9 +91,8 @@ export default defineComponent({
       emits("update:visible", false)
     }
 
-
     return {
-      props,
+      props, state, view,
       editorRef, dialogVisible, fullScreen, requestFullScreen, scrollHeight,
       handleDialogOpened, handleDialogClosed
     }
