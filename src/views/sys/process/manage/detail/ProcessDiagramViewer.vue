@@ -159,8 +159,8 @@ async function initViewerDiagram(xml: string) {
     defs.appendChild(conditionalMarker)
   }
 
-  // const canvas2 = viewer.value.get("canvas");
-  // canvas2.zoom("fit-viewport", true);
+  const canvas2 = viewer.value.get("canvas");
+  canvas2.zoom("fit-viewport", true);
 
   tableLoading.value = true
   histories.value = await ProcessModelApi.readProcessHistory(processInfo.value.process_instance_id)

@@ -13,6 +13,12 @@
         <el-button type="primary" @click="handleViewBPMNXML" title="预览XML">
           <s-v-g-icon name="View" style="width: 1em; height: 1em"/>
         </el-button>
+        <el-button type="primary" @click="handleZoomExpand" title="放大">
+          <s-v-g-icon name="Plus" style="width: 1em; height: 1em"/>
+        </el-button>
+        <el-button type="primary" @click="handleZoomShrink" title="缩小">
+          <s-v-g-icon name="Subtract" style="width: 1em; height: 1em"/>
+        </el-button>
         <el-button type="primary" @click="handleCheckBPMN" title="校验">
           <s-v-g-icon name="Check" style="width: 1em; height: 1em"/>
         </el-button>
@@ -26,10 +32,10 @@
       <input type="file" accept="application/xml" ref="fileInputRef" style="display: none" @change="handleFileChange">
     </div>
   </div>
-  <XmlEditor v-model:visible="previewVisible" :code="previewCode">
+  <XmlEditor ref="editorRef" v-model:visible="previewVisible" :code="previewCode">
     <template #footer>
       <div class="dialog-footer">
-        <el-button size="default" type="primary">保存</el-button>
+        <el-button size="default" type="primary" @click="handleSaveXml">保存</el-button>
       </div>
     </template>
   </XmlEditor>
@@ -91,7 +97,7 @@ function handleCollapsePanel() {
 }
 
 const canvas = shallowRef<HTMLDivElement>()
-
+const scale = ref<number>(1)
 const bpmnModeler = shallowRef<BpmnModeler>()
 const boundPages = ref<ProcessModelNodePageView[]>([])
 const selectedElem = shallowRef()
@@ -106,15 +112,14 @@ provide(processNodePageListKey, boundPages)
 async function init() {
   bpmnModeler.value = new BpmnModeler({
     container: canvas.value,
-    // keyboard: {
-    //   bindTo: window
-    // },
+    keyboard: {
+      bindTo: window
+    },
     additionalModules: [
       {
         // 禁用滚轮滚动
         zoomScroll: ["value", ""],
-        // 禁止拖动线
-        // bendpoints: ["value", ""],
+
       }
     ],
     moddleExtensions: {
@@ -168,8 +173,9 @@ async function createNewDiagram(xml: string) {
     const result = await bpmnModeler.value.importXML(xml);
     const { warnings } = result;
     console.log(warnings);
-    // const canvas = bpmnModeler.value.get('canvas')
-    // canvas.zoom("fit-viewport", true);
+    const canvas = bpmnModeler.value.get('canvas')
+    canvas.zoom("fit-viewport", true);
+    canvas.zoom(scale.value);
 
     console.log("elementRegistry", bpmnModeler.value.get("elementRegistry"))
     console.log("elem all", bpmnModeler.value.get("elementRegistry").getAll())
@@ -195,11 +201,12 @@ onMounted(() =>{
   init()
 })
 
+const editorRef = ref<InstanceType<typeof XmlEditor>>()
 const previewVisible = ref<boolean>(false)
 const previewCode = ref("")
 async function handleViewBPMNXML() {
   const { xml } = await bpmnModeler.value.saveXML({ format: true });
-  console.log("export xml", xml)
+  // console.log("export xml", xml)
   previewCode.value = xml
   previewVisible.value = true
 
@@ -207,6 +214,20 @@ async function handleViewBPMNXML() {
 
 async function handleCheckBPMN() {
 
+}
+
+function handleZoomExpand() {
+  const canvas = bpmnModeler.value.get('canvas')
+  scale.value = scale.value + 0.1
+  canvas.zoom(scale.value);
+  // const newScale = !radio ? 1.0 : this.scale + radio;
+  // this.bpmnModeler.get("canvas").zoom(newScale);
+}
+
+function handleZoomShrink() {
+  const canvas = bpmnModeler.value.get('canvas')
+  scale.value = scale.value - 0.1
+  canvas.zoom(scale.value);
 }
 
 async function handleUpdateBpmnXML() {
@@ -217,6 +238,22 @@ async function handleUpdateBpmnXML() {
   } catch (e) {
     console.error(e)
     ElMessage.error(e?.message || '保存失败')
+  }
+}
+
+async function handleSaveXml() {
+  const text = editorRef.value.view.state.doc.toString()
+  try {
+    await createNewDiagram(text)
+    const { xml } = await bpmnModeler.value.saveXML({ format: false });
+    previewVisible.value = false
+    await ProcessModelApi.persistProcessModelXML(bpmnId, xml)
+    ElMessage.success("保存成功")
+  } catch (e) {
+    console.error(e)
+    ElMessage.error(e?.message || '保存失败')
+  }finally {
+
   }
 }
 

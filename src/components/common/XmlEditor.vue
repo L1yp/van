@@ -68,7 +68,7 @@ export default defineComponent({
 
     function handleDialogOpened() {
       if (!state.value) {
-        console.log("props.code", props.code)
+        // console.log("props.code", props.code)
         state.value = EditorState.create({
           doc: props.code,
           extensions: [
@@ -92,9 +92,8 @@ export default defineComponent({
       emits("update:visible", false)
     }
 
-
     return {
-      props,
+      props, state, view,
       editorRef, dialogVisible, fullScreen, requestFullScreen, scrollHeight,
       handleDialogOpened, handleDialogClosed
     }
