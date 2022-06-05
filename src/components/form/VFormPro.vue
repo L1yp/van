@@ -3,7 +3,7 @@
     <el-form v-bind="formAttr">
       <el-row v-for="(row, idx) in scheme" :key="idx" :gutter="10">
         <el-col v-for="col in row" :span="col.span">
-          <el-form-item :label="col.label" v-bind="col.formItemAttrs">
+          <el-form-item style="width: 100%" :label="col.label" v-bind="col.formItemAttrs">
             <template v-if="col">
               <template v-if="col.writeable">
                 <component

@@ -22,8 +22,8 @@
       >
         <el-table-column label="#" prop="id" width="50"/>
         <el-table-column label="编号" prop="code" width="150" show-overflow-tooltip/>
-        <el-table-column label="标题" prop="name" width="150" show-overflow-tooltip/>
-        <el-table-column label="责任人" width="150" align="center">
+        <el-table-column label="标题" prop="name" show-overflow-tooltip/>
+        <el-table-column label="责任人" align="center" show-overflow-tooltip>
           <template #default="scope">
             <user-viewer :data="scope.row.assignee"></user-viewer>
           </template>
@@ -33,7 +33,7 @@
             <user-viewer :data="scope.row.creator"></user-viewer>
           </template>
         </el-table-column>
-        <el-table-column fixed="right" label="操作" width="200">
+        <el-table-column fixed="right" label="操作">
           <template #default="scope">
             <el-button size="small" plain style="vertical-align: middle" text @click.stop="viewProcess(scope.row)">
               <s-v-g-icon style="width: 1em; height: 1em" name="View"/><span style="margin-left: 6px">详情</span>
@@ -86,11 +86,11 @@ const dictInfoTableLoading = ref(true)
 const dictInfoTableData = ref<ProcessInstanceView[]>([])
 
 
-const dictInfoTableWidth = computed(() => {
-  const padding = 20;
-  const tableWidth = 850;
-  return (padding + tableWidth) + "px";
-})
+// const dictInfoTableWidth = computed(() => {
+//   const padding = 20;
+//   const tableWidth = 850;
+//   return (padding + tableWidth) + "px";
+// })
 const dictTableHeight = computed(() => {
   return `calc(${mainHeight.value} - ${theme.value.mainPadding * 2 + 42 + 20}px)`
 })
@@ -332,7 +332,7 @@ function exportProcessTable() {}
 
 .dict-info-container {
   box-sizing: border-box;
-  width: v-bind(dictInfoTableWidth);
+  /*width: v-bind(dictInfoTableWidth);*/
   background-color: #FFFFFF;
   padding: 10px;
   transition: .3s;

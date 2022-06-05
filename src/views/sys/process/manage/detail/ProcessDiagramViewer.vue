@@ -24,17 +24,26 @@
   <el-popover
     :virtual-ref="hoverElem"
     trigger="hover"
-    title="责任人"
     virtual-triggering
     placement="top"
+    width="300px"
   >
-    <span v-text="assigneeInfo"></span>
+    <el-descriptions size="small" :column="2" border>
+      <template v-for="item in assigneeInfo">
+        <el-descriptions-item label="用户" label-align="left">
+          <span v-text="item?.user_info?.label"></span>
+        </el-descriptions-item>
+        <el-descriptions-item label="操作" label-align="left">
+          <span v-text="item?.state"></span>
+        </el-descriptions-item>
+      </template>
+    </el-descriptions>
   </el-popover>
 </template>
 
 <script lang="ts" setup>
 import {ref, computed, shallowRef, onMounted, inject, onUpdated, toRaw, watch,} from "vue"
-import { ElTable, ElTableColumn, ElPopover, ElScrollbar } from "element-plus"
+import { ElTable, ElTableColumn, ElPopover, ElScrollbar, ElDescriptions, ElDescriptionsItem } from "element-plus"
 import BpmnViewer from 'bpmn-js/lib/NavigatedViewer'
 import {asideWidthKey, mainHeightKey, processInstanceDetailInfoKey, themeKey} from "@/config/app.keys";
 import 'bpmn-js/dist/assets/diagram-js.css';
@@ -60,67 +69,42 @@ interface TableModel {
   duration: string
 }
 
+interface AssigneeInfo {
+  user_info: UserView
+  state: string
+}
+
 const tableLoading = ref<boolean>(false)
 const tableData = computed<TableModel[]>(() => {
   if (!viewer.value) {
     return []
   }
-  const registry = viewer.value.get("elementRegistry")
-  const data = histories.value?.filter(it => ['sequenceFlow'].includes(it.activity_type))
-    .sort((a, b) => dayjs(a.end_time).toDate().getTime() - dayjs(b.end_time).toDate().getTime())
-  const historyData = histories.value?.sort((a, b) =>
-    dayjs(a.end_time).toDate().getTime() - dayjs(b.end_time).toDate().getTime())
+
+  const userTasks = histories.value?.filter(it => ['userTask'].includes(it.activity_type))
   const elems: TableModel[] = []
-  const usedTaskSet = new Set<string>()
-  for (let item of data) {
-    const elem = registry.find(it => it.id === item.activity_id)
-    if (!elem) {
-      console.warn("cannot find element", item)
+
+  elems.push({
+    state: '开始',
+    operation: '发起',
+    operation_user: processInfo.value.creator.label,
+    start_time: processInfo.value.create_time,
+    end_time: processInfo.value.create_time,
+    duration: '0秒'
+  })
+
+  for (let userTask of userTasks) {
+    if (!!userTask.end_time === false) {
       continue
     }
-    const source = elem.source
-    const target = elem.target
-    const tableItem: TableModel = {
-      state: '',
-      operation: '',
-      operation_user: '',
-      start_time: '',
-      end_time: '',
-      duration: '0秒'
-    }
-    if (source.type === 'bpmn:StartEvent') {
-      tableItem.state = source.businessObject?.name
-      tableItem.operation = elem.businessObject?.name // label
-      tableItem.operation_user = processInfo.value?.creator?.label
-      let startElem = historyData.filter(it => !usedTaskSet.has(it.id)).find(it => it.activity_id === source.id)// 查询任务节点的历史条目
-      usedTaskSet.add(startElem.id)
-
-      tableItem.start_time = startElem?.start_time || item.start_time
-      tableItem.end_time = item.end_time
-      const duration = dayjs(tableItem.end_time).diff(tableItem.start_time, 'second')
-
-      tableItem.duration = toReadableDuration(duration)
-    }
-    else if (source.type === 'bpmn:UserTask'){
-      //TODO:  会签 分组处理
-      tableItem.state = source.businessObject?.name // source label
-      tableItem.operation = elem.businessObject?.name // label
-      let taskItem = historyData.filter(it => !usedTaskSet.has(it.id)).find(it => it.activity_id === source.id)// 查询任务节点的历史条目
-      usedTaskSet.add(taskItem.id)
-
-      tableItem.operation_user = taskItem?.assignee?.label || item.assignee?.label
-      tableItem.start_time = taskItem.start_time
-      tableItem.end_time = item.end_time
-      const duration = dayjs(tableItem.end_time).diff(tableItem.start_time, 'second')
-      tableItem.duration = toReadableDuration(duration)
-    }
-    else {
-      continue
-    }
-
-    elems.push(tableItem)
+    elems.push({
+      state: userTask.activity_name,
+      operation: userTask.outcome,
+      operation_user: userTask.assignee.label,
+      start_time: userTask.start_time,
+      end_time: userTask.end_time,
+      duration: toReadableDuration(Math.ceil(userTask.duration_in_millis / 1000))
+    })
   }
-
   return elems
 })
 
@@ -266,18 +250,39 @@ function attachEventListener() {
   })
 }
 
-const assigneeInfo = computed<string>(() => {
-  if (processInfo.value?.current_node_key === hoverElem.value?.id) {
-    return processInfo.value?.assignees?.map(it => it.label).join(', ')
-  } else {
-    const elemId = hoverElem.value?.getAttribute('data-element-id')
-    if (elemId === null) {
-      return ''
-    }
-    const history = histories.value?.find(it => it.activity_id === elemId)
-    if (!history) return ''
-    return history?.assignee?.label
+const assigneeInfo = computed<AssigneeInfo[]>(() => {
+  const result: AssigneeInfo[] = []
+
+  const elemId = hoverElem.value?.getAttribute('data-element-id')
+  if (elemId === null) {
+    return []
   }
+  const items = histories.value?.filter(it => it.activity_id === elemId)
+  if (!items || items.length === 0) return []
+
+  // activity: 驳回时会存在多条历史记录，因此需要顺序获取
+  const activityGroupMap = new Map<string, HistoricActivityInstanceView[]>()
+  const length = histories.value.length
+  for (let i = 0; i < length; i++) {
+    const history = histories.value[i]
+    if (!activityGroupMap.has(history.activity_id)) {
+      activityGroupMap.set(history.activity_id, [])
+    }
+    activityGroupMap.get(history.activity_id).push(history)
+  }
+
+
+  const countMap = new Map<string, number>()
+  for (let i = 0; i < items.length; i++) {
+
+  }
+
+  return items.map(it => {
+    return {
+      user_info: it.assignee,
+      state: it.end_time ? it.outcome : '待处理'
+    } as AssigneeInfo
+  })
 })
 
 defineExpose({

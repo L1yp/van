@@ -36,7 +36,7 @@
               <el-button size="small" plain style="vertical-align: middle" text @click.stop="fieldConfig(scope.row)">
                 <s-v-g-icon style="width: 1em; height: 1em" name="TextField"/><span style="margin-left: 6px">字段</span>
               </el-button>
-              <el-button size="small" plain style="vertical-align: middle; margin-left: 0" text @click.stop="startProcess(scope.row)">
+              <el-button v-if="false" size="small" plain style="vertical-align: middle; margin-left: 0" text @click.stop="startProcess(scope.row)">
                 <s-v-g-icon style="width: 1em; height: 1em" name="Plus"/><span style="margin-left: 6px">发起</span>
               </el-button>
               <el-button size="small" plain style="vertical-align: middle; margin-left: 0" text @click.stop="viewProcessList(scope.row)">

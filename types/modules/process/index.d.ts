@@ -96,7 +96,7 @@ declare interface ProcessModelBPMN {
 declare interface ProcessInstanceView {
   id: number;
   name: string;
-  assignee: UserView;
+  assignee: UserView[];
   creator: UserView;
 }
 
@@ -154,6 +154,7 @@ declare interface HistoricActivityInstanceView {
   task_id?: string;
   called_process_instance_id: string
   variables?: Record<string, any>;
+  outcome: string
 }
 
 declare interface ProcessTaskCompleteParam {
