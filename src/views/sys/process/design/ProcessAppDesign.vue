@@ -320,6 +320,22 @@ async function handleSaveXml() {
   }
 }
 
+async function handleSaveXml() {
+  const text = editorRef.value.view.state.doc.toString()
+  try {
+    await createNewDiagram(text)
+    const { xml } = await bpmnModeler.value.saveXML({ format: false });
+    previewVisible.value = false
+    await ProcessModelApi.persistProcessModelXML(bpmnId, xml)
+    ElMessage.success("保存成功")
+  } catch (e) {
+    console.error(e)
+    ElMessage.error(e?.message || '保存失败')
+  }finally {
+
+  }
+}
+
 const toolbarRef = shallowRef<HTMLDivElement>()
 const fileInputRef = shallowRef<HTMLInputElement>()
 function handleOpenFile() {
