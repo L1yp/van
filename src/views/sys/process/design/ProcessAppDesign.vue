@@ -281,6 +281,20 @@ function handleZoomShrink() {
   canvas.zoom(scale.value);
 }
 
+function handleZoomExpand() {
+  const canvas = bpmnModeler.value.get('canvas')
+  scale.value = scale.value + 0.1
+  canvas.zoom(scale.value);
+  // const newScale = !radio ? 1.0 : this.scale + radio;
+  // this.bpmnModeler.get("canvas").zoom(newScale);
+}
+
+function handleZoomShrink() {
+  const canvas = bpmnModeler.value.get('canvas')
+  scale.value = scale.value - 0.1
+  canvas.zoom(scale.value);
+}
+
 async function handleUpdateBpmnXML() {
   try {
     const success = checkBPMN()
@@ -309,6 +323,22 @@ async function handleSaveXml() {
       return
     }
 
+    previewVisible.value = false
+    await ProcessModelApi.persistProcessModelXML(bpmnId, xml)
+    ElMessage.success("保存成功")
+  } catch (e) {
+    console.error(e)
+    ElMessage.error(e?.message || '保存失败')
+  }finally {
+
+  }
+}
+
+async function handleSaveXml() {
+  const text = editorRef.value.view.state.doc.toString()
+  try {
+    await createNewDiagram(text)
+    const { xml } = await bpmnModeler.value.saveXML({ format: false });
     previewVisible.value = false
     await ProcessModelApi.persistProcessModelXML(bpmnId, xml)
     ElMessage.success("保存成功")
