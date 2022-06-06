@@ -4,17 +4,21 @@
       <label>表达式:&nbsp;</label>
       <el-input style="width: 100%" @change="handleInputChange" v-model="expression"></el-input>
     </div>
-
+    <div class="field-item">
+      <label>序号:&nbsp;</label>
+      <el-input style="width: 100%" @change="handleOrderNoInputChange" v-model="orderNo"></el-input>
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 // TODO: 设置 连线类型：默认流转 条件流程 无
-import {ref, watch, computed, inject, toRaw} from "vue"
-import {ElSelect, ElOption, ElInput, ElAlert} from "element-plus"
+import {ref, watch, inject, toRaw} from "vue"
+import { ElInput } from "element-plus"
 import {bpmnModelerKey, bpmnSelectedElemKey, propertyPanelOpenKey} from "@/config/app.keys";
 
 const expression = ref("")
+const orderNo = ref<number>(0)
 
 const innerWidth = "360px"
 const labelWidth = "60px"
@@ -32,6 +36,7 @@ watch(bpmnSelectedElem, () => {
     return
   }
   expression.value = bo?.conditionExpression?.body
+  orderNo.value = bo?.$attrs['flowable:order']
   propertyPanelOpen("flow-condition")
 })
 
@@ -45,6 +50,15 @@ function handleInputChange(val: string) {
   const modeling = bpmnModeler.value.get("modeling")
   modeling.updateProperties(selectedElem, {
     conditionExpression: expression
+  })
+}
+
+function handleOrderNoInputChange(val: string) {
+  const selectedElem = toRaw(bpmnSelectedElem.value)
+
+  const modeling = bpmnModeler.value.get("modeling")
+  modeling.updateProperties(selectedElem, {
+    'flowable:order': val
   })
 }
 
