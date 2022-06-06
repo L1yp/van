@@ -20,11 +20,14 @@
         <el-button type="primary" @click="handleViewBPMNXML" title="预览XML">
           <s-v-g-icon name="View" style="width: 1em; height: 1em"/>
         </el-button>
+        <el-button type="primary" @click="handleZoomShrink" title="缩小" :disabled="scale <= 10">
+          <s-v-g-icon name="Subtract" style="width: 1em; height: 1em"/>
+        </el-button>
+        <el-button type="primary" @click="handleZoomExpand">
+          {{ scale + '%' }}
+        </el-button>
         <el-button type="primary" @click="handleZoomExpand" title="放大">
           <s-v-g-icon name="Plus" style="width: 1em; height: 1em"/>
-        </el-button>
-        <el-button type="primary" @click="handleZoomShrink" title="缩小">
-          <s-v-g-icon name="Subtract" style="width: 1em; height: 1em"/>
         </el-button>
         <el-button type="primary" @click="handleCheckBPMN" title="校验">
           <s-v-g-icon name="Check" style="width: 1em; height: 1em"/>
@@ -69,11 +72,10 @@ import 'bpmn-js/dist/assets/bpmn-font/css/bpmn-codes.css';
 import 'bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css';
 import PropertyPanel from "@/components/bpmn/PropertyPanel.vue";
 import SVGIcon from "@/components/common/SVGIcon.vue"
-import TextPreview from "@/components/common/TextPreview.vue"
 import XmlEditor from "@/components/common/XmlEditor.vue"
 import * as ProcessModelApi from "@/api/sys/process/"
-import {listProcessPageByBpmnId} from "@/api/sys/process/";
 import initXml from "@/assets/bpmn/init.bpmn20.xml?raw"
+import {Connection, ElementRegistry, FormalExpression} from "bpmn-js";
 
 const route = useRoute()
 const bpmnId = Number(route.params.bpmnId)
@@ -105,7 +107,7 @@ function handleCollapsePanel() {
 }
 
 const canvas = shallowRef<HTMLDivElement>()
-const scale = ref<number>(1)
+const scale = ref<number>(100)
 const bpmnModeler = shallowRef<BpmnModeler>()
 const boundPages = ref<ProcessModelNodePageView[]>([])
 const selectedElem = shallowRef()
@@ -142,7 +144,7 @@ async function init() {
   })
 
   // 元素变更
-  bpmnModeler.value.on("element.changed", e => {
+  bpmnModeler.value.on("element.changed",  e => {
     console.info("element.change", e)
     const { element } = e
     if (element.type === 'bpmn:SequenceFlow') {
@@ -189,7 +191,7 @@ async function createNewDiagram(xml: string) {
     console.log(warnings);
     const canvas = bpmnModeler.value.get('canvas')
     canvas.zoom("fit-viewport", true);
-    canvas.zoom(scale.value);
+    canvas.zoom(Math.ceil(scale.value / 100));
 
     console.log("elementRegistry", bpmnModeler.value.get("elementRegistry"))
     console.log("elem all", bpmnModeler.value.get("elementRegistry").getAll())
@@ -231,13 +233,13 @@ function handleCheckBPMN() {
 }
 
 function checkBPMN(): boolean {
-  const registry = bpmnModeler.value.get("elementRegistry")
+  const registry = bpmnModeler.value.get("elementRegistry") as ElementRegistry
   const userTasks = registry.filter(it => it.type === 'bpmn:UserTask' && it.outgoing.length > 1)
   console.log('userTasks', userTasks)
   const modeling = bpmnModeler.value.get('modeling');
   let result = true
   for (let userTask of userTasks) {
-    const outgoings = userTask.outgoing
+    const outgoings = userTask.outgoing as Connection[]
     for (let outgoing of outgoings) {
       const name = outgoing?.businessObject?.name
       if (!name) {
@@ -255,7 +257,7 @@ function checkBPMN(): boolean {
 
       if (!outgoing?.businessObject?.conditionExpression && name) {
         const bpmnFactory = bpmnModeler.value.get("bpmnFactory")
-        const expression = bpmnFactory.create('bpmn:FormalExpression');
+        const expression = bpmnFactory.create('bpmn:FormalExpression') as FormalExpression
         expression.body = '${outcome == "' + name + '"}'
         const modeling = bpmnModeler.value.get("modeling")
         modeling.updateProperties(outgoing, {
@@ -269,16 +271,14 @@ function checkBPMN(): boolean {
 
 function handleZoomExpand() {
   const canvas = bpmnModeler.value.get('canvas')
-  scale.value = scale.value + 0.1
-  canvas.zoom(scale.value);
-  // const newScale = !radio ? 1.0 : this.scale + radio;
-  // this.bpmnModeler.get("canvas").zoom(newScale);
+  scale.value = scale.value + 10
+  canvas.zoom(scale.value / 100);
 }
 
 function handleZoomShrink() {
   const canvas = bpmnModeler.value.get('canvas')
-  scale.value = scale.value - 0.1
-  canvas.zoom(scale.value);
+  scale.value = scale.value - 10
+  canvas.zoom(scale.value / 100);
 }
 
 async function handleUpdateBpmnXML() {
@@ -309,22 +309,6 @@ async function handleSaveXml() {
       return
     }
 
-    previewVisible.value = false
-    await ProcessModelApi.persistProcessModelXML(bpmnId, xml)
-    ElMessage.success("保存成功")
-  } catch (e) {
-    console.error(e)
-    ElMessage.error(e?.message || '保存失败')
-  }finally {
-
-  }
-}
-
-async function handleSaveXml() {
-  const text = editorRef.value.view.state.doc.toString()
-  try {
-    await createNewDiagram(text)
-    const { xml } = await bpmnModeler.value.saveXML({ format: false });
     previewVisible.value = false
     await ProcessModelApi.persistProcessModelXML(bpmnId, xml)
     ElMessage.success("保存成功")

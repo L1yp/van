@@ -87,14 +87,18 @@ export default defineComponent({
   margin-top: 10px;
 }
 
-:deep(.el-form-item__label) {
-  border-top: 1px solid #ebeef5;
-  border-bottom: 1px solid #ebeef5;
-}
+/*:deep(.el-form-item__label) {*/
+/*  border-top: 1px solid #ebeef5;*/
+/*  border-bottom: 1px solid #ebeef5;*/
+/*}*/
 
-:deep(.el-form-item__content) {
-  border-top: 1px solid #ebeef5;
-  border-bottom: 1px solid #ebeef5;
+/*:deep(.el-form-item__content) {*/
+/*  border-top: 1px solid #ebeef5;*/
+/*  border-bottom: 1px solid #ebeef5;*/
+/*}*/
+
+:deep(.el-select) {
+  width: 100%;
 }
 
 </style>

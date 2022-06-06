@@ -54,6 +54,7 @@ import * as ProcessModelApi from "@/api/sys/process";
 import { dayjs } from "element-plus";
 import {toReadableDuration} from "@/utils/common";
 import bpmnXml from "@/assets/bpmn/budget-change.bpmn20.xml?raw"
+import { ElementRegistry } from "bpmn-js";
 
 const canvasRef = shallowRef<HTMLDivElement>()
 const viewer = shallowRef<BpmnViewer>()
@@ -226,14 +227,10 @@ function coloring() {
 
   canvas.addMarker(processInfo.value.current_node_key, 'highlight-current')
 
-  const registry = viewer.value.get('elementRegistry')
+  const registry = viewer.value.get('elementRegistry') as ElementRegistry
 
-  const flows = registry.filter(it => it.type === 'bpmn:SequenceFlow' && it.businessObject?.conditionExpression)
+  registry.filter(it => it.type === 'bpmn:SequenceFlow' && !!it.businessObject?.conditionExpression)
     .forEach(it => canvas.addMarker(it.id, 'conditional-flow'))
-
-
-
-  console.log('flows', flows)
 }
 
 const hoverElem = shallowRef<HTMLElement>()
