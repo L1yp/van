@@ -76,6 +76,10 @@ import XmlEditor from "@/components/common/XmlEditor.vue"
 import * as ProcessModelApi from "@/api/sys/process/"
 import initXml from "@/assets/bpmn/init.bpmn20.xml?raw"
 import {Connection, ElementRegistry, FormalExpression} from "bpmn-js";
+<<<<<<< HEAD
+import {SaveXMLResult} from "bpmn-js/lib/BaseViewer";
+=======
+>>>>>>> abe1e4b666ccae29650adbc6c6c917720555fee0
 
 const route = useRoute()
 const bpmnId = Number(route.params.bpmnId)
@@ -221,7 +225,7 @@ const editorRef = ref<InstanceType<typeof XmlEditor>>()
 const previewVisible = ref<boolean>(false)
 const previewCode = ref("")
 async function handleViewBPMNXML() {
-  const { xml } = await bpmnModeler.value.saveXML({ format: true });
+  const { xml } = await bpmnModeler.value.saveXML({ format: true }) as SaveXMLResult
   // console.log("export xml", xml)
   previewCode.value = xml
   previewVisible.value = true
@@ -288,7 +292,7 @@ async function handleUpdateBpmnXML() {
       ElMessage.error('BPMN结构尚未完成, 请在红线上填写标题')
       return
     }
-    const { xml } = await bpmnModeler.value.saveXML({ format: false });
+    const { xml } = await bpmnModeler.value.saveXML({ format: false }) as SaveXMLResult
     await ProcessModelApi.persistProcessModelXML(bpmnId, xml)
     ElMessage.success("保存成功")
   } catch (e) {
@@ -301,7 +305,7 @@ async function handleSaveXml() {
   const text = editorRef.value.view.state.doc.toString()
   try {
     await createNewDiagram(text)
-    const { xml } = await bpmnModeler.value.saveXML({ format: false });
+    const { xml } = await bpmnModeler.value.saveXML({ format: false }) as SaveXMLResult
 
     const success = checkBPMN()
     if (!success) {

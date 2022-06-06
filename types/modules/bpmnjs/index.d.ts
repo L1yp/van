@@ -455,7 +455,7 @@ declare module 'bpmn-js/lib/BaseViewer' {
     preamble?: boolean
   }
 
-  class SaveXMLResult {
+  export class SaveXMLResult {
     xml: string
   }
 
