@@ -167,8 +167,10 @@ declare interface ProcessTaskCompleteParam {
 }
 
 declare interface ProcessTODOTaskView {
-  process_type: string
+  process_type_name: string
   process_id: number
+  task_id: string
+  claim_time: string
   process_key: string
   process_definition_id: string
   process_bpmn_id: number

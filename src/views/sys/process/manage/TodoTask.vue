@@ -14,14 +14,17 @@
         <el-table-column type="index" label="#" width="60"/>
         <el-table-column label="流程类型" prop="process_type" width="150"/>
         <el-table-column label="标题" prop="name" width="300"/>
-        <el-table-column label="发起者" prop="creator.label" width="200">
+        <el-table-column label="发起者" width="200">
           <template #default="scope">
             <user-viewer :data="scope.row.creator"></user-viewer>
           </template>
         </el-table-column>
         <el-table-column label="创建时间" prop="create_time" width="200" align="center"/>
-        <el-table-column fixed="right" label="操作" width="100">
+        <el-table-column fixed="right" label="操作">
           <template #default="scope">
+            <el-button size="small" plain style="vertical-align: middle" v-if="!!scope.row.claim_time" text @click.stop="unclaimTask(scope.row)">
+              <SVGIcon style="width: 1em; height: 1em" name="CurveUpLeft"/><span style="margin-left: 6px">撤回认领</span>
+            </el-button>
             <el-button size="small" plain style="vertical-align: middle" text @click.stop="viewProcess(scope.row)">
               <SVGIcon style="width: 1em; height: 1em" name="View"/><span style="margin-left: 6px">详情</span>
             </el-button>
@@ -56,11 +59,6 @@ const dictInfoTableRef = ref<InstanceType<typeof ElTable>>()
 const dictInfoTableLoading = ref(true)
 const dictInfoTableData = ref<ProcessTODOTaskView[]>([])
 
-const dictInfoTableWidth = computed(() => {
-  const padding = 20;
-  const tableWidth = 1010;
-  return (padding + tableWidth) + "px";
-})
 const dictTableHeight = computed(() => {
   return `calc(${mainHeight.value} - ${theme.value.mainPadding * 2 + 20}px)`
 })
@@ -77,6 +75,19 @@ async function viewProcess(row: ProcessTODOTaskView) {
     }
   })
 }
+
+
+async function unclaimTask(row: ProcessTODOTaskView) {
+  try {
+    await ProcessApi.unclaimTask(row.task_id)
+    await loadTableData()
+    ElMessage.success('撤回成功')
+  } catch (e) {
+    console.error(e)
+    ElMessage.error(e?.message || '认领失败')
+  }
+}
+
 
 async function loadTableData() {
   dictInfoTableLoading.value = true
@@ -99,7 +110,6 @@ function exportDictInfoTable() {}
 
 .dict-info-container {
   box-sizing: border-box;
-  width: v-bind(dictInfoTableWidth);
   background-color: #FFFFFF;
   padding: 10px;
   transition: .3s;

@@ -243,6 +243,16 @@ export function listTodoTask(): Promise<ProcessTODOTaskView[]> {
 }
 
 /**
+ * 获取我的待认领任务
+ */
+export function listUnclaimTask(): Promise<ProcessTODOTaskView[]> {
+  return request<ProcessTODOTaskView[]>({
+    method: 'get',
+    url: '/process/task/candidate/list'
+  })
+}
+
+/**
  * 获取我的待办任务
  */
 export function listMyHistoryTask(): Promise<ProcessTODOTaskView[]> {
@@ -272,5 +282,27 @@ export function bindStartFormPage(data: BindProcessStartFormParam): Promise<void
     method: 'post',
     url: `/process/model/page/start/config`,
     data
+  })
+}
+
+/**
+ * 认领任务
+ */
+export function claimTask(task_id: string): Promise<void> {
+  return request<void>({
+    method: 'post',
+    url: '/process/task/claim',
+    data: { task_id }
+  })
+}
+
+/**
+ * 取消认领任务
+ */
+export function unclaimTask(task_id: string): Promise<void> {
+  return request<void>({
+    method: 'post',
+    url: '/process/task/unclaim',
+    data: { task_id }
   })
 }
