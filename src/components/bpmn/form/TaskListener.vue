@@ -12,9 +12,6 @@
             <el-button size="small" circle><s-v-g-icon name="Info" style="width: 1em; height: 1em"/></el-button>
           </template>
           <el-descriptions title="监听详情" :column="1" border>
-            <el-descriptions-item
-              label="监听名称"
-            >{{scope.row.id}}</el-descriptions-item>
             <el-descriptions-item label="监听类型">
               <el-tag v-text="typeDict[scope.row.type]"></el-tag>
             </el-descriptions-item>

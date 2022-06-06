@@ -38,7 +38,7 @@
       </el-collapse-item>
       <el-collapse-item name="flow-condition" v-show="showConditionSeqFlow">
         <template #title>
-          <s-v-g-icon style="width: 1em; height: 1em" name="Notification" /><span style="margin-left: 6px">流转条件</span>
+          <s-v-g-icon style="width: 1em; height: 1em" name="Branch" /><span style="margin-left: 6px">流转条件</span>
         </template>
         <SeqFlowConfig></SeqFlowConfig>
       </el-collapse-item>

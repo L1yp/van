@@ -76,10 +76,7 @@ import XmlEditor from "@/components/common/XmlEditor.vue"
 import * as ProcessModelApi from "@/api/sys/process/"
 import initXml from "@/assets/bpmn/init.bpmn20.xml?raw"
 import {Connection, ElementRegistry, FormalExpression} from "bpmn-js";
-<<<<<<< HEAD
 import {SaveXMLResult} from "bpmn-js/lib/BaseViewer";
-=======
->>>>>>> abe1e4b666ccae29650adbc6c6c917720555fee0
 
 const route = useRoute()
 const bpmnId = Number(route.params.bpmnId)

@@ -2,7 +2,7 @@
   <el-table
     :data="tableData"
   >
-    <el-table-column prop="event" label="事件" width="80"></el-table-column>
+    <el-table-column prop="event" label="事件" width="80" show-overflow-tooltip></el-table-column>
     <el-table-column prop="type" label="类型" width="80" show-overflow-tooltip></el-table-column>
     <el-table-column prop="val" label="值" width="90" show-overflow-tooltip></el-table-column>
     <el-table-column label="操作">
@@ -12,9 +12,6 @@
             <el-button size="small" circle><s-v-g-icon name="Info" style="width: 1em; height: 1em"/></el-button>
           </template>
           <el-descriptions size="small" title="监听详情" :column="1" border>
-            <el-descriptions-item
-              label="监听名称"
-            >{{scope.row.id}}</el-descriptions-item>
             <el-descriptions-item label="监听类型">
               <el-tag v-text="typeDict[scope.row.type]"></el-tag>
             </el-descriptions-item>
@@ -41,9 +38,6 @@ import {ElTable, ElTableColumn, ElPopover, ElDescriptions, ElDescriptionsItem, E
 import SVGIcon from "@/components/common/SVGIcon.vue"
 import {bpmnModelerKey, bpmnSelectedElemKey, propertyPanelOpenKey} from "@/config/app.keys";
 
-/**
- * <activiti:executionListener class="org.jeecg.modules.extbpm.listener.execution.ProcessEndListener" event="start" id="fkc68BdFdr6s3azj" />
- */
 interface ExecListenerModel {
   id: string;
   event: string;
@@ -103,14 +97,7 @@ watch(bpmnSelectedElem, () => {
 })
 
 
-const tableData = ref<ExecListenerModel[]>([
-  {
-    id: "平台通用流程结束监听",
-    event: "end",
-    type: "class",
-    val: "org.jeecg.modules.extbpm.listener.execution.ProcessEndListener",
-  }
-])
+const tableData = ref<ExecListenerModel[]>([])
 
 const typeDict = {
   class: "类",
