@@ -26,7 +26,7 @@
         <el-button type="primary" @click="handleZoomShrink" title="缩小" :disabled="scale <= 10">
           <s-v-g-icon name="Subtract" style="width: 1em; height: 1em"/>
         </el-button>
-        <el-button type="primary" @click="handleZoomExpand">
+        <el-button type="primary" @click="handleZoomReset">
           {{ scale + '%' }}
         </el-button>
         <el-button type="primary" @click="handleZoomExpand" title="放大">
@@ -80,12 +80,10 @@ import * as ProcessModelApi from "@/api/sys/process/"
 import initXml from "@/assets/bpmn/init.bpmn20.xml?raw"
 import {Connection, ElementRegistry, FormalExpression} from "bpmn-js";
 import {SaveXMLResult} from "bpmn-js/lib/BaseViewer";
-import FlowableExtensionModdle from "@/assets/flowable/extension";
 import { useFullscreen } from '@vueuse/core'
 
 const container = ref<HTMLElement | null>(null)
-
-const { isFullscreen, enter, exit, toggle } = useFullscreen(container)
+const { isFullscreen, enter, exit, toggle } = useFullscreen(container.value)
 function reqFullscreen() {
   toggle()
 }
@@ -145,7 +143,6 @@ async function init() {
         zoomScroll: ["value", ""],
 
       },
-      FlowableExtensionModdle
     ],
     moddleExtensions: {
       flowable: flowable_descriptor
@@ -282,6 +279,12 @@ function checkBPMN(): boolean {
     }
   }
   return result
+}
+
+function handleZoomReset() {
+  const canvas = bpmnModeler.value.get('canvas')
+  scale.value = 100
+  canvas.zoom(scale.value / 100);
 }
 
 function handleZoomExpand() {
