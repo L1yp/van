@@ -14,11 +14,11 @@
 <script lang="ts" setup>
 // TODO: 设置 连线类型：默认流转 条件流程 无
 import {ref, watch, inject, toRaw} from "vue"
-import { ElInput } from "element-plus"
+import {ElInput} from "element-plus"
 import {bpmnModelerKey, bpmnSelectedElemKey, propertyPanelOpenKey} from "@/config/app.keys";
 
 const expression = ref("")
-const orderNo = ref<number>(0)
+const orderNo = ref<string>('')
 
 const innerWidth = "360px"
 const labelWidth = "60px"
@@ -36,7 +36,34 @@ watch(bpmnSelectedElem, () => {
     return
   }
   expression.value = bo?.conditionExpression?.body
-  orderNo.value = bo?.$attrs['flowable:order']
+
+  let hasOrder = false
+  if (bo.extensionElements) {
+    const items = bo.extensionElements.values
+    outer:
+      for (let item of items) {
+        console.log('extensionElement', item)
+        if (item.$type === 'flowable:Properties') {
+          const values = item.values
+          if (values && values.length > 0) {
+            for (let child of values) {
+              if (child.$type === 'flowable:Property') {
+                if (child.name === 'order') {
+                  orderNo.value = child.value
+                  hasOrder = true
+                  break outer
+                }
+              }
+            }
+          }
+        }
+      }
+  }
+
+  if (!hasOrder) {
+    orderNo.value = ''
+  }
+
   propertyPanelOpen("flow-condition")
 })
 
@@ -55,13 +82,71 @@ function handleInputChange(val: string) {
 
 function handleOrderNoInputChange(val: string) {
   const selectedElem = toRaw(bpmnSelectedElem.value)
-
   const modeling = bpmnModeler.value.get("modeling")
+  const factory = bpmnModeler.value.get("bpmnFactory")
+  const moddle = bpmnModeler.value.get("moddle")
+
+  const bo = selectedElem.businessObject
+  if (!bo.extensionElements) {
+    bo.extensionElements = factory.create("bpmn:ExtensionElements")
+  }
+
+  let properties = undefined
+  if (!bo.extensionElements?.values) {
+    bo.extensionElements.values = []
+  }
+
+  const items = bo.extensionElements?.values
+  for (let item of items) {
+    if (item.$type === 'flowable:Properties') {
+      properties = item
+      const children = item.values
+      if (children && children.length > 0) {
+        for (let child of children) {
+          if (child.$type === 'flowable:Property') {
+            if (child.name === 'order') {
+              modeling.updateModdleProperties(selectedElem, child, {
+                value: val
+              })
+              return
+            }
+          }
+        }
+      }
+    }
+  }
+
+  if (!properties) {
+    const otherExtensions = items
+
+    const property = moddle.create("flowable:Property", {
+      name: 'order',
+      value: val
+    })
+    properties = moddle.create("flowable:Properties", {
+      values: [property]
+    })
+
+    modeling.updateModdleProperties(selectedElem, bo.extensionElements, {
+      values: items.concat(properties)
+    })
+  } else {
+    const property = moddle.create("flowable:Property", {
+      name: 'order',
+      value: val
+    })
+    const oldValues = properties.values
+
+    modeling.updateModdleProperties(selectedElem, properties, {
+      values: oldValues.concat(property)
+    })
+
+  }
+
   modeling.updateProperties(selectedElem, {
-    'flowable:order': val
+    extensionElements: bo.extensionElements
   })
 }
-
 
 
 </script>

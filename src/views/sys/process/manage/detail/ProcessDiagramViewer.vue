@@ -31,10 +31,11 @@
     <el-descriptions size="small" :column="2" border>
       <template v-for="item in assigneeInfo">
         <el-descriptions-item label="用户" label-align="left">
-          <span v-text="item?.user_info?.label"></span>
+          <span v-if="!item.user_info">待认领</span>
+          <user-viewer v-if="!!item.user_info" :data="item.user_info"></user-viewer>
         </el-descriptions-item>
         <el-descriptions-item label="操作" label-align="left">
-          <span v-text="item?.state"></span>
+          <el-tag v-text="item?.state"></el-tag>
         </el-descriptions-item>
       </template>
     </el-descriptions>
@@ -43,7 +44,7 @@
 
 <script lang="ts" setup>
 import {ref, computed, shallowRef, onMounted, inject, onUpdated, toRaw, watch,} from "vue"
-import { ElTable, ElTableColumn, ElPopover, ElScrollbar, ElDescriptions, ElDescriptionsItem } from "element-plus"
+import { ElTable, ElTableColumn, ElPopover, ElScrollbar, ElDescriptions, ElDescriptionsItem, ElTag } from "element-plus"
 import BpmnViewer from 'bpmn-js/lib/NavigatedViewer'
 import {asideWidthKey, mainHeightKey, processInstanceDetailInfoKey, themeKey} from "@/config/app.keys";
 import 'bpmn-js/dist/assets/diagram-js.css';
@@ -54,7 +55,8 @@ import * as ProcessModelApi from "@/api/sys/process";
 import { dayjs } from "element-plus";
 import {toReadableDuration} from "@/utils/common";
 import bpmnXml from "@/assets/bpmn/budget-change.bpmn20.xml?raw"
-import { ElementRegistry } from "bpmn-js";
+import { ElementRegistry } from "bpmn-js"
+import UserViewer from "@/components/common/viewer/user/UserViewer.vue";
 
 const canvasRef = shallowRef<HTMLDivElement>()
 const viewer = shallowRef<BpmnViewer>()
@@ -269,14 +271,9 @@ const assigneeInfo = computed<AssigneeInfo[]>(() => {
   }
 
 
-  const countMap = new Map<string, number>()
-  for (let i = 0; i < items.length; i++) {
-
-  }
-
   return items.map(it => {
     return {
-      user_info: it.assignee,
+      user_info: it.assignee ,
       state: it.end_time ? it.outcome : '待处理'
     } as AssigneeInfo
   })

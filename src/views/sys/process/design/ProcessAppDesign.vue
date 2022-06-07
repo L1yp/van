@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" ref="container">
     <div id="canvas" ref="canvas"></div>
     <div class="property-panel-container">
       <property-panel
@@ -19,6 +19,9 @@
       <el-button-group>
         <el-button type="primary" @click="handleViewBPMNXML" title="预览XML">
           <s-v-g-icon name="View" style="width: 1em; height: 1em"/>
+        </el-button>
+        <el-button type="primary" @click="reqFullscreen" title="全屏">
+          <s-v-g-icon :name="isFullscreen ? 'FullScreenMinimize' : 'FullScreenMaximize'" style="width: 1em; height: 1em"/>
         </el-button>
         <el-button type="primary" @click="handleZoomShrink" title="缩小" :disabled="scale <= 10">
           <s-v-g-icon name="Subtract" style="width: 1em; height: 1em"/>
@@ -55,7 +58,7 @@
 import BpmnModeler from "bpmn-js/lib/Modeler"
 import {useRoute} from "vue-router";
 import {computed, inject, onBeforeMount, onMounted, provide, readonly, ref, ShallowRef, shallowRef} from "vue";
-import flowable_descriptor from "@/assets/flowable/descriptor.json?raw"
+import flowable_descriptor from "@/assets/flowable/descriptor.json"
 import {ElMessage, ElScrollbar, ElButtonGroup, ElButton} from "element-plus";
 import {
   asideWidthKey,
@@ -77,6 +80,16 @@ import * as ProcessModelApi from "@/api/sys/process/"
 import initXml from "@/assets/bpmn/init.bpmn20.xml?raw"
 import {Connection, ElementRegistry, FormalExpression} from "bpmn-js";
 import {SaveXMLResult} from "bpmn-js/lib/BaseViewer";
+import FlowableExtensionModdle from "@/assets/flowable/extension";
+import { useFullscreen } from '@vueuse/core'
+
+const container = ref<HTMLElement | null>(null)
+
+const { isFullscreen, enter, exit, toggle } = useFullscreen(container)
+function reqFullscreen() {
+  toggle()
+}
+
 
 const route = useRoute()
 const bpmnId = Number(route.params.bpmnId)
@@ -86,11 +99,11 @@ const asideWidth = inject(asideWidthKey)
 const loading = ref(false)
 
 const containerHeight = computed(() => {
-  return `calc(${mainHeight.value} - 40px)`
+  return isFullscreen.value ? '100vh' : `calc(${mainHeight.value} - 40px)`
 })
 
 const panelHeight = computed(() => {
-  return `calc(${containerHeight.value} - 40px - 40px)`
+  return isFullscreen.value ? '100vh' : `calc(${containerHeight.value} - 40px - 40px)`
 })
 
 const containerWidth = computed(() => {
@@ -131,11 +144,12 @@ async function init() {
         // 禁用滚轮滚动
         zoomScroll: ["value", ""],
 
-      }
+      },
+      FlowableExtensionModdle
     ],
     moddleExtensions: {
       flowable: flowable_descriptor
-    }
+    },
   })
 
   // 选中元素变更

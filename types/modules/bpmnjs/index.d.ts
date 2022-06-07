@@ -487,11 +487,11 @@ declare module 'bpmn-js/lib/BaseViewer' {
 
   type BaseViewOptions = {
     container: HTMLElement
-    width: string | number
-    height: string | number
-    moddleExtensions: object
-    modules: any[]
-    additionalModules: any[]
+    width?: string | number
+    height?: string | number
+    moddleExtensions?: object
+    modules?: any[]
+    additionalModules?: any[]
   }
 
 }
