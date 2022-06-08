@@ -30,7 +30,7 @@
           </template>
         </el-table-column>
         <el-table-column label="更新时间" prop="update_time" width="200"/>
-        <el-table-column fixed="right" label="操作" width="300">
+        <el-table-column fixed="right" label="操作">
           <template #default="scope">
             <template v-if="scope.row.children && scope.row.children.length > 0">
               <el-button size="small" plain style="vertical-align: middle" text @click.stop="fieldConfig(scope.row)">
@@ -156,11 +156,6 @@ const tableRef = ref<InstanceType<typeof ElTable>>()
 const tableLoading = ref(true)
 const tableData = ref<ProcessModelTreeView[]>([])
 
-const tableWidth = computed(() => {
-  const padding = 20;
-  const tableWidth = 1180;
-  return (padding + tableWidth) + "px";
-})
 const tableHeight = computed(() => {
   return `calc(${mainHeight.value} - ${theme.value.mainPadding * 2 + 42 + 20}px)`
 })
@@ -312,7 +307,6 @@ function exportDictInfoTable() {}
 <style scoped>
 .dict-info-container {
   box-sizing: border-box;
-  width: v-bind(tableWidth);
   background-color: #FFFFFF;
   padding: 10px;
   transition: .3s;

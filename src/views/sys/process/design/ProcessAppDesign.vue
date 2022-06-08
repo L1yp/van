@@ -1,5 +1,5 @@
 <template>
-  <div class="container" ref="container">
+  <div class="container">
     <div id="canvas" ref="canvas"></div>
     <div class="property-panel-container">
       <property-panel
@@ -19,9 +19,6 @@
       <el-button-group>
         <el-button type="primary" @click="handleViewBPMNXML" title="预览XML">
           <s-v-g-icon name="View" style="width: 1em; height: 1em"/>
-        </el-button>
-        <el-button type="primary" @click="reqFullscreen" title="全屏">
-          <s-v-g-icon :name="isFullscreen ? 'FullScreenMinimize' : 'FullScreenMaximize'" style="width: 1em; height: 1em"/>
         </el-button>
         <el-button type="primary" @click="handleZoomShrink" title="缩小" :disabled="scale <= 10">
           <s-v-g-icon name="Subtract" style="width: 1em; height: 1em"/>
@@ -67,7 +64,7 @@ import {
   mainHeightKey,
   updatePropertyKey,
   processModelFieldKey,
-  processNodePageListKey
+  processNodePageListKey, mainWidthKey
 } from "@/config/app.keys";
 import 'bpmn-js/dist/assets/diagram-js.css';
 import 'bpmn-js/dist/assets/bpmn-font/css/bpmn.css';
@@ -82,30 +79,24 @@ import {Connection, ElementRegistry, FormalExpression} from "bpmn-js";
 import {SaveXMLResult} from "bpmn-js/lib/BaseViewer";
 import { useFullscreen } from '@vueuse/core'
 
-const container = ref<HTMLElement | null>(null)
-const { isFullscreen, enter, exit, toggle } = useFullscreen(container.value)
-function reqFullscreen() {
-  toggle()
-}
-
-
 const route = useRoute()
 const bpmnId = Number(route.params.bpmnId)
 const processKey = route.query.processKey as string
 const mainHeight = inject(mainHeightKey)
 const asideWidth = inject(asideWidthKey)
+const mainWidth = inject(mainWidthKey)
 const loading = ref(false)
 
 const containerHeight = computed(() => {
-  return isFullscreen.value ? '100vh' : `calc(${mainHeight.value} - 40px)`
+  return `calc(${mainHeight.value} - 40px)`
 })
 
 const panelHeight = computed(() => {
-  return isFullscreen.value ? '100vh' : `calc(${containerHeight.value} - 40px - 40px)`
+  return `calc(${containerHeight.value} - 40px - 40px)`
 })
 
 const containerWidth = computed(() => {
-  return `calc(100vw - ${asideWidth.value} - 40px)`
+  return `calc(${mainWidth.value} - 40px)`
 })
 
 const panelWidth = computed(() => collapsed.value ? "40px" : "400px")

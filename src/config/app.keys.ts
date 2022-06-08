@@ -1,5 +1,6 @@
 import {ComputedRef, InjectionKey, Ref, ShallowRef} from "vue";
 
+const mainWidthKey = Symbol("mainWidthKey") as InjectionKey<ComputedRef<string>>
 const mainHeightKey = Symbol("mainHeight") as InjectionKey<ComputedRef<string>>
 const asideWidthKey = Symbol("asideWidth") as InjectionKey<ComputedRef<string>>
 const asideCollapsedKey = Symbol("asideCollapsed") as InjectionKey<Ref<boolean>>
@@ -16,11 +17,13 @@ const propertyPanelOpenKey = Symbol("propertyPanelOpenKey") as InjectionKey<Func
 const processModelFieldKey = Symbol("processModelFieldKey") as InjectionKey<ShallowRef<ProcessFieldDefinition[]>>
 const processInstanceDetailInfoKey = Symbol("processInstanceDetailInfoKey") as InjectionKey<Ref<ProcessInstanceInfoView>>
 const processNodePageListKey = Symbol("processNodePageListKey") as InjectionKey<ShallowRef<ProcessModelNodePageView[]>>
+const pageFullScreenKey = Symbol("pageFullScreenKey") as InjectionKey<Ref<boolean>>
 
 
 
 
 export {
+  mainWidthKey,
   mainHeightKey,
   asideWidthKey,
   asideCollapsedKey,
@@ -37,4 +40,5 @@ export {
   processModelFieldKey,
   processInstanceDetailInfoKey,
   processNodePageListKey,
+  pageFullScreenKey,
 }

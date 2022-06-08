@@ -315,7 +315,6 @@ const marginLeft = "10px"
 
 const dictValueTableWidth = computed(() => {
   return `780px`;
-  // return `calc(100vw - ${asideWidth.value} - ${theme.value.mainPadding * 2}px - ${dictInfoTableWidth.value} - ${marginLeft})`;
 })
 
 const dictTableHeight = computed(() => {

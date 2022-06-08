@@ -1,6 +1,6 @@
 <template>
   <div class="viewer-container">
-    <div>
+    <div :style="diagramViewFullScreen ? {display: 'none'} : undefined">
       <el-table
         v-loading="tableLoading"
         :height="tableHeight"
@@ -17,9 +17,23 @@
         <el-table-column prop="duration" label="时长"></el-table-column>
       </el-table>
     </div>
-    <el-scrollbar :height="viewerHeight" always>
-      <div ref="canvasRef" style="width: 100%; height: 1000px"></div>
-    </el-scrollbar>
+    <div class="diagram-view">
+      <div class="tool-bar">
+        <el-button-group>
+          <el-button @click="handleZoomShrink" :disabled="disabledShrink" title="缩小">
+            <s-v-g-icon name="Subtract" style="width: 1em; height: 1em"/>
+          </el-button>
+          <el-button  @click="handleZoomReset">{{ ((scale || 1) * 100).toFixed(2) + '%' }}</el-button>
+          <el-button  @click="handleZoomExpand" title="放大">
+            <s-v-g-icon name="Plus" style="width: 1em; height: 1em"/>
+          </el-button>
+          <el-button  @click="handleFullScreen" title="全屏">
+            <s-v-g-icon :name="diagramViewFullScreen ? 'FullScreenMinimize' : 'FullScreenMaximize'" style="width: 1em; height: 1em"/>
+          </el-button>
+        </el-button-group>
+      </div>
+      <div ref="canvasRef" :style="{width: '100%', height: viewerHeight}"></div>
+    </div>
   </div>
   <el-popover
     :virtual-ref="hoverElem"
@@ -44,7 +58,7 @@
 
 <script lang="ts" setup>
 import {ref, computed, shallowRef, onMounted, inject, onUpdated, toRaw, watch,} from "vue"
-import { ElTable, ElTableColumn, ElPopover, ElScrollbar, ElDescriptions, ElDescriptionsItem, ElTag } from "element-plus"
+import { ElTable, ElTableColumn, ElPopover, ElScrollbar, ElDescriptions, ElDescriptionsItem, ElTag, ElButtonGroup, ElButton } from "element-plus"
 import BpmnViewer from 'bpmn-js/lib/NavigatedViewer'
 import {asideWidthKey, mainHeightKey, processInstanceDetailInfoKey, themeKey} from "@/config/app.keys";
 import 'bpmn-js/dist/assets/diagram-js.css';
@@ -52,11 +66,12 @@ import 'bpmn-js/dist/assets/bpmn-font/css/bpmn.css';
 import 'bpmn-js/dist/assets/bpmn-font/css/bpmn-codes.css';
 import 'bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css';
 import * as ProcessModelApi from "@/api/sys/process";
-import { dayjs } from "element-plus";
 import {toReadableDuration} from "@/utils/common";
-import bpmnXml from "@/assets/bpmn/budget-change.bpmn20.xml?raw"
 import { ElementRegistry } from "bpmn-js"
 import UserViewer from "@/components/common/viewer/user/UserViewer.vue";
+import {useIcon} from "@/components/common/util";
+import {InternalEvent} from "diagram-js/lib/core/EventBus";
+import SVGIcon from "@/components/common/SVGIcon.vue";
 
 const canvasRef = shallowRef<HTMLDivElement>()
 const viewer = shallowRef<BpmnViewer>()
@@ -111,6 +126,14 @@ const tableData = computed<TableModel[]>(() => {
   return elems
 })
 
+const scale = ref<number>(1)
+const disabledShrink = computed<boolean>(() => {
+  if (!!scale.value) {
+    return scale.value <= 0.1
+  } else {
+    return false
+  }
+})
 onMounted(() => initViewer())
 
 async function initViewer() {
@@ -124,6 +147,15 @@ async function initViewer() {
       container: canvasRef.value,
     })
 
+    viewer.value.on('canvas.viewbox.changed', function (ev: InternalEvent, data: any) {
+      console.log('canvas.viewbox.changed', data.viewbox.scale)
+      if (data.viewbox.scale) {
+        scale.value = data.viewbox.scale
+      } else {
+        scale.value = 1
+      }
+    })
+
     await initViewerDiagram(bpmn.content)
 
   } catch (e) {
@@ -131,6 +163,34 @@ async function initViewer() {
   }
 
 
+}
+
+function handleZoomReset() {
+  const canvas = viewer.value.get('canvas')
+  scale.value = 1
+  canvas.zoom(1);
+}
+
+function handleZoomExpand() {
+  const canvas = viewer.value.get('canvas')
+  scale.value = scale.value + 0.1
+  canvas.zoom(scale.value);
+}
+
+function handleZoomShrink() {
+  const canvas = viewer.value.get('canvas')
+  scale.value = scale.value - 0.1
+  canvas.zoom(scale.value);
+}
+
+const diagramViewFullScreen = ref<boolean>(false)
+function handleFullScreen() {
+  diagramViewFullScreen.value = !diagramViewFullScreen.value
+  if (diagramViewFullScreen.value) {
+
+  } else {
+
+  }
 }
 
 async function initViewerDiagram(xml: string) {
@@ -147,6 +207,8 @@ async function initViewerDiagram(xml: string) {
   }
 
   const canvas2 = viewer.value.get("canvas");
+  console.log('canvas2', canvas2)
+  console.log(canvas2.zoom())
   canvas2.zoom("fit-viewport", true);
 
   tableLoading.value = true
@@ -289,13 +351,14 @@ const theme = inject(themeKey);
 const contentHeight = computed(() => {
   return `calc(${mainHeight.value} - ${theme.value.mainPadding * 2 + 42 + 30}px)`
 })
-const contentWidth = computed(() => {
-  return `calc(100vw - ${asideWidth.value} - ${theme.value.mainPadding * 2}px - 100px)`
-})
 
 const tableHeight = 300
 const viewerHeight = computed(() => {
-  return `calc(${contentHeight.value} - ${tableHeight}px)`
+  if (diagramViewFullScreen.value) {
+    return contentHeight.value
+  } else {
+    return `calc(${contentHeight.value} - ${tableHeight}px)`
+  }
 })
 </script>
 
@@ -307,6 +370,17 @@ const viewerHeight = computed(() => {
 .viewer-container {
   height: v-bind(contentHeight);
   position: relative;
+}
+
+.diagram-view {
+  position: relative;
+}
+
+.tool-bar {
+  position: absolute;
+  left: 30px;
+  top: 10px;
+  z-index: 101;
 }
 
 :deep(.highlight-red .djs-visual > :nth-child(1)) {

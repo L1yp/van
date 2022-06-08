@@ -102,6 +102,16 @@ div.tag.active:hover div.close-tag svg:hover {
   color: #f7f8f9;
 }
 
+div.tag div.close-tag:hover svg {
+  background-color: #c0c4cc;
+  color: #f7f8f9;
+}
+
+div.tag.active div.close-tag:hover svg {
+  background-color: #409eff;
+  color: #f7f8f9;
+}
+
 div.tag div.close-tag {
   box-sizing: border-box;
 }

@@ -1,24 +1,34 @@
 <template>
   <el-container>
-    <el-aside :width="asideWidth">
+    <el-aside :width="asideWidth" :style="pageScreen ? { display: 'none' } : undefined">
       <aside-bar></aside-bar>
     </el-aside>
     <el-container>
-      <el-header>
+      <el-header :style="pageScreen ? { display: 'none' } : undefined">
         <header-bar/>
       </el-header>
-      <tag-bar/>
-      <el-main>
-        <router-view/>
+      <tag-bar :style="pageScreen ? { display: 'none' } : undefined"/>
+      <el-main style="position: relative">
+        <el-scrollbar :height="mainHeight">
+          <router-view/>
+        </el-scrollbar>
+        <div
+          v-show="pageScreen"
+          style="position: absolute; right: 0; top: 0; width: 30px; height: 30px; border-bottom-left-radius: 100%; background-color: #FFFFFF; cursor: pointer"
+          title="关闭全屏"
+          @click.stop="cancelPageScreen"
+        >
+          <s-v-g-icon class="close-page-full-screen" name="close" style="width: 16px; height: 16px; position: absolute; left: 10px; top: 4px"></s-v-g-icon>
+        </div>
       </el-main>
-      <el-footer></el-footer>
+      <el-footer :style="pageScreen ? { display: 'none' } : undefined"></el-footer>
     </el-container>
   </el-container>
 </template>
 
 <script lang="ts" setup>
 import {computed, provide, Ref, ref, watch} from "vue"
-import {ElContainer, ElHeader, ElAside, ElMain, ElFooter} from "element-plus"
+import {ElContainer, ElHeader, ElAside, ElMain, ElFooter, ElScrollbar} from "element-plus"
 import Theme from "../config/theme"
 import {HeaderBar} from "./components/header"
 import {AsideBar} from "./components/aside"
@@ -28,8 +38,9 @@ import {
   mainHeightKey,
   asideWidthKey,
   asideCollapsedKey,
-  themeKey,
+  themeKey, mainWidthKey, pageFullScreenKey,
 } from "@/config/app.keys"
+import SVGIcon from "@/components/common/SVGIcon.vue";
 
 const asideCollapsed: Ref<boolean> = ref(false);
 provide(asideCollapsedKey, asideCollapsed);
@@ -42,7 +53,18 @@ provide(asideWidthKey, asideWidth);
 const theme = ref<ThemeConfig>(Theme)
 provide(themeKey, theme)
 
+const mainWidth = computed<string>(() => {
+  if (pageScreen.value) {
+    return'100vw'
+  }
+  return `calc(100vw - ${asideWidth.value})`;
+})
+provide(mainWidthKey, mainWidth);
+
 const mainHeight = computed<string>(() => {
+  if (pageScreen.value) {
+    return '100vh'
+  }
   return `calc(100vh - ${theme.value.headerHeight + theme.value.tagBarHeight+ theme.value.footerHeight}px)`;
 })
 provide(mainHeightKey, mainHeight);
@@ -52,7 +74,13 @@ const headerHeight = computed(() => `${theme.value.headerHeight}px`)
 const footerHeight = computed(() => `${theme.value.footerHeight}px`)
 const mainPadding = computed(() => `${theme.value.mainPadding}px`)
 const footerPadding = computed(() => `${theme.value.footerPadding}px`)
-const tagBarHeight = computed(() => `${theme.value.tagBarHeight}px`)
+
+const pageScreen = ref<boolean>(false)
+provide(pageFullScreenKey, pageScreen)
+
+function cancelPageScreen() {
+  pageScreen.value = false
+}
 
 
 </script>
@@ -83,8 +111,8 @@ const tagBarHeight = computed(() => `${theme.value.tagBarHeight}px`)
 
 .el-main {
   --el-main-padding: v-bind(mainPadding);
-  width: calc(100vw - v-bind(asideWidth));
-  height: calc(100vh - v-bind(headerHeight) - v-bind(footerHeight) - v-bind(tagBarHeight));
+  width: v-bind(mainWidth);
+  height: v-bind(mainHeight);
 
 }
 
@@ -93,7 +121,9 @@ const tagBarHeight = computed(() => `${theme.value.tagBarHeight}px`)
   height: v-bind(footerHeight);
 }
 
-
+.close-page-full-screen:hover{
+  color: blue
+}
 
 
 
