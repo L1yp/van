@@ -9,9 +9,7 @@
       </el-header>
       <tag-bar :style="pageScreen ? { display: 'none' } : undefined"/>
       <el-main style="position: relative">
-        <el-scrollbar :height="mainHeight">
-          <router-view/>
-        </el-scrollbar>
+        <router-view/>
         <div
           v-show="pageScreen"
           style="position: absolute; right: 0; top: 0; width: 30px; height: 30px; border-bottom-left-radius: 100%; background-color: #FFFFFF; cursor: pointer"

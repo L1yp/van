@@ -1,136 +1,137 @@
 <template>
 
-  <splitpanes class="default-theme" style="height: 100%">
-    <pane size="15" min-size="15" max-size="30">
-      <div class="dept-aside">
-        <el-scrollbar :height="deptTreeHeight" style="background-color: #fff">
-          <el-tree style="height: 100%; overflow: auto" :default-expand-all="true" v-loading="treeLoading" :data="deptTreeData" :props="deptTreeProps" @node-click="handleTreeNodeClick" />
-        </el-scrollbar>
+  <div style="display: flex; align-items: flex-start">
+    <div class="dept-aside">
+      <el-scrollbar :height="deptTreeHeight" style="background-color: #fff">
+        <el-tree style="height: 100%; overflow: auto" :default-expand-all="true" v-loading="treeLoading" :data="deptTreeData" :props="deptTreeProps" @node-click="handleTreeNodeClick" />
+      </el-scrollbar>
+    </div>
+    <div class="main-content">
+      <div class="op-line">
+        <el-input
+          style="width: 200px"
+          placeholder="昵称"
+          v-model="nickKey"
+        ></el-input>
+
+        <el-button type="primary" style="vertical-align: middle; margin-left: 12px;">
+          <SVGIcon style="width: 1em; height: 1em" name="Search"/><span style="margin-left: 4px;">搜索</span>
+        </el-button>
+
+        <el-button style="vertical-align: middle; " type="primary" @click="addUser">
+          <SVGIcon style="width: 1em; height: 1em" name="Plus"/><span style="margin-left: 4px;">新增</span>
+        </el-button>
+        <el-popconfirm
+          title="确定删除?"
+          confirmButtonText="确定"
+          cancelButtonText="取消"
+          @confirm="batchDeleteUser"
+        >
+          <template #reference>
+            <el-button plain style="vertical-align: middle" type="danger" :disabled="selectedUsers.length === 0">
+              <SVGIcon style="width: 1em; height: 1em" name="Delete"/><span style="margin-left: 4px;">删除</span>
+            </el-button>
+          </template>
+        </el-popconfirm>
+        <el-button plain style="vertical-align: middle" type="warning" @click="exportUser">
+          <SVGIcon style="width: 1em; height: 1em" name="Download"/><span style="margin-left: 4px;">导出</span>
+
+        </el-button>
       </div>
-    </pane>
-    <pane size="85" min-size="70" max-size="85">
-      <div class="main-content">
-        <div class="op-line">
-          <el-input
-            style="width: 200px"
-            placeholder="昵称"
-            v-model="nickKey"
-          ></el-input>
 
-          <el-button type="primary" style="vertical-align: middle; margin-left: 12px;">
-            <SVGIcon style="width: 1em; height: 1em" name="Search"/><span style="margin-left: 4px;">搜索</span>
-          </el-button>
-
-          <el-button style="vertical-align: middle; " type="primary" @click="addUser">
-            <SVGIcon style="width: 1em; height: 1em" name="Plus"/><span style="margin-left: 4px;">新增</span>
-          </el-button>
-          <el-popconfirm
-            title="确定删除?"
-            confirmButtonText="确定"
-            cancelButtonText="取消"
-            @confirm="batchDeleteUser"
-          >
-            <template #reference>
-              <el-button plain style="vertical-align: middle" type="danger" :disabled="selectedUsers.length === 0">
-                <SVGIcon style="width: 1em; height: 1em" name="Delete"/><span style="margin-left: 4px;">删除</span>
-              </el-button>
+      <div class="data-table">
+        <el-table
+          v-loading="loading"
+          ref="tableRef"
+          :height="dataTableHeight"
+          :data="userData"
+          style="width: 100%"
+          row-key="id"
+          stripe
+          @selection-change="handleSelectionChange"
+          :row-style="{cursor: 'pointer'}"
+          @row-click="handleRowClick"
+        >
+          <el-table-column type="selection" align="center" header-align="center"/>
+          <el-table-column prop="id" label="#"
+                           align="center"
+                           header-align="center"
+                           width="50"
+          />
+          <el-table-column prop="avatar" label="头像" width="80" align="left" header-align="left">
+            <template #default="scope">
+              <el-avatar
+                style="vertical-align: middle"
+                shape="circle"
+                :size="24"
+                fit="cover"
+                :src="scope.row.avatar"
+              >
+              </el-avatar>
             </template>
-          </el-popconfirm>
-          <el-button plain style="vertical-align: middle" type="warning" @click="exportUser">
-            <SVGIcon style="width: 1em; height: 1em" name="Download"/><span style="margin-left: 4px;">导出</span>
-
-          </el-button>
-        </div>
-
-        <div class="data-table">
-          <el-table
-            v-loading="loading"
-            ref="tableRef"
-            :height="dataTableHeight"
-            :data="userData"
-            style="width: 100%"
-            row-key="id"
-            stripe
-            @selection-change="handleSelectionChange"
-            :row-style="{cursor: 'pointer'}"
-            @row-click="handleRowClick"
+          </el-table-column>
+          <el-table-column prop="username" label="用户名(工号)"
+                           align="left"
+                           header-align="left"
+                           width="120"
+          />
+          <el-table-column prop="nickname" label="昵称" width="100"/>
+          <el-table-column prop="phone" label="手机" width="120"/>
+          <el-table-column prop="email" label="邮箱" width="150"/>
+          <el-table-column prop="status" label="状态"
+                           align="center"
+                           header-align="center"
+                           width="80"
           >
-            <el-table-column type="selection" align="center" header-align="center"/>
-            <el-table-column prop="id" label="#"
-              align="center"
-              header-align="center"
-              width="50"
-            />
-            <el-table-column prop="avatar" label="头像" width="80" align="left" header-align="left">
-              <template #default="scope">
-                <el-avatar
-                  style="vertical-align: middle"
-                  shape="circle"
-                  :size="24"
-                  fit="cover"
-                  :src="scope.row.avatar"
-                >
-                </el-avatar>
-              </template>
-            </el-table-column>
-            <el-table-column prop="username" label="用户名(工号)"
-              align="left"
-              header-align="left"
-              width="120"
-            />
-            <el-table-column prop="nickname" label="昵称" width="100"/>
-            <el-table-column prop="phone" label="手机" width="120"/>
-            <el-table-column prop="email" label="邮箱" width="150"/>
-            <el-table-column prop="status" label="状态"
-              align="center"
-              header-align="center"
-              width="80"
-            >
-              <template #default="scope">
-                <el-tag :type="scope.row.status === 0 ? '' : 'danger'" v-text="scope.row.status === 0 ? '正常' : '禁用'"></el-tag>
-              </template>
-            </el-table-column>
-            <el-table-column label="操作">
-              <template #default="scope">
-                <el-button plain style="vertical-align: middle" text @click.stop="addUser(scope.row)">
-                  <SVGIcon style="width: 1em; height: 1em" name="Plus"/><span style="margin-left: 4px;">新增</span>
-                </el-button>
-                <el-button plain style="vertical-align: middle" text @click.stop="editUser(scope.row)">
-                  <SVGIcon style="width: 1em; height: 1em" name="Edit"/><span style="margin-left: 4px;">编辑</span>
-                </el-button>
-                <el-button plain style="vertical-align: middle" text @click.stop="relateRole(scope.row)">
-                  <SVGIcon style="width: 1em; height: 1em" name="relation"/><span style="margin-left: 4px;">角色</span>
-                </el-button>
-                <el-button plain style="vertical-align: middle" text @click.stop="relatePrimaryDept(scope.row)">
-                  <SVGIcon style="width: 1em; height: 1em" name="relation"/><span style="margin-left: 4px;">主部门</span>
-                </el-button>
-                <el-button plain style="vertical-align: middle" text @click.stop="relateDept(scope.row)">
-                  <SVGIcon style="width: 1em; height: 1em" name="relation"/><span style="margin-left: 4px;">兼职部门</span>
-                </el-button>
-                <el-popconfirm
-                  title="确定删除?"
-                  confirmButtonText="确定"
-                  cancelButtonText="取消"
-                  @confirm.stop="delUser(scope.row)"
-                >
-                  <template #reference>
-                    <el-button plain style="vertical-align: middle" text @click.stop>
-                      <SVGIcon style="width: 1em; height: 1em" name="Delete"/><span style="margin-left: 4px;">删除</span>
-                    </el-button>
-                  </template>
-                </el-popconfirm>
+            <template #default="scope">
+              <el-tag :type="scope.row.status === 0 ? '' : 'danger'" v-text="scope.row.status === 0 ? '正常' : '禁用'"></el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作">
+            <template #default="scope">
+              <el-button plain style="vertical-align: middle" text @click.stop="addUser(scope.row)">
+                <SVGIcon style="width: 1em; height: 1em" name="Plus"/><span style="margin-left: 4px;">新增</span>
+              </el-button>
+              <el-button plain style="vertical-align: middle" text @click.stop="editUser(scope.row)">
+                <SVGIcon style="width: 1em; height: 1em" name="Edit"/><span style="margin-left: 4px;">编辑</span>
+              </el-button>
+              <el-button plain style="vertical-align: middle" text @click.stop="relateRole(scope.row)">
+                <SVGIcon style="width: 1em; height: 1em" name="relation"/><span style="margin-left: 4px;">角色</span>
+              </el-button>
+              <el-button plain style="vertical-align: middle" text @click.stop="relatePrimaryDept(scope.row)">
+                <SVGIcon style="width: 1em; height: 1em" name="relation"/><span style="margin-left: 4px;">主部门</span>
+              </el-button>
+              <el-button plain style="vertical-align: middle" text @click.stop="relateDept(scope.row)">
+                <SVGIcon style="width: 1em; height: 1em" name="relation"/><span style="margin-left: 4px;">兼职部门</span>
+              </el-button>
+              <el-popconfirm
+                title="确定删除?"
+                confirmButtonText="确定"
+                cancelButtonText="取消"
+                @confirm.stop="delUser(scope.row)"
+              >
+                <template #reference>
+                  <el-button plain style="vertical-align: middle" text @click.stop>
+                    <SVGIcon style="width: 1em; height: 1em" name="Delete"/><span style="margin-left: 4px;">删除</span>
+                  </el-button>
+                </template>
+              </el-popconfirm>
 
-              </template>
-            </el-table-column>
-          </el-table>
-        </div>
+            </template>
+          </el-table-column>
+        </el-table>
       </div>
-    </pane>
+    </div>
+  </div>
 
-  </splitpanes>
-
-
-  <el-dialog v-model="dialogFormVisible" :title="dialogTitle" :append-to-body="true" :draggable="true" custom-class="user-ext-dialog">
+  <v-dialog
+    v-model="dialogFormVisible"
+    :title="dialogTitle"
+    draggable
+    append-to-body
+    @confirm="confirmDialog"
+    @cancel="dialogFormVisible = false"
+  >
     <el-form :model="dialogFormData" :label-width="80">
       <el-form-item v-if="dialogTitle === '编辑用户'" label="用户ID">
         <el-input disabled v-model="dialogFormData.id"></el-input>
@@ -151,13 +152,7 @@
         <el-switch v-model="dialogFormData.status"></el-switch>
       </el-form-item>
     </el-form>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取消</el-button>
-        <el-button type="primary" @click="confirmDialog">确定</el-button>
-      </span>
-    </template>
-  </el-dialog>
+  </v-dialog>
 
   <role-selector
     v-model:visible="roleDialogVisible"
@@ -194,30 +189,17 @@
 <script lang="ts" setup>
 import {computed, ComputedRef, inject, onBeforeMount, onMounted, Ref, ref} from "vue";
 import {
-  ElAvatar,
-  ElButton,
-  ElDialog,
-  ElForm,
-  ElFormItem,
-  ElInput,
-  ElMessage,
-  ElPopconfirm,
-  ElScrollbar,
-  ElSwitch,
-  ElTable,
-  ElTableColumn,
-  ElTag,
-  ElTree
+  ElAvatar, ElButton, ElForm, ElFormItem, ElInput, ElMessage, ElPopconfirm,
+  ElScrollbar, ElSwitch, ElTable, ElTableColumn, ElTag, ElTree
 } from "element-plus";
 import * as UserApi from "@/api/sys/user";
 import * as DeptApi from "@/api/sys/dept";
 import * as RoleApi from "@/api/sys/role";
-import {Pane, Splitpanes} from 'splitpanes';
 import SVGIcon from "@/components/common/SVGIcon.vue"
 import RoleSelector from "./dialog/RoleSelector.vue"
 import DeptSelector from "./dialog/DeptSelector.vue"
-import {mainHeightKey, themeKey} from "@/config/app.keys";
-import 'splitpanes/dist/splitpanes.css';
+import {mainHeightKey, mainWidthKey, themeKey} from "@/config/app.keys";
+import VDialog from "@/components/dialog/VDialog.vue";
 
 const deptTreeProps = {
   label: 'simple_name',
@@ -236,23 +218,17 @@ const tableRef = ref<InstanceType<typeof ElTable>>(null);
 
 
 const theme = inject<Ref<ThemeConfig>>(themeKey)
+const mainWidth = inject<ComputedRef<string>>(mainWidthKey)
 const mainHeight = inject<ComputedRef<string>>(mainHeightKey)
 
-
-const dataTableHeight = computed<string>(() => {
-  /**
-   * 32px op height
-   * 10px marginTop
-   */
-  return `calc(${mainHeight.value} - ${theme.value.mainPadding - theme.value.mainPadding - 32 - 10}px)`;
-});
-
-const deptTreeHeight = computed(() => {
-  /**
-   * 10px marginTop
-   */
-  return `calc(${mainHeight.value} - ${theme.value.mainPadding - theme.value.mainPadding - 32 - 10}px)`;
-});
+const deptTreeWidth = '300px'
+const dataTableWidth = computed<string>(() => `calc(${mainWidth.value} - ${theme.value.mainPadding * 2 + 10}px - ${deptTreeWidth})`)
+/**
+ * 32: op-line
+ * 10: marginTop
+ */
+const dataTableHeight = computed<string>(() => `calc(${mainHeight.value} - ${theme.value.mainPadding * 2 + 32 + 10}px)`);
+const deptTreeHeight = computed<string>(() => `calc(${mainHeight.value} - ${theme.value.mainPadding * 2}px)`);
 
 const userData = ref<UserView[]>([]);
 
@@ -324,8 +300,8 @@ function editUser(user) {
 const currentRowUid = ref<number>(0);
 
 /* 角色关联操作开始  */
-const roleDialogVisible = ref(false); // 由于props传值会把普通类型 消除 响应式 因此需要包装成对象传值
-const roleUserData = ref([]);
+const roleDialogVisible = ref<boolean>(false); // 由于props传值会把普通类型 消除 响应式 因此需要包装成对象传值
+const roleUserData = ref<RoleView[]>([]);
 const boundRoleIds = ref<number[]>([]);
 
 async function relateRole(user: UserView) {
@@ -363,16 +339,15 @@ async function confirmRoleDialog(selectedIds: number[]) {
 
 
 /* 兼职部门关联操作开始  */
-const partTimeDeptDialogVisible = ref(false);
+const partTimeDeptDialogVisible = ref<boolean>(false);
 const partTimeDeptData = ref<DeptView[]>([]);
 const boundPartTimeDeptIds = ref<number[]>([]);
 
 
 /**
  * 兼职部门绑定
- * @param user
  */
-async function relateDept(user) {
+async function relateDept(user: UserView) {
   currentRowUid.value = user.id;
   try {
     boundPartTimeDeptIds.value = await UserApi.findBoundPartTimeDepartments(currentRowUid.value);
@@ -409,8 +384,8 @@ async function confirmDeptDialog(selectedIds: number[]) {
 /* 部门关联操作结束  */
 
 /* 主部门关联操作开始  */
-const primaryDeptDialogVisible = ref(false);
-const boundPrimaryDeptId = ref(0);
+const primaryDeptDialogVisible = ref<boolean>(false);
+const boundPrimaryDeptId = ref<number>(0);
 
 async function relatePrimaryDept(user) {
   currentRowUid.value = user.id;
@@ -447,27 +422,21 @@ async function confirmPrimaryDeptDialog(selectedId: number) {
 /* 部门关联操作结束  */
 
 
+function delUser() {}
 
-function delUser() {
+function exportUser() {}
 
-}
+const selectedUsers = ref<UserView[]>([]);
 
-function exportUser() {
-
-}
-
-const selectedUsers = ref([]);
-
-function handleSelectionChange(menus) {
-  selectedUsers.value = menus;
+function handleSelectionChange(users: UserView[]) {
+  selectedUsers.value = users;
 }
 
 function handleRowClick(row, column, event) {
   tableRef.value.toggleRowSelection(row, undefined);
 }
 
-function batchDeleteUser() {
-}
+function batchDeleteUser() {}
 
 async function reloadTableData() {
   loading.value = true;
@@ -495,12 +464,10 @@ onBeforeMount(async () => {
 onMounted( () => {
   reloadTableData();
   reloadDeptTreeData();
-
 });
 </script>
 
 <style scoped>
-
 
 .op-line {
   box-sizing: border-box;
@@ -510,20 +477,17 @@ onMounted( () => {
 .data-table {
   box-sizing: border-box;
   margin-top: 10px;
+  width: v-bind(dataTableWidth)
 }
 
-.dept-aside, .main-content {
-  width: 100%;
-  height: 100%;
+.dept-aside {
+  width: v-bind(deptTreeWidth);
+}
+
+.main-content {
+  margin-left: 10px;
 }
 
 
-:deep(.splitpanes__splitter) {
-  width: 5px;
-  background-color: #FFFFFF;
-  position: relative;
-  border-left: 1px solid rgba(227, 227, 227, 0.87);
-  border-right: 1px solid rgba(227, 227, 227, 0.87);
-}
 
 </style>

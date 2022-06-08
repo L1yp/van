@@ -77,7 +77,6 @@ import * as ProcessModelApi from "@/api/sys/process/"
 import initXml from "@/assets/bpmn/init.bpmn20.xml?raw"
 import {Connection, ElementRegistry, FormalExpression} from "bpmn-js";
 import {SaveXMLResult} from "bpmn-js/lib/BaseViewer";
-import { useFullscreen } from '@vueuse/core'
 
 const route = useRoute()
 const bpmnId = Number(route.params.bpmnId)
