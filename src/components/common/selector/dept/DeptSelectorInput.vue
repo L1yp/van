@@ -15,7 +15,7 @@
     placeholder="双击选择部门"
     value-key="id"
     v-bind="$attrs"
-    @change="handleSelectChanged"
+    @change="updateModelValue"
   >
     <el-option
       v-for="item in options"
@@ -42,6 +42,7 @@ import * as DeptApi from "@/api/sys/dept";
 import { ElSelect, ElOption } from "element-plus"
 import DeptSelectorModal from "@/components/common/selector/dept/DeptSelectorModal.vue";
 import {DeptSelectorInputEmits, DeptSelectorInputProps} from "@/components/common/selector/dept/util";
+import {primitiveArrayEquals} from "@/utils/common";
 
 export default defineComponent({
   props: DeptSelectorInputProps,
@@ -86,24 +87,43 @@ export default defineComponent({
 
     watch(() => props.modelValue, () => {
       if (props.modelValue) {
-        if (props.valueKey && typeof props.valueKey === 'string' && props.readViewFn && typeof props.readViewFn === 'function') {
+        if (props.valueKey && typeof props.valueKey === 'string') {
           if (props.multiple) {
             if (!Array.isArray(props.modelValue)) {
               console.warn("[DeptSelectorInput] multiple is true, but modelValue is not Array")
             }
             const views: DeptView[] = []
             const userKeys = props.modelValue as any[]
-            for (let userKey of userKeys) {
-              const userView = props.readViewFn(userKey);
-              views.push(userView)
+            const currentKeys = (selectedElems.value as DeptView[]).map(it => it[props.valueKey as string])
+            if (primitiveArrayEquals(userKeys, currentKeys)) {
+              options.value = selectedElems.value as DeptView[]
+            } else {
+              if (props.readViewFn && typeof props.readViewFn === 'function') {
+                for (let userKey of userKeys) {
+                  const userView = props.readViewFn(userKey);
+                  views.push(userView)
+                }
+                selectedElems.value = views
+                options.value = views
+              } else {
+                console.error("[dept-selector-input] please provide read-view-fn")
+              }
             }
-            selectedElems.value = views
-            options.value = views
+
 
           } else {
-            selectedElems.value = props.readViewFn(props.modelValue as any);
-            options.value = [selectedElems.value as DeptView]
+            if (selectedElems.value && selectedElems.value[props.valueKey] === props.modelValue) {
+              options.value = [selectedElems.value as DeptView]
+            } else {
 
+              if (props.readViewFn && typeof props.readViewFn === 'function') {
+                selectedElems.value = props.readViewFn(props.modelValue as any);
+                options.value = [selectedElems.value as DeptView]
+              } else {
+                console.error("[dept-selector-input] please provide read-view-fn")
+              }
+
+            }
           }
         } else {
           selectedElems.value = props.modelValue as DeptView[]
@@ -152,11 +172,6 @@ export default defineComponent({
       }
     }
 
-    function handleSelectChanged() {
-      emits('update:modelValue', selectedElems.value)
-    }
-
-
     const deptSelectorRef = ref<InstanceType<typeof DeptSelectorModal>>()
 
     function handleDblClick() {
@@ -165,7 +180,6 @@ export default defineComponent({
 
     return {
       updateModelValue, loading, selectedElems, options, handleSearch, deptSelectorRef, handleDblClick,
-      handleSelectChanged
     }
   },
 })

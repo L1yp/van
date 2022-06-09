@@ -77,6 +77,12 @@ export function toReadableDuration(second: number) {
   }
   str = str + `${remain3}秒`
   return str
+}
 
 
+export function primitiveArrayEquals(a, b): boolean {
+  return Array.isArray(a) &&
+  Array.isArray(b) &&
+  a.length === b.length &&
+  a.every((val, index) => val === b[index])
 }

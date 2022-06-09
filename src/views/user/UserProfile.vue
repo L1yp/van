@@ -1,7 +1,22 @@
 <template>
 
-  <user-selector-input style="width: 100%" v-model="selectedElems" multiple></user-selector-input>
+  <user-selector-input
+    style="width: 100%"
+    v-model="selectedElems"
+    multiple
+  >
+  </user-selector-input>
+
+  <user-selector-input
+    style="width: 100%"
+    v-model="selectedUserIds"
+    value-key="id"
+    multiple
+  >
+  </user-selector-input>
+
   <dept-selector-input style="width: 100%" v-model="selectedDeptElems" multiple></dept-selector-input>
+  <dept-selector-input style="width: 100%" v-model="selectedDeptIds" value-key="id" multiple></dept-selector-input>
 
   <v-form-pro
     :form-attr="{labelWidth: '120px'}"
@@ -24,6 +39,8 @@ const loading = ref(false)
 const selectedElems = ref<UserView[]>(null)
 const selectedDeptElems = ref<DeptView[]>(null)
 
+const selectedUserIds = ref<number[]>([])
+const selectedDeptIds = ref<number[]>([])
 
 
 const formScheme: FormScheme[][] = [

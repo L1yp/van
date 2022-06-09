@@ -15,7 +15,7 @@
     placeholder="双击选择用户"
     value-key="id"
     v-bind="$attrs"
-    @change="handleSelectChanged"
+    @change="updateModelValue"
   >
     <el-option
       v-for="item in options"
@@ -42,6 +42,7 @@ import * as UserApi from "@/api/sys/user";
 import UserSelectorModal from "@/components/common/selector/user/UserSelectorModal.vue";
 import { ElSelect, ElOption } from "element-plus"
 import { UserSelectorInputProps, UserSelectorInputEmits } from './util'
+import {primitiveArrayEquals} from "@/utils/common";
 
 
 export default defineComponent({
@@ -86,24 +87,42 @@ export default defineComponent({
 
     watch(() => props.modelValue, () => {
       if (props.modelValue) {
-        if (props.valueKey && typeof props.valueKey === 'string' && props.readViewFn && typeof props.readViewFn === 'function') {
+        if (props.valueKey && typeof props.valueKey === 'string') {
           if (props.multiple) {
             if (!Array.isArray(props.modelValue)) {
               console.warn("[SelectorInput] multiple is true, but modelValue is not Array")
             }
             const views: UserView[] = []
             const userKeys = props.modelValue as any[]
-            for (let userKey of userKeys) {
-              const userView = props.readViewFn(userKey);
-              views.push(userView)
+            const currentKeys = (selectedElems.value as UserView[]).map(it => it[props.valueKey as string])
+
+            if (primitiveArrayEquals(userKeys, currentKeys)) {
+              options.value = selectedElems.value as UserView[]
+            } else {
+              if (props.readViewFn && typeof props.readViewFn === 'function') {
+                for (let userKey of userKeys) {
+                  const userView = props.readViewFn(userKey);
+                  views.push(userView)
+                }
+                selectedElems.value = views
+                options.value = views
+              } else {
+                console.error("[user-selector-input] please provide read-view-fn")
+              }
             }
-            selectedElems.value = views
-            options.value = views
 
           } else {
-            selectedElems.value = props.readViewFn(props.modelValue as any);
-            options.value = [selectedElems.value as UserView]
+            if (selectedElems.value && selectedElems.value[props.valueKey] === props.modelValue) {
+              options.value = [selectedElems.value as UserView]
+            } else {
+              if (props.readViewFn && typeof props.readViewFn === 'function') {
+                selectedElems.value = props.readViewFn(props.modelValue as any);
+                options.value = [selectedElems.value as UserView]
+              } else {
+                console.error("please provide read-view-fn")
+              }
 
+            }
           }
         } else {
           selectedElems.value = props.modelValue as UserView[]
@@ -165,13 +184,10 @@ export default defineComponent({
       userSelectorRef.value.open()
     }
 
-    function handleSelectChanged() {
-      emits('update:modelValue', selectedElems.value)
-    }
 
     return {
       updateModelValue, loading, selectedElems, options, handleSearch,
-      userSelectorRef, handleDblClick, handleSelectChanged
+      userSelectorRef, handleDblClick,
     }
 
   },
