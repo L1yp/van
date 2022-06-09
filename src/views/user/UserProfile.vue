@@ -2,21 +2,95 @@
 
   <user-selector-input
     style="width: 100%"
-    v-model="selectedElems"
-    multiple
+    v-model="selectedElem"
+    :multiple="false"
+    placeholder="单选用户，value是对象，可双击弹框选择"
   >
   </user-selector-input>
+  <div>
+    {{ JSON.stringify(selectedElem) }}
+  </div>
+
+
+  <user-selector-input
+    style="width: 100%"
+    v-model="selectedUserId"
+    value-key="id"
+    :multiple="false"
+    placeholder="单选用户，value是id，可双击弹框选择"
+  >
+  </user-selector-input>
+  <div>
+    {{ selectedUserId }}
+  </div>
+  <user-selector-input
+    style="width: 100%"
+    v-model="selectedElems"
+    multiple
+    placeholder="多选用户，value是对象数组，可双击弹框选择"
+  >
+  </user-selector-input>
+  <div>
+    {{ JSON.stringify(selectedElems) }}
+  </div>
 
   <user-selector-input
     style="width: 100%"
     v-model="selectedUserIds"
     value-key="id"
     multiple
+    placeholder="多选用户，value是ID数组，可双击弹框选择"
   >
   </user-selector-input>
+  <div>
+    {{ JSON.stringify(selectedUserIds) }}
+  </div>
 
-  <dept-selector-input style="width: 100%" v-model="selectedDeptElems" multiple></dept-selector-input>
-  <dept-selector-input style="width: 100%" v-model="selectedDeptIds" value-key="id" multiple></dept-selector-input>
+
+
+  <dept-selector-input
+    style="width: 100%"
+    v-model="selectedDeptElem"
+    :multiple="false"
+    placeholder="单选部门，value是对象，可双击弹框选择"
+  >
+  </dept-selector-input>
+  <div>
+    {{ JSON.stringify(selectedDeptElem) }}
+  </div>
+
+  <dept-selector-input
+    style="width: 100%"
+    v-model="selectedDeptId"
+    value-key="id"
+    :multiple="false"
+    placeholder="单选部门，value是ID，可双击弹框选择"
+  >
+  </dept-selector-input>
+  <div>
+    {{ selectedDeptId }}
+  </div>
+
+  <dept-selector-input
+    style="width: 100%"
+    v-model="selectedDeptElems" multiple
+    placeholder="多选部门，value是对象数组，可双击弹框选择"
+  >
+  </dept-selector-input>
+  <div>
+    {{ JSON.stringify(selectedDeptElems) }}
+  </div>
+
+  <dept-selector-input
+    style="width: 100%"
+    v-model="selectedDeptIds"
+    value-key="id" multiple
+    placeholder="多选部门，value是ID数组，可双击弹框选择"
+  >
+  </dept-selector-input>
+  <div>
+    {{ JSON.stringify(selectedDeptIds) }}
+  </div>
 
   <v-form-pro
     :form-attr="{labelWidth: '120px'}"
@@ -25,6 +99,9 @@
   >
 
   </v-form-pro>
+  <div>
+    {{ JSON.stringify(formModel) }}
+  </div>
 
 </template>
 
@@ -36,26 +113,29 @@ import UserSelectorInput from "@/components/common/selector/user/UserSelectorInp
 import DeptSelectorInput from "@/components/common/selector/dept/DeptSelectorInput.vue"
 
 const loading = ref(false)
-const selectedElems = ref<UserView[]>(null)
-const selectedDeptElems = ref<DeptView[]>(null)
-
+const selectedUserId = ref<number>(0)
+const selectedElem = ref<UserView>(null)
 const selectedUserIds = ref<number[]>([])
-const selectedDeptIds = ref<number[]>([])
+const selectedElems = ref<UserView[]>(null)
 
+const selectedDeptId = ref<number>(0)
+const selectedDeptElem = ref<UserView>(null)
+const selectedDeptIds = ref<number[]>([])
+const selectedDeptElems = ref<DeptView[]>(null)
 
 const formScheme: FormScheme[][] = [
   [
     {
       name: 'end_monthly',
       label: '是否月结调整',
-      component: 'dict-tag',
+      component: 'dict-input',
       span: 12,
-      writeable: false,
+      writeable: true,
       componentAttrs: {
         scope: 'global',
         ident: 'yesno',
         valType: 'value',
-        val: 1
+        modelValue: 1
       }
     },
     {

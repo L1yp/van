@@ -27,6 +27,116 @@ npm run build
 发现掉线可以加群联系我：[770709473](https://jq.qq.com/?_wv=1027&k=hyd5LqDR)
 
 # 组件
+
+> 样例
+```vue
+<user-selector-input
+  style="width: 100%"
+  v-model="selectedElem"
+  :multiple="false"
+  placeholder="单选用户，value是对象，可双击弹框选择"
+>
+</user-selector-input>
+<div>
+  {{ JSON.stringify(selectedElem) }}
+</div>
+
+
+<user-selector-input
+  style="width: 100%"
+  v-model="selectedUserId"
+  value-key="id"
+  :multiple="false"
+  placeholder="单选用户，value是id，可双击弹框选择"
+>
+</user-selector-input>
+<div>
+  {{ selectedUserId }}
+</div>
+<user-selector-input
+  style="width: 100%"
+  v-model="selectedElems"
+  multiple
+  placeholder="多选用户，value是对象数组，可双击弹框选择"
+>
+</user-selector-input>
+<div>
+  {{ JSON.stringify(selectedElems) }}
+</div>
+
+<user-selector-input
+  style="width: 100%"
+  v-model="selectedUserIds"
+  value-key="id"
+  multiple
+  placeholder="多选用户，value是ID数组，可双击弹框选择"
+>
+</user-selector-input>
+<div>
+  {{ JSON.stringify(selectedUserIds) }}
+</div>
+
+
+
+<dept-selector-input
+  style="width: 100%"
+  v-model="selectedDeptElem"
+  :multiple="false"
+  placeholder="单选部门，value是对象，可双击弹框选择"
+>
+</dept-selector-input>
+<div>
+  {{ JSON.stringify(selectedDeptElem) }}
+</div>
+
+<dept-selector-input
+  style="width: 100%"
+  v-model="selectedDeptId"
+  value-key="id"
+  :multiple="false"
+  placeholder="单选部门，value是ID，可双击弹框选择"
+>
+</dept-selector-input>
+<div>
+  {{ selectedDeptId }}
+</div>
+
+<dept-selector-input
+  style="width: 100%"
+  v-model="selectedDeptElems" multiple
+  placeholder="多选部门，value是对象数组，可双击弹框选择"
+>
+</dept-selector-input>
+<div>
+  {{ JSON.stringify(selectedDeptElems) }}
+</div>
+
+<dept-selector-input
+  style="width: 100%"
+  v-model="selectedDeptIds"
+  value-key="id" multiple
+  placeholder="多选部门，value是ID数组，可双击弹框选择"
+>
+</dept-selector-input>
+<div>
+  {{ JSON.stringify(selectedDeptIds) }}
+</div>
+
+<v-form-pro
+  :form-attr="{labelWidth: '120px'}"
+  :scheme="formScheme"
+  v-model="formModel"
+>
+
+</v-form-pro>
+<div>
+  {{ JSON.stringify(formModel) }}
+</div>
+```
+
+![组件例子](docs/images/component-demo.png)
+
+
 ## 字典组件
 ### DictTag 字典值展示组件
 #### 示例

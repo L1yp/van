@@ -12,10 +12,11 @@
     :remote-method="handleSearch"
     :loading="loading"
     tag-type="success"
-    placeholder="双击选择部门"
+    :placeholder="placeholder"
     value-key="id"
     v-bind="$attrs"
     @change="updateModelValue"
+    ref="selectRef"
   >
     <el-option
       v-for="item in options"
@@ -37,7 +38,7 @@
 </template>
 
 <script lang="ts">
-import {ref, watch, defineComponent, toRaw} from "vue";
+import {ref, watch, defineComponent, toRaw, nextTick} from "vue";
 import * as DeptApi from "@/api/sys/dept";
 import { ElSelect, ElOption } from "element-plus"
 import DeptSelectorModal from "@/components/common/selector/dept/DeptSelectorModal.vue";
@@ -51,6 +52,7 @@ export default defineComponent({
     DeptSelectorModal, ElSelect, ElOption
   },
   setup(props, {emit: emits}){
+    const selectRef = ref<InstanceType<typeof ElSelect>>()
 
     function updateModelValue(val: DeptView | DeptView[]) {
       console.log("updateModelValue", val)
@@ -79,6 +81,7 @@ export default defineComponent({
       }
 
       emits('update:modelValue', result)
+      nextTick(() => selectRef.value?.blur())
     }
 
     const loading = ref(false)
@@ -179,7 +182,8 @@ export default defineComponent({
     }
 
     return {
-      updateModelValue, loading, selectedElems, options, handleSearch, deptSelectorRef, handleDblClick,
+      updateModelValue, loading, selectedElems, options,
+      handleSearch, deptSelectorRef, handleDblClick, selectRef,
     }
   },
 })

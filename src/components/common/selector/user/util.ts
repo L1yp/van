@@ -34,7 +34,12 @@ export const UserSelectorInputProps: ComponentPropsOptions<any> = {
     required: false,
     default: null
   },
-  readViewFn: Function as PropType<(param: number | number[] | string | string[]) => UserView>
+  readViewFn: Function as PropType<(param: number | number[] | string | string[]) => UserView>,
+  placeholder: {
+    type: String as PropType<string>,
+    required: false,
+    default: '双击选择用户'
+  },
 }
 
 export const UserSelectorInputEmits = [

@@ -12,10 +12,11 @@
     :remote-method="handleSearch"
     :loading="loading"
     tag-type="success"
-    placeholder="双击选择用户"
+    :placeholder="placeholder"
     value-key="id"
     v-bind="$attrs"
     @change="updateModelValue"
+    ref="selectRef"
   >
     <el-option
       v-for="item in options"
@@ -37,7 +38,7 @@
 </template>
 
 <script lang="ts">
-import { ref, watch, defineComponent } from "vue";
+import {ref, watch, defineComponent, nextTick} from "vue";
 import * as UserApi from "@/api/sys/user";
 import UserSelectorModal from "@/components/common/selector/user/UserSelectorModal.vue";
 import { ElSelect, ElOption } from "element-plus"
@@ -52,8 +53,9 @@ export default defineComponent({
     UserSelectorModal, ElSelect, ElOption,
   },
   setup(props, {emit: emits}) {
+    const selectRef = ref<InstanceType<typeof ElSelect>>()
     function updateModelValue(val: UserView | UserView[]) {
-      console.log("updateModelValue", val)
+      console.log("updateModelValue", val, selectRef.value)
       if (!val) {
         console.log("val", val)
         selectedElems.value = val
@@ -79,6 +81,7 @@ export default defineComponent({
       }
 
       emits('update:modelValue', result)
+      nextTick(() => selectRef.value?.blur())
     }
 
     const loading = ref(false)
@@ -187,7 +190,7 @@ export default defineComponent({
 
     return {
       updateModelValue, loading, selectedElems, options, handleSearch,
-      userSelectorRef, handleDblClick,
+      userSelectorRef, handleDblClick, selectRef,
     }
 
   },

@@ -34,7 +34,12 @@ export const DeptSelectorInputProps: ComponentPropsOptions<any> = {
     required: false,
     default: null
   },
-  readViewFn: Function as PropType<(param: number | number[] | string | string[]) => DeptView>
+  readViewFn: Function as PropType<(param: number | number[] | string | string[]) => DeptView>,
+  placeholder: {
+    type: String as PropType<string>,
+    required: false,
+    default: '双击选择部门'
+  },
 }
 
 export const DeptSelectorInputEmits = [
