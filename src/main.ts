@@ -1,4 +1,4 @@
-import {createApp, onBeforeUnmount, ref} from 'vue'
+import {createApp, ref} from 'vue'
 import App from './App.vue'
 import {isReady, setupRouter} from './router'
 import 'virtual:svg-icons-register'
@@ -16,7 +16,8 @@ async function startup() {
     const app = createApp(App)
 
     setupAxios();
-    app.use(ElLoading);
+    // @ts-ignore
+    app.use(ElLoading)
 
     const dictInfoRef = ref<DictInfo[]>([])
     app.provide(dictInfosKey, dictInfoRef)
@@ -54,6 +55,7 @@ async function startup() {
     }
 
     console.log("startup setup router before");
+    // @ts-ignore
     setupRouter(app, menuOptions.value);
     console.log("startup setup router after");
 

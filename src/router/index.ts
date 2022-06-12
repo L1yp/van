@@ -1,6 +1,5 @@
 import {createRouter, createWebHistory, RouteRecordRaw, RouterOptions, } from 'vue-router'
 import {read} from "@/utils/storage"
-import * as UserApi from "@/api/sys/user"
 import {Component, App} from "vue";
 
 const Layout: Component = () => import("../layouts/TopLeft.vue");
@@ -15,9 +14,6 @@ componentMap.set("roleManagement", () => import("@/views/sys/role/RoleManagement
 componentMap.set("menuManagement", () => import("@/views/sys/menu/MenuManage.vue"))
 componentMap.set("deptManagement", () => import("@/views/sys/dept/DeptManage.vue"))
 componentMap.set("dictConfig", () => import("@/views/sys/dict/DictInfo.vue"))
-// componentMap.set("userRelateRole", () => import("@/views/sys/common/selector/role/index.vue"))
-// componentMap.set("roleRelateMenu", () => import("@/views/sys/common/selector/role/index.vue"))
-// componentMap.set("userRelateDept", () => import("@/views/sys/common/selector/dept/index.vue"))
 componentMap.set("userSetting", Home)
 componentMap.set("userProfile", () => import("@/views/user/UserProfile.vue"))
 componentMap.set("userPassword", IconSelector)
@@ -35,6 +31,7 @@ componentMap.set("processHistoryInstance", () => import("@/views/sys/process/man
 
 componentMap.set("processInstanceInfo", () => import("@/views/sys/process/manage/ProcessInstanceDetail.vue")) // 流程明细
 componentMap.set("processModelPage", () => import("@/views/sys/process/page/ProcessModelPageManage.vue")) // 流程页面
+componentMap.set("processModelForm", () => import("@/views/sys/process/design/ProcessModelForm.vue")) // 流程表单
 
 
 const layoutRoute  = {
@@ -96,9 +93,10 @@ console.log("create router beforeEach after");
 /**
  * 安装初始路由
  */
-export function setupRouter(app: App<Element>, menuOptions: MenuConfig[]) {
+export function setupRouter(app: App, menuOptions: MenuConfig[]) {
   installLayoutContentRoute(menuOptions)
-  app.use(router);
+  // @ts-ignore
+  app.use(router)
 }
 
 /**

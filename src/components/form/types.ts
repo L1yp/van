@@ -8,3 +8,36 @@ export interface FormScheme {
   formItemAttrs?: Record<string, any>
   componentAttrs?: Record<string, any>
 }
+
+export interface CandidateComponentConfig {
+  id: string
+  component: string
+  icon?: string
+  label: string
+  labelWidth?: string | number
+  attrs?: Record<string, any>
+}
+
+
+export interface ComponentConfig {
+  id: string
+  component: string
+  label?: string
+  labelWidth?: string | number
+  attrs?: Record<string, any>
+}
+
+export interface FormItemConfig {
+  prop: string
+  label: string
+  labelWidth: string | number
+  required: boolean
+  error: string
+  showMessage: boolean
+  inlineMessage: boolean
+  size: 'small' | 'default' | 'large'
+}
+
+export interface InputConfig extends FormItemConfig {
+
+}
