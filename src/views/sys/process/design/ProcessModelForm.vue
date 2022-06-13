@@ -17,34 +17,7 @@
     </div>
     <div class="form-wrapper">
       <el-form style="width: 100%; height: 100%">
-        <draggable
-          style="width: 100%; height: 100%"
-          :list="formComponentList"
-          :group="{name: 'component', pull: false, put: true }"
-          item-key="id"
-        >
-          <template #item="{element}">
-            <template v-if="element.component === 'el-row'">
-              <component
-                :is="element.component"
-                v-bind="element.attrs"
-              >
-
-              </component>
-            </template>
-            <template v-else>
-              <el-form-item :prop="element.id" :label="element.label" :label-width="element.labelWidth">
-                <component
-                  :is="element.component"
-                  v-bind="element.attrs"
-                >
-
-                </component>
-              </el-form-item>
-            </template>
-
-          </template>
-        </draggable>
+        <nested-drag-item :children="formComponentList" group="component"></nested-drag-item>
       </el-form>
     </div>
     <div class="property-panel">
@@ -59,6 +32,7 @@ import {mainHeightKey, mainWidthKey, themeKey} from "@/config/app.keys";
 import Draggable from "vuedraggable"
 import { ElForm, ElFormItem, ElInput, ElSelect, ElRow, ElCol } from "element-plus"
 import {CandidateComponentConfig, ComponentConfig} from "@/components/form/types";
+import NestedDragItem from "@/components/form/NestedDragItem.vue";
 
 function genId(): string {
   return Math.random().toString().replaceAll("0.", "");
@@ -70,13 +44,16 @@ function transCloneComponent(original: CandidateComponentConfig) {
     component: original.component,
     label: original.label,
     labelWidth: original.labelWidth,
-    attrs: original.attrs
+    attrs: original.attrs,
+    children: []
   }
+  console.log("newItem", newItem)
   return newItem;
 }
 
 export default defineComponent({
   components: {
+    NestedDragItem,
     Draggable, ElForm, ElFormItem, ElInput, ElSelect, ElRow, ElCol
   },
   setup() {
@@ -91,13 +68,23 @@ export default defineComponent({
         id: genId(),
         component: 'el-select',
         label: "下拉框",
-        labelWidth: "120px"
+        labelWidth: "120px",
+        attrs: {
+          style: {
+            width: '100%',
+          }
+        }
       },
       {
         id: genId(),
         component: 'el-input',
         label: "单行文本框",
-        labelWidth: "120px"
+        labelWidth: "120px",
+        attrs: {
+          style: {
+            width: '100%',
+          }
+        }
       },
       {
         id: genId(),
@@ -107,18 +94,12 @@ export default defineComponent({
           style: {
             height: '100px'
           }
-        }
+        },
+        children: [],
       },
     ])
 
-    const formComponentList = ref<ComponentConfig[]>([
-      {
-        id: "3",
-        label: "类型",
-        labelWidth: "120px",
-        component: 'el-select'
-      },
-    ])
+    const formComponentList = ref<ComponentConfig[]>([])
 
 
     return {
