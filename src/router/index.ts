@@ -95,7 +95,6 @@ console.log("create router beforeEach after");
  */
 export function setupRouter(app: App, menuOptions: MenuConfig[]) {
   installLayoutContentRoute(menuOptions)
-  // @ts-ignore
   app.use(router)
 }
 

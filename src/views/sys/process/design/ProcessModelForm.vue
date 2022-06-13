@@ -16,23 +16,33 @@
       </draggable>
     </div>
     <div class="form-wrapper">
-      <el-form>
+      <el-form style="width: 100%; height: 100%">
         <draggable
           style="width: 100%; height: 100%"
           :list="formComponentList"
           :group="{name: 'component', pull: false, put: true }"
-          handle="div.drag-form-item"
           item-key="id"
         >
           <template #item="{element}">
-            <el-form-item :prop="element.id" :label="element.label" :label-width="element.labelWidth">
+            <template v-if="element.component === 'el-row'">
               <component
                 :is="element.component"
                 v-bind="element.attrs"
               >
 
               </component>
-            </el-form-item>
+            </template>
+            <template v-else>
+              <el-form-item :prop="element.id" :label="element.label" :label-width="element.labelWidth">
+                <component
+                  :is="element.component"
+                  v-bind="element.attrs"
+                >
+
+                </component>
+              </el-form-item>
+            </template>
+
           </template>
         </draggable>
       </el-form>
@@ -47,7 +57,7 @@
 import { computed, inject, ref, defineComponent } from "vue";
 import {mainHeightKey, mainWidthKey, themeKey} from "@/config/app.keys";
 import Draggable from "vuedraggable"
-import { ElForm, ElFormItem, ElInput, ElSelect } from "element-plus"
+import { ElForm, ElFormItem, ElInput, ElSelect, ElRow, ElCol } from "element-plus"
 import {CandidateComponentConfig, ComponentConfig} from "@/components/form/types";
 
 function genId(): string {
@@ -59,14 +69,15 @@ function transCloneComponent(original: CandidateComponentConfig) {
     id: genId(),
     component: original.component,
     label: original.label,
-    labelWidth: original.labelWidth
+    labelWidth: original.labelWidth,
+    attrs: original.attrs
   }
   return newItem;
 }
 
 export default defineComponent({
   components: {
-    Draggable, ElForm, ElFormItem, ElInput, ElSelect
+    Draggable, ElForm, ElFormItem, ElInput, ElSelect, ElRow, ElCol
   },
   setup() {
     const mainWidth = inject(mainWidthKey)
@@ -87,6 +98,16 @@ export default defineComponent({
         component: 'el-input',
         label: "单行文本框",
         labelWidth: "120px"
+      },
+      {
+        id: genId(),
+        component: 'el-row',
+        label: "行容器",
+        attrs: {
+          style: {
+            height: '100px'
+          }
+        }
       },
     ])
 

@@ -16,7 +16,6 @@ async function startup() {
     const app = createApp(App)
 
     setupAxios();
-    // @ts-ignore
     app.use(ElLoading)
 
     const dictInfoRef = ref<DictInfo[]>([])
