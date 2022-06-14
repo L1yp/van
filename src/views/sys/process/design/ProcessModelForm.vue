@@ -16,9 +16,12 @@
       </draggable>
     </div>
     <div class="form-wrapper">
-      <el-form style="width: 100%; height: 100%">
-        <nested-drag-item :children="formComponentList" group="component"></nested-drag-item>
-      </el-form>
+      <el-scrollbar :height="containerHeight" always>
+        <el-form style="width: 100%; ">
+          <nested-drag-item :style="{width: '100%', minHeight: containerHeight}" :children="formComponentList" group="component"></nested-drag-item>
+        </el-form>
+      </el-scrollbar>
+
     </div>
     <div class="property-panel">
 
@@ -30,7 +33,7 @@
 import { computed, inject, ref, defineComponent } from "vue";
 import {mainHeightKey, mainWidthKey, themeKey} from "@/config/app.keys";
 import Draggable from "vuedraggable"
-import { ElForm, ElFormItem, ElInput, ElSelect, ElRow, ElCol } from "element-plus"
+import { ElForm, ElFormItem, ElInput, ElSelect, ElRow, ElCol, ElScrollbar } from "element-plus"
 import {CandidateComponentConfig, ComponentConfig} from "@/components/form/types";
 import NestedDragItem from "@/components/form/NestedDragItem.vue";
 
@@ -45,7 +48,7 @@ function transCloneComponent(original: CandidateComponentConfig) {
     label: original.label,
     labelWidth: original.labelWidth,
     attrs: original.attrs,
-    children: []
+    children: JSON.parse(JSON.stringify(original.children || []))
   }
   console.log("newItem", newItem)
   return newItem;
@@ -54,7 +57,7 @@ function transCloneComponent(original: CandidateComponentConfig) {
 export default defineComponent({
   components: {
     NestedDragItem,
-    Draggable, ElForm, ElFormItem, ElInput, ElSelect, ElRow, ElCol
+    Draggable, ElForm, ElFormItem, ElInput, ElSelect, ElRow, ElCol, ElScrollbar
   },
   setup() {
     const mainWidth = inject(mainWidthKey)
@@ -92,7 +95,7 @@ export default defineComponent({
         label: "行容器",
         attrs: {
           style: {
-            height: '100px'
+            minHeight: '100px'
           }
         },
         children: [],
