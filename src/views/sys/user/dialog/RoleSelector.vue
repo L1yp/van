@@ -1,5 +1,17 @@
 <template>
-  <el-dialog @opened="handleOpenedDialog" @closed="emits('update:visible', false)" custom-class="user-ext-dialog" width="280px" v-model="visible" title="关联角色" :append-to-body="true">
+
+  <v-dialog
+    @opened="handleOpenedDialog"
+    @closed="emits('update:visible', false)"
+    width="280px"
+    v-model="visible"
+    title="关联角色"
+    append-to-body
+    draggable
+    :show-full-screen="false"
+    @confirm="confirmRoleDialog"
+    @cancel="emits('cancel')"
+  >
     <div style="width: 100%">
       <div style="width: 240px; ">
         <el-table
@@ -20,8 +32,8 @@
 
         </el-table>
       </div>
-      <div style="box-sizing: border-box; margin-top: 10px; border: 1px #e3e3e3 solid; width: 240px; padding: 0 5px 5px;" :style="{height: `${selectedBoxHeight}px`}">
-        <el-scrollbar :height="`${selectedBoxHeight - 5 - 2}px`" always>
+      <div style="box-sizing: border-box; border: 1px #e3e3e3 solid; width: 240px; margin-top: 10px; ">
+        <el-scrollbar :height="selectedBoxHeight" always view-class="selected-tags">
           <el-tag @close="handleCloseRole(item)" v-for="item in selectedRoles" closable>{{item.name}}</el-tag>
         </el-scrollbar>
 
@@ -29,14 +41,7 @@
 
     </div>
 
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="emits('cancel')">取消</el-button>
-        <el-button type="primary" @click="confirmRoleDialog">确定</el-button>
-      </span>
-    </template>
-
-  </el-dialog>
+  </v-dialog>
 </template>
 
 <script lang="ts" setup>
@@ -44,6 +49,7 @@ import {ref, computed, watch,} from "vue"
 import {
   ElDialog, ElTable, ElTableColumn, ElTag, ElButton, ElScrollbar
 } from "element-plus"
+import VDialog from "@/components/dialog/VDialog.vue";
 
 interface Props {
   roleData: RoleView[];
@@ -128,12 +134,10 @@ function handleOpenedDialog() {
 </script>
 
 <style scoped>
-.el-tag + .el-tag {
-  margin-left: 5px;
+:deep(.selected-tags) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: 5px;
 }
-
-.el-tag {
-  margin-top: 5px;
-}
-
 </style>

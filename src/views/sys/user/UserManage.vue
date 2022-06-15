@@ -300,7 +300,7 @@ function editUser(user) {
 const currentRowUid = ref<number>(0);
 
 /* 角色关联操作开始  */
-const roleDialogVisible = ref<boolean>(false); // 由于props传值会把普通类型 消除 响应式 因此需要包装成对象传值
+const roleDialogVisible = ref<boolean>(false);
 const roleUserData = ref<RoleView[]>([]);
 const boundRoleIds = ref<number[]>([]);
 
