@@ -48,7 +48,8 @@ function transCloneComponent(original: CandidateComponentConfig) {
     label: original.label,
     labelWidth: original.labelWidth,
     attrs: original.attrs,
-    children: JSON.parse(JSON.stringify(original.children || []))
+    children: JSON.parse(JSON.stringify(original.children || [])),
+    children2: JSON.parse(JSON.stringify(original.children2 || [])),
   }
   console.log("newItem", newItem)
   return newItem;
@@ -99,6 +100,7 @@ export default defineComponent({
           }
         },
         children: [],
+        children2: [],
       },
     ])
 

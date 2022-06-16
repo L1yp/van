@@ -17,6 +17,7 @@ export interface CandidateComponentConfig {
   labelWidth?: string | number
   attrs?: Record<string, any>
   children?: CandidateComponentConfig[]
+  children2?: CandidateComponentConfig[]
 }
 
 
@@ -27,6 +28,7 @@ export interface ComponentConfig {
   labelWidth?: string | number
   attrs?: Record<string, any>,
   children?: ComponentConfig[]
+  children2?: ComponentConfig[]
 }
 
 export interface FormItemConfig {

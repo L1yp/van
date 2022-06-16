@@ -8,14 +8,15 @@
     <template #item="{ element }">
       <div class="drag-form-item">
 
-        <template v-if="['el-row', 'el-col'].includes(element.component)">
-          <component
-            v-bind="element.attrs"
-            :is="element.component"
-          >
-            <nested-drag-item style="width: 100%; min-height: 100px; " :children="element.children"></nested-drag-item>
-          </component>
+        <template v-if="'el-row' === element.component">
+          <el-row>
+            <el-col :span="12">
+              <nested-drag-item style="width: 100%; min-height: 100px; " :children="element.children"></nested-drag-item>
+            </el-col>
+            <el-col :span="12"><nested-drag-item style="width: 100%; min-height: 100px; " :children="element.children2"></nested-drag-item></el-col>
+          </el-row>
         </template>
+
         <template v-else>
           <el-form-item :prop="element.id" :label="element.label" :label-width="element.labelWidth">
             <component
