@@ -13,22 +13,20 @@ export interface CandidateComponentConfig {
   id: string
   component: string
   icon?: string
-  label: string
-  labelWidth?: string | number
+  title?: string
+  formItemAttrs?: Record<string, any>
   attrs?: Record<string, any>
   children?: CandidateComponentConfig[]
-  children2?: CandidateComponentConfig[]
 }
 
 
 export interface ComponentConfig {
   id: string
   component: string
-  label?: string
-  labelWidth?: string | number
+  icon?: string
+  formItemAttrs?: Record<string, any>
   attrs?: Record<string, any>,
   children?: ComponentConfig[]
-  children2?: ComponentConfig[]
 }
 
 export interface FormItemConfig {

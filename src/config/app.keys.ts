@@ -1,4 +1,5 @@
 import {ComputedRef, InjectionKey, Ref, ShallowRef} from "vue";
+import {ComponentConfig} from "@/components/form/types";
 
 const mainWidthKey = Symbol("mainWidthKey") as InjectionKey<ComputedRef<string>>
 const mainHeightKey = Symbol("mainHeight") as InjectionKey<ComputedRef<string>>
@@ -18,6 +19,7 @@ const processModelFieldKey = Symbol("processModelFieldKey") as InjectionKey<Shal
 const processInstanceDetailInfoKey = Symbol("processInstanceDetailInfoKey") as InjectionKey<Ref<ProcessInstanceInfoView>>
 const processNodePageListKey = Symbol("processNodePageListKey") as InjectionKey<ShallowRef<ProcessModelNodePageView[]>>
 const pageFullScreenKey = Symbol("pageFullScreenKey") as InjectionKey<Ref<boolean>>
+const vFormActiveElementKey = Symbol() as InjectionKey<Ref<ComponentConfig>>
 
 
 
@@ -41,4 +43,5 @@ export {
   processInstanceDetailInfoKey,
   processNodePageListKey,
   pageFullScreenKey,
+  vFormActiveElementKey,
 }
