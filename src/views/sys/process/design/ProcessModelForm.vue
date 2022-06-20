@@ -5,33 +5,21 @@
         <el-tab-pane label="组件" name="component">
           <candidate-component-page
             :height="designerContainerHeight"
-            :input-components="inputComponents"
-            :output-components="outputComponents"
-            :layout-components="layoutComponents"
+            :input-components="InputComponents"
+            :output-components="OutputComponents"
+            :layout-components="LayoutComponents"
           >
           </candidate-component-page>
         </el-tab-pane>
         <el-tab-pane label="字段" name="field">
-          <draggable
-            style="width: 100%; height: 100%"
-            :list="componentList"
-            :group="{ name: 'component', pull: 'clone', put: false}"
-            handle="div.component-item"
-            item-key="id"
-            :sort="false"
-            :clone="transCloneComponent"
-          >
-            <template #item="{ element }">
-              <div class="component-item">{{ element.title }}</div>
-            </template>
-          </draggable>
+
         </el-tab-pane>
       </el-tabs>
 
     </div>
     <div class="form-wrapper">
       <div class="form-designer-toolbar">
-
+        <el-button text type="primary" :icon="viewIcon" @click="handleClickViewJSON">查看JSON</el-button>
       </div>
       <el-scrollbar :height="containerHeight" always>
         <el-form style="width: calc(100% - 10px); padding: 5px">
@@ -44,21 +32,29 @@
       <form-property-panel :height="designerContainerHeight"></form-property-panel>
     </div>
   </div>
+
+  <JsonEditor v-model:visible="editorInfo.visible" :code="editorInfo.code"></JsonEditor>
+
+
 </template>
 
 <script lang="ts" setup>
 import {computed, inject, ref, defineComponent, provide} from "vue";
 import {mainHeightKey, mainWidthKey, themeKey, vFormActiveElementKey} from "@/config/app.keys";
 import Draggable from "vuedraggable"
-import { ElForm, ElScrollbar, ElTabs, ElTabPane } from "element-plus"
+import { ElForm, ElScrollbar, ElTabs, ElTabPane, ElButton } from "element-plus"
 import {CandidateComponentConfig, ComponentConfig} from "@/components/form/types";
 import NestedDragItem from "@/components/form/designer/NestedDragItem.vue";
 import FormPropertyPanel from "@/components/form/designer/FormPropertyPanel.vue"
 import CandidateComponentPage from "@/components/form/designer/candidate/CandidateComponentPage.vue";
 import { genId, transCloneComponent } from '@/components/form/designer/util/common'
+import {useIcon} from "@/components/common/util";
+import JsonEditor from "@/components/common/JsonEditor.vue";
+import { InputComponents, OutputComponents, LayoutComponents } from "@/components/form/designer/data"
+
+const viewIcon = useIcon('View')
 
 const candidateActiveTab = ref<string>('component')
-
 
 const mainWidth = inject(mainWidthKey)
 const mainHeight = inject(mainHeightKey)
@@ -73,217 +69,23 @@ const designerContainerHeight = computed<string>(() => `calc(${containerHeight.v
 const vFormActiveElement = ref<ComponentConfig>(null)
 provide(vFormActiveElementKey, vFormActiveElement)
 
-const inputComponents: CandidateComponentConfig[] = [
-  {
-    id: genId(),
-    icon: 'TextField',
-    component: 'el-input',
-    title: "单行文本框",
-    formItemAttrs: {
-      prop: genId(),
-      label: "单行文本框",
-      labelWidth: "120px",
-      required: false,
-      error: '',
-      showMessage: true,
-      inlineMessage: false,
-      size: 'default'
-    },
-    attrs: {
-      style: {
-        width: '100%',
-      }
-    }
-  },
-  {
-    id: genId(),
-    icon: 'Select',
-    component: 'el-select',
-    title: "下拉框",
-    formItemAttrs: {
-      prop: genId(),
-      label: "下拉框",
-      labelWidth: "120px",
-      required: false,
-      error: '',
-      showMessage: true,
-      inlineMessage: false,
-      size: 'default'
-    },
-    attrs: {
-      style: {
-        width: '100%',
-      }
-    }
-  },
-  {
-    id: genId(),
-    icon: 'Checkbox',
-    component: 'el-checkbox-group',
-    title: "多选框组",
-    formItemAttrs: {
-      prop: genId(),
-      label: "多选框组",
-      labelWidth: "120px",
-      required: false,
-      error: '',
-      showMessage: true,
-      inlineMessage: false,
-      size: 'default'
-    },
-    attrs: {
-      style: {
-        width: '100%',
-      }
-    },
-    children: [
-      {
-        id: genId(),
-        component: 'el-checkbox',
-        title: '多选框',
-        attrs: {
-          label: 'Option1'
-        }
-      },
-      {
-        id: genId(),
-        component: 'el-checkbox',
-        title: '多选框',
-        attrs: {
-          label: 'Option2'
-        }
-      },
-    ]
-  },
-]
-const outputComponents = []
-const layoutComponents = [
-  {
-    id: genId(),
-    component: 'el-row',
-    title: "栅格",
-    formItemAttrs: {
-      label: "栅格",
-    },
-    attrs: {
-      style: {
-        minHeight: '120px'
-      }
-    },
-    children: [
-      {
-        id: genId(),
-        component: 'el-col',
-        title: "栅格",
-        formItemAttrs: {
-          label: "栅格",
-        },
-        attrs: {
-          span: 12,
-          style: {
-            minHeight: '80px'
-          }
-        },
-        children: [],
-      },
-      {
-        id: genId(),
-        component: 'el-col',
-        title: "栅格",
-        formItemAttrs: {
-          label: "栅格",
-        },
-        attrs: {
-          span: 12,
-          style: {
-            minHeight: '80px'
-          }
-        },
-        children: [],
-      }
-    ],
-  }
-]
 
-
-const componentList = ref<CandidateComponentConfig[]>([
-  {
-    id: genId(),
-    component: 'el-select',
-    title: "下拉框",
-    formItemAttrs: {
-      label: "下拉框",
-      labelWidth: "120px",
-    },
-    attrs: {
-      style: {
-        width: '100%',
-      }
-    }
-  },
-  {
-    id: genId(),
-    component: 'el-input',
-    title: "单行文本框",
-    formItemAttrs: {
-      label: "单行文本框",
-      labelWidth: "120px",
-    },
-    attrs: {
-      style: {
-        width: '100%',
-      }
-    }
-  },
-  {
-    id: genId(),
-    component: 'el-row',
-    title: "行容器",
-    formItemAttrs: {
-      label: "行容器",
-    },
-    attrs: {
-      style: {
-        minHeight: '120px'
-      }
-    },
-    children: [
-      {
-        id: genId(),
-        component: 'el-col',
-        title: "栅格",
-        formItemAttrs: {
-          label: "栅格",
-        },
-        attrs: {
-          span: 12,
-          style: {
-            minHeight: '80px'
-          }
-        },
-        children: [],
-      },
-      {
-        id: genId(),
-        component: 'el-col',
-        title: "栅格",
-        formItemAttrs: {
-          label: "栅格",
-        },
-        attrs: {
-          span: 12,
-          style: {
-            minHeight: '80px'
-          }
-        },
-        children: [],
-      }
-    ],
-  },
-])
 
 const formComponentList = ref<ComponentConfig[]>([])
 
+interface JSONEditorInfo {
+  visible: boolean
+  code: string
+}
+const editorInfo = ref<JSONEditorInfo>({
+  visible: false,
+  code: ''
+})
+
+function handleClickViewJSON() {
+  editorInfo.value.code = JSON.stringify(formComponentList.value, null, 4)
+  editorInfo.value.visible = true
+}
 </script>
 
 <style scoped>
@@ -307,7 +109,7 @@ const formComponentList = ref<ComponentConfig[]>([])
 }
 
 .property-panel-container {
-  width: 300px;
+  width: 400px;
   height: v-bind(containerHeight);
   background-color: #FFFFFF;
 }
@@ -328,5 +130,8 @@ const formComponentList = ref<ComponentConfig[]>([])
   width: 100%;
   height: 40px;
   background-color: #FFFFFF;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }
 </style>

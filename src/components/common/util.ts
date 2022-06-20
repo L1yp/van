@@ -6,6 +6,14 @@ import SVGIcon from "@/components/common/SVGIcon.vue";
  * @param attrs
  */
 export function useIcon(name: string, attrs?: Record<string, any>) {
+  if (!attrs) {
+    attrs = {
+      style: {
+        width: '1em',
+        height: '1em'
+      }
+    }
+  }
   return h(SVGIcon, {
     name,
     ...attrs

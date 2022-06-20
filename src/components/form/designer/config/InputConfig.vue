@@ -16,7 +16,6 @@
             <s-v-g-icon name="InfoFilled" style="width: 16px; height: 16px"></s-v-g-icon>
           </div>
         </div>
-
       </template>
       <el-select v-model="vFormSelectElem.attrs.type">
         <el-option label="文本" value="text"></el-option>
@@ -45,11 +44,11 @@
     </el-form-item>
 
     <el-form-item prop="maxlength" label="最大输入长度">
-      <el-input type="number" v-model="vFormSelectElem.attrs.maxlength"></el-input>
+      <el-input-number v-model="vFormSelectElem.attrs.maxlength"></el-input-number>
     </el-form-item>
 
     <el-form-item prop="maxlength" label="最小输入长度">
-      <el-input type="number" v-model="vFormSelectElem.attrs.minlength"></el-input>
+      <el-input-number v-model="vFormSelectElem.attrs.minlength"></el-input-number>
     </el-form-item>
 
     <el-form-item prop="showWordLimit" label="展示字数统计">
@@ -59,7 +58,7 @@
       </el-radio-group>
     </el-form-item>
     <el-form-item prop="placeholder" label="占位文本">
-      <el-input type="number" v-model="vFormSelectElem.attrs.placeholder"></el-input>
+      <el-input-number v-model="vFormSelectElem.attrs.placeholder"></el-input-number>
     </el-form-item>
     <el-form-item prop="clearable" label="是否可清空">
       <el-radio-group v-model="vFormSelectElem.attrs.clearable">
@@ -99,7 +98,7 @@
     </el-form-item>
 
     <el-form-item prop="rows" label="行数">
-      <el-input type="number" v-model="vFormSelectElem.attrs.rows"></el-input>
+      <el-input-number v-model="vFormSelectElem.attrs.rows"></el-input-number>
     </el-form-item>
 
     <el-form-item prop="autoresize" label="高度自适应">
@@ -121,15 +120,15 @@
     </el-form-item>
 
     <el-form-item prop="max" label="最大值(原生)">
-      <el-input type="number" v-model="vFormSelectElem.attrs.max"></el-input>
+      <el-input-number v-model="vFormSelectElem.attrs.max"></el-input-number>
     </el-form-item>
 
     <el-form-item prop="min" label="最小值(原生)">
-      <el-input type="number" v-model="vFormSelectElem.attrs.min"></el-input>
+      <el-input-number v-model="vFormSelectElem.attrs.min"></el-input-number>
     </el-form-item>
 
     <el-form-item prop="step" label="步数(原生)">
-      <el-input type="number" v-model="vFormSelectElem.attrs.step"></el-input>
+      <el-input-number v-model="vFormSelectElem.attrs.step"></el-input-number>
     </el-form-item>
 
     <el-form-item prop="resize" label="缩放">
@@ -149,7 +148,7 @@
     </el-form-item>
 
     <el-form-item prop="form" label="form(原生)">
-      <el-input type="number" v-model="vFormSelectElem.attrs.form"></el-input>
+      <el-input-number v-model="vFormSelectElem.attrs.form"></el-input-number>
     </el-form-item>
 
     <el-form-item prop="tabindex" label="tabindex">
@@ -172,7 +171,7 @@
 
 <script lang="ts" setup>
 import {
-  ElForm, ElFormItem, ElInput, ElSelect, ElOption, ElRadioGroup, ElRadioButton,
+  ElForm, ElFormItem, ElInput, ElSelect, ElOption, ElRadioGroup, ElRadioButton, ElInputNumber
 } from 'element-plus'
 import {inject} from "vue";
 import {vFormActiveElementKey} from "@/config/app.keys";

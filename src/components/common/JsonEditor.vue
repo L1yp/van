@@ -26,7 +26,7 @@
 <script lang="ts">
 import {basicSetup, EditorView} from "codemirror"
 import {EditorState, Compartment} from "@codemirror/state"
-import {xml} from "@codemirror/lang-xml"
+import { json } from "@codemirror/lang-json"
 import {computed, ref, shallowRef, toRaw, watch, defineComponent, PropType} from "vue";
 import {ElDialog, ElScrollbar, ElButton} from "element-plus"
 import SVGIcon from "@/components/common/SVGIcon.vue"
@@ -75,7 +75,7 @@ export default defineComponent({
         doc: props.code,
         extensions: [
           basicSetup,
-          language.of(xml()),
+          language.of(json()),
           tabSize.of(EditorState.tabSize.of(4))
         ]
       })

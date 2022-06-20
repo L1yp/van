@@ -87,7 +87,7 @@
     @confirm="handleDialogConfirm"
     @cancel="dialogInfo.visible = false"
   >
-    <el-form v-model="dialogInfo.formData" ref="formRef" label-width="120px">
+    <el-form :model="dialogInfo.formData" ref="formRef" label-width="120px">
       <el-row :gutter="10">
         <el-col :span="6">
           <el-form-item label="流程标识" prop="processKey">

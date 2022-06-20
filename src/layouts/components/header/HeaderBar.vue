@@ -8,15 +8,49 @@
 
   <div style="display: flex; justify-content: flex-end; align-items: center;">
     <el-dropdown :hide-on-click="false" @command="handleCommand">
-            <span class="el-dropdown-link">
-              <el-avatar
-                  shape="circle"
-                  :size="40"
-                  fit="cover"
-                  :src="userInfo.avatar"
-              >
-              </el-avatar>
-            </span>
+      <span class="el-dropdown-link">
+        <el-avatar
+          shape="circle"
+          :size="40"
+          fit="cover"
+          src="https://github.com/fluidicon.png"
+        >
+        </el-avatar>
+      </span>
+      <template #dropdown>
+        <el-dropdown-menu>
+          <el-dropdown-item command="github-van">前端</el-dropdown-item>
+          <el-dropdown-item command="github-van-app">后端</el-dropdown-item>
+        </el-dropdown-menu>
+      </template>
+    </el-dropdown>
+    <el-dropdown :hide-on-click="false" @command="handleCommand">
+      <span class="el-dropdown-link">
+        <el-avatar
+          shape="circle"
+          :size="40"
+          fit="cover"
+          src="https://gitee.com/assets/favicon.ico"
+        >
+        </el-avatar>
+      </span>
+      <template #dropdown>
+        <el-dropdown-menu>
+          <el-dropdown-item command="gitee-van">前端</el-dropdown-item>
+          <el-dropdown-item command="gitee-van-app">后端</el-dropdown-item>
+        </el-dropdown-menu>
+      </template>
+    </el-dropdown>
+    <el-dropdown :hide-on-click="false" @command="handleCommand">
+      <span class="el-dropdown-link">
+        <el-avatar
+          shape="circle"
+          :size="40"
+          fit="cover"
+          :src="userInfo.avatar"
+        >
+        </el-avatar>
+      </span>
       <template #dropdown>
         <el-dropdown-menu>
           <el-dropdown-item command="profile">个人信息</el-dropdown-item>
@@ -30,7 +64,7 @@
 
 <script lang="ts" setup>
 import {inject, Ref} from "vue"
-import {ElButton, ElAvatar, ElDropdown, ElDropdownMenu, ElDropdownItem} from "element-plus"
+import {ElAvatar, ElButton, ElDropdown, ElDropdownItem, ElDropdownMenu} from "element-plus"
 import {useRouter} from "vue-router";
 import {uninstallLayoutContentRoute} from "@/router";
 import SVGIcon from "@/components/common/SVGIcon.vue";
@@ -41,6 +75,7 @@ const router = useRouter();
 const asideCollapsed = inject<Ref<boolean>>(asideCollapsedKey)!
 const userInfo = inject(userInfoKey)
 console.log("userInfo", userInfo)
+
 function collapse() {
   asideCollapsed.value = !asideCollapsed.value;
 }
@@ -55,10 +90,25 @@ function handleCommand(command: string) {
     remove("tags");
     router.replace({name: "login"});
   }
+  else if (command === 'gitee-van') {
+    window.open('https://gitee.com/L1yp/van')
+  }
+  else if (command === 'gitee-van-app') {
+    window.open('https://gitee.com/L1yp/van-app')
+  }
+  else if (command === 'github-van') {
+    window.open('https://github.com/L1yp/van')
+  }
+  else if (command === 'github-van-app') {
+    window.open('https://github.com/L1yp/van-app')
+
+  }
 }
 
 </script>
 
 <style scoped>
-
+:deep(.el-dropdown + .el-dropdown) {
+  margin-left: 10px;
+}
 </style>

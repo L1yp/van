@@ -3,7 +3,7 @@
     <el-tab-pane label="组件属性" name="component">
       <el-scrollbar :height="collapseScrollHeight" always>
         <el-collapse v-model="openedItems" style="padding: 0 6px">
-          <el-collapse-item name="form-item" title="FormItem配置">
+          <el-collapse-item name="form-item" title="FormItem配置" v-show="vFormSelectElem?.category === 'form-item'">
             <el-form
               v-if="vFormSelectElem?.formItemAttrs"
               :model="vFormSelectElem?.formItemAttrs"
@@ -50,6 +50,9 @@
           </el-collapse-item>
           <el-collapse-item name="component" title="组件配置">
             <input-config v-if="vFormSelectElem?.component === 'el-input'"></input-config>
+            <row-config v-if="vFormSelectElem?.component === 'el-row'"></row-config>
+            <col-config v-if="vFormSelectElem?.component === 'el-col'"></col-config>
+            <select-config v-if="vFormSelectElem?.component === 'el-select'"></select-config>
           </el-collapse-item>
         </el-collapse>
       </el-scrollbar>
@@ -66,6 +69,9 @@ import {
 import {computed, inject, ref} from "vue";
 import {vFormActiveElementKey} from "@/config/app.keys";
 import InputConfig from "@/components/form/designer/config/InputConfig.vue";
+import RowConfig from "@/components/form/designer/config/RowConfig.vue";
+import ColConfig from "@/components/form/designer/config/ColConfig.vue";
+import SelectConfig from "@/components/form/designer/config/SelectConfig.vue";
 
 interface Props {
   height: string

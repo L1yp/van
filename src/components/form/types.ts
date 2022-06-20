@@ -12,6 +12,7 @@ export interface FormScheme {
 export interface CandidateComponentConfig {
   id: string
   component: string
+  category: 'form-item' | 'layout' | 'output'
   icon?: string
   title?: string
   formItemAttrs?: Record<string, any>
@@ -23,6 +24,7 @@ export interface CandidateComponentConfig {
 export interface ComponentConfig {
   id: string
   component: string
+  category: 'form-item' | 'layout' | 'output'
   icon?: string
   formItemAttrs?: Record<string, any>
   attrs?: Record<string, any>,

@@ -8,7 +8,8 @@ export function transCloneComponent(original: CandidateComponentConfig) {
   const newItem: ComponentConfig = {
     id: genId(),
     component: original.component,
-    formItemAttrs: JSON.parse(JSON.stringify(original.formItemAttrs)),
+    category: original.category,
+    formItemAttrs: original.formItemAttrs ? JSON.parse(JSON.stringify(original.formItemAttrs)) : undefined,
     attrs: original.attrs,
     children: JSON.parse(JSON.stringify(original.children || [])),
   }

@@ -104,4 +104,8 @@ body {
 .el-button.is-plain.is-text + .el-button.is-plain.is-text {
   margin-left: 0;
 }
+
+.el-popper.form-item-tooltip code {
+  background-color: #f5f7fa;
+}
 </style>
