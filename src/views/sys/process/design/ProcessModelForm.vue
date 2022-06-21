@@ -21,15 +21,21 @@
       <div class="form-designer-toolbar">
         <el-button text type="primary" :icon="viewIcon" @click="handleClickViewJSON">查看JSON</el-button>
       </div>
-      <el-scrollbar :height="containerHeight" always>
-        <el-form style="width: calc(100% - 10px); padding: 5px">
-          <nested-drag-item :style="{width: '100%', minHeight: `calc(${containerHeight} - 10px)`}" :children="formComponentList" group="component"></nested-drag-item>
+      <el-scrollbar style="height: calc(100% - 40px)" :height="designerContainerHeight" always>
+        <el-form style="padding: 10px">
+          <!-- 若(nested-drag-item).height + padding*2 > designerContainerHeight 则会出现滚动条  -->
+          <nested-drag-item
+            :style="{width: '100%', minHeight: `calc(${designerContainerHeight} - 20px)`}"
+            :children="formComponentList"
+            group="component"
+          >
+          </nested-drag-item>
         </el-form>
       </el-scrollbar>
 
     </div>
     <div class="property-panel-container">
-      <form-property-panel :height="designerContainerHeight"></form-property-panel>
+      <form-property-panel :height="formPropertyPanelHeight"></form-property-panel>
     </div>
   </div>
 
@@ -39,9 +45,8 @@
 </template>
 
 <script lang="ts" setup>
-import {computed, inject, ref, defineComponent, provide} from "vue";
+import {computed, inject, ref, provide} from "vue";
 import {mainHeightKey, mainWidthKey, themeKey, vFormActiveElementKey} from "@/config/app.keys";
-import Draggable from "vuedraggable"
 import { ElForm, ElScrollbar, ElTabs, ElTabPane, ElButton } from "element-plus"
 import {CandidateComponentConfig, ComponentConfig} from "@/components/form/types";
 import NestedDragItem from "@/components/form/designer/NestedDragItem.vue";
@@ -65,6 +70,8 @@ const containerWidth = computed<string>(() => `calc(${mainWidth.value} - ${theme
 const containerHeight = computed<string>(() => `calc(${mainHeight.value} - ${theme.value.mainPadding * 2}px)`)
 
 const designerContainerHeight = computed<string>(() => `calc(${containerHeight.value} - 40px)`)
+
+const formPropertyPanelHeight = computed<string>(() => `calc(${containerHeight.value} - 55px)`)
 
 const vFormActiveElement = ref<ComponentConfig>(null)
 provide(vFormActiveElementKey, vFormActiveElement)
@@ -105,7 +112,7 @@ function handleClickViewJSON() {
 
 .form-wrapper {
   flex: 1;
-  height: v-bind(designerContainerHeight);
+  height: v-bind(containerHeight);
 }
 
 .property-panel-container {

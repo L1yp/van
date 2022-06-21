@@ -18,6 +18,7 @@ export interface CandidateComponentConfig {
   formItemAttrs?: Record<string, any>
   attrs?: Record<string, any>
   children?: CandidateComponentConfig[]
+  [key: string]: any
 }
 
 
@@ -28,7 +29,31 @@ export interface ComponentConfig {
   icon?: string
   formItemAttrs?: Record<string, any>
   attrs?: Record<string, any>,
+  refreshState: boolean
   children?: ComponentConfig[]
+}
+
+interface SelectOptionFixedValue {
+  label: string
+  value: string
+}
+
+interface SelectOptionDictValue {
+  scope: string
+  ident: string
+}
+
+interface SelectOptionUrlValue {
+
+}
+
+interface SelectOption {
+  type: 'fixed' | 'dict' | 'url'
+  value: SelectOptionFixedValue[] | SelectOptionDictValue | SelectOptionUrlValue
+}
+
+export interface SelectConfig extends ComponentConfig {
+  options: SelectOption
 }
 
 export interface FormItemConfig {

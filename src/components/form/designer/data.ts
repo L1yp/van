@@ -1,4 +1,4 @@
-import {CandidateComponentConfig} from "@/components/form/types";
+import {CandidateComponentConfig, SelectConfig} from "@/components/form/types";
 import {genId} from "@/components/form/designer/util/common";
 
 
@@ -44,7 +44,6 @@ export const InputComponents: CandidateComponentConfig[] = [
     attrs: {
       multiple: false,
       disabled: false,
-      valueKey: 'value',
       size: 'default',
       clearable: false,
       collapseTags: false,
@@ -56,9 +55,9 @@ export const InputComponents: CandidateComponentConfig[] = [
       placeholder: '',
       filterable: false,
       allowCreate: false,
-      filterMethod: new Function('() => {}'),
+      // filterMethod: new Function('() => {}'),
       remote: false,
-      remoteMethod: new Function('() => {}'),
+      // remoteMethod: new Function('() => {}'),
       loading: false,
       loadingText: 'Loading',
       noMatchText: 'No matching data',
@@ -76,8 +75,29 @@ export const InputComponents: CandidateComponentConfig[] = [
       style: {
         width: '100%',
       }
+    },
+    options: {
+      type: 'fixed',
+      value: [
+        {
+          label: 'Option1',
+          value: 1,
+        },
+        {
+          label: 'Option2',
+          value: 2,
+        },
+        {
+          label: 'Option3',
+          value: 3,
+        },
+        {
+          label: 'Option4',
+          value: 4,
+        },
+      ]
     }
-  },
+  } as SelectConfig,
   {
     id: genId(),
     icon: 'Checkbox',

@@ -13,7 +13,7 @@
           shape="circle"
           :size="40"
           fit="cover"
-          src="https://github.com/fluidicon.png"
+          src="/images/github-icon.png"
         >
         </el-avatar>
       </span>

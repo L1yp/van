@@ -8,7 +8,7 @@
   >
 
     <el-form-item prop="multiple" label="多选">
-      <el-radio-group v-model="vFormSelectElem.attrs.multiple">
+      <el-radio-group v-model="formData.multiple" @change="handleChangeMultiple">
         <el-radio-button :label="true">是</el-radio-button>
         <el-radio-button :label="false">否</el-radio-button>
       </el-radio-group>
@@ -60,7 +60,7 @@
           content="当鼠标悬停于折叠标签的文本时，是否显示所有选中的标签。 要使用此属性，<code>collapse-tags</code>属性必须设定为 true"
         />
       </template>
-      <el-radio-group v-model="vFormSelectElem.attrs.collapseTags">
+      <el-radio-group v-model="vFormSelectElem.attrs.collapseTagsTooltip">
         <el-radio-button :label="true">是</el-radio-button>
         <el-radio-button :label="false">否</el-radio-button>
       </el-radio-group>
@@ -310,12 +310,35 @@ import {
   ElForm, ElFormItem, ElInput, ElSelect, ElOption, ElInputNumber, ElRadioGroup, ElRadioButton,
   ElTooltip
 } from 'element-plus'
-import {inject} from "vue";
+import {inject, nextTick, ref} from "vue";
 import {vFormActiveElementKey} from "@/config/app.keys";
 import SVGIcon from "@/components/common/SVGIcon.vue";
 import FormItemTooltip from "../../FormItemTooltip.vue"
 
 const vFormSelectElem = inject(vFormActiveElementKey)
+
+interface FormData {
+  multiple: boolean
+}
+
+const formData = ref<FormData>({
+  multiple: vFormSelectElem.value?.attrs?.multiple
+})
+
+function handleChangeMultiple(val: boolean) {
+  console.log('handleChangeMultiple', val)
+
+  vFormSelectElem.value.refreshState = false
+  if (val) {
+    vFormSelectElem.value.attrs.modelValue = []
+  } else {
+    vFormSelectElem.value.attrs.modelValue = undefined
+  }
+  requestAnimationFrame(() => {
+    vFormSelectElem.value.attrs.multiple = val
+    vFormSelectElem.value.refreshState = true
+  })
+}
 
 </script>
 
