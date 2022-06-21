@@ -61,7 +61,7 @@ watch(bpmnSelectedElem, () => {
   }
 
   if (type.value === "bpmn:StartEvent") {
-    creator.value = BpmnUtil.getAttrIgnorePrefix(businessObject.$attrs, "initiator")
+    creator.value = businessObject.initiator
   }
 
 }, {immediate: true})

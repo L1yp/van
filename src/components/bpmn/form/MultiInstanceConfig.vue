@@ -118,8 +118,8 @@ watch(bpmnSelectedElem, () => {
       } else {
         formData.value.type = 2
       }
-      if (BpmnUtil.hasAttrIgnorePrefix(bo.loopCharacteristics?.$attrs, "collection")) {
-        const val = BpmnUtil.getAttrIgnorePrefix(bo.loopCharacteristics?.$attrs, "collection")
+      if (bo.loopCharacteristics?.collection) {
+        const val = bo.loopCharacteristics?.collection
         if (val.startsWith("${psr.read")) {
           // custom field
           const idx = val.indexOf("', '")
@@ -143,8 +143,8 @@ watch(bpmnSelectedElem, () => {
       } else {
         formData.value.collection = null
       }
-      if (BpmnUtil.hasAttrIgnorePrefix(bo.loopCharacteristics?.$attrs, "elementVariable")) {
-        formData.value.item = BpmnUtil.getAttrIgnorePrefix(bo.loopCharacteristics?.$attrs, "elementVariable")
+      if (bo.loopCharacteristics?.elementVariable) {
+        formData.value.item = bo.loopCharacteristics?.elementVariable
       } else {
         formData.value.item = null
       }

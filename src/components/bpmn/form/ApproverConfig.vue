@@ -104,7 +104,7 @@ watch(bpmnSelectedElem, () => {
   initExtOptions()
   let elementVariable = ''
   if (bo?.loopCharacteristics) {
-    elementVariable = BpmnUtil.getAttrIgnorePrefix(bo.loopCharacteristics?.$attrs, "elementVariable")
+    elementVariable = bo?.loopCharacteristics?.elementVariable
     const multiInstance = options.value.find(it => it.id === -2)
     if (multiInstance) {
       multiInstance.label = `会签审核(${elementVariable})`
@@ -117,17 +117,9 @@ watch(bpmnSelectedElem, () => {
       })
     }
   }
-  if (!bo || !bo?.$attrs || Object.keys(bo?.$attrs).length === 0) {
-    expression.value = null
-    return
-  }
 
-
-
-
-
-  if (BpmnUtil.hasAttrIgnorePrefix(bo?.$attrs, "assignee")) {
-    const val = BpmnUtil.getAttrIgnorePrefix(bo?.$attrs, "assignee")
+  if (bo?.assignee) {
+    const val = bo?.assignee
     if (val.startsWith("${psr.read")) {
       // custom field
       const idx = val.indexOf("', '")

@@ -14,4 +14,5 @@ declare interface BusinessObject {
   $attrs: Record<string, string>;
   $parent: any;
   di: any;
+  initiator?: string
 }
