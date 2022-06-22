@@ -17,7 +17,6 @@
             :class="vFormActiveElement === element ? ['drag-selected'] : []"
           >
             <el-col
-              v-if="item.refreshState"
               v-bind="item.attrs"
               v-for="item in element.children"
               :key="item.id"
@@ -104,11 +103,11 @@
 
 <script lang="ts">
 import Draggable from "vuedraggable";
-import {defineComponent, inject, ref} from "vue";
+import {defineComponent, inject, nextTick, ref} from "vue";
 import { ElForm, ElFormItem, ElInput, ElSelect, ElRow, ElCol, ElCheckboxGroup, ElCheckbox, ElOption } from "element-plus"
 import SVGIcon from "@/components/common/SVGIcon.vue";
 import {dictValuesKey, vFormActiveElementKey} from "@/config/app.keys";
-
+import emitter from "@/event/mitt";
 
 
 export default defineComponent({
@@ -118,6 +117,16 @@ export default defineComponent({
     children: Array
   },
   setup(props, { emit }) {
+
+    emitter.on('selectMultipleChanged', (event) => {
+      console.log('selectedMultipleChanged', event, formData.value[event.prop])
+      // vFormActiveElement.value.attrs.multiple = event.multiple
+      if (event.multiple) {
+        formData.value[event.prop] = []
+      } else {
+        formData.value[event.prop] = undefined
+      }
+    })
 
     const vFormActiveElement = inject(vFormActiveElementKey)
     const formData = ref({})

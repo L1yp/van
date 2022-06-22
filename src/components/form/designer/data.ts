@@ -31,6 +31,7 @@ export const InputComponents: CandidateComponentConfig[] = [
     component: 'el-select',
     category: 'form-item',
     title: "下拉框",
+    refreshState: true,
     formItemAttrs: {
       prop: genId(),
       label: "下拉框",

@@ -19,6 +19,7 @@
     "element-plus": "^2.2.6",
     "fast-glob": "^3.2.11",
     "highlight.js": "^11.5.1",
+    "mitt": "^3.0.0",
     "sortablejs": "^1.15.0",
     "spark-md5": "^3.0.2",
     "vite-plugin-svg-icons": "^2.0.1",

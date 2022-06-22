@@ -7,6 +7,11 @@
     style="padding: 5px;"
   >
 
+
+    <el-form-item prop="id" label="键">
+      <el-input v-model="vFormSelectElem.id"></el-input>
+    </el-form-item>
+
     <el-form-item prop="multiple" label="多选">
       <el-radio-group v-model="formData.multiple" @change="handleChangeMultiple">
         <el-radio-button :label="true">是</el-radio-button>
@@ -314,6 +319,7 @@ import {inject, nextTick, ref} from "vue";
 import {vFormActiveElementKey} from "@/config/app.keys";
 import SVGIcon from "@/components/common/SVGIcon.vue";
 import FormItemTooltip from "../../FormItemTooltip.vue"
+import emitter from "@/event/mitt";
 
 const vFormSelectElem = inject(vFormActiveElementKey)
 
@@ -327,15 +333,15 @@ const formData = ref<FormData>({
 
 function handleChangeMultiple(val: boolean) {
   console.log('handleChangeMultiple', val)
-
   vFormSelectElem.value.refreshState = false
-  if (val) {
-    vFormSelectElem.value.attrs.modelValue = []
-  } else {
-    vFormSelectElem.value.attrs.modelValue = undefined
-  }
-  requestAnimationFrame(() => {
-    vFormSelectElem.value.attrs.multiple = val
+
+  nextTick(() => {
+
+    emitter.emit('selectMultipleChanged', {
+      multiple: val,
+      prop: vFormSelectElem.value.id
+    })
+
     vFormSelectElem.value.refreshState = true
   })
 }
