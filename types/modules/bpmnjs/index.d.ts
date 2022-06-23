@@ -492,6 +492,7 @@ declare module 'bpmn-js/lib/BaseViewer' {
     moddleExtensions?: object
     modules?: any[]
     additionalModules?: any[]
+    [key: string]: any
   }
 
 }
