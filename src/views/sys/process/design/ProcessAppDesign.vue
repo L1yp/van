@@ -70,6 +70,7 @@ import 'bpmn-js/dist/assets/diagram-js.css';
 import 'bpmn-js/dist/assets/bpmn-font/css/bpmn.css';
 import 'bpmn-js/dist/assets/bpmn-font/css/bpmn-codes.css';
 import 'bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css';
+import 'diagram-js-minimap/assets/diagram-js-minimap.css'
 import PropertyPanel from "@/components/bpmn/PropertyPanel.vue";
 import SVGIcon from "@/components/common/SVGIcon.vue"
 import XmlEditor from "@/components/common/XmlEditor.vue"
@@ -77,6 +78,7 @@ import * as ProcessModelApi from "@/api/sys/process/"
 import initXml from "@/assets/bpmn/init.bpmn20.xml?raw"
 import {Connection, ElementRegistry, FormalExpression} from "bpmn-js";
 import {SaveXMLResult} from "bpmn-js/lib/BaseViewer";
+import miniMapModule from 'diagram-js-minimap'
 
 const route = useRoute()
 const bpmnId = Number(route.params.bpmnId)
@@ -133,10 +135,14 @@ async function init() {
         zoomScroll: ["value", ""],
 
       },
+      miniMapModule
     ],
     moddleExtensions: {
       flowable: flowable_descriptor
     },
+    minimap: {
+      open: true
+    }
   })
 
   // 选中元素变更
@@ -450,5 +456,12 @@ div.container{
 .dialog-footer {
   display: flex;
   justify-content: space-around;
+}
+
+:deep(.djs-minimap) {
+  top: unset;
+  right: unset;
+  left: 20px;
+  bottom: 20px;
 }
 </style>

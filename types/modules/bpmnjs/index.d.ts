@@ -650,6 +650,7 @@ declare module 'bpmn-js/lib/Modeler' {
     moddleExtensions?: object
     modules?: any[]
     additionalModules?: any[]
+    [key: string]: any
   }
 
   export default Modeler
