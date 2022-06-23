@@ -60,8 +60,8 @@
 import {ref, computed, shallowRef, onMounted, inject, onUpdated, toRaw, watch,} from "vue"
 import { ElTable, ElTableColumn, ElPopover, ElScrollbar, ElDescriptions, ElDescriptionsItem, ElTag, ElButtonGroup, ElButton } from "element-plus"
 import BpmnViewer from 'bpmn-js/lib/NavigatedViewer'
-import ImportModule from 'bpmn-js/lib/import'
-import DrawModule from 'bpmn-js/lib/draw'
+import ImportModule from 'bpmn-js/lib/import/index'
+import DrawModule from 'bpmn-js/lib/draw/index'
 import {asideWidthKey, mainHeightKey, processInstanceDetailInfoKey, themeKey} from "@/config/app.keys";
 import 'bpmn-js/dist/assets/diagram-js.css';
 import 'bpmn-js/dist/assets/bpmn-font/css/bpmn.css';
@@ -75,7 +75,7 @@ import UserViewer from "@/components/common/viewer/user/UserViewer.vue";
 import {useIcon} from "@/components/common/util";
 import {InternalEvent} from "diagram-js/lib/core/EventBus";
 import SVGIcon from "@/components/common/SVGIcon.vue";
-import MiniMapModule from 'diagram-js-minimap'
+import MiniMapModule from 'diagram-js-minimap/dist/index'
 
 const canvasRef = shallowRef<HTMLDivElement>()
 const viewer = shallowRef<BpmnViewer>()

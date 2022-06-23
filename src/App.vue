@@ -12,6 +12,18 @@ const zIndex = 3000;
 </template>
 
 <style>
+::-webkit-scrollbar {
+  display: block;
+  width: 10px;
+  height: 10px;
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #e5e6eb content-box;
+  border: 2px solid transparent;
+  border-radius: 5px;
+}
+
 html, body {
   margin: 0;
   padding: 0;
