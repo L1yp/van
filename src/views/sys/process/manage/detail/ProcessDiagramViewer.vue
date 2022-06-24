@@ -149,7 +149,7 @@ async function initViewer() {
     const bpmn = await ProcessModelApi.findProcessModelBPMN(processInfo.value.process_bpmn_id)
     viewer.value = new BpmnViewer({
       container: canvasRef.value,
-      modules: [
+      additionalModules: [
         ImportModule, MiniMapModule, DrawModule,
       ],
       minimap: {
