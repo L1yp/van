@@ -11,7 +11,6 @@
 
         <template v-if="'el-row' === element.component">
           <el-row
-            v-if="element.refreshState"
             v-bind="element.attrs"
             @click.stop="handleClickElement(element)"
             :class="vFormActiveElement === element ? ['drag-selected'] : []"
@@ -27,24 +26,7 @@
             </el-col>
           </el-row>
         </template>
-        <template v-else-if="'el-checkbox-group' === element.component">
-          <el-form-item
-            :prop="element.id"
-            v-bind="element.formItemAttrs"
-            @click.stop="handleClickElement(element)"
-            :class="vFormActiveElement === element ? ['drag-selected'] : []"
-          >
-            <el-checkbox-group v-if="element.refreshState" v-bind="element.attrs" v-model="formData[element.id]">
-              <el-checkbox label="Option1"></el-checkbox>
-              <el-checkbox label="Option2"></el-checkbox>
-              <el-checkbox label="Option3"></el-checkbox>
-<!--              <el-checkbox-->
-<!--                v-for="item in element.children"-->
-<!--                v-bind="item.attrs"-->
-<!--              />-->
-            </el-checkbox-group>
-          </el-form-item>
-        </template>
+
         <template v-else-if="'el-select' === element.component">
           <el-form-item
             :prop="element.id"
@@ -52,7 +34,7 @@
             @click.stop="handleClickElement(element)"
             :class="vFormActiveElement === element ? ['drag-selected'] : undefined"
           >
-            <el-select v-if="element.refreshState" v-bind="element.attrs" v-model="formData[element.id]">
+            <el-select :key="element.key" v-bind="element.attrs" v-model="formData[element.id]">
               <template v-if="element.options?.type === 'fixed'">
                 <el-option
                   :label="item.label"
@@ -108,11 +90,17 @@ import { ElForm, ElFormItem, ElInput, ElSelect, ElRow, ElCol, ElCheckboxGroup, E
 import SVGIcon from "@/components/common/SVGIcon.vue";
 import {dictValuesKey, vFormActiveElementKey} from "@/config/app.keys";
 import emitter from "@/event/mitt";
-
+import DictInput from "@/components/dict/DictInput.vue";
+import DictTag from "@/components/dict/DictTag.vue";
+import UserSelectorInput from "@/components/common/selector/user/UserSelectorInput.vue";
+import DeptSelectorInput from "@/components/common/selector/dept/DeptSelectorInput.vue";
 
 export default defineComponent({
   name: "NestedDragItem",
-  components: { Draggable, ElForm, ElFormItem, ElInput, ElSelect, ElOption, ElRow, ElCol, SVGIcon, ElCheckboxGroup, ElCheckbox },
+  components: {
+    Draggable, ElForm, ElFormItem, ElInput, ElSelect, ElOption, ElRow, ElCol, SVGIcon, ElCheckboxGroup, ElCheckbox,
+    DictInput, DictTag, UserSelectorInput, DeptSelectorInput,
+  },
   props: {
     children: Array
   },
@@ -120,7 +108,7 @@ export default defineComponent({
 
     emitter.on('selectMultipleChanged', (event) => {
       console.log('selectedMultipleChanged', event, formData.value[event.prop])
-      // vFormActiveElement.value.attrs.multiple = event.multiple
+      vFormActiveElement.value.attrs.multiple = event.multiple
       if (event.multiple) {
         formData.value[event.prop] = []
       } else {

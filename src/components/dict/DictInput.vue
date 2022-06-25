@@ -50,10 +50,22 @@
     >
     </el-tree-select>
   </template>
+
 </template>
 
 <script lang="ts">
-import {defineComponent, inject, onBeforeMount, onBeforeUnmount, ref, shallowRef, watch} from "vue"
+import {
+  computed,
+  defineComponent,
+  inject,
+  onBeforeMount,
+  onBeforeUnmount,
+  onMounted,
+  onUpdated,
+  ref,
+  shallowRef,
+  watch
+} from "vue"
 import {DictInputProps, DictInputEmits} from "./util";
 import {
   ElSelect, ElOption, ElCheckboxGroup, ElCheckboxButton,
@@ -91,22 +103,17 @@ export default defineComponent({
         emits("update:modelValue", val);
       }
     }
-    const dictInfo = shallowRef<DictInfo>()
     const dictInfos = inject(dictInfosKey)
     const dictValues = inject(dictValuesKey)
-    const tag = ref<DictValue>(null)
-    const options = ref<DictValue[]>([])
-
-    onBeforeMount(() => {
-      dictInfo.value = dictInfos.value.find(it => it.ident === props.ident && it.scope === props.scope)
-
+    const dictInfo = computed<DictInfo>(() => dictInfos.value.find(it => it.ident === props.ident && it.scope === props.scope))
+    const options = computed<DictValue[]>(() => {
       const items = dictValues.value.filter(dictValue => dictValue.scope === props.scope && dictValue.ident === props.ident && dictValue.status === 0)
       for (let item of items) {
         item.children = []
         item.value = item.val
       }
       if (dictInfo.value?.type === 1) {
-        options.value = items
+        return items
       } else if (dictInfo.value?.type === 2) {
         const map = new Map<number, DictValue>(items.map(it => [it.id, it]))
         items.forEach(it => {
@@ -115,12 +122,9 @@ export default defineComponent({
             item.children.push(it)
           }
         })
-        console.log("options", items.filter(it => it.pid === 0))
-        options.value = items.filter(it => it.pid === 0)
+        return items.filter(it => it.pid === 0)
       }
-
-
-
+      return []
     })
 
     const defaultProps = {
@@ -130,7 +134,6 @@ export default defineComponent({
       props,
       selectedItems,
       options,
-      tag,
       updateModelValue,
       defaultProps,
       dictInfo,

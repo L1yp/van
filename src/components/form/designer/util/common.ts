@@ -10,9 +10,9 @@ export function transCloneComponent(original: CandidateComponentConfig) {
     component: original.component,
     category: original.category,
     formItemAttrs: original.formItemAttrs ? JSON.parse(JSON.stringify(original.formItemAttrs)) : undefined,
-    attrs: original.attrs,
+    attrs: original.attrs ? JSON.parse(JSON.stringify(original.attrs)) : undefined,
     children: JSON.parse(JSON.stringify(original.children || [])),
-    refreshState: true,
+    key: 1,
   }
 
   if (original.component === 'el-select') {

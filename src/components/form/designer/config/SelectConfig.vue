@@ -38,7 +38,7 @@
       </el-radio-group>
     </el-form-item>
 
-    <el-form-item prop="clearable" label="是否可清空">
+    <el-form-item v-show="!vFormSelectElem.attrs.multiple" prop="clearable" label="是否可清空">
       <el-radio-group v-model="vFormSelectElem.attrs.clearable">
         <el-radio-button :label="true">是</el-radio-button>
         <el-radio-button :label="false">否</el-radio-button>
@@ -332,18 +332,13 @@ const formData = ref<FormData>({
 })
 
 function handleChangeMultiple(val: boolean) {
-  console.log('handleChangeMultiple', val)
-  vFormSelectElem.value.refreshState = false
-
-  nextTick(() => {
-
-    emitter.emit('selectMultipleChanged', {
-      multiple: val,
-      prop: vFormSelectElem.value.id
-    })
-
-    vFormSelectElem.value.refreshState = true
+  console.log('handleChangeMultiple', val, vFormSelectElem.value.key)
+  emitter.emit('selectMultipleChanged', {
+    multiple: val,
+    prop: vFormSelectElem.value.id
   })
+
+  vFormSelectElem.value.key++
 }
 
 </script>

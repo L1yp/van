@@ -29,8 +29,9 @@ export interface ComponentConfig {
   icon?: string
   formItemAttrs?: Record<string, any>
   attrs?: Record<string, any>,
-  refreshState: boolean
   children?: ComponentConfig[]
+  key: number
+  modelValue?: any
 }
 
 interface SelectOptionFixedValue {

@@ -53,6 +53,8 @@
             <row-config v-if="vFormSelectElem?.component === 'el-row'"></row-config>
             <col-config v-if="vFormSelectElem?.component === 'el-col'"></col-config>
             <select-config v-if="vFormSelectElem?.component === 'el-select'"></select-config>
+            <dict-input-config v-if="vFormSelectElem?.component === 'dict-input'"></dict-input-config>
+            <user-selector-input-config v-if="vFormSelectElem?.component === 'user-selector-input'"></user-selector-input-config>
           </el-collapse-item>
         </el-collapse>
       </el-scrollbar>
@@ -72,6 +74,8 @@ import InputConfig from "@/components/form/designer/config/InputConfig.vue";
 import RowConfig from "@/components/form/designer/config/RowConfig.vue";
 import ColConfig from "@/components/form/designer/config/ColConfig.vue";
 import SelectConfig from "@/components/form/designer/config/SelectConfig.vue";
+import DictInputConfig from "@/components/form/designer/config/DictInputConfig.vue";
+import UserSelectorInputConfig from "@/components/form/designer/config/UserSelectorInputConfig.vue";
 
 interface Props {
   height: string

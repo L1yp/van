@@ -19,6 +19,8 @@
     </div>
     <div class="form-wrapper">
       <div class="form-designer-toolbar">
+        <el-button text type="primary" :icon="deleteIcon" @click="handleClickClear">清空</el-button>
+        <el-button text type="primary" :icon="viewIcon" @click="handleClickPreview">预览</el-button>
         <el-button text type="primary" :icon="viewIcon" @click="handleClickViewJSON">查看JSON</el-button>
       </div>
       <el-scrollbar style="height: calc(100% - 40px)" :height="designerContainerHeight" always>
@@ -41,6 +43,15 @@
 
   <JsonEditor v-model:visible="editorInfo.visible" :code="editorInfo.code"></JsonEditor>
 
+  <v-dialog
+    v-model="dialogInfo.visible"
+    draggable
+    title="预览表单"
+    @cancel="dialogInfo.visible = false"
+    @confirm="dialogInfo.visible = false"
+  >
+    <v-form-render :schemes="formComponentList"></v-form-render>
+  </v-dialog>
 
 </template>
 
@@ -56,8 +67,11 @@ import { genId, transCloneComponent } from '@/components/form/designer/util/comm
 import {useIcon} from "@/components/common/util";
 import JsonEditor from "@/components/common/JsonEditor.vue";
 import { InputComponents, OutputComponents, LayoutComponents } from "@/components/form/designer/data"
+import VDialog from "@/components/dialog/VDialog.vue";
+import VFormRender from "@/components/form/designer/VFormRender.vue";
 
 const viewIcon = useIcon('View')
+const deleteIcon = useIcon('Delete')
 
 const candidateActiveTab = ref<string>('component')
 
@@ -88,6 +102,26 @@ const editorInfo = ref<JSONEditorInfo>({
   visible: false,
   code: ''
 })
+
+interface DialogInfo<T> {
+  visible: boolean
+  formData: T
+}
+
+const dialogInfo = ref<DialogInfo<object>>({
+  visible: false,
+  formData: {
+
+  }
+})
+
+function handleClickClear() {
+  formComponentList.value = []
+}
+
+function handleClickPreview() {
+  dialogInfo.value.visible =  true
+}
 
 function handleClickViewJSON() {
   editorInfo.value.code = JSON.stringify(formComponentList.value, null, 4)

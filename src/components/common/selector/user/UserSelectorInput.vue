@@ -1,5 +1,6 @@
 <template>
   <el-select
+    :key="selectKey"
     v-model="selectedElems"
     remote
     filterable
@@ -54,6 +55,7 @@ export default defineComponent({
   },
   setup(props, {emit: emits}) {
     const selectRef = ref<InstanceType<typeof ElSelect>>()
+    const selectKey = ref<number>(Math.random())
     function updateModelValue(val: UserView | UserView[]) {
       console.log("updateModelValue", val, selectRef.value)
       if (!val) {
@@ -140,6 +142,10 @@ export default defineComponent({
         selectedElems.value = props.multiple ? [] : null
       }
     }, {immediate: true})
+    watch(() => props.multiple, () => {
+      selectedElems.value = props.multiple ? [] : undefined
+      selectKey.value++
+    })
 
     async function handleSearch(keyword: string) {
       if (!keyword) {
@@ -190,7 +196,7 @@ export default defineComponent({
 
     return {
       updateModelValue, loading, selectedElems, options, handleSearch,
-      userSelectorRef, handleDblClick, selectRef,
+      userSelectorRef, handleDblClick, selectRef, selectKey
     }
 
   },

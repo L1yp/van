@@ -27,11 +27,58 @@ export const InputComponents: CandidateComponentConfig[] = [
   },
   {
     id: genId(),
+    icon: 'config',
+    component: 'dict-input',
+    category: 'form-item',
+    title: "字典输入框",
+    formItemAttrs: {
+      prop: genId(),
+      label: "字典输入框",
+      labelWidth: "120px",
+      required: false,
+      error: '',
+      showMessage: true,
+      inlineMessage: false,
+      size: 'default'
+    },
+    attrs: {
+      multiple: false,
+      checkStrictly: false,
+      scope: 'global',
+      ident: 'common_status',
+      valType: 'id'
+    }
+  },
+  {
+    id: genId(),
+    icon: 'User',
+    component: 'user-selector-input',
+    category: 'form-item',
+    title: "用户输入框",
+    formItemAttrs: {
+      prop: genId(),
+      label: "用户输入框",
+      labelWidth: "120px",
+      required: false,
+      error: '',
+      showMessage: true,
+      inlineMessage: false,
+      size: 'default'
+    },
+    attrs: {
+      multiple: false,
+      placeholder: '',
+      style: {
+        width: '100%'
+      }
+    }
+  },
+  {
+    id: genId(),
     icon: 'Select',
     component: 'el-select',
     category: 'form-item',
     title: "下拉框",
-    refreshState: true,
     formItemAttrs: {
       prop: genId(),
       label: "下拉框",
@@ -69,9 +116,9 @@ export const InputComponents: CandidateComponentConfig[] = [
       teleported: true,
       persistent: true,
       automaticDropdown: false,
-      clearIcon: 'CircleClose',
+      // clearIcon: 'CircleClose',
       fitInputWidth: true,
-      suffixIcon: 'ArrowUp',
+      // suffixIcon: 'ArrowUp',
       tagType: 'info',
       style: {
         width: '100%',
@@ -98,48 +145,6 @@ export const InputComponents: CandidateComponentConfig[] = [
         },
       ]
     }
-  } as SelectConfig,
-  {
-    id: genId(),
-    icon: 'Checkbox',
-    component: 'el-checkbox-group',
-    category: 'form-item',
-    title: "多选框组",
-    formItemAttrs: {
-      prop: genId(),
-      label: "多选框组",
-      labelWidth: "120px",
-      required: false,
-      error: '',
-      showMessage: true,
-      inlineMessage: false,
-      size: 'default'
-    },
-    attrs: {
-      style: {
-        width: '100%',
-      }
-    },
-    children: [
-      {
-        id: genId(),
-        component: 'el-checkbox',
-        category: 'form-item',
-        title: '多选框',
-        attrs: {
-          label: 'Option1'
-        }
-      },
-      {
-        id: genId(),
-        component: 'el-checkbox',
-        category: 'form-item',
-        title: '多选框',
-        attrs: {
-          label: 'Option2'
-        }
-      },
-    ]
   },
 ]
 export const OutputComponents: CandidateComponentConfig[] = []
@@ -151,7 +156,8 @@ export const LayoutComponents: CandidateComponentConfig[] = [
     title: "栅格",
     attrs: {
       style: {
-        minHeight: '120px'
+        minHeight: '120px',
+        marginTop: '16px'
       },
       gutter: 0,
       justify: 'start',

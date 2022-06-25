@@ -26,7 +26,7 @@ export const UserSelectorInputProps: ComponentPropsOptions<any> = {
   },
   modelValue: {
     type: null as unknown as PropType<UserView | UserView[] | null>,
-    required: true,
+    required: false,
     validator: (v: any) => ['number', 'string', 'object'].includes(typeof v) || v === null || Array.isArray(v) || v === undefined,
   },
   valueKey: {
