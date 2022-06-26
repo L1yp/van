@@ -27,54 +27,6 @@ export const InputComponents: CandidateComponentConfig[] = [
   },
   {
     id: genId(),
-    icon: 'config',
-    component: 'dict-input',
-    category: 'form-item',
-    title: "字典输入框",
-    formItemAttrs: {
-      prop: genId(),
-      label: "字典输入框",
-      labelWidth: "120px",
-      required: false,
-      error: '',
-      showMessage: true,
-      inlineMessage: false,
-      size: 'default'
-    },
-    attrs: {
-      multiple: false,
-      checkStrictly: false,
-      scope: 'global',
-      ident: 'common_status',
-      valType: 'id'
-    }
-  },
-  {
-    id: genId(),
-    icon: 'User',
-    component: 'user-selector-input',
-    category: 'form-item',
-    title: "用户输入框",
-    formItemAttrs: {
-      prop: genId(),
-      label: "用户输入框",
-      labelWidth: "120px",
-      required: false,
-      error: '',
-      showMessage: true,
-      inlineMessage: false,
-      size: 'default'
-    },
-    attrs: {
-      multiple: false,
-      placeholder: '',
-      style: {
-        width: '100%'
-      }
-    }
-  },
-  {
-    id: genId(),
     icon: 'Select',
     component: 'el-select',
     category: 'form-item',
@@ -146,6 +98,55 @@ export const InputComponents: CandidateComponentConfig[] = [
       ]
     }
   },
+  {
+    id: genId(),
+    icon: 'config',
+    component: 'dict-input',
+    category: 'form-item',
+    title: "字典输入框",
+    formItemAttrs: {
+      prop: genId(),
+      label: "字典输入框",
+      labelWidth: "120px",
+      required: false,
+      error: '',
+      showMessage: true,
+      inlineMessage: false,
+      size: 'default'
+    },
+    attrs: {
+      multiple: false,
+      checkStrictly: false,
+      scope: 'global',
+      ident: 'common_status',
+      valType: 'id'
+    }
+  },
+  {
+    id: genId(),
+    icon: 'User',
+    component: 'user-selector-input',
+    category: 'form-item',
+    title: "用户输入框",
+    formItemAttrs: {
+      prop: genId(),
+      label: "用户输入框",
+      labelWidth: "120px",
+      required: false,
+      error: '',
+      showMessage: true,
+      inlineMessage: false,
+      size: 'default'
+    },
+    attrs: {
+      multiple: false,
+      placeholder: '',
+      style: {
+        width: '100%'
+      }
+    }
+  },
+
 ]
 export const OutputComponents: CandidateComponentConfig[] = []
 export const LayoutComponents: CandidateComponentConfig[] = [

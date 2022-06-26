@@ -14,7 +14,9 @@ export default defineConfig(({ command, mode }) => {
 
   return {
     build: {
-      target: ["chrome91"]
+      target: ["chrome91"],
+      sourcemap: true,
+      minify: false,
     },
     plugins: createVitePlugins(env, isBuild),
     resolve: {

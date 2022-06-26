@@ -6,7 +6,6 @@
       :label="item[labelField]"
       :value="item[valueField]"
     >
-
     </el-option>
   </el-select>
 </template>

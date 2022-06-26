@@ -54,7 +54,7 @@
 <script lang="ts" setup>
 import BpmnModeler from "bpmn-js/lib/Modeler"
 import {useRoute} from "vue-router";
-import {computed, inject, onBeforeMount, onMounted, provide, readonly, ref, ShallowRef, shallowRef} from "vue";
+import {computed, inject, onBeforeMount, onMounted, provide, ref, ShallowRef, shallowRef} from "vue";
 import flowable_descriptor from "@/assets/flowable/descriptor.json"
 import {ElMessage, ElScrollbar, ElButtonGroup, ElButton} from "element-plus";
 import {
