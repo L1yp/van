@@ -57,7 +57,7 @@ npm run build
 | 系统  | 角色管理     | ![角色管理](docs/images/role-manage.png)             |
 | 系统  | 菜单管理     | ![菜单管理](docs/images/menu-manage.png)             |
 | 系统  | 部门管理     | ![部门管理](docs/images/dept-manage.png)             |
-| 系统  | 字典管理     | ![字典管理](docs/images/dept-manage.png)             |
+| 系统  | 字典管理     | ![字典管理](docs/images/dict-manage.png)             |
 | 流程  | 流程模型     | ![流程模型](docs/images/process-model-list.png)      |
 | 流程  | 流程字段     | ![流程字段](docs/images/process-field-list.png)      |
 | 流程  | 流程表单     | ![流程页面(表单)](docs/images/process-page-list.png)   |
@@ -66,7 +66,7 @@ npm run build
 | 流程  | 流程设计器    | ![流程设计器](docs/images/process-designer.png)       |
 | 流程  | 流程详情     | ![流程详情](docs/images/process-info.png)            |
 | 流程  | 流程历史     | ![流程历史](docs/images/process-history.png)         |
-| 流程  | 在线表单     | ![流程历史](docs/images/online-form.png)             |
+| 流程  | 在线表单     | ![在线表单](docs/images/online-form.png)             |
 
 
 
