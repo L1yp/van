@@ -20,6 +20,28 @@ export const InputComponents: CandidateComponentConfig[] = [
       size: 'default'
     },
     attrs: {
+      type: 'text',
+      showWordLimit: false,
+      placeholder: '',
+      clearable: false,
+      showPassword: false,
+      disabled: false,
+      size: 'default',
+      rows: 2,
+      autoresize: false,
+      autocomplete: 'off',
+      name: '',
+      readonly: false,
+      max: undefined,
+      min: undefined,
+      step: undefined,
+      resize: 'none',
+      autofocus: false,
+      form: '',
+      label: '',
+      tabindex: undefined,
+      validateEvent: true,
+      inputStyle: '',
       style: {
         width: '100%',
       }

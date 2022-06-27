@@ -27,7 +27,8 @@
       </template>
       <template v-else>
         <el-radio-group :modelValue="selectedItems" @update:modelValue="updateModelValue">
-          <el-radio-button v-for="item in options" :label="valType === 'id' ? item.id : item.val">{{item.label}}</el-radio-button>
+          <el-radio-button v-for="item in options" :label="valType === 'id' ? item.id : item.val">{{ item.label }}
+          </el-radio-button>
         </el-radio-group>
       </template>
 
@@ -54,22 +55,16 @@
 </template>
 
 <script lang="ts">
+import {computed, defineComponent, inject, ref, toRaw, watch,} from "vue"
+import {DictInputEmits, DictInputProps} from "./util";
 import {
-  computed,
-  defineComponent,
-  inject,
-  onBeforeMount,
-  onBeforeUnmount,
-  onMounted,
-  onUpdated,
-  ref,
-  shallowRef,
-  watch
-} from "vue"
-import {DictInputProps, DictInputEmits} from "./util";
-import {
-  ElSelect, ElOption, ElCheckboxGroup, ElCheckboxButton,
-  ElRadioGroup, ElRadioButton, ElTreeSelect
+  ElCheckboxButton,
+  ElCheckboxGroup,
+  ElOption,
+  ElRadioButton,
+  ElRadioGroup,
+  ElSelect,
+  ElTreeSelect
 } from "element-plus";
 import {dictInfosKey, dictValuesKey} from "@/config/app.keys";
 
@@ -83,16 +78,16 @@ export default defineComponent({
     ElRadioGroup, ElRadioButton, ElTreeSelect
   },
   setup(props, ctx) {
-    const { emit: emits } = ctx
+    const {emit: emits} = ctx
 
     const selectedItems = ref<number | number[]>(props.modelValue as (number | number[]))
 
     watch(
       () => props.modelValue,
       () => {
-      console.log("dict-input watch props.modelValue", props.modelValue)
-      selectedItems.value = props.modelValue as (number | number[])
-    })
+        console.log("dict-input watch props.modelValue", props.modelValue)
+        selectedItems.value = props.modelValue as (number | number[])
+      })
 
     function updateModelValue(val) {
       console.log("dict-input updateModelValue selectedItems", selectedItems.value, val)
@@ -103,11 +98,13 @@ export default defineComponent({
         emits("update:modelValue", val);
       }
     }
+
     const dictInfos = inject(dictInfosKey)
     const dictValues = inject(dictValuesKey)
     const dictInfo = computed<DictInfo>(() => dictInfos.value.find(it => it.ident === props.ident && it.scope === props.scope))
     const options = computed<DictValue[]>(() => {
-      const items = dictValues.value.filter(dictValue => dictValue.scope === props.scope && dictValue.ident === props.ident && dictValue.status === 0)
+      const raw = toRaw(dictValues.value)
+      const items = raw.filter(dictValue => dictValue.scope === props.scope && dictValue.ident === props.ident && dictValue.status === 0)
       for (let item of items) {
         item.children = []
         item.value = item.val
