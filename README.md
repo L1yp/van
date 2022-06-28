@@ -28,8 +28,7 @@
 ## 起步
 
 ```sh
-npm install -g pnpm # 安装pnpm
-pnpm install # 安装依赖
+npm install # 安装依赖
 ```
 
 ### 开发
