@@ -127,13 +127,13 @@
   >
     <el-tabs tab-position="left">
       <el-tab-pane label="H5">
-        <PageSchemeDefinition v-model="dialogInfo.schemeFormData.h5" ident="h5" :page-id="dialogInfo.schemeFormData.process_model_page_id" :process-key="processKey" :fields="processFields"></PageSchemeDefinition>
+        <page-designer v-model="dialogInfo.schemeFormData.h5" ident="h5" :page-id="dialogInfo.schemeFormData.process_model_page_id" :process-key="processKey" :fields="processFields"></page-designer>
       </el-tab-pane>
       <el-tab-pane label="Pad">
-        <PageSchemeDefinition v-model="dialogInfo.schemeFormData.pad" ident="pad" :page-id="dialogInfo.schemeFormData.process_model_page_id" :process-key="processKey" :fields="processFields"></PageSchemeDefinition>
+        <page-designer v-model="dialogInfo.schemeFormData.pad" ident="pad" :page-id="dialogInfo.schemeFormData.process_model_page_id" :process-key="processKey" :fields="processFields"></page-designer>
       </el-tab-pane>
       <el-tab-pane label="PC">
-        <PageSchemeDefinition v-model="dialogInfo.schemeFormData.pc" ident="pc" :page-id="dialogInfo.schemeFormData.process_model_page_id" :process-key="processKey" :fields="processFields"></PageSchemeDefinition>
+        <page-designer v-model="dialogInfo.schemeFormData.pc" ident="pc" :page-id="dialogInfo.schemeFormData.process_model_page_id" :process-key="processKey" :fields="processFields"></page-designer>
       </el-tab-pane>
     </el-tabs>
 
@@ -169,7 +169,7 @@ import {asideWidthKey, mainHeightKey, themeKey} from "@/config/app.keys";
 import VDialog from "@/components/dialog/VDialog.vue";
 import * as ProcessPageApi from "@/api/sys/process/page"
 import * as ProcessApi from "@/api/sys/process"
-import PageSchemeDefinition from "./scheme/PageSchemeDefinition.vue"
+import PageDesigner from "./page/designer.vue"
 import {FormScheme} from "@/components/form/types";
 import VFormPro from "@/components/form/VFormPro.vue";
 

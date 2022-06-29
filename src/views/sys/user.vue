@@ -196,8 +196,8 @@ import * as UserApi from "@/api/sys/user";
 import * as DeptApi from "@/api/sys/dept";
 import * as RoleApi from "@/api/sys/role";
 import SVGIcon from "@/components/common/SVGIcon.vue"
-import RoleSelector from "./dialog/RoleSelector.vue"
-import DeptSelector from "./dialog/DeptSelector.vue"
+import RoleSelector from "./user/dialog/RoleSelector.vue"
+import DeptSelector from "./user/dialog/DeptSelector.vue"
 import {mainHeightKey, mainWidthKey, themeKey} from "@/config/app.keys";
 import VDialog from "@/components/dialog/VDialog.vue";
 

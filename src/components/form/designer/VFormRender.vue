@@ -11,7 +11,7 @@
 <script lang="ts" setup>
 import { ElForm } from 'element-plus'
 import { ComponentConfig } from "@/components/form/types";
-import {defineProps, ref} from "vue";
+import {ref} from "vue";
 import VFormNestedItem from "@/components/form/designer/VFormNestedItem.vue";
 
 

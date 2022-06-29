@@ -81,7 +81,7 @@ import {SaveXMLResult} from "bpmn-js/lib/BaseViewer";
 import miniMapModule from 'diagram-js-minimap'
 
 const route = useRoute()
-const bpmnId = Number(route.params.bpmnId)
+const bpmnId = Number(route.query.bpmnId)
 const processKey = route.query.processKey as string
 const mainHeight = inject(mainHeightKey)
 const asideWidth = inject(asideWidthKey)

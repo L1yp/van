@@ -82,13 +82,15 @@ function collapse() {
 
 function handleCommand(command: string) {
   if (command === "profile") {
-    router.push({name: "userProfile"});
+    router.push({path: "/user/profile"});
   }
   else if (command === "logout") {
     uninstallLayoutContentRoute();
     remove("isLogin");
     remove("tags");
-    router.replace({name: "login"});
+    router.replace({
+      path: "/app/login"
+    });
   }
   else if (command === 'gitee-van') {
     window.open('https://gitee.com/L1yp/van')

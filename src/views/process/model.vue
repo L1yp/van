@@ -186,12 +186,10 @@ async function copyBPMN(row: ProcessModelTreeView) {
 
 function designProcess(row: ProcessModelTreeView) {
   router.push({
-    name: "processAppDesign",
-    params: {
-      bpmnId: row.id
-    },
+    path: '/process/model/diagram/designer',
     query: {
-      processKey: row.process_key
+      processKey: row.process_key,
+      bpmnId: row.id
     }
   })
 }
@@ -229,8 +227,9 @@ async function stopBpmn(row: ProcessModelTreeView) {
 
 
 function fieldConfig(row: ProcessModelTreeView) {
-  router.push({name: "processField",
-    params: {
+  router.push({
+    path: "/process/model/field",
+    query: {
       processKey: row.process_key
     }
   })
@@ -255,14 +254,24 @@ async function startProcess(row: ProcessModelTreeView) {
 }
 
 function viewProcessList(row: ProcessModelTreeView) {
-  router.push({name: "processInstanceByKey", params: {key: row.process_key}})
+  router.push({
+    path: "/process/manage/model/instance",
+    query: {
+      key: row.process_key
+    }
+  })
 }
 
 function viewPageList(row: ProcessModelTreeView) {
-  router.push({name: "processModelPage", query: {key: row.process_key}})
+  router.push({
+    path: "/process/model/page",
+    query: {
+      key: row.process_key
+    }
+  })
 }
 
-onMounted(async() => {
+onMounted(async () => {
   await loadProcessModelList()
 })
 

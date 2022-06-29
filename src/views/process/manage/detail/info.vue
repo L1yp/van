@@ -50,7 +50,7 @@ import {asideWidthKey, mainHeightKey, processInstanceDetailInfoKey, themeKey, us
 import {ElTabs, ElTabPane, ElButton, ElScrollbar, ElMessage} from "element-plus"
 import * as ProcessApi from "@/api/sys/process"
 import { getDeviceType } from "@/utils/common";
-import ProcessDiagramViewer from "@/views/sys/process/manage/detail/ProcessDiagramViewer.vue";
+import ProcessDiagramViewer from "@/views/process/manage/detail/diagram.vue";
 import VDialog from "@/components/dialog/VDialog.vue";
 import VFormPro from "@/components/form/VFormPro.vue";
 import {FormScheme} from "@/components/form/types";

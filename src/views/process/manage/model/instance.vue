@@ -76,7 +76,7 @@ import UserViewer from "@/components/common/viewer/user/UserViewer.vue";
 
 const route = useRoute()
 const router = useRouter()
-const key = route.params.key as string
+const key = route.query.key as string
 
 const mainHeight = inject(mainHeightKey);
 const theme = inject(themeKey);

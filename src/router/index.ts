@@ -1,38 +1,24 @@
-import {createRouter, createWebHistory, RouteRecordRaw, RouterOptions, } from 'vue-router'
+import {createRouter, createWebHistory, } from 'vue-router'
 import {read} from "@/utils/storage"
 import {Component, App} from "vue";
 
 const Layout: Component = () => import("../layouts/TopLeft.vue");
-const Home: Component = () => import("@/views/app/Home.vue");
-const IconSelector: Component = () => import("@/components/common/selector/icon/IconSelector.vue");
 
-const componentMap = new Map<String, any>();
-componentMap.set("dashboard", Home)
-componentMap.set("sysManagement", Home)
-componentMap.set("userManagement", () => import("@/views/sys/user/UserManage.vue"))
-componentMap.set("roleManagement", () => import("@/views/sys/role/RoleManagement.vue"))
-componentMap.set("menuManagement", () => import("@/views/sys/menu/MenuManage.vue"))
-componentMap.set("deptManagement", () => import("@/views/sys/dept/DeptManage.vue"))
-componentMap.set("dictConfig", () => import("@/views/sys/dict/DictInfo.vue"))
-componentMap.set("userSetting", Home)
-componentMap.set("userProfile", () => import("@/views/user/UserProfile.vue"))
-componentMap.set("userPassword", IconSelector)
-componentMap.set("login", () => import("@/views/app/Login.vue"))
-componentMap.set("permissionManagement", () => import("@/views/sys/permission/Permission.vue"))
-componentMap.set("processModel", () => import("@/views/sys/process/design/ProcessModel.vue")) // 流程模型
-componentMap.set("processAppDesign", () => import("@/views/sys/process/design/ProcessAppDesign.vue")) // 流程设计详情
-componentMap.set("processField", () => import("@/views/sys/process/design/ProcessField.vue")) // 流程字段配置
+/**
+ * glob: () => import('xxx')
+ * globEager: import * as glob_xxx from 'xxx'
+ *    vue文件导出的是default, 因此要传给vue-router：glob_xxx.default
+ */
+const viewModules = import.meta.globEager("../views/**/*.vue")
 
-componentMap.set("processInstanceByKey", () => import("@/views/sys/process/manage/ProcessInstanceList.vue")) // 某个流程的流程列表
-
-componentMap.set("unclaimTask", () => import("@/views/sys/process/manage/UnclaimTask.vue")) // 我待认领的流程
-componentMap.set("todoTask", () => import("@/views/sys/process/manage/TodoTask.vue")) // 我的待办
-componentMap.set("processHistoryInstance", () => import("@/views/sys/process/manage/MyHistoryProcess.vue")) // 我办理过的流程
-
-componentMap.set("processInstanceInfo", () => import("@/views/sys/process/manage/ProcessInstanceDetail.vue")) // 流程明细
-componentMap.set("processModelPage", () => import("@/views/sys/process/page/ProcessModelPageManage.vue")) // 流程页面
-componentMap.set("processModelForm", () => import("@/views/sys/process/design/ProcessModelForm.vue")) // 流程表单
-
+/**
+ * 路由映射视图文件
+ * @param route
+ */
+function routeToView(route: string) {
+  // return viewModules[`../views${route}.vue`].default // if globEager
+  return viewModules[`../views${route}.vue`] // if glob
+}
 
 const layoutRoute  = {
   path: '/home',
@@ -44,9 +30,9 @@ const layoutRoute  = {
 const redirectRoute = { path: "/", redirect: "/home" };
 
 const loginRouteRecord = {
-  path: "/login",
+  path: "/app/login",
   name: "login",
-  component: componentMap.get("login"),
+  component: routeToView("/app/login"),
 };
 
 const staticRoutes: any[] = [loginRouteRecord];
@@ -138,7 +124,7 @@ function transMenuToRoute(options: MenuConfig[]) {
       const child = {
         path: menuOption.route,
         name: menuOption.name,
-        component: componentMap.get(menuOption.name),
+        component: routeToView(menuOption.route),
         redirect: "",
         meta: {
           title: menuOption.title,

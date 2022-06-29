@@ -79,7 +79,7 @@ import VFormPro from "@/components/form/VFormPro.vue";
 import {FormScheme} from "@/components/form/types";
 
 const route = useRoute()
-const processKey = route.params.processKey as string
+const processKey = route.query.processKey as string
 
 
 const mainHeight = inject(mainHeightKey);

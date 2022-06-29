@@ -138,9 +138,9 @@ import {
 } from "element-plus"
 import * as RoleApi from "@/api/sys/role"
 import SVGIcon from "@/components/common/SVGIcon.vue";
-import RoleMenuTable from "./dialog/RoleMenuBind.vue"
-import RolePermissionTable from "./dialog/RolePermissionBind.vue"
-import {buildPermissionTree} from "./index"
+import RoleMenuTable from "./role/dialog/RoleMenuBind.vue"
+import RolePermissionTable from "./role/dialog/RolePermissionBind.vue"
+import { buildPermissionTree } from "./role/index"
 import * as MenuApi from "@/api/sys/menu";
 import * as PermissionApi from "@/api/sys/permission";
 import * as UserApi from "@/api/sys/user";
