@@ -40,16 +40,20 @@
     trigger="hover"
     virtual-triggering
     placement="top"
-    width="300px"
+    width="400px"
   >
-    <el-descriptions size="small" :column="2" border>
+    <el-descriptions size="small" :column="3" border>
       <template v-for="item in assigneeInfo">
         <el-descriptions-item label="用户" label-align="left">
           <span v-if="!item.user_info">待认领</span>
           <user-viewer v-if="!!item.user_info" :data="item.user_info"></user-viewer>
         </el-descriptions-item>
+
         <el-descriptions-item label="操作" label-align="left">
           <el-tag v-text="item?.state"></el-tag>
+        </el-descriptions-item>
+        <el-descriptions-item label="时间" label-align="left">
+          <span v-text="item?.time"></span>
         </el-descriptions-item>
       </template>
     </el-descriptions>
@@ -93,6 +97,7 @@ interface TableModel {
 
 interface AssigneeInfo {
   user_info: UserView
+  time: string
   state: string
 }
 
@@ -322,7 +327,6 @@ function attachEventListener() {
 }
 
 const assigneeInfo = computed<AssigneeInfo[]>(() => {
-  const result: AssigneeInfo[] = []
 
   const elemId = hoverElem.value?.getAttribute('data-element-id')
   if (elemId === null) {
@@ -346,7 +350,8 @@ const assigneeInfo = computed<AssigneeInfo[]>(() => {
   return items.map(it => {
     return {
       user_info: it.assignee ,
-      state: it.end_time ? it.outcome : '待处理'
+      state: it.end_time ? it.outcome : '待处理',
+      time: it.end_time
     } as AssigneeInfo
   })
 })

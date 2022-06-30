@@ -16,8 +16,8 @@ const viewModules = import.meta.globEager("../views/**/*.vue")
  * @param route
  */
 function routeToView(route: string) {
-  // return viewModules[`../views${route}.vue`].default // if globEager
-  return viewModules[`../views${route}.vue`] // if glob
+  return viewModules[`../views${route}.vue`].default // if globEager
+  // return viewModules[`../views${route}.vue`] // if glob
 }
 
 const layoutRoute  = {
