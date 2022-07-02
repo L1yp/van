@@ -12,8 +12,16 @@
         row-key="id"
       >
         <el-table-column type="index" label="#" width="60"/>
-        <el-table-column label="流程类型" prop="process_type" width="150"/>
-        <el-table-column label="标题" prop="name" width="300"/>
+        <el-table-column label="流程类型" prop="process_type" width="150">
+          <template #default="scope">
+            <el-button link v-text="scope.row.process_type" @click="viewProcessList(scope.row)" style="text-decoration: underline"></el-button>
+          </template>
+        </el-table-column>
+        <el-table-column label="标题" prop="name" width="300">
+          <template #default="scope">
+            <el-button link v-text="scope.row.name" @click="viewProcess(scope.row)" style="text-decoration: underline"></el-button>
+          </template>
+        </el-table-column>
         <el-table-column label="发起者" width="200">
           <template #default="scope">
             <user-viewer :data="scope.row.creator"></user-viewer>
@@ -67,9 +75,18 @@ const dictTableHeight = computed(() => {
 
 const userInfo = inject<Ref<UserInfo>>(userInfoKey)
 
-async function viewProcess(row: ProcessTODOTaskView) {
+function viewProcessList(row: ProcessTODOTaskView) {
   router.push({
-    name: "processInstanceInfo",
+    path: "/process/manage/model/instance",
+    query: {
+      key: row.process_key
+    }
+  })
+}
+
+function viewProcess(row: ProcessTODOTaskView) {
+  router.push({
+    path: '/process/manage/detail/info',
     query: {
       id: row.process_id,
       key: row.process_key

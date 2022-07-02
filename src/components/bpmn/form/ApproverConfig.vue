@@ -24,7 +24,7 @@ import {
   bpmnSelectedElemKey,
   dictValuesKey,
   processModelFieldKey,
-  propertyPanelOpenKey
+  propertyPanelOpenedKey
 } from "@/config/app.keys";
 import {BpmnUtil} from "@/components/bpmn/form/util";
 
@@ -69,21 +69,14 @@ function initExtOptions() {
       console.error("存在多个startEvent节点")
     } else if (startArr.length === 1) {
       const startEvent = startArr[0]
-      const attrs = startEvent?.businessObject?.$attrs
-      const keys: string[] = Object.keys(attrs)
-      for (let key of keys) {
-        if (key.endsWith(":initiator")) {
-          const val = attrs[key]
-          const creatorArr = options.value.filter(it => it.id === -1)
-          if (!creatorArr || creatorArr.length === 0) {
-            options.value.push({
-              id: -1,
-              label: `流程创建者(${val})`,
-              value: "${" + val + "}"
-            })
-          }
-          break;
-        }
+      const initiator = startEvent?.businessObject?.initiator
+      const creatorArr = options.value.filter(it => it.id === -1)
+      if (!creatorArr || creatorArr.length === 0) {
+        options.value.push({
+          id: -1,
+          label: `流程创建者(${initiator})`,
+          value: "${" + initiator + "}"
+        })
       }
     }
   }
@@ -97,7 +90,7 @@ interface SelectModel {
 
 const bpmnModeler = inject(bpmnModelerKey)
 const bpmnSelectedElem = inject(bpmnSelectedElemKey)
-const propertyPanelOpen = inject(propertyPanelOpenKey)
+const propertyPanelOpen = inject(propertyPanelOpenedKey)
 watch(bpmnSelectedElem, () => {
   const selectedElem = toRaw(bpmnSelectedElem.value)
   const bo = toRaw(selectedElem?.businessObject)
@@ -160,7 +153,10 @@ watch(bpmnSelectedElem, () => {
   }
 
   // init expression
-  propertyPanelOpen("owner")
+  if (!['owner', 'page', 'multi-instance'].includes(propertyPanelOpen.value)) {
+    propertyPanelOpen.value = 'owner'
+  }
+
 })
 
 function handleInputChange() {

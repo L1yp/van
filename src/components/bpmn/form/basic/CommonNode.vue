@@ -27,7 +27,7 @@
 <script lang="ts" setup>
 import {ref, watch, computed, inject, unref, isProxy, toRaw} from "vue"
 import {ElInput} from "element-plus"
-import {bpmnModelerKey, bpmnSelectedElemKey, propertyPanelOpenKey, updatePropertyKey} from "@/config/app.keys";
+import {bpmnModelerKey, bpmnSelectedElemKey, propertyPanelOpenedKey, updatePropertyKey} from "@/config/app.keys";
 import {BpmnUtil} from "../util"
 
 const key = ref<string>()
@@ -40,7 +40,7 @@ const innerWidth = "360px"
 const labelWidth = "70px"
 const inputWidth = `calc(${innerWidth} - ${labelWidth})`
 
-const propertyPanelOpen = inject(propertyPanelOpenKey)
+const propertyPanelOpen = inject(propertyPanelOpenedKey)
 const bpmnModeler = inject(bpmnModelerKey)
 const bpmnSelectedElem = inject(bpmnSelectedElemKey)
 watch(bpmnSelectedElem, () => {
@@ -57,7 +57,7 @@ watch(bpmnSelectedElem, () => {
   type.value = businessObject?.$type
   const defaultTypes = ["bpmn:UserTask", "bpmn:SequenceFlow"]
   if (!defaultTypes.includes(type.value)) {
-    propertyPanelOpen("base-setting")
+    propertyPanelOpen.value = 'base-setting'
   }
 
   if (type.value === "bpmn:StartEvent") {

@@ -75,15 +75,12 @@ import TaskListener from "@/components/bpmn/form/TaskListener.vue";
 import GlobalListener from "@/components/bpmn/form/GlobalListener.vue";
 import MultiInstanceConfig from "@/components/bpmn/form/MultiInstanceConfig.vue";
 import SVGIcon from "@/components/common/SVGIcon.vue";
-import {bpmnModelerKey, bpmnSelectedElemKey, propertyPanelOpenKey} from "@/config/app.keys";
+import {bpmnModelerKey, bpmnSelectedElemKey, propertyPanelOpenedKey} from "@/config/app.keys";
 import SeqFlowConfig from "@/components/bpmn/form/SeqFlowConfig.vue";
 import BasicSetting from "@/components/bpmn/form/BasicSetting.vue";
 import ApproverConfig from "@/components/bpmn/form/ApproverConfig.vue";
 import PageConfig from "@/components/bpmn/form/PageConfig.vue";
 
-interface Props {
-
-}
 
 const expand = ref<string>("base-setting")
 function open(key: string) {
@@ -92,13 +89,12 @@ function open(key: string) {
   }
   expand.value = key
 }
-provide(propertyPanelOpenKey, open)
 
-const props = defineProps<Props>()
+provide(propertyPanelOpenedKey, expand)
+
 
 const bpmnSelectedElem = inject(bpmnSelectedElemKey)
 const bpmnModeler = inject(bpmnModelerKey)
-
 
 const showConditionSeqFlow = computed<boolean>(() => {
   const selectedElem = toRaw(bpmnSelectedElem.value)
@@ -122,10 +118,6 @@ function recalculateShowConditionSeqFlow() {
   showConditionSeqFlow.effect.scheduler()
 }
 
-const pageConfigRef = ref<InstanceType<typeof PageConfig>>()
-function handleClickPageConfig() {
-  pageConfigRef.value.open()
-}
 
 defineExpose({
   recalculateShowConditionSeqFlow

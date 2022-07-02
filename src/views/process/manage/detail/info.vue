@@ -335,7 +335,7 @@ function getComponent(scheme: PageFieldScheme): ComponentInfo {
     }
   }
   else if (componentType === 5) {
-    return writeable === 1 ? {name: 'el-input-number'} : {name: 'el-input', attrs: { disabled: true }};
+    return writeable === 1 ? {name: 'el-input-number', attrs: { modelValue: processInfo.value[name] }} : {name: 'el-input', attrs: { disabled: true, modelValue: processInfo.value[name] }};
   }
   else if (componentType === 6) {
     return writeable === 1 ?

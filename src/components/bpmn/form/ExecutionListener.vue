@@ -36,7 +36,7 @@
 import {inject, ref, toRaw, watch,} from "vue"
 import {ElTable, ElTableColumn, ElPopover, ElDescriptions, ElDescriptionsItem, ElTag, ElPopconfirm, ElButton} from "element-plus"
 import SVGIcon from "@/components/common/SVGIcon.vue"
-import {bpmnModelerKey, bpmnSelectedElemKey, propertyPanelOpenKey} from "@/config/app.keys";
+import {bpmnModelerKey, bpmnSelectedElemKey} from "@/config/app.keys";
 
 interface ExecListenerModel {
   id: string;
@@ -44,7 +44,6 @@ interface ExecListenerModel {
   type: string;
   val: string;
 }
-const propertyPanelOpen = inject(propertyPanelOpenKey)
 const bpmnModeler = inject(bpmnModelerKey)
 const bpmnSelectedElem = inject(bpmnSelectedElemKey)
 watch(bpmnSelectedElem, () => {

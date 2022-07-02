@@ -2,9 +2,13 @@
   <el-table
     :data="tableData"
   >
-    <el-table-column prop="event" label="事件" width="70"></el-table-column>
-    <el-table-column prop="type" label="类型" width="100" show-overflow-tooltip></el-table-column>
-    <el-table-column prop="val" label="值" width="80" show-overflow-tooltip></el-table-column>
+    <el-table-column prop="event" label="事件" width="90" show-overflow-tooltip></el-table-column>
+    <el-table-column prop="type" label="类型" width="110" show-overflow-tooltip>
+      <template #default="scope">
+        <el-tag v-text="scope.row.type"></el-tag>
+      </template>
+    </el-table-column>
+    <el-table-column prop="val" label="值" width="60" show-overflow-tooltip></el-table-column>
     <el-table-column label="操作">
       <template #default="scope">
         <el-popover placement="left" trigger="hover" width="600px">
@@ -15,11 +19,10 @@
             <el-descriptions-item label="监听类型">
               <el-tag v-text="typeDict[scope.row.type]"></el-tag>
             </el-descriptions-item>
-            <el-descriptions-item label="事件">{{scope.row.event}}</el-descriptions-item>
+            <el-descriptions-item label="事件"><el-tag v-text="scope.row.event"></el-tag></el-descriptions-item>
             <el-descriptions-item label="值">{{scope.row.val}}</el-descriptions-item>
           </el-descriptions>
         </el-popover>
-        <el-button size="small" style="margin-left: 6px" circle><s-v-g-icon name="Plus" style="width: 1em; height: 1em"/></el-button>
         <el-popconfirm title="确定删除?" confirmButtonText="确定" cancelButtonText="取消" @confirm="deleteRow(scope.row)">
           <template #reference>
             <el-button size="small" circle style="margin-left: 6px"><s-v-g-icon name="Delete" style="width: 1em; height: 1em"/></el-button>
@@ -37,10 +40,6 @@ import {ref, watch, computed, inject, toRaw} from "vue"
 import {ElTable, ElTableColumn, ElPopover, ElDescriptions, ElDescriptionsItem, ElTag, ElPopconfirm, ElButton} from "element-plus"
 import SVGIcon from "@/components/common/SVGIcon.vue"
 import {bpmnModelerKey, bpmnSelectedElemKey} from "@/config/app.keys";
-
-/**
- * <activiti:taskListener delegateExpression="${someJavaDelegateBean}" event="create" id="1180758402067910658" />
- */
 
 interface TaskListenerModel {
   id: string;
@@ -72,7 +71,7 @@ watch(bpmnSelectedElem, () => {
   if (listeners && listeners.length > 0) {
     const data = []
     for (let listener of listeners) {
-      if (!listener.$type.endsWith("taskListener")) {
+      if (!listener.$type.endsWith("TaskListener")) {
         continue
       }
       let type = null;

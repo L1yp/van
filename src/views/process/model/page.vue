@@ -127,13 +127,13 @@
   >
     <el-tabs tab-position="left">
       <el-tab-pane label="H5">
-        <page-designer v-model="dialogInfo.schemeFormData.h5" ident="h5" :page-id="dialogInfo.schemeFormData.process_model_page_id" :process-key="processKey" :fields="processFields"></page-designer>
+        <page-designer :key="dialogInfo.refreshKey" v-model="dialogInfo.schemeFormData.h5" ident="h5" :page-id="dialogInfo.schemeFormData.process_model_page_id" :process-key="processKey" :fields="processFields"></page-designer>
       </el-tab-pane>
       <el-tab-pane label="Pad">
-        <page-designer v-model="dialogInfo.schemeFormData.pad" ident="pad" :page-id="dialogInfo.schemeFormData.process_model_page_id" :process-key="processKey" :fields="processFields"></page-designer>
+        <page-designer :key="dialogInfo.refreshKey" v-model="dialogInfo.schemeFormData.pad" ident="pad" :page-id="dialogInfo.schemeFormData.process_model_page_id" :process-key="processKey" :fields="processFields"></page-designer>
       </el-tab-pane>
       <el-tab-pane label="PC">
-        <page-designer v-model="dialogInfo.schemeFormData.pc" ident="pc" :page-id="dialogInfo.schemeFormData.process_model_page_id" :process-key="processKey" :fields="processFields"></page-designer>
+        <page-designer :key="dialogInfo.refreshKey" v-model="dialogInfo.schemeFormData.pc" ident="pc" :page-id="dialogInfo.schemeFormData.process_model_page_id" :process-key="processKey" :fields="processFields"></page-designer>
       </el-tab-pane>
     </el-tabs>
 
@@ -289,6 +289,7 @@ async function configPageScheme(row: ProcessModelPageView) {
       dialogInfo.value.schemeFormData.h5 = scheme.h5
       dialogInfo.value.schemeFormData.pad = scheme.pad
       dialogInfo.value.schemeFormData.pc = scheme.pc
+      dialogInfo.value.refreshKey++
     }
     dialogInfo.value.schemeVisible = true
   } catch (e) {
@@ -343,6 +344,7 @@ interface DialogInfo {
   schemeVisible: boolean
   schemeTitle: string
   schemeFormData: AddProcessModelPageSchemeParam
+  refreshKey: number
 }
 
 const formRef = ref<InstanceType<typeof ElForm>>()
@@ -361,7 +363,8 @@ const dialogInfo = ref<DialogInfo>({
     h5: [],
     pad: [],
     pc: [],
-  }
+  },
+  refreshKey: 1
 })
 
 interface StartFormDialogInfo {

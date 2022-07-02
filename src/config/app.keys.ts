@@ -14,7 +14,7 @@ const permissionKey = Symbol("permission") as InjectionKey<Ref<Set<string>>>
 const bpmnSelectedElemKey = Symbol("bpmnSelectedElem") as InjectionKey<ShallowRef<any>>
 const bpmnModelerKey = Symbol("bpmnModeler") as InjectionKey<ShallowRef<any>>
 const updatePropertyKey = Symbol("updatePropertyKey") as InjectionKey<Function>
-const propertyPanelOpenKey = Symbol("propertyPanelOpenKey") as InjectionKey<Function>
+const propertyPanelOpenedKey = Symbol("propertyPanelOpenedKey") as InjectionKey<Ref<string>>
 const processModelFieldKey = Symbol("processModelFieldKey") as InjectionKey<ShallowRef<ProcessFieldDefinition[]>>
 const processInstanceDetailInfoKey = Symbol("processInstanceDetailInfoKey") as InjectionKey<Ref<ProcessInstanceInfoView>>
 const processNodePageListKey = Symbol("processNodePageListKey") as InjectionKey<ShallowRef<ProcessModelNodePageView[]>>
@@ -38,7 +38,7 @@ export {
   bpmnSelectedElemKey,
   bpmnModelerKey,
   updatePropertyKey,
-  propertyPanelOpenKey,
+  propertyPanelOpenedKey,
   processModelFieldKey,
   processInstanceDetailInfoKey,
   processNodePageListKey,

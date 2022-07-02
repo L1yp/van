@@ -201,28 +201,15 @@ const dialogInfo = ref<DialogInfo>({
         name: 'db_field_type',
         label: '数据库类型',
         component: 'el-input',
-        span: 8,
+        span: 12,
         writeable: true,
       },
       {
         name: 'db_default_value',
         label: '数据库默认值',
         component: 'el-input',
-        span: 8,
+        span: 12,
         writeable: true,
-      },
-      {
-        name: 'nullable',
-        label: '可空',
-        component: 'dict-input',
-        span: 8,
-        writeable: true,
-        componentAttrs: {
-          multiple: false,
-          scope: 'global',
-          ident: 'yesno',
-          valType: 'value',
-        }
       },
     ],
     [

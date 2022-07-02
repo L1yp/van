@@ -53,10 +53,9 @@
 
 <script lang="ts" setup>
 // 会签配置
-import {ref, watch, computed, inject, toRaw} from "vue"
-import {ElSelect, ElOption, ElInput, ElAlert} from "element-plus"
+import {inject, nextTick, ref, toRaw, watch} from "vue"
+import {ElAlert, ElInput, ElOption, ElSelect} from "element-plus"
 import {bpmnModelerKey, bpmnSelectedElemKey, dictValuesKey, processModelFieldKey} from "@/config/app.keys";
-import {BpmnUtil} from "@/components/bpmn/form/util";
 import {useRoute} from "vue-router";
 
 const route = useRoute()
@@ -109,7 +108,6 @@ watch(bpmnSelectedElem, () => {
   if (!selectedElem) {
     return
   }
-  let extensionElements = null
   if (selectedElem?.type === "bpmn:UserTask") {
     const bo = selectedElem.businessObject
     if (bo.loopCharacteristics) {
@@ -220,6 +218,10 @@ function handleChangeInput(type: string, val: number | string) {
     "flowable:elementVariable": formData.value.item,
     "flowable:collection": "${psr.read('" + processKey + "', '" + (formData.value.collection.value as ProcessFieldDefinition).name + "', execution)}" ,
   })
+
+  const canvas = bpmnModeler.value.get("canvas")
+  bpmnSelectedElem.value = canvas.getRootElement()
+  nextTick(() => bpmnSelectedElem.value = selectedElem)
 
 }
 

@@ -323,6 +323,17 @@
       ]
     },
     {
+      "name": "Sortable",
+      "extends": ["bpmn:SequenceFlow"],
+      "properties": [
+        {
+          "name": "order",
+          "isAttr": true,
+          "type": "Integer"
+        }
+      ]
+    },
+    {
       "name": "Assignee",
       "supperClass": "Element",
       "meta": {

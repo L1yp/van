@@ -43,7 +43,7 @@ const labelWidth = "70px"
 const inputWidth = computed(() => `calc(${innerWidth} - ${labelWidth})`)
 
 const route = useRoute()
-const process_bpmn_id = Number(route.params.bpmnId)
+const process_bpmn_id = Number(route.query.bpmnId)
 const process_key = route.query.processKey as string
 const bpmnSelectedElem = inject(bpmnSelectedElemKey);
 const processNodePages = inject(processNodePageListKey);
