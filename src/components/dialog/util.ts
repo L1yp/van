@@ -78,6 +78,11 @@ export const VDialogProps: ComponentPropsOptions<any> = {
     type: Boolean as PropType<boolean>,
     required: false,
     default: true
+  },
+  disableFooter: {
+    type: Boolean as PropType<boolean>,
+    required: false,
+    default: false
   }
 }
 

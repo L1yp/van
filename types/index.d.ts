@@ -9,3 +9,23 @@ declare interface UserInfo {
   phone?: string;
   avatar?: string;
 }
+
+declare interface TableData<T> {
+  data: T[]
+  height: string | number | import("vue").ComputedRef<string | number>
+  loading: boolean
+}
+
+declare interface PageTableData<T> {
+  pageIdx: number
+  pageSize: number
+  total: number
+  tableData: TableData<T>
+}
+
+declare interface DialogInfo<T> {
+  visible: boolean
+  formData: T
+  title: string
+  loading: boolean
+}

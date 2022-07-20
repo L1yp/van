@@ -22,16 +22,14 @@
         </el-button>
       </template>
     </el-popconfirm>
-    <el-button size="default" plain style="vertical-align: middle" type="warning" @click="exportTable">
-      <SVGIcon style="width: 1em; height: 1em" name="Delete"/><span style="margin-left: 4px;">导出</span>
-    </el-button>
+    <el-button size="default" plain style="vertical-align: middle" type="warning" :icon="downloadIcon" @click="exportTable">导出</el-button>
   </div>
 
   <div class="data-table">
     <el-table
-      v-loading="loading"
+      v-loading="tableData.loading"
       ref="tableRef"
-      :height="dataTableHeight"
+      :height="tableData.height"
       :data="filterDataList"
       style="width: 100%"
       row-key="id"
@@ -56,15 +54,9 @@
       </el-table-column>
       <el-table-column label="操作">
         <template #default="scope">
-          <el-button plain style="vertical-align: middle;" text @click="addItem(scope.row)">
-            <SVGIcon style="width: 1em; height: 1em" name="Plus"/><span style="margin-left: 4px;">新增</span>
-          </el-button>
-          <el-button plain style="vertical-align: middle;" text @click="addSubItem(scope.row)">
-            <SVGIcon style="width: 1em; height: 1em" name="Plus"/><span style="margin-left: 4px;">子部门</span>
-          </el-button>
-          <el-button plain style="vertical-align: middle;" text @click="editItem(scope.row)">
-            <SVGIcon style="width: 1em; height: 1em" name="Edit"/><span style="margin-left: 4px;">编辑</span>
-          </el-button>
+          <el-button plain style="vertical-align: middle;" text @click="addItem(scope.row)" :icon="plusIcon">新增</el-button>
+          <el-button plain style="vertical-align: middle;" text @click="addSubItem(scope.row)" :icon="plusIcon">子部门</el-button>
+          <el-button plain style="vertical-align: middle;" text @click="editItem(scope.row)" :icon="editIcon">编辑</el-button>
           <el-popconfirm
             title="确定删除?"
             confirmButtonText="确定"
@@ -72,9 +64,7 @@
             @confirm="delItem(scope.row)"
           >
             <template #reference>
-              <el-button plain style="vertical-align: middle;" text>
-                <SVGIcon style="width: 1em; height: 1em" name="Delete"/><span style="margin-left: 4px;">删除</span>
-              </el-button>
+              <el-button plain style="vertical-align: middle;" text :icon="deleteIcon">删除</el-button>
             </template>
           </el-popconfirm>
         </template>
@@ -82,52 +72,80 @@
     </el-table>
   </div>
 
-  <el-dialog v-model="dialogFormVisible" :title="dialogTitle" width="300px" custom-class="user-ext-dialog" :draggable="true">
-    <el-form :model="dialogFormData" size="default" :label-width="60">
-      <el-form-item v-if="dialogTitle === '编辑部门'" label="部门ID">
-        <el-input disabled v-model="dialogFormData.id"></el-input>
-      </el-form-item>
-      <el-form-item label="名称">
-        <el-input v-model="dialogFormData.title"></el-input>
-      </el-form-item>
-      <el-form-item label="简称">
-        <el-input v-model="dialogFormData.simple_name"></el-input>
-      </el-form-item>
-      <el-form-item label="描述">
-        <el-input v-model="dialogFormData.description"></el-input>
-      </el-form-item>
-      <el-form-item label="标识">
-        <el-input v-model="dialogFormData.ident"></el-input>
-      </el-form-item>
-      <el-form-item label="排序">
-        <el-input v-model="dialogFormData.order_no"></el-input>
-      </el-form-item>
+  <v-dialog
+    v-model="dialogInfo.visible"
+    :title="dialogInfo.title"
+    width="600px"
+    :draggable="true"
+    :disable-footer="dialogInfo.loading"
+    @cancel="dialogInfo.visible = false"
+    @confirm="confirmDialog"
+  >
+    <el-form :model="dialogInfo.formData" size="default" :label-width="60" v-loading="dialogInfo.loading">
+      <el-row v-if="dialogInfo.title === '编辑部门'">
+        <el-form-item label="部门ID" style="width: 100%">
+          <el-input disabled v-model="dialogInfo.formData.id"></el-input>
+        </el-form-item>
+      </el-row>
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="名称" style="width: 100%">
+            <el-input v-model="dialogInfo.formData.title"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="简称" style="width: 100%">
+            <el-input v-model="dialogInfo.formData.simple_name"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="标识" style="width: 100%">
+            <el-input v-model="dialogInfo.formData.ident"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="排序">
+            <el-input-number :controls="false" v-model="dialogInfo.formData.order_no" style="width: 100%"></el-input-number>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="领导" style="width: 100%">
+            <user-selector-input
+              v-model="dialogInfo.formData.owner"
+              value-key="id"
+              :read-view-fn="k => dialogInfo.formData.owner_info"
+              :multiple="false"
+              placeholder="双击选择用户"
+            ></user-selector-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="状态" style="width: 100%">
+            <dict-input ident="common_status" v-model="dialogInfo.formData.status" ></dict-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-form-item label="描述" style="width: 100%">
+          <el-input v-model="dialogInfo.formData.description"></el-input>
+        </el-form-item>
+      </el-row>
 
-      <el-form-item label="父ID">
-        <el-input type="number" v-model="dialogFormData.pid"></el-input>
-      </el-form-item>
-      <el-form-item label="领导">
-        <user-selector-input
-          style="width: 100%"
-          v-model="dialogFormData.owner"
-          value-key="id"
-          :read-view-fn="k => dialogFormData.owner_info"
-          :multiple="false"
-          placeholder="双击选择用户"
-        ></user-selector-input>
-      </el-form-item>
+      <el-row>
+        <el-col>
+          <el-form-item label="父ID">
+            <el-input-number :controls="false" v-model="dialogInfo.formData.pid" style="width: 100%"></el-input-number>
+          </el-form-item>
+        </el-col>
+      </el-row>
 
-      <el-form-item label="状态">
-        <dict-input ident="common_status" v-model="dialogFormData.status" ></dict-input>
-      </el-form-item>
+
     </el-form>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button size="default" @click="dialogFormVisible = false">取消</el-button>
-        <el-button size="default" type="primary" @click="confirmDialog">确定</el-button>
-      </span>
-    </template>
-  </el-dialog>
+  </v-dialog>
 </template>
 
 <script lang="ts" setup>
@@ -136,9 +154,9 @@ import SVGIcon from "@/components/common/SVGIcon.vue";
 import {
   ElTable,
   ElTableColumn,
-  ElInput, ElTag,
-  ElButton,
-  ElSwitch, ElPopconfirm, ElDialog, ElForm, ElFormItem, ElMessage
+  ElInput, ElTag, ElInputNumber,
+  ElButton, ElRow, ElCol,
+  ElPopconfirm, ElForm, ElFormItem, ElMessage
 } from "element-plus";
 import * as DeptApi from "@/api/sys/dept";
 import {filterDataWithTitle} from "@/utils/common"
@@ -146,26 +164,43 @@ import {mainHeightKey, themeKey} from "@/config/app.keys";
 import UserSelectorInput from "@/components/common/selector/user/UserSelectorInput.vue";
 import DictInput from "@/components/dict/DictInput.vue";
 import DictTag from "@/components/dict/DictTag.vue";
+import {useIcon} from "@/components/common/util";
+import VDialog from "@/components/dialog/VDialog.vue";
 
-const loading = ref(true);
-const tableRef = ref<InstanceType<typeof ElTable> | null>();
+const deleteIcon = useIcon('Delete')
+const editIcon = useIcon('Edit')
+const plusIcon = useIcon('Plus')
+const downloadIcon = useIcon('Download')
+
+const tableRef = ref<InstanceType<typeof ElTable>>();
 
 const theme = inject<Ref<ThemeConfig>>(themeKey)
 const mainHeight = inject<ComputedRef<string>>(mainHeightKey)
 
+const tableData = ref<TableData<DeptView>>({
+  loading: false,
+  height: computed<string>(() => `calc(${mainHeight.value} - ${theme.value.mainPadding + theme.value.mainPadding + 32 + 10}px)`),
+  data: [],
+})
 
-const dataTableHeight = computed<string>(() => {
-  /**
-   * 32px op height
-   * 10px marginTop
-   */
-  return `calc(${mainHeight.value} - ${theme.value.mainPadding + theme.value.mainPadding + 32 + 10}px)`;
-});
+const dialogInfo = ref<DialogInfo<AddDeptParam | UpdateDeptParam>>({
+  visible: false,
+  loading: false,
+  title: '',
+  formData: {
+    id: 0,
+    title: "",
+    simple_name: "",
+    description: "",
+    ident: "",
+    order_no: 0,
+    pid: 0,
+    owner: 0,
+    status: false,
+  }
+})
 
-const tableData = ref([]);
-
-const deptTitleKey = ref("");
-const dialogFormVisible = ref(false);
+const deptTitleKey = ref<string>("");
 
 const formInit: AddDeptParam | UpdateDeptParam = {
   id: 0,
@@ -179,62 +214,58 @@ const formInit: AddDeptParam | UpdateDeptParam = {
   status: false,
 };
 
-const dialogFormData = ref<AddDeptParam | UpdateDeptParam>();
-const dialogTitle = ref<string>("");
-
-
 const filterDataList = computed<DeptView[]>(() => {
   const result: DeptView[] = [];
-  filterDataWithTitle(result, tableData.value, deptTitleKey.value, "simple_name", undefined);
+  filterDataWithTitle(result, tableData.value.data, deptTitleKey.value, "simple_name", undefined);
   if (result.length > 0) nextTick(() => expandOrShrinkAll(result, true));
   return result;
 });
 
 function addItem(row: DeptView) {
-  dialogTitle.value = "新增部门";
+  dialogInfo.value.title = "新增部门"
   if (row && !(row instanceof Event)) {
-    dialogFormData.value = {} as AddDeptParam
-    Object.assign(dialogFormData.value, row)
+    dialogInfo.value.formData = {} as AddDeptParam
+    Object.assign(dialogInfo.value.formData, row)
   } else {
-    dialogFormData.value = formInit
+    dialogInfo.value.formData = formInit
   }
-  dialogFormVisible.value = true;
+  dialogInfo.value.visible = true;
 }
 
 function addSubItem(row: DeptView) {
-  dialogTitle.value = "新增子部门";
+  dialogInfo.value.title = "新增子部门"
   if (row && !(row instanceof Event)) {
-    dialogFormData.value = {} as AddDeptParam
-    Object.assign(dialogFormData.value, row)
+    dialogInfo.value.formData = {} as AddDeptParam
+    Object.assign(dialogInfo.value.formData, row)
   } else {
-    dialogFormData.value = formInit;
+    dialogInfo.value.formData = formInit
   }
-  dialogFormVisible.value = true;
+  dialogInfo.value.visible = true
 }
 
 function editItem(row: DeptView) {
-  dialogTitle.value = "编辑部门";
-  dialogFormData.value = {} as UpdateDeptParam
-  Object.assign(dialogFormData.value, row)
-  dialogFormVisible.value = true;
+  dialogInfo.value.title = "编辑部门";
+  dialogInfo.value.formData = {} as UpdateDeptParam
+  Object.assign(dialogInfo.value.formData, row)
+  dialogInfo.value.visible = true
 
 }
 
 
 async function confirmDialog() {
-  if (dialogTitle.value === '新增部门' || dialogTitle.value === '新增子部门') {
-    await DeptApi.addDept(dialogFormData.value as AddDeptParam);
-    await reloadTableData();
-    ElMessage.info("新增成功");
-  } else if (dialogTitle.value === '编辑部门') {
-    await DeptApi.updateDept(dialogFormData.value as UpdateDeptParam);
-    await reloadTableData();
-    ElMessage.info("编辑成功");
+  if (dialogInfo.value.title === '新增部门' || dialogInfo.value.title === '新增子部门') {
+    await DeptApi.addDept(dialogInfo.value.formData as AddDeptParam)
+    await reloadTableData()
+    ElMessage.info("新增成功")
+  } else if (dialogInfo.value.title === '编辑部门') {
+    await DeptApi.updateDept(dialogInfo.value.formData as UpdateDeptParam)
+    await reloadTableData()
+    ElMessage.info("编辑成功")
   }
-  dialogFormVisible.value = false;
+  dialogInfo.value.visible = false
 }
 
-function delItem(row) {
+function delItem(row: DeptView) {
 
 }
 
@@ -274,15 +305,12 @@ function batchDelete() {
 
 
 async function reloadTableData() {
-  loading.value = true;
-  const result = await DeptApi.findDept();
-  tableData.value = result;
-  loading.value = false;
+  tableData.value.loading = true;
+  tableData.value.data = await DeptApi.findDept();
+  tableData.value.loading = false;
 }
 
-onMounted(() => {
-  reloadTableData();
-});
+onMounted(reloadTableData)
 </script>
 
 <style scoped>
