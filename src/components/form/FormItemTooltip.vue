@@ -19,7 +19,6 @@
 <script lang="ts" setup>
 import SVGIcon from "@/components/common/SVGIcon.vue";
 import { ElTooltip } from 'element-plus'
-import {defineProps} from "vue";
 
 interface Props {
   title: string
