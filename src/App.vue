@@ -63,7 +63,7 @@ body {
   box-sizing: border-box;
 }
 .user-ext-dialog.el-dialog .el-dialog__header {
-  padding: 20px 24px;
+  padding: 12px 24px;
   border-bottom: 1px solid #e3e3e3;
   margin-right: 0;
   box-sizing: border-box;

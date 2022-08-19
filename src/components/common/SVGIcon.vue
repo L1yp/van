@@ -11,7 +11,7 @@ export default defineComponent({
     name: String as PropType<string>
   },
   setup(props){
-    const symbolId = computed(() => `#icon-${props.name}`)
+    const symbolId = computed<string>(() => `#icon-${props.name}`)
     return {
       symbolId
     }

@@ -36,7 +36,10 @@ import {installLayoutContentRoute} from "@/router"
 import {useRoute, useRouter} from "vue-router";
 import {read, write} from "@/utils/storage";
 import {menuOptionsKey, permissionKey, userInfoKey} from "@/config/app.keys";
+import {useTitle} from "@vueuse/core";
 
+const title = useTitle()
+title.value = '用户登录'
 const router = useRouter();
 const route = useRoute();
 

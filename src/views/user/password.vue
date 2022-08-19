@@ -1,9 +1,9 @@
 <template>
-  <div>password</div>
+  <expression-editor/>
 </template>
 
 <script lang="ts" setup>
-
+import ExpressionEditor from '@/components/expression/editor/ExpressionEditor.vue'
 </script>
 
 <style scoped>
