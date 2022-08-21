@@ -1,7 +1,7 @@
 <template>
   <div class="expression-panel-container">
     <!-- 字段列表 -->
-    <div>
+    <div style="border: 1px solid #E3E3E3; ">
       <el-scrollbar height="300px" always>
         <el-radio-group v-model="selectedFieldId">
           <div>
@@ -23,7 +23,7 @@
       </el-scrollbar>
     </div>
     <!-- 操作符 -->
-    <div style="display: flex; flex-direction: column; justify-content: space-between">
+    <div style="display: flex; flex-direction: column; justify-content: space-between; ">
       <el-select v-model="operator" style="width: 100px" :disabled="!selectedFieldId">
         <el-option
           v-for="item in operators"
@@ -37,7 +37,7 @@
           <el-button
             type="primary"
             style="width: 100px"
-            @click="emits('confirm')"
+            @click="handleConfirm"
             :disabled="!selectedFieldId || !operator"
           >
             确定
@@ -52,36 +52,70 @@
     <div style="flex: 1; height: 300px">
       <!-- 用户 -->
       <div v-show="[6, 7].includes(props.fields.find(it => it.id === selectedFieldId)?.component_type)">
-        <div style="border: 1px solid #E3E3E3; height: 160px">
-          <el-scrollbar height="160px" always>
-            <el-radio-group v-model="userFieldEqToDptVal">
-              <div>
-                <div class="field-wrapper"><el-radio :label="1" size="small">本人</el-radio></div>
-                <div class="field-wrapper"><el-radio :label="2" size="small">本人部门</el-radio></div>
-                <div class="field-wrapper"><el-radio :label="3" size="small">下级部门</el-radio></div>
-                <div class="field-wrapper"><el-radio :label="4" size="small">所有部门</el-radio></div>
-              </div>
+        <div style="border: 1px solid #E3E3E3; height: 254px">
+          <el-scrollbar height="254px" always>
+            <el-select v-model="target" placeholder="请选择部门范围" style="width: 100%">
+              <el-option label="我的部门的用户列表" value="本人部门"></el-option>
+              <el-option label="我的下级部门的用户列表" value="下级部门"></el-option>
+            </el-select>
 
-            </el-radio-group>
+            <div v-show="depts.length === 0">
+              <el-button :icon="plusIcon" circle @click="handleAddDept"></el-button>
+            </div>
+            <div v-show="depts.length > 0">
+              <div
+                v-for="(dept, idx) in depts"
+                :key="dept.id"
+                style="display: flex"
+              >
+                <el-button :icon="plusIcon" circle @click="handleAddDept"></el-button>
+                <div style="flex: 1">
+                  <dept-selector-input style="width: 50%" v-model="depts[idx].view" :multiple="false" :clearable="false"/>
+                  <el-select v-model="dept.scope" placeholder="请选择部门范围"  style="width: 50%">
+                    <el-option label="当前部门" value="本人部门"></el-option>
+                    <el-option label="下级部门" value="下级部门"></el-option>
+                  </el-select>
+                </div>
+                <el-button :icon="subIcon" circle @click="handleRemoveDept(dept)"></el-button>
+
+              </div>
+            </div>
           </el-scrollbar>
         </div>
-        <div  style="border: 1px solid #E3E3E3; height: 126px; margin-top: 10px">
-          <user-selector-input style="width: 100%" v-model="userFieldEqToUserVal" multiple :clearable="false" />
+        <div style="height: 32px; margin-top: 10px">
+          <user-selector-input style="width: 100%" v-model="users" multiple :clearable="false" />
         </div>
       </div>
       <!-- 部门 -->
       <div v-show="[9, 10].includes(props.fields.find(it => it.id === selectedFieldId)?.component_type)">
         <div style="border: 1px solid #E3E3E3; height: 298px">
           <el-scrollbar height="298px" always>
-            <el-radio-group v-model="dptFieldEqToVal">
-              <div>
-                <div class="field-wrapper"><el-radio :label="1" size="small">上级部门</el-radio></div>
-                <div class="field-wrapper"><el-radio :label="2" size="small">本人部门</el-radio></div>
-                <div class="field-wrapper"><el-radio :label="3" size="small">下级部门</el-radio></div>
-                <div class="field-wrapper"><el-radio :label="4" size="small">所有部门</el-radio></div>
-              </div>
+            <el-select v-model="target" placeholder="请选择部门范围" style="width: 100%">
+              <el-option label="我的部门" value="本人部门"></el-option>
+              <el-option label="下级部门" value="下级部门"></el-option>
+            </el-select>
 
-            </el-radio-group>
+            <div v-show="depts.length === 0">
+              <el-button :icon="plusIcon" circle @click="handleAddDept"></el-button>
+            </div>
+            <div v-show="depts.length > 0">
+              <div
+                v-for="(dept, idx) in depts"
+                :key="dept.id"
+                style="display: flex"
+              >
+                <el-button :icon="plusIcon" circle @click="handleAddDept"></el-button>
+                <div style="flex: 1">
+                  <dept-selector-input style="width: 50%" v-model="depts[idx].view" :multiple="false" :clearable="false"/>
+                  <el-select v-model="dept.scope" placeholder="请选择部门范围"  style="width: 50%">
+                    <el-option label="当前部门" value="本人部门"></el-option>
+                    <el-option label="下级部门" value="下级部门"></el-option>
+                  </el-select>
+                </div>
+                <el-button :icon="subIcon" circle @click="handleRemoveDept(dept)"></el-button>
+
+              </div>
+            </div>
           </el-scrollbar>
         </div>
       </div>
@@ -89,13 +123,14 @@
       <!-- 文本 -->
       <div v-show="[1, 2, 5].includes(props.fields.find(it => it.id === selectedFieldId)?.component_type)">
         <div>
-          <el-input v-model="textFieldEqToVal"></el-input>
+          <el-input v-model="target"></el-input>
         </div>
       </div>
+      <!-- 字典 -->
       <div v-show="[3, 4].includes(props.fields.find(it => it.id === selectedFieldId)?.component_type)">
         <div style="border: 1px solid #E3E3E3; height: 298px">
           <el-scrollbar height="298px" always>
-            <el-checkbox-group v-model="dictFieldEqToVal">
+            <el-checkbox-group v-model="targetArr">
               <div>
                 <div
                   class="field-wrapper"
@@ -109,6 +144,24 @@
           </el-scrollbar>
         </div>
       </div>
+
+
+      <div v-show="[11].includes(props.fields.find(it => it.id === selectedFieldId)?.component_type)">
+        <div style="border: 1px solid #E3E3E3; height: 300px">
+          <el-scrollbar height="300px" always>
+            <el-radio-group v-model="target">
+              <div>
+                <div class="field-wrapper"><el-radio label="今天" size="small"></el-radio></div>
+                <div class="field-wrapper"><el-radio label="本周" size="small"></el-radio></div>
+                <div class="field-wrapper"><el-radio label="本月" size="small"></el-radio></div>
+                <div class="field-wrapper"><el-radio label="本季度" size="small"></el-radio></div>
+                <div class="field-wrapper"><el-radio label="本年" size="small"></el-radio></div>
+              </div>
+
+            </el-radio-group>
+          </el-scrollbar>
+        </div>
+      </div>
     </div>
 
   </div>
@@ -119,56 +172,132 @@
 <script lang="ts" setup>
 import {
   ElScrollbar, ElSelect, ElOption, ElRadioGroup, ElRadio, ElButton, ElInput,
-  ElCheckboxGroup, ElCheckbox
+  ElCheckboxGroup, ElCheckbox, ElMessage,
 } from 'element-plus'
 import {computed, inject, nextTick, ref, watch} from "vue";
 import UserSelectorInput from "@/components/common/selector/user/UserSelectorInput.vue";
+import DeptSelectorInput from "@/components/common/selector/dept/DeptSelectorInput.vue";
 import {dictValuesKey} from "@/config/app.keys";
+import { useIcon } from "@/components/common/util";
 
 interface Props {
   fields: ProcessFieldDefinition[]
+  fieldId?: number
+  operator?: string
+  val?: string
 }
 
 interface Emits {
-  (e: 'confirm'): void
+  (e: 'confirm', field: ProcessFieldDefinition, operator: string, val: any): void
   (e: 'cancel'): void
+  (e: 'update:fieldId', fieldId: number): void
+  (e: 'update:operator', operator: string): void
+  (e: 'update:val', val: string): void
 }
 
-const emits = defineEmits<Emits>()
+const plusIcon = useIcon('Plus')
+const subIcon = useIcon('Subtract')
 
+interface SelectorWrapper<T> {
+  id: string
+  view: T
+  scope: string
+}
+
+
+const users = ref<UserView[]>([])
+
+
+const depts = ref<SelectorWrapper<DeptView>[]>([])
+function handleAddDept() {
+  depts.value.push({
+    id: Math.random().toString(),
+    view: null,
+    scope: ''
+  })
+}
+
+function handleRemoveDept(dept: SelectorWrapper<DeptView>) {
+  const idx = depts.value.indexOf(dept)
+  if (idx > -1) {
+    depts.value.splice(idx, 1)
+  }
+}
+
+
+const emits = defineEmits<Emits>()
 const props = defineProps<Props>()
-const selectedFieldId = ref<number>()
 
 const operators = computed<string[]>(() => {
   const field = props.fields.find(it => it.id === selectedFieldId.value)
   let options: string[] = []
   if ([1, 2].includes(field?.component_type)) {
-    options = ['=', 'LIKE', 'NOT LIKE']
+    options = ['=', 'contains', 'startsWith', 'endsWith']
   } else if ([5].includes(field?.component_type)) {
     options = ['=', '>', '<', '>=', '<=']
   } else if ([3, 4, 6, 7, 9, 10].includes(field?.component_type)) {
     options = ['=']
   } else if ([11].includes(field?.component_type)) {
-    options = ['IN']
+    options = ['=']
   } else {
     options = ['=']
   }
-  nextTick(() => operator.value = options[0])
+  if (!options.includes(operator.value)) {
+    nextTick(() => operator.value = options[0])
+  }
   return options
 })
 
-watch(selectedFieldId, () => operator.value = undefined)
 
-const operator = ref<string>()
+const operator = computed<string>({
+  get: () => {
+    console.log('getter operator', props.operator)
+    return props.operator
+  },
+  set: (v) => emits('update:operator', v)
+})
+const selectedFieldId = computed<number>({
+  get: () => props.fieldId,
+  set: v => {
+    operator.value = undefined
+    target.value = undefined
+    emits('update:fieldId', v)
+  }
+})
 
-const userFieldEqToDptVal = ref<number>()
-const userFieldEqToUserVal = ref<number[]>()
+const target = computed<string>({
+  get: () => {
+    const field = props.fields.find(it => it.id === props.fieldId)
+    // console.log('target getter field', field)
+    if ([3, 4].includes(field?.component_type)) {
+      return undefined
+    } else {
+      return props.val
+    }
+  },
+  set: v => {
+    // console.log('target setter', v)
+    emits('update:val', v)
+  }
+})
 
-const dptFieldEqToVal = ref<number>()
+const targetArr = computed<number[]>({
+  get: () => {
+    const field = props.fields.find(it => it.id === props.fieldId)
+    // console.log('targetArr getter field', field)
+    if ([3, 4].includes(field?.component_type)) {
+      return props.val?.split(',').map(it => parseInt(it))
+    } else {
+      return []
+    }
+  },
+  set: v => {
+    // console.log('target arr setter', v)
+    emits('update:val', v.join(','))
+  }
+})
 
-const textFieldEqToVal = ref<string>('')
 
-const dictFieldEqToVal = ref<number[]>([])
 
 const messageSource = inject(dictValuesKey);
 
@@ -177,6 +306,23 @@ const dictOptions = computed<DictValue[]>(() => {
   const scope = props.fields.find(it => it.id === selectedFieldId.value)?.dict_scope
   return messageSource.value.filter(it => it.scope === scope && it.ident === ident)
 })
+
+
+
+
+function handleConfirm() {
+  const field = props.fields.find(it => it.id === selectedFieldId.value)
+  if (!field || !operator.value) {
+    ElMessage.warning(`请先选择字段 & 操作符`)
+    return
+  }
+
+  if ([3, 4].includes(field.component_type)) {
+    emits('confirm', field, operator.value, targetArr.value.join(','))
+  } else {
+    emits('confirm', field, operator.value, target.value)
+  }
+}
 
 </script>
 

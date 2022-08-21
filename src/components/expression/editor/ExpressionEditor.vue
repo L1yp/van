@@ -7,17 +7,20 @@
         <el-popover
           v-model:visible="popoverVisible"
           placement="top-start"
-          width="500px"
+          width="700px"
         >
           <template #reference>
-            <span @click.stop="popoverVisible = true">
+            <span @click.stop="handleOpenAddPanel">
               <s-v-g-icon style="width: 24px; height: 24px" name="Plus"/>
             </span>
           </template>
           <div style="height: 300px">
             <field-expression-panel
               :fields="fieldDefinitions"
-              @confirm="popoverVisible = false"
+              v-model:field-id="addState.fieldId"
+              v-model:operator="addState.operator"
+              v-model:val="addState.val"
+              @confirm="handleConfirm"
               @cancel="popoverVisible = false"
             />
           </div>
@@ -28,8 +31,28 @@
       <div class="toolbar-item" @click="handleAddOr">或</div>
       <div class="toolbar-item" @click="handleAddAnd">且</div>
     </div>
-    <div ref="editorRef"></div>
+    <div ref="editorRef" style="height: 160px; padding: 10px"></div>
   </div>
+
+  <el-popover
+    placement="top-start"
+    width="700px"
+    trigger="click"
+    :virtual-ref="popoverElem"
+    virtual-triggering
+    v-model:visible="editPopoverVisible"
+  >
+    <div style="height: 300px">
+      <field-expression-panel
+        :fields="fieldDefinitions"
+        v-model:field-id="editState.fieldId"
+        v-model:operator="editState.operator"
+        v-model:val="editState.val"
+        @confirm="handleUpdateState"
+        @cancel="editPopoverVisible = false"
+      />
+    </div>
+  </el-popover>
 </template>
 
 <script lang="ts" setup>
@@ -37,48 +60,74 @@ import {onBeforeMount, onMounted, ref, shallowRef} from "vue";
 import {
   createEditor,
   Editor,
+  paragraphComponentLoader,
 } from "@textbus/editor";
-import {ExpressionBlock, expressionBlockLoader} from "@/components/expression/editor/components/ExpressionBlock"
+
+import {
+  Viewer, ViewOptions,
+} from '@textbus/browser'
+
+import {
+  ExpressionBlock,
+  expressionBlockLoader,
+  popoverElem,
+  editPopoverVisible,
+  editState,
+  ExpressionBlockState,
+  editBlockRef, BlockAttr,
+} from "@/components/expression/editor/components/ExpressionBlock"
+
+import {
+  ExpressionRoot, expressionRootLoader
+} from '@/components/expression/editor/components/ExpressionRoot'
+
 import SVGIcon from "@/components/common/SVGIcon.vue";
 import { ElPopover, ElInput, ElButton } from 'element-plus'
 import {Commander} from "@textbus/core";
 import { loadProcessFieldDefinition } from '@/api/sys/process'
 import FieldExpressionPanel from "@/components/expression/components/FieldExpressionPanel.vue";
+import {EditorOptions} from "@textbus/editor/bundles/types";
+import {NopCommander} from "@/components/expression/editor/components/NopCommander";
 
+const addState = ref<BlockAttr>({
+  fieldId: 0,
+  operator: '',
+  val: ''
+})
 const popoverVisible = ref<boolean>(false)
+
+function handleOpenAddPanel() {
+  addState.value = {
+    fieldId: 0,
+    operator: '',
+    val: ''
+  }
+  popoverVisible.value = true
+}
+
 const fieldDefinitions = ref<ProcessFieldDefinition[]>([])
 onBeforeMount(async () => fieldDefinitions.value = await loadProcessFieldDefinition('holiday'))
 
 const editorRef = shallowRef<HTMLDivElement>()
 
-const options = {
-  // 编辑时的文档样式
-  editingStyleSheets: [
-    `[style*=color]:not([style*=background-color]) a {color: inherit;}`,
-    `a {text-decoration: underline; color: #449fdb; cursor: text;}`,
-    `[textbus-editable=off] > * {user-select: text; cursor: default;}`
-  ],
-  // 文档样式
-  styleSheets: [
-    `p {margin: 0; padding: 0;vertical-align: middle;}`
-  ],
+const options: ViewOptions = {
+  autoFocus: true,
   componentLoaders: [
     expressionBlockLoader,
   ],
-  formatLoaders: [],
-  plugins: [],
+  providers: [
+    {
+      provide: Commander,
+      useClass: NopCommander
+    }
+  ]
 }
 
-const editor = shallowRef<Editor>()
+const editor = shallowRef<Viewer>()
+
 
 onMounted(() => {
-  console.log('onMounted')
-
-  editor.value = createEditor(options)
-  editor.value.onReady.subscribe(() => {
-    console.log('editor is ready')
-    editor.value.focus()
-  })
+  editor.value = new Viewer(ExpressionRoot, expressionRootLoader, options)
   editor.value.mount(editorRef.value)
 })
 
@@ -86,7 +135,11 @@ function handleAddBlockStart() {
   const expression = ExpressionBlock.createInstance(editor.value.injector, {
     slots: [],
     state: {
-      content: '('
+      text: '(',
+      content: {
+        type: 'START',
+        attrs: undefined
+      }
     }
   })
   const commander = editor.value.injector.get(Commander);
@@ -97,7 +150,11 @@ function handleAddBlockEnd() {
   const expression = ExpressionBlock.createInstance(editor.value.injector, {
     slots: [],
     state: {
-      content: ')'
+      text: ')',
+      content: {
+        type: 'END',
+        attrs: undefined
+      }
     }
   })
   const commander = editor.value.injector.get(Commander);
@@ -108,7 +165,11 @@ function handleAddOr() {
   const expression = ExpressionBlock.createInstance(editor.value.injector, {
     slots: [],
     state: {
-      content: '或'
+      text: '或',
+      content: {
+        type: 'OR',
+        attrs: undefined
+      }
     }
   })
   const commander = editor.value.injector.get(Commander);
@@ -119,36 +180,61 @@ function handleAddAnd() {
   const expression = ExpressionBlock.createInstance(editor.value.injector, {
     slots: [],
     state: {
-      content: '且'
+      text: '且',
+      content: {
+        type: 'AND',
+        attrs: undefined
+      }
     }
   })
   const commander = editor.value.injector.get(Commander);
   commander.insert(expression)
 }
 
-const expression = ref<string>('')
+const state = ref<ExpressionBlockState>()
 
-function handleAddBlock() {
+
+function handleConfirm(field: ProcessFieldDefinition, operator: string, val: any) {
   const expressionInstance = ExpressionBlock.createInstance(editor.value.injector, {
     slots: [],
     state: {
-      content: expression.value
+      text: `${field.label} ${operator} ${val}`,
+      content: {
+        type: "BLOCK",
+        attrs: {
+          fieldId: field.id,
+          operator: operator,
+          val: val,
+        }
+      }
     }
   })
   const commander = editor.value.injector.get(Commander);
   commander.insert(expressionInstance)
+  popoverVisible.value = false
+}
+
+
+
+function handleUpdateState() {
+  const field = fieldDefinitions.value.find(it => it.id === editState.value.fieldId)
+  editBlockRef.value.updateState(draft => {
+    draft.text = `${field.label} ${editState.value.operator} ${editState.value.val}`
+    draft.content.attrs.fieldId = editState.value.fieldId
+    draft.content.attrs.operator = editState.value.operator
+    draft.content.attrs.val = editState.value.val
+  })
+  editPopoverVisible.value = false
 }
 
 </script>
 
 <style>
-.textbus-container {
-  height: 200px;
-}
 
 span.expression-block {
   background-color: #F5F5F5;
   padding: 6px;
+  cursor: pointer;
 }
 
 span.expression-block + span.expression-block {
@@ -161,13 +247,12 @@ div.editor-toolbar {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  /*padding: 5px 10px 5px 10px;*/
   width: 100%;
   box-sizing: border-box;
   height: 34px;
   background-color: #ffffff;
   border: 1px solid rgb(227, 227, 227);
-  /*border-bottom: none;*/
+
 }
 
 div.editor-toolbar div.toolbar-item {

@@ -59,7 +59,17 @@
         </el-collapse>
       </el-scrollbar>
     </el-tab-pane>
-    <el-tab-pane label="表单属性" name="form"></el-tab-pane>
+    <el-tab-pane label="表单属性" name="form">
+      <div>
+        <el-scrollbar :height="collapseScrollHeight" always>
+          <el-collapse v-model="formOpenedItems" style="padding: 0 6px">
+            <el-collapse-item name="component" title="组件配置" v-if="!!vFormSelectElem">
+              <el-input v-model="vFormSelectElem.injectFunc"></el-input>
+            </el-collapse-item>
+          </el-collapse>
+        </el-scrollbar>
+      </div>
+    </el-tab-pane>
   </ElTabs>
 </template>
 
@@ -90,6 +100,7 @@ const vFormSelectElem = inject(vFormActiveElementKey)
 const activePane = ref<string>('component')
 const openedItems = ref<string[]>(['form-item', 'component'])
 
+const formOpenedItems = ref<string[]>([])
 </script>
 
 <style scoped>

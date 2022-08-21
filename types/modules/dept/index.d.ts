@@ -1,15 +1,15 @@
 declare interface DeptView {
   id: number;
-  title: string;
-  simple_name: string;
-  description: string;
-  ident: string;
-  order_no: number;
-  pid: number;
-  owner: number;
+  title?: string;
+  simple_name?: string;
+  description?: string;
+  ident?: string;
+  order_no?: number;
+  pid?: number;
+  owner?: number;
   owner_info?: UserView;
-  status: boolean;
-  children: DeptView[],
+  status?: boolean;
+  children?: DeptView[],
 }
 
 declare interface AddDeptParam {

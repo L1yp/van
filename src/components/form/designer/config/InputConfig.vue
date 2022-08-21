@@ -58,7 +58,7 @@
       </el-radio-group>
     </el-form-item>
     <el-form-item prop="placeholder" label="占位文本">
-      <el-input-number v-model="vFormSelectElem.attrs.placeholder"></el-input-number>
+      <el-input v-model="vFormSelectElem.attrs.placeholder"></el-input>
     </el-form-item>
     <el-form-item prop="clearable" label="是否可清空">
       <el-radio-group v-model="vFormSelectElem.attrs.clearable">

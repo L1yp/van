@@ -14,7 +14,7 @@
         <el-table-column type="index" label="#" width="60"/>
         <el-table-column label="流程类型" prop="process_type" width="150">
           <template #default="scope">
-            <el-button link v-text="scope.row.process_type" @click="viewProcessList(scope.row)" style="text-decoration: underline"></el-button>
+            <el-button link v-text="scope.row.process_type_name" @click="viewProcessList(scope.row)" style="text-decoration: underline"></el-button>
           </template>
         </el-table-column>
         <el-table-column label="标题" prop="name" width="300">

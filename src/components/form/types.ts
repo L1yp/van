@@ -1,3 +1,12 @@
+export interface VFormDesignerScheme {
+  width: string
+  labelPosition: 'left' | 'right' | 'top'
+  labelWidth: string
+  size: 'large' | 'default' | 'small'
+  css: string
+  class: string
+}
+
 export interface FormScheme {
   name: string // map to modelValue
   label: string
@@ -32,6 +41,7 @@ export interface ComponentConfig {
   children?: ComponentConfig[]
   key: number
   modelValue?: any
+  injectFunc?: string
 }
 
 interface SelectOptionFixedValue {

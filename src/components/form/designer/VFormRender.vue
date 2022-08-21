@@ -1,5 +1,5 @@
 <template>
-  <el-form>
+  <el-form :model="formData">
     <v-form-nested-item
       v-for="item in props.schemes"
       :item="item"

@@ -41,7 +41,7 @@
 
 <script lang="ts">
 import { ElFormItem, ElSelect, ElOption, ElInput, ElRow, ElCol } from 'element-plus'
-import {defineComponent, PropType, ref} from "vue";
+import {defineComponent, getCurrentInstance, PropType, ref} from "vue";
 import {ComponentConfig} from "@/components/form/types";
 import DictInput from "@/components/dict/DictInput.vue";
 import DictTag from "@/components/dict/DictTag.vue";
@@ -60,7 +60,12 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props) {
+  setup(props, ctx) {
+    if (props.item.injectFunc) {
+      const inlineFunc = new Function(props.item.injectFunc)
+      const instance = getCurrentInstance()
+      inlineFunc.call(instance)
+    }
   },
 })
 
