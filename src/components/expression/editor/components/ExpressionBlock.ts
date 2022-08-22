@@ -46,6 +46,39 @@ export interface ExpressionBlockState {
   content: Content
 }
 
+export interface ExpressionStringModel {
+  target: string
+}
+
+export interface ExpressionNumberModel {
+  target: number
+}
+
+export interface ExpressionUserModel {
+  my_dept_scope: number
+  users: number[]
+  user_of_dept: {
+    dept_id: number
+    scope: number
+  }
+}
+
+export interface ExpressionDeptModel {
+  my_dept_scope: number
+  user_of_dept: {
+    dept_id: number
+    scope: number
+  }
+}
+
+export interface ExpressionDictModel {
+  selected: Array<{
+    id: number
+    scope: number
+  }>
+}
+
+
 export const popoverElem = shallowRef<HTMLSpanElement>()
 export const editPopoverVisible = ref<boolean>(false)
 export const editBlockRef = shallowRef<ExtractComponentInstanceType<typeof ExpressionBlock>>()
