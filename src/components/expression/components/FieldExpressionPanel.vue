@@ -54,7 +54,7 @@
       <div v-show="[6, 7].includes(selectedField?.component_type)">
         <div style="border: 1px solid #E3E3E3; height: 254px">
           <el-scrollbar height="254px" always>
-            <el-select v-model="exprUserModel.my_dept_scope" placeholder="请选择部门范围" style="width: 100%">
+            <el-select v-model="exprUserModel.my_dept_scope" placeholder="请选择部门范围" style="width: 100%" clearable>
               <el-option label="我的部门的用户列表" :value="1"></el-option>
               <el-option label="我的下级部门的用户列表" :value="2"></el-option>
             </el-select>
@@ -90,7 +90,7 @@
       <div v-show="[9, 10].includes(selectedField?.component_type)">
         <div style="border: 1px solid #E3E3E3; height: 298px">
           <el-scrollbar height="298px" always>
-            <el-select v-model="exprDeptModel.my_dept_scope" placeholder="请选择部门范围" style="width: 100%">
+            <el-select v-model="exprDeptModel.my_dept_scope" placeholder="请选择部门范围" clearable style="width: 100%">
               <el-option label="我的部门" :value="1"></el-option>
               <el-option label="下级部门" :value="2"></el-option>
             </el-select>
@@ -207,7 +207,7 @@ import {
   ElScrollbar, ElSelect, ElOption, ElRadioGroup, ElRadio, ElButton, ElInput,
   ElCheckboxGroup, ElCheckbox, ElMessage, ElTree
 } from 'element-plus'
-import { computed, inject, nextTick, ref } from "vue";
+import { computed, inject, nextTick, onBeforeUpdate, ref, watch } from "vue";
 import UserSelectorInput from "@/components/common/selector/user/UserSelectorInput.vue";
 import DeptSelectorInput from "@/components/common/selector/dept/DeptSelectorInput.vue";
 import {dictInfosKey, dictValuesKey} from "@/config/app.keys";
@@ -237,7 +237,6 @@ const subIcon = useIcon('Subtract')
 
 
 const dictSelected = ref<number>(0)
-
 
 function handleAddDeptOfUser() {
   exprUserModel.value.user_of_dept.push({
@@ -286,7 +285,7 @@ const operators = computed<string[]>(() => {
   const field = props.fields.find(it => it.id === selectedFieldId.value)
   let options: string[] = []
   if ([1, 2].includes(field?.component_type)) {
-    options = ['=', 'contains', 'startsWith', 'endsWith']
+    options = ['=', 'LIKE', 'NOT LIKE']
   } else if ([5].includes(field?.component_type)) {
     options = ['=', '>', '<', '>=', '<=']
   } else if ([3, 4, 6, 7, 9, 10].includes(field?.component_type)) {
@@ -314,7 +313,6 @@ const selectedFieldId = computed<number>({
   get: () => props.fieldId,
   set: v => {
     operator.value = undefined
-    target.value = undefined
     emits('update:fieldId', v)
   }
 })
@@ -335,10 +333,6 @@ const exprUserModel = ref<ExpressionUserModel>({
   users: [],
   user_of_dept: []
 })
-
-
-
-
 const exprDeptModel = ref<ExpressionDeptModel>({
   my_dept_scope: 1,
   user_of_dept: []
@@ -347,77 +341,49 @@ const exprDateModel = ref<ExpressionDateModel>({
   selected: undefined
 })
 
+/**
+ * 设置数据状态
+ */
+function setState() {
+  const type = selectedField.value?.component_type
+  const data = JSON.parse(props.val)
+  if ([1, 2].includes(type)) {
+    exprStringModel.value = data
+  } else if ([3, 4].includes(type)) {
+    exprDictModel.value = data
+  } else if ([5].includes(type)) {
+    exprNumberModel.value = data
+  } else if ([6, 7].includes(type)) {
+    exprUserModel.value = data
+  } else if ([9, 10].includes(type)) {
+    exprDeptModel.value = data
+  } else if ([11].includes(type)) {
+    exprDateModel.value = data
+  }
+}
 
+/**
+ * 清除数据状态
+ */
+function purgeState() {
+  exprStringModel.value = { target: '' }
+  exprNumberModel.value = { target: undefined }
+  exprDictModel.value = { selected: [] }
+  exprUserModel.value = {
+    my_dept_scope: 1,
+    users: [],
+    user_of_dept: []
+  }
+  exprDeptModel.value = {
+    my_dept_scope: 1,
+    user_of_dept: []
+  }
+  exprDateModel.value = { selected: undefined }
+}
 
-type FieldValue = ExpressionStringModel | ExpressionNumberModel | ExpressionUserModel | ExpressionDeptModel | ExpressionDictModel | ExpressionDateModel
-
-const targetVal = computed<FieldValue>({
-  get: () => {
-    if ([1, 2].includes(selectedField.value?.component_type)) {
-      if (!props.val) {
-        return {
-          target: ''
-        } as ExpressionStringModel
-      } else {
-        return JSON.parse(props.val)
-      }
-    } else if ([3, 4].includes(selectedField.value?.component_type)) {
-      if (!props.val) {
-        return {
-          selected: []
-        } as ExpressionDictModel
-      } else {
-        return JSON.parse(props.val)
-      }
-    } else if ([5].includes(selectedField.value?.component_type)) {
-      if (!props.val) {
-        return {
-          target: 0
-        } as ExpressionNumberModel
-      } else {
-        return JSON.parse(props.val)
-      }
-    } else if ([6, 7].includes(selectedField.value?.component_type)) {
-      if (!props.val) {
-        return {
-          my_dept_scope: 1,
-          users: [],
-          user_of_dept: []
-        } as ExpressionUserModel
-      } else {
-        return JSON.parse(props.val)
-      }
-    } else if ([9, 10].includes(selectedField.value?.component_type)) {
-      if (!props.val) {
-        return {
-          my_dept_scope: 1,
-          user_of_dept: []
-        } as ExpressionDeptModel
-      } else {
-        return JSON.parse(props.val)
-      }
-    } else if ([11].includes(selectedField.value?.component_type)) {
-      if (!props.val) {
-        return {
-          start: 0,
-          end: 0
-        } as ExpressionDateModel
-      } else {
-        return JSON.parse(props.val)
-      }
-    } else {
-      return {}
-    }
-    
-  },
-  set: v => {
-    console.log('setter target val', v);
-    
-    emits('update:val', JSON.stringify(v))
-  },
+defineExpose({
+  purgeState, setState
 })
-
-
 
 const dictInfos = inject(dictInfosKey)
 const srcDictInfo = computed<DictInfo>(() => {
@@ -476,38 +442,6 @@ const srcDictValues = computed<DictOptionModel[]>(() => {
   }
 })
 
-const target = computed<string>({
-  get: () => {
-    const field = props.fields.find(it => it.id === props.fieldId)
-    // console.log('target getter field', field)
-    if ([3, 4].includes(field?.component_type)) {
-      return undefined
-    } else {
-      return props.val
-    }
-  },
-  set: v => {
-    // console.log('target setter', v)
-    emits('update:val', v)
-  }
-})
-
-const targetArr = computed<number[]>({
-  get: () => {
-    const field = props.fields.find(it => it.id === props.fieldId)
-    // console.log('targetArr getter field', field)
-    if ([3, 4].includes(field?.component_type)) {
-      return props.val?.split(',').map(it => parseInt(it))
-    } else {
-      return []
-    }
-  },
-  set: v => {
-    // console.log('target arr setter', v)
-    emits('update:val', v.join(','))
-  }
-})
-
 
 function handleConfirm() {
   const field = props.fields.find(it => it.id === selectedFieldId.value)
@@ -517,10 +451,22 @@ function handleConfirm() {
   }
 
   if ([1, 2].includes(field.component_type)) {
+    if(!exprStringModel.value.target) {
+      ElMessage.error(`请输入字符串`)
+      return
+    }
     emits('confirm', field, operator.value, JSON.stringify(exprStringModel.value))
   } else if ([3, 4].includes(field.component_type)) {
+    if(!exprDictModel.value.selected || exprDictModel.value.selected.length === 0) {
+      ElMessage.error(`至少选择一项`)
+      return
+    }
     emits('confirm', field, operator.value, JSON.stringify(exprDictModel.value))
   } else if ([5].includes(field.component_type)) {
+    if(!exprNumberModel.value.target) {
+      ElMessage.error(`请输入一个值`)
+      return
+    }
     emits('confirm', field, operator.value, JSON.stringify(exprNumberModel.value))
   } else if ([6, 7].includes(field.component_type)) {
     emits('confirm', field, operator.value, JSON.stringify(exprUserModel.value))

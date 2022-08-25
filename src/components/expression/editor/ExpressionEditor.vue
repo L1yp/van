@@ -8,6 +8,7 @@
           v-model:visible="popoverVisible"
           placement="top-start"
           width="700px"
+          @show="handleInitState"
         >
           <template #reference>
             <span @click.stop="handleOpenAddPanel">
@@ -16,6 +17,7 @@
           </template>
           <div style="height: 300px">
             <field-expression-panel
+              ref="addPanelRef"
               :fields="fieldDefinitions"
               v-model:field-id="addState.fieldId"
               v-model:operator="addState.operator"
@@ -30,7 +32,7 @@
       <div class="toolbar-item" @click="handleAddBlockEnd">)</div>
       <div class="toolbar-item" @click="handleAddOr">或</div>
       <div class="toolbar-item" @click="handleAddAnd">且</div>
-      <div class="toolbar-item" @click="handleCompile">编译</div>
+      <div class="toolbar-item" @click="handleCompile">编</div>
     </div>
     <div ref="editorRef" style="height: 160px; padding: 10px"></div>
   </div>
@@ -45,6 +47,7 @@
     :virtual-ref="popoverElem"
     virtual-triggering
     v-model:visible="editPopoverVisible"
+    @show="handleRefreshState"
   >
     <div style="height: 300px">
       <field-expression-panel
@@ -52,6 +55,7 @@
         v-model:field-id="editState.fieldId"
         v-model:operator="editState.operator"
         v-model:val="editState.val"
+        ref="editPanelRef"
         @confirm="handleUpdateState"
         @cancel="editPopoverVisible = false"
       />
@@ -82,7 +86,7 @@ import {
 
 import SVGIcon from "@/components/common/SVGIcon.vue";
 import { ElPopover, ElInput, ElButton } from 'element-plus'
-import {Commander} from "@textbus/core";
+import {Commander, RootComponentRef, Slot, ExtractComponentInstanceType } from "@textbus/core";
 import { loadProcessFieldDefinition } from '@/api/sys/process'
 import FieldExpressionPanel from "@/components/expression/components/FieldExpressionPanel.vue";
 import {NopCommander} from "@/components/expression/editor/components/NopCommander";
@@ -196,15 +200,27 @@ function handleAddAnd() {
 }
 
 function handleCompile() {
-  const json = editor.value.getJSON()
-  console.log('expr', json);
+  if(editor.value.getContents().content === '<br>') {
+    return
+  }
+
+  const injector = editor.value.injector
+  const rootComponent = injector.get(RootComponentRef)
+
+  const slots = rootComponent.component.slots?.toArray() || [];
+  const slot: Slot = slots[0]
+  const states: ExpressionBlockState[] = []
+  type ExpressionComponentInstnce = ExtractComponentInstanceType<typeof ExpressionBlock>
+  for (let i = 0; i < slot.length; i++) {
+    const element: ExpressionComponentInstnce = slot.getContentAtIndex(i) as ExpressionComponentInstnce;
+    states.push(element.state)
+  }
+  console.log('states', states);
   
 }
 
 
-
-function handleConfirm(field: ProcessFieldDefinition, operator: string, val: string) {
-
+function buildText(field: ProcessFieldDefinition, operator: string, val: string) {
   let text = ''
   if ([1, 2].includes(field.component_type)) {
     const data = JSON.parse(val) as ExpressionStringModel
@@ -243,6 +259,14 @@ function handleConfirm(field: ProcessFieldDefinition, operator: string, val: str
     const data = JSON.parse(val) as ExpressionDateModel
   }
 
+  return text
+}
+
+
+function handleConfirm(field: ProcessFieldDefinition, operator: string, val: string) {
+
+  const text = buildText(field, operator, val)
+
   const expressionInstance = ExpressionBlock.createInstance(editor.value.injector, {
     slots: [],
     state: {
@@ -264,17 +288,26 @@ function handleConfirm(field: ProcessFieldDefinition, operator: string, val: str
 
 
 
-function handleUpdateState() {
-  const field = fieldDefinitions.value.find(it => it.id === editState.value.fieldId)
+function handleUpdateState(field: ProcessFieldDefinition, operator: string, val: string) {
+  const text = buildText(field, operator, val)
   editBlockRef.value.updateState(draft => {
-    draft.text = `${field.label} ${editState.value.operator} ${editState.value.val}`
-    draft.content.attrs.fieldId = editState.value.fieldId
-    draft.content.attrs.operator = editState.value.operator
-    draft.content.attrs.val = editState.value.val
+    draft.text = text
+    draft.content.attrs.fieldId = field.id
+    draft.content.attrs.operator = operator
+    draft.content.attrs.val = val
   })
   editPopoverVisible.value = false
 }
 
+const editPanelRef = shallowRef<InstanceType<typeof FieldExpressionPanel>>()
+function handleRefreshState() {
+  editPanelRef.value.setState()
+}
+
+const addPanelRef = shallowRef<InstanceType<typeof FieldExpressionPanel>>()
+function handleInitState() {
+  addPanelRef.value.purgeState()
+}
 </script>
 
 <style>

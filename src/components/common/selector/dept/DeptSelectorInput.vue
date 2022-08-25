@@ -84,7 +84,7 @@ export default defineComponent({
       nextTick(() => selectRef.value?.blur())
     }
 
-    const loading = ref(false)
+    const loading = ref<boolean>(false)
     const selectedElems = ref<DeptView | DeptView[]>(props.multiple ? [] : null)
     const options = ref<DeptView[]>([])
 
