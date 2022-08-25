@@ -56,28 +56,39 @@ export interface ExpressionNumberModel {
 
 export interface ExpressionUserModel {
   my_dept_scope: number
-  users: number[]
-  user_of_dept: {
-    dept_id: number
-    scope: number
-  }
-}
-
-export interface ExpressionDeptModel {
-  my_dept_scope: number
-  user_of_dept: {
-    dept_id: number
-    scope: number
-  }
-}
-
-export interface ExpressionDictModel {
-  selected: Array<{
+  users: UserView[]
+  user_of_dept: Array<{
     id: number
+    dept: DeptView
     scope: number
   }>
 }
 
+export interface ExpressionDeptModel {
+  my_dept_scope: number
+  user_of_dept: Array<{
+    id: number
+    dept: DeptView
+    scope: number
+  }>
+}
+
+export interface ExpressionDictModel {
+  selected: string[]
+}
+
+export interface DictOptionModel {
+  id: number
+  pid: number
+  label: string
+  value: number
+  scope: number
+  children?: DictOptionModel[]
+}
+
+export interface ExpressionDateModel {
+  selected: string
+}
 
 export const popoverElem = shallowRef<HTMLSpanElement>()
 export const editPopoverVisible = ref<boolean>(false)

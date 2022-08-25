@@ -51,68 +51,68 @@
     <!-- 右值 -->
     <div style="flex: 1; height: 300px">
       <!-- 用户 -->
-      <div v-show="[6, 7].includes(selectedFiled?.component_type)">
+      <div v-show="[6, 7].includes(selectedField?.component_type)">
         <div style="border: 1px solid #E3E3E3; height: 254px">
           <el-scrollbar height="254px" always>
-            <el-select v-model="target" placeholder="请选择部门范围" style="width: 100%">
-              <el-option label="我的部门的用户列表" value="本人部门"></el-option>
-              <el-option label="我的下级部门的用户列表" value="下级部门"></el-option>
+            <el-select v-model="exprUserModel.my_dept_scope" placeholder="请选择部门范围" style="width: 100%">
+              <el-option label="我的部门的用户列表" :value="1"></el-option>
+              <el-option label="我的下级部门的用户列表" :value="2"></el-option>
             </el-select>
 
-            <div v-show="depts.length === 0">
-              <el-button :icon="plusIcon" circle @click="handleAddDept"></el-button>
+            <div v-show="exprUserModel.user_of_dept.length === 0">
+              <el-button :icon="plusIcon" circle @click="handleAddDeptOfUser"></el-button>
             </div>
-            <div v-show="depts.length > 0">
+            <div v-show="exprUserModel.user_of_dept.length > 0">
               <div
-                v-for="(dept, idx) in depts"
-                :key="dept.id"
+                v-for="(item, idx) in exprUserModel.user_of_dept"
+                :key="item.id"
                 style="display: flex"
               >
-                <el-button :icon="plusIcon" circle @click="handleAddDept"></el-button>
+                <el-button :icon="plusIcon" circle @click="handleAddDeptOfUser"></el-button>
                 <div style="flex: 1">
-                  <dept-selector-input style="width: 50%" v-model="depts[idx].view" :multiple="false" :clearable="false"/>
-                  <el-select v-model="dept.scope" placeholder="请选择部门范围"  style="width: 50%">
-                    <el-option label="当前部门" value="本人部门"></el-option>
-                    <el-option label="下级部门" value="下级部门"></el-option>
+                  <dept-selector-input style="width: 50%" v-model="item.dept" :multiple="false" :clearable="false"/>
+                  <el-select v-model="item.scope" placeholder="请选择部门范围"  style="width: 50%">
+                    <el-option label="当前部门" :value="1"></el-option>
+                    <el-option label="下级部门" :value="2"></el-option>
                   </el-select>
                 </div>
-                <el-button :icon="subIcon" circle @click="handleRemoveDept(dept)"></el-button>
+                <el-button :icon="subIcon" circle @click="handleRemoveDeptOfUser(item)"></el-button>
 
               </div>
             </div>
           </el-scrollbar>
         </div>
         <div style="height: 32px; margin-top: 10px">
-          <user-selector-input style="width: 100%" v-model="users" multiple :clearable="false" />
+          <user-selector-input style="width: 100%" v-model="exprUserModel.users" multiple :clearable="false" />
         </div>
       </div>
       <!-- 部门 -->
-      <div v-show="[9, 10].includes(selectedFiled?.component_type)">
+      <div v-show="[9, 10].includes(selectedField?.component_type)">
         <div style="border: 1px solid #E3E3E3; height: 298px">
           <el-scrollbar height="298px" always>
-            <el-select v-model="target" placeholder="请选择部门范围" style="width: 100%">
-              <el-option label="我的部门" value="本人部门"></el-option>
-              <el-option label="下级部门" value="下级部门"></el-option>
+            <el-select v-model="exprDeptModel.my_dept_scope" placeholder="请选择部门范围" style="width: 100%">
+              <el-option label="我的部门" :value="1"></el-option>
+              <el-option label="下级部门" :value="2"></el-option>
             </el-select>
 
-            <div v-show="depts.length === 0">
+            <div v-show="exprDeptModel.user_of_dept.length === 0">
               <el-button :icon="plusIcon" circle @click="handleAddDept"></el-button>
             </div>
-            <div v-show="depts.length > 0">
+            <div v-show="exprDeptModel.user_of_dept.length > 0">
               <div
-                v-for="(dept, idx) in depts"
-                :key="dept.id"
+                v-for="(item, idx) in exprDeptModel.user_of_dept"
+                :key="item.id"
                 style="display: flex"
               >
                 <el-button :icon="plusIcon" circle @click="handleAddDept"></el-button>
                 <div style="flex: 1">
-                  <dept-selector-input style="width: 50%" v-model="depts[idx].view" :multiple="false" :clearable="false"/>
-                  <el-select v-model="dept.scope" placeholder="请选择部门范围"  style="width: 50%">
-                    <el-option label="当前部门" value="本人部门"></el-option>
-                    <el-option label="下级部门" value="下级部门"></el-option>
+                  <dept-selector-input style="width: 50%" v-model="item.dept" :multiple="false" :clearable="false"/>
+                  <el-select v-model="item.scope" placeholder="请选择部门范围"  style="width: 50%">
+                    <el-option label="当前部门" :value="1"></el-option>
+                    <el-option label="下级部门" :value="2"></el-option>
                   </el-select>
                 </div>
-                <el-button :icon="subIcon" circle @click="handleRemoveDept(dept)"></el-button>
+                <el-button :icon="subIcon" circle @click="handleRemoveDept(item)"></el-button>
 
               </div>
             </div>
@@ -121,23 +121,29 @@
       </div>
 
       <!-- 文本 -->
-      <div v-show="[1, 2, 5].includes(selectedFiled?.component_type)">
+      <div v-show="[1, 2].includes(selectedField?.component_type)">
         <div>
-          <el-input v-model="target"></el-input>
+          <el-input v-model="exprStringModel.target"></el-input>
+        </div>
+      </div>
+      <!-- 数字 -->
+      <div v-show="[5].includes(selectedField?.component_type)">
+        <div>
+          <el-input v-model.number="exprNumberModel.target"></el-input>
         </div>
       </div>
       <!-- 字典 -->
-      <div v-show="[3, 4].includes(selectedFiled?.component_type)">
+      <div v-show="[3, 4].includes(selectedField?.component_type)">
         <div style="border: 1px solid #E3E3E3; height: 298px">
           <el-scrollbar height="298px" always>
-            <template v-if="srcDictInfo?.type === 1">
-              <el-checkbox-group v-model="targetArr">
+            <template v-if="true || srcDictInfo?.type === 1">
+              <el-checkbox-group v-model="exprDictModel.selected">
                 <div>
                   <div
                     class="field-wrapper"
-                    v-for="option in dictOptions"
+                    v-for="option in srcDictValues"
                   >
-                    <el-checkbox :label="option.id" size="small">{{option.label}}</el-checkbox>
+                    <el-checkbox :label="JSON.stringify(option)" size="small">{{option.label}}</el-checkbox>
                   </div>
                 </div>
               </el-checkbox-group>
@@ -173,10 +179,10 @@
       </div>
 
 
-      <div v-show="[11].includes(props.fields.find(it => it.id === selectedFieldId)?.component_type)">
+      <div v-show="[11].includes(selectedField?.component_type)">
         <div style="border: 1px solid #E3E3E3; height: 300px">
           <el-scrollbar height="300px" always>
-            <el-radio-group v-model="target">
+            <el-radio-group v-model="exprDateModel.selected">
               <div>
                 <div class="field-wrapper"><el-radio label="今天" size="small"></el-radio></div>
                 <div class="field-wrapper"><el-radio label="本周" size="small"></el-radio></div>
@@ -201,11 +207,15 @@ import {
   ElScrollbar, ElSelect, ElOption, ElRadioGroup, ElRadio, ElButton, ElInput,
   ElCheckboxGroup, ElCheckbox, ElMessage, ElTree
 } from 'element-plus'
-import {computed, inject, nextTick, ref, watch} from "vue";
+import { computed, inject, nextTick, ref } from "vue";
 import UserSelectorInput from "@/components/common/selector/user/UserSelectorInput.vue";
 import DeptSelectorInput from "@/components/common/selector/dept/DeptSelectorInput.vue";
 import {dictInfosKey, dictValuesKey} from "@/config/app.keys";
 import { useIcon } from "@/components/common/util";
+import { 
+  ExpressionDeptModel, ExpressionDictModel, ExpressionNumberModel, ExpressionStringModel, 
+  ExpressionUserModel, ExpressionDateModel, DictOptionModel,
+} from '../editor/components/ExpressionBlock';
 
 interface Props {
   fields: ProcessFieldDefinition[]
@@ -225,35 +235,52 @@ interface Emits {
 const plusIcon = useIcon('Plus')
 const subIcon = useIcon('Subtract')
 
-interface SelectorWrapper<T> {
-  id: string
-  view: T
-  scope: string
-}
 
 const dictSelected = ref<number>(0)
-const users = ref<UserView[]>([])
 
 
-const depts = ref<SelectorWrapper<DeptView>[]>([])
-function handleAddDept() {
-  depts.value.push({
-    id: Math.random().toString(),
-    view: null,
-    scope: ''
+function handleAddDeptOfUser() {
+  exprUserModel.value.user_of_dept.push({
+    id: Math.random(),
+    dept: null,
+    scope: 1,
   })
 }
 
-function handleRemoveDept(dept: SelectorWrapper<DeptView>) {
-  const idx = depts.value.indexOf(dept)
+function handleRemoveDeptOfUser(dept) {
+  const idx = exprUserModel.value.user_of_dept.indexOf(dept)
   if (idx > -1) {
-    depts.value.splice(idx, 1)
+    exprUserModel.value.user_of_dept.splice(idx, 1)
+  }
+}
+
+
+function handleAddDept() {
+  exprDeptModel.value.user_of_dept.push({
+    id: Math.random(),
+    dept: null,
+    scope: 1,
+  })
+}
+
+function handleRemoveDept(dept) {
+  const idx = exprDeptModel.value.user_of_dept.indexOf(dept)
+  if (idx > -1) {
+    exprUserModel.value.user_of_dept.splice(idx, 1)
   }
 }
 
 
 const emits = defineEmits<Emits>()
 const props = defineProps<Props>()
+
+const selectedField = computed<ProcessFieldDefinition>(() => {
+  if (!selectedFieldId.value) {
+    return null
+  } else {
+    return props.fields.find(it => it.id === selectedFieldId.value)
+  }
+})
 
 const operators = computed<string[]>(() => {
   const field = props.fields.find(it => it.id === selectedFieldId.value)
@@ -292,37 +319,122 @@ const selectedFieldId = computed<number>({
   }
 })
 
-const selectedFiled = computed<ProcessFieldDefinition>(() => {
-  if (!selectedFieldId.value) {
-    return null
-  } else {
-    return props.fields.find(it => it.id === selectedFieldId.value)
-  }
+
+
+const exprStringModel = ref<ExpressionStringModel>({
+  target: ''
 })
+const exprNumberModel = ref<ExpressionNumberModel>({
+  target: undefined
+})
+const exprDictModel = ref<ExpressionDictModel>({
+  selected: []
+})
+const exprUserModel = ref<ExpressionUserModel>({
+  my_dept_scope: 1,
+  users: [],
+  user_of_dept: []
+})
+
+
+
+
+const exprDeptModel = ref<ExpressionDeptModel>({
+  my_dept_scope: 1,
+  user_of_dept: []
+})
+const exprDateModel = ref<ExpressionDateModel>({
+  selected: undefined
+})
+
+
+
+type FieldValue = ExpressionStringModel | ExpressionNumberModel | ExpressionUserModel | ExpressionDeptModel | ExpressionDictModel | ExpressionDateModel
+
+const targetVal = computed<FieldValue>({
+  get: () => {
+    if ([1, 2].includes(selectedField.value?.component_type)) {
+      if (!props.val) {
+        return {
+          target: ''
+        } as ExpressionStringModel
+      } else {
+        return JSON.parse(props.val)
+      }
+    } else if ([3, 4].includes(selectedField.value?.component_type)) {
+      if (!props.val) {
+        return {
+          selected: []
+        } as ExpressionDictModel
+      } else {
+        return JSON.parse(props.val)
+      }
+    } else if ([5].includes(selectedField.value?.component_type)) {
+      if (!props.val) {
+        return {
+          target: 0
+        } as ExpressionNumberModel
+      } else {
+        return JSON.parse(props.val)
+      }
+    } else if ([6, 7].includes(selectedField.value?.component_type)) {
+      if (!props.val) {
+        return {
+          my_dept_scope: 1,
+          users: [],
+          user_of_dept: []
+        } as ExpressionUserModel
+      } else {
+        return JSON.parse(props.val)
+      }
+    } else if ([9, 10].includes(selectedField.value?.component_type)) {
+      if (!props.val) {
+        return {
+          my_dept_scope: 1,
+          user_of_dept: []
+        } as ExpressionDeptModel
+      } else {
+        return JSON.parse(props.val)
+      }
+    } else if ([11].includes(selectedField.value?.component_type)) {
+      if (!props.val) {
+        return {
+          start: 0,
+          end: 0
+        } as ExpressionDateModel
+      } else {
+        return JSON.parse(props.val)
+      }
+    } else {
+      return {}
+    }
+    
+  },
+  set: v => {
+    console.log('setter target val', v);
+    
+    emits('update:val', JSON.stringify(v))
+  },
+})
+
+
 
 const dictInfos = inject(dictInfosKey)
 const srcDictInfo = computed<DictInfo>(() => {
-  if ([3, 4].includes(selectedFiled.value?.component_type)) {
-    return dictInfos.value.find(it => it.ident === selectedFiled.value.dict_ident && it.scope === selectedFiled.value.dict_scope)
+  if ([3, 4].includes(selectedField.value?.component_type)) {
+    return dictInfos.value.find(it => it.ident === selectedField.value.dict_ident && it.scope === selectedField.value.dict_scope)
   } else {
     return null
   }
 })
 
-interface DictOptionModel {
-  id: number
-  pid: number
-  label: string
-  value: number
-  scope: number
-  children?: DictOptionModel[]
-}
+
 
 const dictValues = inject(dictValuesKey)
 const srcDictValues = computed<DictOptionModel[]>(() => {
   if(srcDictInfo.value) {
     const list = dictValues.value.filter(it => it.ident == srcDictInfo.value.ident && it.scope == srcDictInfo.value.scope)
-    if(srcDictInfo.value.type === 1) {
+    if(true || srcDictInfo.value.type === 1) {
       return list.map(it => {
         return {
           id: it.id,
@@ -397,18 +509,6 @@ const targetArr = computed<number[]>({
 })
 
 
-
-const messageSource = inject(dictValuesKey);
-
-const dictOptions = computed<DictValue[]>(() => {
-  const ident = props.fields.find(it => it.id === selectedFieldId.value)?.dict_ident
-  const scope = props.fields.find(it => it.id === selectedFieldId.value)?.dict_scope
-  return messageSource.value.filter(it => it.scope === scope && it.ident === ident)
-})
-
-
-
-
 function handleConfirm() {
   const field = props.fields.find(it => it.id === selectedFieldId.value)
   if (!field || !operator.value) {
@@ -416,10 +516,18 @@ function handleConfirm() {
     return
   }
 
-  if ([3, 4].includes(field.component_type)) {
-    emits('confirm', field, operator.value, targetArr.value.join(','))
-  } else {
-    emits('confirm', field, operator.value, target.value)
+  if ([1, 2].includes(field.component_type)) {
+    emits('confirm', field, operator.value, JSON.stringify(exprStringModel.value))
+  } else if ([3, 4].includes(field.component_type)) {
+    emits('confirm', field, operator.value, JSON.stringify(exprDictModel.value))
+  } else if ([5].includes(field.component_type)) {
+    emits('confirm', field, operator.value, JSON.stringify(exprNumberModel.value))
+  } else if ([6, 7].includes(field.component_type)) {
+    emits('confirm', field, operator.value, JSON.stringify(exprUserModel.value))
+  } else if ([9, 10].includes(field.component_type)) {
+    emits('confirm', field, operator.value, JSON.stringify(exprDeptModel.value))
+  } else if ([11].includes(field.component_type)) {
+    emits('confirm', field, operator.value, JSON.stringify(exprDateModel.value))
   }
 }
 

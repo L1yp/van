@@ -32,9 +32,13 @@ export const DeptSelectorInputProps: ComponentPropsOptions<any> = {
   valueKey: {
     type: String as PropType<string>,
     required: false,
-    default: null
+    default: null,
   },
-  readViewFn: Function as PropType<(param: number | number[] | string | string[]) => DeptView>,
+  readViewFn: {
+    type: Function as PropType<(param: number | number[] | string | string[]) => DeptView>,
+    required: false,
+    default: null,
+  },
   placeholder: {
     type: String as PropType<string>,
     required: false,

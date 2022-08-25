@@ -34,7 +34,11 @@ export const UserSelectorInputProps: ComponentPropsOptions<any> = {
     required: false,
     default: null
   },
-  readViewFn: Function as PropType<(param: number | number[] | string | string[]) => UserView>,
+  readViewFn: {
+    type: Function as PropType<(param: number | number[] | string | string[]) => UserView>,
+    required: false,
+    default: null
+  },
   placeholder: {
     type: String as PropType<string>,
     required: false,
