@@ -55,8 +55,10 @@
         <div style="border: 1px solid #E3E3E3; height: 254px">
           <el-scrollbar height="254px" always>
             <el-select v-model="exprUserModel.my_dept_scope" placeholder="请选择部门范围" style="width: 100%" clearable>
-              <el-option label="我的部门的用户列表" :value="1"></el-option>
-              <el-option label="我的下级部门的用户列表" :value="2"></el-option>
+              <el-option label="本人" :value="1"></el-option>
+              <el-option label="本部门" :value="2"></el-option>
+              <el-option label="本部门及下级部门" :value="3"></el-option>
+              <el-option label="下级部门" :value="4"></el-option>
             </el-select>
 
             <div v-show="exprUserModel.user_of_dept.length === 0">
@@ -72,8 +74,9 @@
                 <div style="flex: 1">
                   <dept-selector-input style="width: 50%" v-model="item.dept" :multiple="false" :clearable="false"/>
                   <el-select v-model="item.scope" placeholder="请选择部门范围"  style="width: 50%">
-                    <el-option label="当前部门" :value="1"></el-option>
-                    <el-option label="下级部门" :value="2"></el-option>
+                    <el-option label="本部门" :value="1"></el-option>
+                    <el-option label="本部门及下级部门" :value="2"></el-option>
+                    <el-option label="下级部门" :value="3"></el-option>
                   </el-select>
                 </div>
                 <el-button :icon="subIcon" circle @click="handleRemoveDeptOfUser(item)"></el-button>
@@ -91,8 +94,9 @@
         <div style="border: 1px solid #E3E3E3; height: 298px">
           <el-scrollbar height="298px" always>
             <el-select v-model="exprDeptModel.my_dept_scope" placeholder="请选择部门范围" clearable style="width: 100%">
-              <el-option label="我的部门" :value="1"></el-option>
-              <el-option label="下级部门" :value="2"></el-option>
+              <el-option label="本部门" :value="1"></el-option>
+              <el-option label="本部门及下级部门" :value="2"></el-option>
+              <el-option label="下级部门" :value="3"></el-option>
             </el-select>
 
             <div v-show="exprDeptModel.user_of_dept.length === 0">
@@ -108,8 +112,9 @@
                 <div style="flex: 1">
                   <dept-selector-input style="width: 50%" v-model="item.dept" :multiple="false" :clearable="false"/>
                   <el-select v-model="item.scope" placeholder="请选择部门范围"  style="width: 50%">
-                    <el-option label="当前部门" :value="1"></el-option>
-                    <el-option label="下级部门" :value="2"></el-option>
+                    <el-option label="本部门" :value="1"></el-option>
+                    <el-option label="本部门及下级部门" :value="2"></el-option>
+                    <el-option label="下级部门" :value="3"></el-option>
                   </el-select>
                 </div>
                 <el-button :icon="subIcon" circle @click="handleRemoveDept(item)"></el-button>
@@ -265,7 +270,7 @@ function handleAddDept() {
 function handleRemoveDept(dept) {
   const idx = exprDeptModel.value.user_of_dept.indexOf(dept)
   if (idx > -1) {
-    exprUserModel.value.user_of_dept.splice(idx, 1)
+    exprDeptModel.value.user_of_dept.splice(idx, 1)
   }
 }
 

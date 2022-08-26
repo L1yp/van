@@ -55,6 +55,12 @@ export interface ExpressionNumberModel {
 }
 
 export interface ExpressionUserModel {
+  /**
+   * 1: 本人
+   * 2: 本部门
+   * 3: 本部门及下级部门
+   * 4: 下级部门
+   */
   my_dept_scope: number
   users: UserView[]
   user_of_dept: Array<{

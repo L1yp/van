@@ -235,28 +235,37 @@ function buildText(field: ProcessFieldDefinition, operator: string, val: string)
     text = `${field.description} ${operator} ${data.target}`
   } else if ([6, 7].includes(field.component_type)) {
     const data = JSON.parse(val) as ExpressionUserModel
-    const scopeMap = ['', '本人部门', '下级部门']
+    const scopeMap = ['', '本人', '本部门', '本部门及下级部门', '下级部门']
+    const deptScoptMap = ['', '本部门', '本部门及下级部门', '下级部门']
     let sUserList = ''
     if (data.users && data.users.length > 0) {
       sUserList = ', ' + data.users.map(it => it.label).join(',')
     }
     let sDeptList = ''
     if (data.user_of_dept && data.user_of_dept.length > 0) {
-      sDeptList = ', ' + data.user_of_dept.map(it => it.scope > 1 ? `${it.dept.title}的${scopeMap[it.scope]}` : `${it.dept.title}`)
+      sDeptList = ', ' + data.user_of_dept.map(it => it.scope > 1 ? `${it.dept.title}的${deptScoptMap[it.scope]}` : `${it.dept.title}`)
     }
     console.log(666);
     
     text = `${field.description} ${operator} ${scopeMap[data.my_dept_scope]}${sUserList}${sDeptList}`
   } else if ([9, 10].includes(field.component_type)) {
     const data = JSON.parse(val) as ExpressionDeptModel
-    const scopeMap = ['', '当前部门', '下级部门']
+    const scopeMap = ['', '本部门', '本部门及下级部门', '下级部门']
+
+    const arr = []
+
+    if (data.my_dept_scope) {
+      arr.push(scopeMap[data.my_dept_scope || 0])
+    }
+
     let sDeptList = ''
     if (data.user_of_dept && data.user_of_dept.length > 0) {
-      sDeptList = ', ' + data.user_of_dept.map(it => it.scope > 1 ? `${it.dept.title}的${scopeMap[it.scope]}` : `${it.dept.title}`)
+      arr.push(data.user_of_dept.map(it => it.scope > 1 ? `${it.dept.title}的${scopeMap[it.scope]}` : `${it.dept.title}`))
     }
-    text = `${field.description} ${operator} ,${scopeMap[data.my_dept_scope]}${sDeptList}`
+    text = `${field.description} ${operator} ${arr.join(',')}`
   } else if ([11].includes(field.component_type)) {
     const data = JSON.parse(val) as ExpressionDateModel
+    text = `${field.description} ${operator} ${data.selected}`
   }
 
   return text
