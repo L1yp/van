@@ -19,7 +19,7 @@
             <field-expression-panel
               ref="addPanelRef"
               :fields="fieldDefinitions"
-              v-model:field-id="addState.fieldId"
+              v-model:field-id="addState.field_id"
               v-model:operator="addState.operator"
               v-model:val="addState.val"
               @confirm="handleConfirm"
@@ -52,7 +52,7 @@
     <div style="height: 300px">
       <field-expression-panel
         :fields="fieldDefinitions"
-        v-model:field-id="editState.fieldId"
+        v-model:field-id="editState.field_id"
         v-model:operator="editState.operator"
         v-model:val="editState.val"
         ref="editPanelRef"
@@ -98,7 +98,7 @@ const exprPreview = computed<string>(() => {
 })
 
 const addState = ref<BlockAttr>({
-  fieldId: 0,
+  field_id: 0,
   operator: '',
   val: ''
 })
@@ -106,7 +106,7 @@ const popoverVisible = ref<boolean>(false)
 
 function handleOpenAddPanel() {
   addState.value = {
-    fieldId: 0,
+    field_id: 0,
     operator: '',
     val: ''
   }
@@ -216,6 +216,7 @@ function handleCompile() {
     states.push(element.state)
   }
   console.log('states', states);
+  console.log('states', JSON.stringify(states));
   
 }
 
@@ -283,7 +284,7 @@ function handleConfirm(field: ProcessFieldDefinition, operator: string, val: str
       content: {
         type: "BLOCK",
         attrs: {
-          fieldId: field.id,
+          field_id: field.id,
           operator: operator,
           val: val,
         }
@@ -301,7 +302,7 @@ function handleUpdateState(field: ProcessFieldDefinition, operator: string, val:
   const text = buildText(field, operator, val)
   editBlockRef.value.updateState(draft => {
     draft.text = text
-    draft.content.attrs.fieldId = field.id
+    draft.content.attrs.field_id = field.id
     draft.content.attrs.operator = operator
     draft.content.attrs.val = val
   })

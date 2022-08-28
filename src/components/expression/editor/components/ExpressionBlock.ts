@@ -23,7 +23,7 @@ export type ExpressionType = 'AND' | 'OR' | 'START' | 'END' | 'BLOCK'
  * 表达式块结构
  */
 export type BlockAttr = {
-  fieldId: number
+  field_id: number
   operator: string
   val: string
 }
@@ -100,7 +100,7 @@ export const popoverElem = shallowRef<HTMLSpanElement>()
 export const editPopoverVisible = ref<boolean>(false)
 export const editBlockRef = shallowRef<ExtractComponentInstanceType<typeof ExpressionBlock>>()
 export const editState = ref<BlockAttr>({
-  fieldId: 0,
+  field_id: 0,
   operator: '',
   val: ''
 })
@@ -128,7 +128,7 @@ export const ExpressionBlock = defineComponent({
             if (self.state.content.type === 'BLOCK') {
               popoverElem.value = compRef.current
 
-              editState.value.fieldId = self.state.content.attrs.fieldId
+              editState.value.field_id = self.state.content.attrs.field_id
               editState.value.operator = self.state.content.attrs.operator
               editState.value.val = self.state.content.attrs.val
 
