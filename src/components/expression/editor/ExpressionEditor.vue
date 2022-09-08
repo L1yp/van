@@ -223,18 +223,25 @@ function handleCompile() {
 
 function buildText(field: ProcessFieldDefinition, operator: string, val: string) {
   let text = ''
+  // 单行文本、多行文本
   if ([1, 2].includes(field.component_type)) {
     const data = JSON.parse(val) as ExpressionStringModel
     text = `${field.description} ${operator} ${data.target}`
-  } else if ([3, 4].includes(field.component_type)) {
+  } 
+  // 字典单选 字典多选
+  else if ([3, 4].includes(field.component_type)) {
     const data = JSON.parse(val) as ExpressionDictModel
     const options = data.selected.map(it => JSON.parse(it) as DictOptionModel)
     const labels = options.map(it => it.label).join(',')
     text = `${field.description} ${operator} ${labels}`
-  } else if ([5].includes(field.component_type)) {
+  } 
+  // 数字
+  else if ([5].includes(field.component_type)) {
     const data = JSON.parse(val) as ExpressionNumberModel
     text = `${field.description} ${operator} ${data.target}`
-  } else if ([6, 7].includes(field.component_type)) {
+  } 
+  // 用户
+  else if ([6, 7].includes(field.component_type)) {
     const data = JSON.parse(val) as ExpressionUserModel
     const scopeMap = ['', '本人', '本部门', '本部门及下级部门', '下级部门']
     const deptScoptMap = ['', '本部门', '本部门及下级部门', '下级部门']
@@ -249,7 +256,9 @@ function buildText(field: ProcessFieldDefinition, operator: string, val: string)
     console.log(666);
     
     text = `${field.description} ${operator} ${scopeMap[data.my_dept_scope]}${sUserList}${sDeptList}`
-  } else if ([9, 10].includes(field.component_type)) {
+  } 
+  // 部门
+  else if ([9, 10].includes(field.component_type)) {
     const data = JSON.parse(val) as ExpressionDeptModel
     const scopeMap = ['', '本部门', '本部门及下级部门', '下级部门']
 
@@ -264,7 +273,9 @@ function buildText(field: ProcessFieldDefinition, operator: string, val: string)
       arr.push(data.user_of_dept.map(it => it.scope > 1 ? `${it.dept.title}的${scopeMap[it.scope]}` : `${it.dept.title}`))
     }
     text = `${field.description} ${operator} ${arr.join(',')}`
-  } else if ([11].includes(field.component_type)) {
+  } 
+  // 时间
+  else if ([11].includes(field.component_type)) {
     const data = JSON.parse(val) as ExpressionDateModel
     text = `${field.description} ${operator} ${data.selected}`
   }
