@@ -39,7 +39,7 @@
 </template>
 
 <script lang="ts">
-import {ref, watch, defineComponent, nextTick} from "vue";
+import {ref, watch, defineComponent, nextTick, computed} from "vue";
 import * as UserApi from "@/api/sys/user";
 import UserSelectorModal from "@/components/common/selector/user/UserSelectorModal.vue";
 import { ElSelect, ElOption } from "element-plus"
@@ -89,6 +89,24 @@ export default defineComponent({
     const loading = ref(false)
     const selectedElems = ref<UserView | UserView[]>(props.multiple ? [] : null)
     const options = ref<UserView[]>([])
+
+    // const selectedElems = computed<UserView | UserView[]>({
+    //   get: () => {
+    //     if (props.valueKey && typeof props.valueKey === 'string') {
+    //
+    //     }
+    //     if (props.multiple) {
+    //       return props.modelValue as UserView
+    //     }
+    //     else {
+    //       return props.modelValue as UserView[]
+    //     }
+    //
+    //   },
+    //   set: v => {
+    //
+    //   }
+    // })
 
     watch(() => props.modelValue, () => {
       if (props.modelValue) {

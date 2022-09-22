@@ -1,28 +1,11 @@
 <template>
 
   <expression-editor/>
-
-  <v-table :rows="rows" style="margin-top: 20px">
-    <v-column-group>
-      <template #header>
-        <span>6666</span>
-      </template>
-      <v-column field="id" title="#" width="80"></v-column>
-      <v-column field="avatar" title="头像" width="100"></v-column>
-    </v-column-group>
-    
-    <v-column field="name" title="名称" width="120"></v-column>
-    <v-column field="age" title="年龄" width="80"></v-column>
-    
-  </v-table>
 </template>
 
 <script lang="ts" setup>
 import ExpressionEditor from '@/components/expression/editor/ExpressionEditor.vue'
-import VTable from '@/components/table/VTable.vue'
-import VColumn from '@/components/table/VColumn.vue'
 import { ref } from 'vue'
-import VColumnGroup from '@/components/table/VColumnGroup.vue';
 
 const columns = ref([
   {

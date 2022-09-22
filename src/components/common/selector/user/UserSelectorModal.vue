@@ -46,11 +46,6 @@
       </el-table-column>
       <el-table-column width="120" label="用户名(工号)" prop="username" align="left" header-align="left"/>
       <el-table-column width="80" label="昵称" prop="nickname"/>
-      <el-table-column width="80" label="状态" prop="status" align="center" header-align="center">
-        <template #default="scope">
-          <dict-tag ident="common_status" :val="scope.row.status"></dict-tag>
-        </template>
-      </el-table-column>
     </el-table>
 
     <template #footer>
@@ -82,7 +77,7 @@ export default defineComponent({
   emits: UserSelectorModelEmits,
   setup(props, {emit: emits, expose}) {
 
-    const baseTableWidth = 410;
+    const baseTableWidth = 330;
     const tableWidth = computed(() => (baseTableWidth + 40) + "px")
     const dialogWidth = computed(() => `calc(${tableWidth.value} + 40px)`)
 
