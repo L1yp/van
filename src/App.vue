@@ -1,12 +1,12 @@
 <script setup>
 import {ElConfigProvider} from "element-plus";
 import {RouterView} from "vue-router";
+import zhCn from "element-plus/lib/locale/lang/zh-cn";
 
-const zIndex = 3000;
 </script>
 
 <template>
-  <el-config-provider :zIndex="zIndex">
+  <el-config-provider :locale="zhCn">
     <router-view />
   </el-config-provider>
 </template>

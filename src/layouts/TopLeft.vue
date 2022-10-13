@@ -8,7 +8,7 @@
         <header-bar/>
       </el-header>
       <tag-bar :style="pageScreen ? { display: 'none' } : undefined"/>
-      <el-main style="position: relative">
+      <el-main style="position: relative" :style="{ width: mainWidth, height: mainHeight }">
         <router-view/>
         <div
           v-show="pageScreen"

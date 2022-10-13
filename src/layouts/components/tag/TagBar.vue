@@ -96,7 +96,7 @@ function closeTag(tag: TagInfo) {
 }
 
 
-watch(() => unref(route).fullPath, (newPath, oldPath)=>{
+watch(() => route.fullPath, (newPath, oldPath)=>{
   console.log("path", newPath, oldPath, route);
   if (route.matched[0].name !== "main") {
     // 只把layout main路由的加入多标签
@@ -122,20 +122,20 @@ watch(() => unref(route).fullPath, (newPath, oldPath)=>{
   }
 
   if (isNewTab) {
-    const meta: RouteMetaRecord = route.meta as RouteMetaRecord;
+    const meta = route.meta as unknown as RouteMetaRecord
     const tag: TagInfo = {
       path: newPath,
-      title: meta.title,
+      title: meta.name,
       active: true,
-      close: meta.close,
+      close: meta.closeable,
       icon: meta.icon,
     }
     tags.push(tag);
     activeTag.value = tag;
 
   }
-  const meta: RouteMetaRecord = route.meta as RouteMetaRecord;
-  title.value = meta.title
+  const meta: RouteMetaRecord = route.meta as unknown as RouteMetaRecord;
+  title.value = meta.name
 
   write("tags", tags);
 

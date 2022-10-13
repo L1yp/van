@@ -1,189 +1,268 @@
 <template>
-  <v-dialog
-    v-model="dialogVisible"
-    :width="dialogWidth" title="选择部门"
+  <VDialog
+    v-model="visible"
+    :title="props.title"
+    width="800px"
     append-to-body
-    center
-    :draggable="true"
-    :destroy-on-close="true"
-    @opened="handleOpenedDialog"
-    @cancel="dialogVisible = false"
-    @confirm="confirm"
+    @opened="handleOpened"
+    @confirm="handleConfirm"
+    @cancel="visible = false"
   >
-    <el-table
-      v-loading="loading"
-      ref="tableRef"
-      :data="tableData"
-      height="50vh"
-      style="width: 100%"
-      row-key="id"
-      stripe
-      :row-style="{cursor: 'pointer'}"
-      @selection-change="handleSelectionChange"
-      :highlight-current-row="true"
-      @row-click="handleRowClick"
-      @row-dblclick="handleRowDbClick"
-      @current-change="handleCurrentChange"
-    >
-      <el-table-column width="60" type="selection" align="center" header-align="center" v-if="props.multiple"/>
-      <el-table-column prop="simple_name" align="left" header-align="left" label="简称" width="300" />
-      <el-table-column prop="id" align="center" header-align="center" label="#" width="60" />
-      <el-table-column prop="ident" align="center" header-align="center" label="编号" width="100" />
-      <el-table-column prop="status" align="center" header-align="center" label="状态" width="80">
-        <template #default="scope">
-          <dict-tag ident="common_status" :val="scope.row.status"></dict-tag>
-        </template>
-      </el-table-column>
-    </el-table>
+    <div class="user-selector-modal" style="height: 100%">
+      <div :style="{ width: '100%', height: tableHeight, marginTop: '10px' }">
+        <el-table
+          v-loading="loading"
+          ref="tableRef"
+          :data="treeData"
+          height="100%"
+          row-key="id"
+          stripe border default-expand-all
+          :row-style="{cursor: 'pointer'}"
+          :highlight-current-row="true"
+          :cell-class-name="handleCellClassName"
+          @row-click="handleRowClick"
+          @row-dblclick="handleRowDbClick"
+        >
+          <el-table-column>
+            <el-table-column type="index" align="center" header-align="center" width="50" :resizable="false">
+              <template #header>
+                <template v-if="props.multiple">
+                  <template v-if="isAllAdd">
+                    <span class="select-all-user" @click="handleRemoveAll">
+                      <el-icon><Minus/></el-icon>
+                    </span>
+                  </template>
+                  <template v-else>
+                    <span class="select-all-user" @click="handleAddAll">
+                      <el-icon><Plus/></el-icon>
+                    </span>
+                  </template>
+                </template>
+                <template v-else><span>#</span></template>
 
-  </v-dialog>
+              </template>
+              <template #default="scope">
+                <template v-if="props.multiple">
+                  <template v-if="selectedIdMap.has(scope.row.id)">
+                    <span @click="handleRemoveDept(scope.row)">
+                      <el-icon><Minus/></el-icon>
+                    </span>
+
+                  </template>
+                  <template v-else>
+                    <span @click="handleAddDept(scope.row)">
+                      <el-icon><Plus/></el-icon>
+                    </span>
+                  </template>
+                </template>
+                <template v-else>
+                  <el-radio class="dept-selector" name="dept-selector" :label="scope.row.id" v-model="selectedIds"></el-radio>
+                </template>
+
+              </template>
+            </el-table-column>
+          </el-table-column>
+
+          <el-table-column>
+            <template #header>
+              <el-input v-model="deptKey"></el-input>
+            </template>
+            <el-table-column label="名称" prop="title" align="left" header-align="left"/>
+          </el-table-column>
+          <el-table-column label="简称" prop="simple_name" width="200" align="left" header-align="left"/>
+          <el-table-column label="编号" prop="ident" width="100" align="left" header-align="left"/>
+          <el-table-column label="排序" prop="order_no" width="80" align="center" header-align="center" :resizable="false"/>
+
+        </el-table>
+      </div>
+
+      <div class="selected-container" v-if="props.multiple">
+        <el-scrollbar height="200px" always view-class="selected-tags">
+          <el-tag
+            v-for="item in selectedElems"
+            :key="item.id"
+            closable @close="handleRemoveDept(item)"
+          >
+            {{ item.title }}
+          </el-tag>
+        </el-scrollbar>
+
+      </div>
+    </div>
+
+  </VDialog>
 </template>
-<script lang="ts">
-import {computed, nextTick, ref, unref, defineComponent, watch} from "vue";
+
+<script lang="ts" setup>
+import VDialog from '@/components/dialog/VDialog.vue';
+import { computed, ref, toRaw } from 'vue';
 import {
-  ElDialog, ElButton, ElTag, ElTable,
-  ElTableColumn, ElAvatar, ElRadio
+  ElTable, ElTableColumn, ElRadio, ElInput, ElScrollbar, ElTag,
+  ElIcon,
 } from "element-plus";
-import * as DeptApi from "@/api/sys/dept"
-import DictTag from "@/components/dict/DictTag.vue"
-import VDialog from "@/components/dialog/VDialog.vue";
-import {DeptSelectorModelEmits, DeptSelectorModelProps} from "@/components/common/selector/dept/util";
+import { Plus, Minus } from "@element-plus/icons-vue";
+import { filterDataWithTitle, findTreeItemById, isArray, flatternTree } from '@/utils/common'
 
 
-export default defineComponent({
-  name: "DeptSelectorModel",
-  components: {
-    VDialog,
-    ElDialog, ElButton, ElTag, ElTable,
-    ElTableColumn, ElAvatar, DictTag, ElRadio
-  },
-  props: DeptSelectorModelProps,
-  emits: DeptSelectorModelEmits,
-  setup(props, {emit: emits, expose}) {
+interface Props {
+  multiple?: boolean
+  modelValue: string | string[]
+  data: DeptView[]
+  title?: string
+  visible: boolean
+}
 
-    const baseTableWidth = 550;
-    const tableWidth = computed(() => props.multiple ? ((baseTableWidth + 50) + "px") : (baseTableWidth + "px"))
-    const dialogWidth = computed(() => `calc(${tableWidth.value} + 40px)`)
+interface Emits {
+  (e: 'update:visible', val: boolean): void
+  (e: 'update:modelValue', val: string | string[]): void
+  (e: 'confirm'): void
+}
 
-    const tableRef = ref<InstanceType<typeof ElTable>>(null);
-    const dialogVisible = ref(false);
-    const loading = ref(false);
-
-    const tableData = ref([]);
-    const selectedRows = ref<DeptView[]>([]);
-    function handleSelectionChange(selectedArr) {
-      selectedRows.value = selectedArr;
-    }
+const props = withDefaults(defineProps<Props>(), {
+  multiple: false,
+  title: '请选择部门',
+})
+const emits = defineEmits<Emits>()
 
 
-    function handleRowClick(row, column, event) {
-      tableRef.value.toggleRowSelection(row, undefined);
-    }
-
-    function handleRowDbClick(row, column, event) {
-      if (!props.multiple) {
-        currentRow.value = row
-        emits("update:modelValue", currentRow.value)
-        dialogVisible.value = false
-      }
-    }
-
-    const currentRow = ref<DeptView>()
-    function handleCurrentChange(newRow, oldRow) {
-      currentRow.value = newRow
-    }
-
-    function confirm() {
-
-      if (props.multiple) {
-        const selected = (tableRef.value.getSelectionRows() as DeptView[])
-        console.log("selected", selected)
-        emits("update:modelValue", selected)
-      } else {
-        emits("update:modelValue", currentRow.value)
-      }
-
-      dialogVisible.value = false
-    }
-
-    function open() {
-      dialogVisible.value = true
-    }
-
-    function close() {
-      dialogVisible.value = false
-    }
-
-    async function handleOpenedDialog() {
-      try {
-
-        loading.value = true
-        tableData.value = await DeptApi.findDept()
-        loading.value = false
-
-        await nextTick(() => initSelectionDepts())
-      } catch (e) {
-        console.error(e)
-      } finally {
-      }
-    }
-
-    function initSelectionDepts() {
-      if (!props.modelValue) {
-        return
-      }
-      console.log("props.modelValue", Array.isArray(props.modelValue), props.modelValue)
-
-      if (props.multiple) {
-        let initDeptIds = []
-        if (Array.isArray(props.modelValue)) {
-          initDeptIds = unref(props.modelValue).map(it => it.id)
-        } else {
-          console.warn("[UserSelectorModal props] multiple is true, but modelValue is not Array?")
-        }
-        for (const dept of unref(tableData.value)) {
-          if (initDeptIds.includes(dept.id)) {
-            tableRef.value.toggleRowSelection(dept, true)
-          } else {
-            tableRef.value.toggleRowSelection(dept, false)
-          }
-        }
-      } else {
-        if (props.modelValue) {
-          for (const dept of unref(tableData.value)) {
-            if ((props.modelValue as DeptView).id === dept.id) {
-              tableRef.value.setCurrentRow(dept)
-              break
-            }
-          }
-
-        }
-      }
-
-    }
-
-
-
-    expose({
-      open, close
-    })
-
-    return {
-      props,
-      dialogWidth, tableRef, dialogVisible, loading, tableData,
-      handleSelectionChange, handleRowClick, handleCurrentChange,
-      confirm, open, close, handleOpenedDialog,
-      handleRowDbClick,
-    }
-  },
-
+const visible = computed<boolean>({
+  get: () => { return props.visible },
+  set: v => emits('update:visible', v)
 })
 
+const loading = ref<boolean>(false)
+
+function handleCellClassName({ column, columnIndex }): string | undefined {
+  console.log(column);
+  if (columnIndex === 0) {
+    return 'column-index-no-place-holder'
+  }
+
+}
+
+function handleRowClick(row: DeptView) {
+  if (!props.multiple) {
+    selectedIds.value = row.id
+  }
+}
+
+function handleRowDbClick(row: DeptView) {
+  if (!props.multiple) {
+    selectedIds.value = row.id
+    emits('confirm')
+    visible.value = false
+  }
+
+}
+
+const selectedIds = computed<string | string[]>({
+  get: () => {
+    return props.modelValue
+  },
+  set: v => {
+    emits('update:modelValue', v)
+  }
+})
+
+const selectedIdMap = computed<Set<string>>(() => new Set<string>(selectedIds.value))
+
+const selectedElems = computed<DeptView[]>(() => {
+  if (typeof selectedIds.value === 'string') {
+    return [findTreeItemById<DeptView>(props.data, 'id', selectedIds.value)!]
+  } else if (isArray(selectedIds.value)) {
+    return selectedIds.value.map(it => findTreeItemById<DeptView>(props.data, 'id', it)!) || []
+  } else return []
+})
+
+
+
+const isAllAdd = computed<boolean>(() => flatDataIds.value.filter(it => !selectedIdMap.value.has(it)).length === 0)
+
+const tableRef = ref<InstanceType<typeof ElTable>>()
+const tableHeight = computed<string>(() => {
+  const selectedContainerHeight = props.multiple ? (200 + 10) : 0 // marginTop
+  const marginTop = 10
+  return `calc(100% - ${selectedContainerHeight + marginTop}px)`
+})
+
+const flatData = computed<DeptView[]>(() => flatternTree(props.data))
+const flatDataIds = computed(() => flatData.value.map(it => it.id))
+
+const treeData = computed<DeptView[]>(() => {
+  const data = toRaw(props.data)
+  if (!deptKey.value) {
+    return data
+  }
+  const result: DeptView[] = []
+  filterDataWithTitle(result, data, deptKey.value, 'title', undefined)
+  return result
+})
+
+const deptKey = ref<string>('')
+
+function handleOpened() {
+  selectedIds.value = props.modelValue
+}
+
+function handleConfirm() {
+  emits('confirm')
+  visible.value = false
+}
+
+
+function handleAddDept(item: DeptView) {
+  if (props.multiple) {
+    // TODO: add cascader sub tree
+    (selectedIds.value as string[]).push(item.id)
+  } else {
+    selectedIds.value = item.id
+  }
+}
+
+function handleRemoveDept(item: DeptView) {
+  if (props.multiple) {
+    const idx = (selectedIds.value as string[]).indexOf(item.id)
+    idx !== -1 && (selectedIds.value as string[]).splice(idx, 1)
+  } else {
+    selectedIds.value = ''
+  }
+}
+
+function handleAddAll() {
+  props.multiple && flatData.value.filter(it => !selectedIdMap.value.has(it.id)).forEach(it => (selectedIds.value as string[]).push(it.id))
+}
+
+function handleRemoveAll() {
+  if (props.multiple) {
+    selectedIds.value = []
+  }
+}
 </script>
 
-
 <style scoped>
+.selected-container {
+  box-sizing: border-box;
+  border: 1px #e3e3e3 solid;
+  width: 100%;
+  margin-top: 10px;
+}
+
+:deep(.selected-tags) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: 5px;
+}
+
 :deep(.el-radio.dept-selector span.el-radio__label) {
   display: none;
+}
+
+:deep(.column-index-no-place-holder span.el-table__placeholder) {
+  display: none;
+}
+
+.select-all-user {
+  cursor: pointer;
 }
 </style>

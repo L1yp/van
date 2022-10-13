@@ -16,6 +16,14 @@ declare interface TableData<T> {
   loading: boolean
 }
 
+declare interface PageData<T, D = any> {
+  page_idx: number
+  page_size: number
+  total: number
+  data: T[]
+  additional?: D
+}
+
 declare interface PageTableData<T> {
   pageIdx: number
   pageSize: number
@@ -28,4 +36,8 @@ declare interface DialogInfo<T> {
   formData: T
   title: string
   loading: boolean
+}
+
+declare interface Tree {
+  children: this[]
 }

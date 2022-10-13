@@ -3,11 +3,7 @@ declare interface LoginParam {
   password: string;
 }
 
-declare interface LoginResult {
-  menus: MenuConfig[];
-  user_info: UserInfo;
-  token: string;
-}
+
 
 
 /**
@@ -15,12 +11,13 @@ declare interface LoginResult {
  * POST body是jackson反序列化，配置了下划线风格
  */
 declare interface UserQueryParam extends PageParam {
-  username?: string;
-  nickname?: string;
-  phone?: string;
-  email?: string;
-  status?: number;
-  updateBy?: string;
+  username?: string
+  nickname?: string
+  phone?: string
+  email?: string
+  deptId?: string
+  status?: number
+  updateBy?: string
 }
 
 declare interface UserAddParam {
@@ -30,22 +27,25 @@ declare interface UserAddParam {
   phone?: string;
   email?: string;
   avatar?: string;
+  dept_id: string
   status?: number;
 }
 
 declare interface UserUpdateParam {
-  id: number;
-  password?: string;
+  id: string;
   nickname?: string;
   phone?: string;
   email?: string;
   avatar?: string;
+  dept_id: string
+  pt_dept_ids: string[]
   status?: number;
 }
 
 declare interface UserView {
-  id: number;
+  id: string
   username: string;
+  dept_id: number
   nickname?: string;
   phone?: string;
   email?: string;
@@ -53,4 +53,9 @@ declare interface UserView {
   status?: number;
   update_by?: string;
   label?: string;
+  pt_dept_ids?: string[]
+}
+
+declare interface UserPageAdditional {
+  dept: Record<string, DeptView>
 }

@@ -37,6 +37,7 @@ import {useRoute, useRouter} from "vue-router";
 import {read, write} from "@/utils/storage";
 import {menuOptionsKey, permissionKey, userInfoKey} from "@/config/app.keys";
 import {useTitle} from "@vueuse/core";
+import {toTree} from "@/utils/common";
 
 const title = useTitle()
 title.value = '用户登录'
@@ -46,19 +47,18 @@ const route = useRoute();
 const username = ref("admin");
 const password = ref("123456");
 
-const menuOptions = inject<Ref<MenuConfig[]>>(menuOptionsKey)
+const menuOptions = inject<Ref<MenuView[]>>(menuOptionsKey)
 const userInfo = inject<Ref<UserInfo>>(userInfoKey)
-const permissions = inject(permissionKey);
 
 async function login() {
   const md5pass = SparkMD5.hash(password.value);
   try {
     const data: LoginResult = await UserApi.login(username.value, md5pass);
+
+    data.menus = toTree(data.menus, 'id', 'pid')
     menuOptions!.value = data.menus
     userInfo!.value = data.user_info
 
-    const idents = await UserApi.permission()
-    permissions.value = new Set<string>(idents)
 
     console.log("menus", data.menus)
     console.log("before routes", router.getRoutes())

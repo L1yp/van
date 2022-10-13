@@ -11,6 +11,7 @@
     "@codemirror/lang-xml": "^6.0.0",
     "@codemirror/state": "^6.0.1",
     "@codemirror/view": "^6.0.1",
+    "@element-plus/icons-vue": "^2.0.10",
     "@textbus/browser": "^2.0.0",
     "@textbus/core": "^2.0.0",
     "@textbus/editor": "^2.0.0",
@@ -20,7 +21,7 @@
     "clipboard": "^2.0.10",
     "codemirror": "^6.0.0",
     "diagram-js-minimap": "^2.1.1",
-    "element-plus": "^2.2.8",
+    "element-plus": "^2.2.17",
     "fast-glob": "^3.2.11",
     "highlight.js": "^11.5.1",
     "mitt": "^3.0.0",
@@ -29,7 +30,9 @@
     "vite-plugin-svg-icons": "^2.0.1",
     "vue": "^3.2.36",
     "vue-router": "^4.0.14",
-    "vuedraggable": "^4.1.0"
+    "vuedraggable": "^4.1.0",
+    "vxe-table": "^4.3.5",
+    "xe-utils": "^3.5.6"
   },
   "devDependencies": {
     "@types/sortablejs": "^1.13.0",

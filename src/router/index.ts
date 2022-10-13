@@ -1,6 +1,7 @@
 import {createRouter, createWebHistory, } from 'vue-router'
 import {read} from "@/utils/storage"
-import {Component, App} from "vue";
+import {Component, App, toRaw} from "vue";
+import {findTreeItemById} from "@/utils/common";
 
 const Layout: Component = () => import("../layouts/TopLeft.vue");
 
@@ -79,7 +80,7 @@ console.log("create router beforeEach after");
 /**
  * 安装初始路由
  */
-export function setupRouter(app: App, menuOptions: MenuConfig[]) {
+export function setupRouter(app: App, menuOptions: MenuView[]) {
   installLayoutContentRoute(menuOptions)
   app.use(router)
 }
@@ -87,7 +88,7 @@ export function setupRouter(app: App, menuOptions: MenuConfig[]) {
 /**
  * 动态导入路由
  */
-export function installLayoutContentRoute(menuOptions: MenuConfig[]) {
+export function installLayoutContentRoute(menuOptions: MenuView[]) {
   if (!menuOptions || menuOptions.length === 0) {
     return;
   }
@@ -111,43 +112,38 @@ export function uninstallLayoutContentRoute() {
 
 }
 
-function transMenuToRoute(options: MenuConfig[]) {
+function transMenuToRoute(options: MenuView[]) {
   for (let menuOption of options) {
-    if (!menuOption.children || menuOption.children.length === 0) {
-      let parentNode: MenuConfig | undefined = menuOption;
+    if (!menuOption.children?.length) {
+      let parentNode: MenuView | undefined = menuOption
       // 找不到图标就找上层 直到根节点为止
       while(parentNode && !parentNode.icon) {
-        parentNode = parentNode.parent;
+        parentNode = findTreeItemById(options, 'id', parentNode.pid)
       }
-      let icon = parentNode?.icon ?? null;
 
-      const child = {
-        path: menuOption.route,
-        name: menuOption.name,
-        component: routeToView(menuOption.route),
-        redirect: "",
-        meta: {
-          title: menuOption.title,
-          close: menuOption.close === 1,
-          icon: icon,
+      let icon = parentNode?.icon || null
+
+      if (menuOption.type === 'PAGE') {
+        const child = {
+          path: menuOption.path,
+          name: menuOption.name,
+          component: routeToView(menuOption.component),
+          redirect: "",
+          meta: {
+            ...toRaw(menuOption),
+            icon,
+          }
         }
+        layoutRoute.children?.push(child)
+      }
 
-      };
-      layoutRoute.children?.push(child);
 
     } else {
-      if(menuOption.children && menuOption.children.length > 0) {
-        for (const child of menuOption.children) {
-          child.parent = menuOption;
-        }
-      }
-      transMenuToRoute(menuOption.children);
+      transMenuToRoute(menuOption.children)
     }
   }
 }
 
-export interface RouteMetaRecord {
-  title?: string;
-  close?: boolean;
-  icon?: string;
+export interface RouteMetaRecord extends MenuView {
+
 }

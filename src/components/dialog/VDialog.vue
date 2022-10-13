@@ -8,7 +8,7 @@
     :modal="props.modal"
     :append-to-body="props.appendToBody"
     :lock-scroll="props.lockScroll"
-    :custom-class="props.customClass"
+    :class="props.customClass"
     :open-delay="props.openDelay"
     :close-delay="props.closeDelay"
     :close-on-click-modal="props.closeOnClickModal"
@@ -23,17 +23,18 @@
     @close="handleClose"
     @open-auto-focus="handleOpenAutoFocus"
     @close-auto-focus="handleCloseAutoFocus"
->
+  >
     <template #header>
       <slot name="header">
-        <div style="display: flex; justify-content: space-between; align-content: center; height: 23px; box-sizing: border-box">
+        <div style="display: flex; justify-content: space-between; align-content: center; height: 23px; box-sizing: border-box; font-weight: bold; color: rgb(107 109 114);">
           <div style="font-size: 1.2em" v-text="props.title"></div>
           <div style="display: flex; flex-direction: row; justify-content: center">
             <div v-if="props.showFullScreen" @click.stop="requestFullScreen" class="full-screen btn">
-              <s-v-g-icon style="width: 20px; height: 20px" :name="fullScreen ? 'FullScreenMinimize' : 'FullScreenMaximize'"/>
+              <svg v-if="fullScreen" style="width: 20px; height: 20px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24"><g fill="none"><path d="M8.5 3.75a.75.75 0 0 0-1.5 0v2.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 0 0 1.5h2.5A2.25 2.25 0 0 0 8.5 6.25v-2.5zm0 16.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 0-.75-.75h-2.5a.75.75 0 0 1 0-1.5h2.5a2.25 2.25 0 0 1 2.25 2.25v2.5zM16.25 3a.75.75 0 0 0-.75.75v2.5a2.25 2.25 0 0 0 2.25 2.25h2.5a.75.75 0 0 0 0-1.5h-2.5a.75.75 0 0 1-.75-.75v-2.5a.75.75 0 0 0-.75-.75zm-.75 17.25a.75.75 0 0 0 1.5 0v-2.5a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 0 0-1.5h-2.5a2.25 2.25 0 0 0-2.25 2.25v2.5z" fill="currentColor"/></g></svg>
+              <svg v-if="!fullScreen" style="width: 20px; height: 20px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 20 20"><g fill="none"><path d="M3 5a2 2 0 0 1 2-2h2a.5.5 0 0 1 0 1H5a1 1 0 0 0-1 1v2a.5.5 0 0 1-1 0V5zm9.5-1.5A.5.5 0 0 1 13 3h2a2 2 0 0 1 2 2v2a.5.5 0 0 1-1 0V5a1 1 0 0 0-1-1h-2a.5.5 0 0 1-.5-.5zm-9 9a.5.5 0 0 1 .5.5v2a1 1 0 0 0 1 1h2a.5.5 0 0 1 0 1H5a2 2 0 0 1-2-2v-2a.5.5 0 0 1 .5-.5zm13 0a.5.5 0 0 1 .5.5v2a2 2 0 0 1-2 2h-2a.5.5 0 0 1 0-1h2a1 1 0 0 0 1-1v-2a.5.5 0 0 1 .5-.5z" fill="currentColor"/></g></svg>
             </div>
             <div @click.stop="handleCloseClick" class="close btn">
-              <s-v-g-icon style="width: 20px; height: 20px" name="close"/>
+              <svg style="width: 20px; height: 20px" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" data-v-ba633cb8=""><path fill="currentColor" d="M764.288 214.592 512 466.88 259.712 214.592a31.936 31.936 0 0 0-45.12 45.12L466.752 512 214.528 764.224a31.936 31.936 0 1 0 45.12 45.184L512 557.184l252.288 252.288a31.936 31.936 0 0 0 45.12-45.12L557.12 512.064l252.288-252.352a31.936 31.936 0 1 0-45.12-45.184z"></path></svg>
             </div>
           </div>
         </div>
@@ -43,95 +44,140 @@
     <template #footer>
       <slot name="footer">
         <div style="display: flex; justify-content: center">
-          <el-button type="primary" @click="handleConfirm">确定</el-button>
-          <el-button @click="handleCancel">取消</el-button>
+          <el-button :disabled="props.disableFooter" type="primary" @click="handleConfirm" v-text="confirmText"></el-button>
+          <el-button :disabled="props.disableFooter" @click="handleCancel" v-text="cancelText"></el-button>
         </div>
       </slot>
     </template>
   </el-dialog>
 </template>
 
-<script lang="ts">
-import { ref, defineComponent, onUpdated } from "vue"
+<script lang="ts" setup>
+import { computed } from "vue"
 import { ElDialog, ElButton } from "element-plus"
-import { VDialogProps, VDialogEmits } from "./util"
-import SVGIcon from "@/components/common/SVGIcon.vue"
-
-export default defineComponent({
-  name: "VDialog",
-  components: { ElDialog, SVGIcon, ElButton },
-  props: VDialogProps,
-  emits: VDialogEmits,
-  setup(props, ctx){
-    const {emit: emits} = ctx
-
-    const visible = ref<boolean>(props.modelValue as boolean)
 
 
-    onUpdated(() => {
-      visible.value = props.modelValue as boolean
-      if (props.fullScreen !== undefined) {
-        fullScreen.value = props.fullScreen as boolean
-      }
-    })
+interface Props {
+  modelValue: boolean
+  title: string
+  width?: number | string
+  top?: string
+  modal?: boolean
+  appendToBody?: boolean
+  lockScroll?: boolean
+  customClass?: string
+  openDelay?: number
+  closeDelay?: number
+  closeOnClickModal?: boolean
+  closeOnPressEscape?: boolean
+  beforeClose?: (done) => void
+  draggable?: boolean
+  center?: boolean
+  destroyOnClose?: boolean
+  fullScreen?: boolean
+  showFullScreen?: boolean
+  confirmText?: string
+  cancelText?: string
+  disableFooter?: boolean
+}
 
-    const fullScreen = ref<boolean>(false)
-    function requestFullScreen() {
-      fullScreen.value = !fullScreen.value
-      if (props.fullScreen !== undefined) {
-        emits('update:fullScreen', fullScreen.value)
-      }
-    }
-
-
-    function handleConfirm() {
-      emits("confirm")
-    }
-
-    function handleCancel() {
-      emits("cancel")
-    }
-
-
-    function handleCloseClick() {
-      visible.value = false
-      emits("update:modelValue", false)
-    }
-
-
-    function handleOpen() {
-      emits("open")
-    }
-
-    function handleClose() {
-      emits("close")
-    }
-
-    function handleOpened() {
-      emits("opened")
-    }
-
-    function handleClosed() {
-      emits("closed")
-      emits("update:modelValue", false)
-    }
-
-    function handleOpenAutoFocus() {
-      emits("open-auto-focus")
-    }
-
-    function handleCloseAutoFocus() {
-      emits("close-auto-focus")
-    }
-    return  {
-      props,
-      fullScreen, visible, requestFullScreen,
-      handleCloseClick, handleConfirm, handleCancel,
-      handleOpen, handleClose, handleClosed, handleOpened,
-      handleOpenAutoFocus, handleCloseAutoFocus
-    }
-  },
+const props = withDefaults(defineProps<Props>(), {
+  width: '50%',
+  top: '15vh',
+  modal: true,
+  appendToBody: false,
+  lockScroll: true,
+  customClass: 'user-ext-dialog',
+  openDelay: 0,
+  closeDelay: 0,
+  closeOnClickModal: true,
+  closeOnPressEscape: true,
+  draggable: true,
+  center: false,
+  destroyOnClose: false,
+  showFullScreen: false,
+  confirmText: '确定',
+  cancelText: '取消',
+  disableFooter: false
 })
+
+interface Emits {
+  (e: 'update:modelValue', val: boolean): void,
+  (e: 'update:fullScreen', val: boolean): void,
+  (e: 'open'): void,
+  (e: 'opened'): void,
+  (e: 'close'): void,
+  (e: 'closed'): void,
+  (e: 'open-auto-focus'): void,
+  (e: 'close-auto-focus'): void,
+  (e: 'confirm'): void,
+  (e: 'cancel'): void,
+}
+const emits = defineEmits<Emits>()
+
+const visible = computed<boolean>({
+  get: () => { return props.modelValue },
+  set: v => emits('update:modelValue', v)
+})
+
+const fullScreen = computed<boolean>({
+  get: () => { return props.fullScreen || false },
+  set: v => emits('update:fullScreen', v)
+})
+
+// const fullScreen = ref<boolean>(false)
+function requestFullScreen() {
+  fullScreen.value = !fullScreen.value
+  // if (props.fullScreen !== undefined) {
+  //   emits('update:fullScreen', fullScreen.value)
+  // }
+}
+// onUpdated(() => {
+//   visible.value = props.modelValue as boolean
+//   if (props.fullScreen !== undefined) {
+//     fullScreen.value = props.fullScreen as boolean
+//   }
+// })
+
+
+
+function handleConfirm() {
+  emits("confirm")
+}
+
+function handleCancel() {
+  emits("cancel")
+}
+
+
+function handleCloseClick() {
+  visible.value = false
+}
+
+
+function handleOpen() {
+  emits("open")
+}
+
+function handleClose() {
+  emits("close")
+}
+
+function handleOpened() {
+  emits("opened")
+}
+
+function handleClosed() {
+  emits("closed")
+}
+
+function handleOpenAutoFocus() {
+  emits("open-auto-focus")
+}
+
+function handleCloseAutoFocus() {
+  emits("close-auto-focus")
+}
 
 </script>
 
@@ -148,5 +194,40 @@ div.btn + div.btn {
 
 div.btn:hover {
   color: var(--el-color-primary)
+}
+</style>
+
+<style>
+
+.user-ext-dialog {
+  box-sizing: border-box;
+  margin: 15vh auto;
+}
+
+.user-ext-dialog.is-fullscreen {
+  box-sizing: border-box;
+  margin: auto;
+}
+
+.user-ext-dialog.el-dialog .el-dialog__footer {
+  padding: 10px;
+  border-top: 1px solid #e3e3e3;
+  border-bottom: 1px solid #e3e3e3;
+  box-sizing: border-box;
+}
+.user-ext-dialog.el-dialog .el-dialog__header {
+  padding: 10px 24px;
+  border-bottom: 1px solid #e3e3e3;
+  margin-right: 0;
+  box-sizing: border-box;
+}
+
+.user-ext-dialog.el-dialog .el-dialog__body {
+  padding: 10px 20px;
+  box-sizing: border-box;
+}
+
+.el-dialog.is-fullscreen.user-ext-dialog .el-dialog__body {
+  height: calc(100vh - 44px - 54px)
 }
 </style>

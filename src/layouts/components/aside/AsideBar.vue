@@ -28,9 +28,9 @@ import {useRoute} from "vue-router";
 import {asideCollapsedKey, menuOptionsKey, themeKey} from "@/config/app.keys";
 
 const route = useRoute();
-const menuOptions = inject<MenuConfig[]>(menuOptionsKey)
+const menuOptions = inject(menuOptionsKey)
 
-const theme = inject<Ref<ThemeConfig>>(themeKey)
+const theme = inject(themeKey)
 
 /**
  * 是否折叠菜单侧边栏

@@ -10,37 +10,24 @@ import {findAllDictValue, findDictInfoList} from "@/api/sys/dict/dict"
 import {remove} from "./utils/storage"
 import {dictInfosKey, dictValuesKey, menuOptionsKey, permissionKey, userInfoKey} from "./config/app.keys"
 import {permission} from "@/directives/permission"
+import VXETable from 'vxe-table'
+import 'vxe-table/lib/style.css'
+import {toTree} from "@/utils/common";
 
 async function startup() {
   try {
     const app = createApp(App)
 
-    setupAxios();
+    setupAxios()
     app.use(ElLoading)
+    app.use(VXETable)
 
-    const dictInfoRef = ref<DictInfo[]>([])
-    app.provide(dictInfosKey, dictInfoRef)
-    dictInfoRef.value = await findDictInfoList()
-
-    const dictValues = await findAllDictValue()
-    const dictValuesRef = ref(dictValues)
-    app.provide(dictValuesKey, dictValuesRef)
-
-    const permissions = ref<Set<string>>(new Set<string>())
-    try {
-      const permissionsList = await UserApi.permission()
-      permissions.value = new Set<string>(permissionsList)
-    } catch (e) {
-      console.error(e)
-    } finally {
-      app.provide(permissionKey, permissions)
-    }
-
-    const menuOptions = ref<MenuConfig[]>([])
+    const menuOptions = ref<MenuView[]>([])
     const userInfo = ref<UserInfo>()
 
     try {
-      const data = await UserApi.menu();
+      const data = await UserApi.menu()
+      data.menus = toTree(data.menus, 'id', 'pid')
       menuOptions.value = data.menus
       userInfo.value = data.user_info
       console.log("menu list", data);

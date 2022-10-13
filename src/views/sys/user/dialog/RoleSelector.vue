@@ -74,7 +74,7 @@ console.log(props);
 
 const emits = defineEmits<Emits>();
 
-const selectedBoxHeight = 57;
+const selectedBoxHeight = 63;
 const roleTableHeight = computed(() => {
   const marginY = 30; // vh
   const headerHeight = 55; // px

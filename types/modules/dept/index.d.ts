@@ -1,15 +1,14 @@
-declare interface DeptView {
-  id: number;
+declare interface DeptView extends Tree {
+  id: string;
   title?: string;
   simple_name?: string;
   description?: string;
   ident?: string;
   order_no?: number;
-  pid?: number;
-  owner?: number;
+  pid?: string;
+  owner?: string;
   owner_info?: UserView;
   status?: boolean;
-  children?: DeptView[],
 }
 
 declare interface AddDeptParam {

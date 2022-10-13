@@ -1,18 +1,18 @@
 <template>
   <template v-for="menuOption in props.menuOptions" :key="menuOption.id">
     <template v-if="!menuOption.children || menuOption.children.length === 0">
-      <el-menu-item v-if="menuOption.hidden === 0" :index="menuOption.route">
+      <el-menu-item v-if="!menuOption.hidden" :index="menuOption.path">
         <el-icon  v-if="menuOption.icon && menuOption.icon.length > 0"><SVGIcon :name="menuOption.icon"/></el-icon>
         <template #title>
-          <span v-text="menuOption.title"></span>
+          <span v-text="menuOption.name"></span>
         </template>
       </el-menu-item>
     </template>
     <template v-else>
-      <el-sub-menu :index="menuOption.route">
+      <el-sub-menu :index="menuOption.path">
         <template #title>
           <el-icon v-if="menuOption.icon && menuOption.icon.length > 0"><SVGIcon :name="menuOption.icon"/></el-icon>
-          <span v-text="menuOption.title"></span>
+          <span v-text="menuOption.name"></span>
         </template>
         <NestedMenu :menu-options="menuOption.children"></NestedMenu>
       </el-sub-menu>
@@ -25,10 +25,10 @@ import SVGIcon from "@/components/common/SVGIcon.vue"
 import {ElMenuItem, ElIcon, ElSubMenu} from "element-plus";
 
 interface Props {
-  menuOptions: MenuConfig[]
+  menuOptions: MenuView[]
 }
 
-const props = defineProps<Props>();
+const props = defineProps<Props>()
 
 </script>
 

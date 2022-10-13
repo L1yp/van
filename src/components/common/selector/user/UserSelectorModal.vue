@@ -1,216 +1,269 @@
 <template>
-  <el-dialog
-    v-model="dialogVisible"
-    :width="dialogWidth" title="选择用户"
+  <VDialog
+    v-model="visible"
+    :title="props.title"
+    full-screen
     append-to-body
-    center
-    :draggable="true"
-    :destroy-on-close="true"
-    custom-class="user-ext-dialog"
-    @opened="handleOpenedDialog"
+    @opened="handleOpened"
+    @confirm="handleConfirm"
+    @cancel="visible = false"
   >
+    <div class="user-selector-modal" style="height: 100%">
+      <div class="search-form">
+        <el-form inline :model="formData" ref="formRef">
+          <el-form-item label="用户名" prop="username">
+            <el-input v-model="formData.username"></el-input>
+          </el-form-item>
+          <el-form-item label="姓名" prop="realName">
+            <el-input v-model="formData.realName"></el-input>
+          </el-form-item>
+          <!-- dept selector -->
+          <el-form-item label="部门" prop="departmentId">
+            <DeptSelectorInput v-model="formData.departmentId" multiple />
+          </el-form-item>
 
-    <el-table
-      v-loading="loading"
-      ref="tableRef"
-      :data="userData"
-      height="50vh"
-      style="width: 100%"
-      row-key="id"
-      stripe
-      :row-style="{cursor: 'pointer'}"
-      @selection-change="handleSelectionChange"
-      :highlight-current-row="true"
-      @row-click="handleRowClick"
-      @row-dblclick="handleRowDbClick"
-      @current-change="handleCurrentChange"
-    >
-      <el-table-column width="40" type="selection" align="center" header-align="center" v-if="props.multiple"/>
-      <el-table-column width="40" align="center" header-align="center" v-if="!props.multiple">
-        <template #default="scope">
-          <el-radio class="user-selector" name="user-selector" :label="scope.row.id" v-model="selectedRowId"></el-radio>
-        </template>
-      </el-table-column>
-      <el-table-column width="50" label="#" prop="id" align="center" header-align="center"/>
-      <el-table-column width="80" label="头像" prop="avatar">
-        <template #default="scope">
-          <el-avatar
-            style="vertical-align: middle"
-            shape="circle"
-            :size="24"
-            fit="cover"
-            :src="scope.row.avatar"
+          <el-form-item>
+            <el-button type="primary" @click="handleSearch" :loading="loading">搜索</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
+      <div :style="{ width: '100%', height: tableHeight }">
+        <el-table
+          v-loading="loading"
+          ref="tableRef"
+          :data="pageData.data"
+          height="100%"
+          row-key="id"
+          stripe border
+          :row-style="{cursor: 'pointer'}"
+          :highlight-current-row="true"
+          @row-click="handleRowClick"
+          @row-dblclick="handleRowDbClick"
+        >
+          <el-table-column width="40" align="center" header-align="center" :resizable="false" v-if="props.multiple">
+            <template #header>
+              <template v-if="isAllAdd">
+                <span class="select-all-user" @click="handleRemoveAll">
+                  <el-icon><Minus/></el-icon>
+                </span>
+
+              </template>
+              <template v-else>
+                <span class="select-all-user" @click="handleAddAll">
+                  <el-icon><Plus/></el-icon>
+                </span>
+              </template>
+            </template>
+            <template #default="scope">
+              <template v-if="selectedUserIds.has(scope.row.id)">
+                <span @click="handleRemoveUser(scope.row)">
+                  <el-icon><Minus/></el-icon>
+                </span>
+
+              </template>
+              <template v-else>
+                <span @click="handleAddUser(scope.row)">
+                  <el-icon><Plus/></el-icon>
+                </span>
+              </template>
+            </template>
+          </el-table-column>
+          <el-table-column width="40" align="center" header-align="center" :resizable="false" v-if="!props.multiple">
+            <template #default="scope">
+              <el-radio class="user-selector" name="user-selector" :label="scope.row.id" v-model="selectedRowId"></el-radio>
+            </template>
+          </el-table-column>
+          <el-table-column width="120" label="工号" prop="username" align="left" header-align="left"/>
+          <el-table-column width="120" label="姓名" prop="realName"/>
+          <el-table-column label="部门" prop="departmentName"/>
+        </el-table>
+      </div>
+      <div>
+        <el-pagination
+          ref="pagerRef"
+          small
+          layout="prev, pager, next"
+          :total="pageData.total"
+          :page-size="pageData.page_size"
+          v-model:current-page="pageData.page_idx"
+          @current-change="handleSearch"
+        />
+      </div>
+
+      <div class="selected-container">
+        <el-scrollbar height="200px" always view-class="selected-tags">
+          <el-tag
+            v-for="item in localSelectedUser"
+            :key="item.id"
+            closable @close="handleRemoveUser(item)"
           >
-          </el-avatar>
-        </template>
-      </el-table-column>
-      <el-table-column width="120" label="用户名(工号)" prop="username" align="left" header-align="left"/>
-      <el-table-column width="80" label="昵称" prop="nickname"/>
-    </el-table>
+            {{ item.realName + (item.departmentName ? `<${item.departmentName}>` : '') }}
+          </el-tag>
+        </el-scrollbar>
 
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="confirm">确定</el-button>
-      </span>
-    </template>
-  </el-dialog>
+      </div>
+    </div>
+
+  </VDialog>
 </template>
-<script lang="ts">
-import {computed, nextTick, ref, unref, defineComponent, watch} from "vue";
+
+<script lang="ts" setup>
+import VDialog from '@/components/dialog/VDialog.vue';
+import { computed, nextTick, ref } from 'vue';
 import {
-  ElDialog, ElButton, ElTag, ElTable,
-  ElTableColumn, ElAvatar, ElRadio
+  ElTable, ElTableColumn, ElRadio, ElForm, ElFormItem, ElInput, ElButton, ElScrollbar, ElTag,
+  ElIcon, ElPagination,
 } from "element-plus";
-import * as UserApi from "@/api/sys/user"
-import DictTag from "@/components/dict/DictTag.vue"
-import {UserSelectorModelEmits, UserSelectorModelProps} from "@/components/common/selector/user/util";
+import { useUserData } from "@/service/system/user";
+import { Plus, Minus } from "@element-plus/icons-vue";
+import DeptSelectorInput from "../dept/DeptSelectorInput.vue";
+
+interface Props {
+  multiple?: boolean
+  modelValue: UserView[]
+  title?: string
+  visible: boolean
+}
+
+interface Emits {
+  (e: 'update:visible', val: boolean): void
+  (e: 'update:modelValue', val: UserView[]): void
+  (e: 'confirm'): void
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  multiple: false,
+  title: '请选择用户',
+})
+const emits = defineEmits<Emits>()
 
 
-export default defineComponent({
-  name: "UserSelectorModel",
-  components: {
-    ElDialog, ElButton, ElTag, ElTable,
-    ElTableColumn, ElAvatar, DictTag, ElRadio
-  },
-  props: UserSelectorModelProps,
-  emits: UserSelectorModelEmits,
-  setup(props, {emit: emits, expose}) {
-
-    const baseTableWidth = 330;
-    const tableWidth = computed(() => (baseTableWidth + 40) + "px")
-    const dialogWidth = computed(() => `calc(${tableWidth.value} + 40px)`)
-
-    const tableRef = ref<InstanceType<typeof ElTable>>(null);
-    const dialogVisible = ref(false);
-    const loading = ref(false);
-
-    const userData = ref([]);
-    const selectedRows = ref([]);
-    function handleSelectionChange(selectedArr) {
-      selectedRows.value = selectedArr;
-    }
-
-
-    function handleRowClick(row, column, event) {
-      tableRef.value.toggleRowSelection(row, undefined);
-    }
-
-    function handleRowDbClick(row, column, event) {
-      if (!props.multiple) {
-        currentRow.value = row
-        emits("update:modelValue", currentRow.value)
-        dialogVisible.value = false
-      }
-    }
-
-    const selectedRowId = ref<number>(-1)
-    const currentRow = ref<UserView>()
-    watch(currentRow, () => {
-      if (currentRow.value) {
-        selectedRowId.value = currentRow.value.id
-      } else {
-        selectedRowId.value = -1
-      }
-    })
-    function handleCurrentChange(newRow, oldRow) {
-      currentRow.value = newRow
-    }
-
-    function confirm() {
-
-      if (props.multiple) {
-        const selected = (tableRef.value.getSelectionRows() as UserView[])
-        console.log("selected", selected)
-        emits("update:modelValue", selected)
-      } else {
-        emits("update:modelValue", currentRow.value)
-      }
-
-      dialogVisible.value = false
-    }
-
-    function open() {
-      dialogVisible.value = true
-    }
-
-    function close() {
-      dialogVisible.value = false
-    }
-
-    async function handleOpenedDialog() {
-      try {
-        const params: UserQueryParam = {
-          pageIdx: 1,
-          pageSize: 50
-        }
-        loading.value = true
-        userData.value = await UserApi.pageUserList(params)
-        loading.value = false
-
-        await nextTick(() => initSelectionUsers())
-      } catch (e) {
-        console.error(e)
-      } finally {
-      }
-    }
-
-    function initSelectionUsers() {
-      if (!props.modelValue) {
-        return
-      }
-      console.log("props.modelValue", Array.isArray(props.modelValue), props.modelValue)
-
-      if (props.multiple) {
-        let initUserIds = []
-        if (Array.isArray(props.modelValue)) {
-          initUserIds = unref(props.modelValue).map(it => it.username)
-        } else {
-          console.warn("[UserSelectorModal props] multiple is true, but modelValue is not Array?")
-        }
-        for (const user of unref(userData.value)) {
-          if (initUserIds.includes(user.username)) {
-            tableRef.value.toggleRowSelection(user, true)
-          } else {
-            tableRef.value.toggleRowSelection(user, false)
-          }
-        }
-      } else {
-        if (props.modelValue) {
-          for (const user of unref(userData.value)) {
-            if ((props.modelValue as UserView).username === user.username) {
-              tableRef.value.setCurrentRow(user)
-              break
-            }
-          }
-
-        }
-      }
-
-    }
-
-
-
-    expose({
-      open, close
-    })
-
-    return {
-      props,
-      dialogWidth, tableRef, dialogVisible, loading, userData,
-      handleSelectionChange, handleRowClick, handleCurrentChange,
-      confirm, open, close, handleOpenedDialog, handleRowDbClick,
-      selectedRowId,
-    }
-  },
-
+const visible = computed<boolean>({
+  get: () => { return props.visible },
+  set: v => emits('update:visible', v)
 })
 
+
+
+const selectedRowId = computed<string>({
+  get: () => {
+    if (!props.multiple) {
+      return localSelectedUser.value?.[0]?.id || ''
+    } else return ''
+  },
+  set: v => {
+    if (!props.multiple) {
+      localSelectedUser.value = [ pageData.value.data.find(it => it.id === v)! ]
+    }
+  },
+})
+const loading = ref<boolean>(false)
+
+
+function handleRowClick(row: UserView) {
+  selectedRowId.value = row.id
+}
+
+function handleRowDbClick(row: UserView) {
+  selectedRowId.value = row.id
+  handleConfirm()
+}
+
+
+const localSelectedUser = ref<UserView[]>(props.modelValue || [])
+const selectedUserIds = computed<Set<string>>(() => new Set<string>((localSelectedUser.value || []).map(it => it.id)))
+
+const isAllAdd = computed<boolean>(() => pageData.value.data?.filter(it => !selectedUserIds.value.has(it.id))?.length === 0)
+
+const tableRef = ref<InstanceType<typeof ElTable>>()
+const formRef = ref<InstanceType<typeof ElForm>>()
+const pagerRef = ref<InstanceType<typeof ElPagination>>()
+
+const tableHeight = computed<string>(() => {
+  const formHeight = formRef.value?.$el.clientHeight || 0
+  const pagerHeight = pagerRef.value?.$el.clientHeight || 0
+  const selectedContainerHeight = 200 + 10 // marginTop
+  return `calc(100% - ${formHeight + selectedContainerHeight + pagerHeight}px)`
+})
+
+const { pageData, loadUserPageList } = useUserData(loading)
+const formData = ref<UserQueryParam>({
+  username: '',
+  nickname: '',
+  phone: '',
+  email: '',
+  deptId: '',
+  pageIdx: pageData.value.page_idx,
+  pageSize: pageData.value.page_size,
+})
+
+function handleSearch() {
+  loadUserPageList(formData.value).then(_ => {
+    const selectedUserId = new Set<string>(localSelectedUser.value.map(it => it.id))
+    pageData.value.data
+      .filter(it => selectedUserId.has(it.id))
+      .forEach(it => tableRef.value?.toggleRowSelection(it, true))
+  })
+}
+
+function handleOpened() {
+  localSelectedUser.value = props.modelValue
+  handleSearch()
+}
+
+function handleConfirm() {
+  emits('update:modelValue', localSelectedUser.value)
+  // FIXME: emits call is async
+  nextTick(() => {
+    emits('confirm')
+    visible.value = false
+  })
+
+
+}
+
+
+function handleAddUser(item: UserView) {
+  localSelectedUser.value.push(item)
+}
+
+function handleRemoveUser(item: UserView) {
+  const idx = localSelectedUser.value.map(it => it.id).indexOf(item.id)
+  idx !== -1 && localSelectedUser.value.splice(idx, 1)
+}
+
+function handleAddAll() {
+  pageData.value.data.filter(it => !selectedUserIds.value.has(it.id)).forEach(it => localSelectedUser.value.push(it))
+}
+
+function handleRemoveAll() {
+  pageData.value.data.filter(it => selectedUserIds.value.has(it.id)).forEach(it => {
+    const idx = localSelectedUser.value.map(it => it.id).indexOf(it.id)
+    idx !== -1 && localSelectedUser.value.splice(idx, 1)
+  })
+}
 </script>
 
-
 <style scoped>
+.selected-container {
+  box-sizing: border-box;
+  border: 1px #e3e3e3 solid;
+  width: 100%;
+  margin-top: 10px;
+}
+
+:deep(.selected-tags) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: 5px;
+}
+
 :deep(.el-radio.user-selector span.el-radio__label) {
   display: none;
+}
+
+.select-all-user {
+  cursor: pointer;
 }
 </style>
