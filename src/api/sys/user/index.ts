@@ -27,10 +27,11 @@ export function addUser(data: UserAddParam): Promise<void> {
 /**
  * 查询关联的角色列表
  */
-export function findBoundRoles(uid: number): Promise<number[]> {
-  return request<number[]>({
+export function findBoundRoles(uid: string): Promise<string[]> {
+  return request<string[]>({
     method: 'get',
-    url: `/user/role/bound/find?uid=${uid}`,
+    url: `/user/role`,
+    params: { uid }
   })
 }
 

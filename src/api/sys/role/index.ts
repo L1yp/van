@@ -1,13 +1,12 @@
-import axios from "axios";
-import {request} from "@/api/request";
+import { request } from "@/api/request";
 
 /**
  * 查询角色
  */
-export function findRole(): Promise<RoleView[]> {
+export function findRole() {
   return request<RoleView[]>({
     method: 'get',
-    url: `/role/find`
+    url: `/role/find`,
   })
 }
 
@@ -70,8 +69,8 @@ export function batchDelRole(ids: string) {
  * @param {number} roleId
  * @returns {Promise<number[]>}
  */
-export function menuBound(roleId: number): Promise<number[]> {
-  return request<number[]>({
+export function menuBound(roleId: string) {
+  return request<string[]>({
     method: 'get',
     url: `/role/menu/bound?roleId=${roleId}`
   })
@@ -79,10 +78,10 @@ export function menuBound(roleId: number): Promise<number[]> {
 
 /**
  * 绑定菜单
- * @param {number} role_id
- * @param {number[]} menu_ids
+ * @param {string} role_id
+ * @param {string[]} menu_ids
  */
-export function bindMenu(role_id: number, menu_ids: number[]): Promise<void> {
+export function bindMenu(role_id: string, menu_ids: string[]) {
   const data = { role_id, menu_ids }
   return request<void>({
     method: 'post',
@@ -94,11 +93,11 @@ export function bindMenu(role_id: number, menu_ids: number[]): Promise<void> {
 
 /**
  * 查询角色绑定的权限列表
- * @param {number} roleId
- * @returns {Promise<number[]>}
+ * @param {string} roleId
+ * @returns {Promise<string[]>}
  */
-export function permissionBound(roleId: number): Promise<number[]> {
-  return request<number[]>({
+export function permissionBound(roleId: string) {
+  return request<string[]>({
     method: 'get',
     url: `/role/permission/bound?roleId=${roleId}`,
   })
@@ -109,7 +108,7 @@ export function permissionBound(roleId: number): Promise<number[]> {
  * @param {number} role_id
  * @param {number[]} permission_ids
  */
-export function bindPermission(role_id: number, permission_ids: number[]) {
+export function bindPermission(role_id: string, permission_ids: string[]) {
   return request<void>({
     method: 'post',
     url: `/role/permission/bind`,

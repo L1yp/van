@@ -17,3 +17,34 @@ declare interface MenuConfig extends TreeData{
   has_children?: boolean;
   parent?: MenuConfig;
 }
+
+
+
+declare interface MenuAddParam {
+  name: string
+  pid: string
+  type: 'FOLDER' | 'PAGE' | 'BUTTON' | 'TAB' | 'PROCESS'
+  path: string
+  component: string
+  icon: string
+  order_no: number
+  hidden: boolean
+  closeable: boolean
+  state: number
+  remark: string
+}
+
+declare interface MenuUpdateParam {
+  id: string
+  name: string
+  pid: string
+  type: 'FOLDER' | 'PAGE' | 'BUTTON' | 'TAB' | 'PROCESS'
+  path: string
+  component: string
+  icon: string
+  order_no: number
+  hidden: boolean
+  closeable: boolean
+  state: number
+  remark: string
+}

@@ -2,7 +2,7 @@
   <el-dialog
     @opened="handleOpenDialog"
     @close="handleCloseDialog"
-    custom-class="user-ext-dialog"
+    class="user-ext-dialog"
     width="320px" v-model="visible"
     :title="props.title"
     :append-to-body="true"
@@ -40,24 +40,22 @@
 </template>
 
 <script lang="ts" setup>
-import {ref, computed, toRef, watch, Ref,} from "vue"
+import {ref, computed, watch, Ref,} from "vue"
 import {
   ElDialog, ElTable, ElTableColumn, ElButton
 } from "element-plus"
-import {read} from "@/utils/storage"
-import * as MenuApi from "@/api/sys/menu"
 
 interface Emits {
-  (e: 'confirm', roleId: number, menuIds: number[]): void;
+  (e: 'confirm', roleId: string, menuIds: string[]): void;
   (e: 'update:visible', visible: boolean): void;
   (e: 'cancel'): void;
 }
 
 interface Props {
   title: string;
-  roleId: number;
-  boundMenus: number[];
-  menuOptions: MenuConfig[];
+  roleId: string;
+  boundMenus: string[];
+  menuOptions: MenuView[];
   visible: boolean;
 }
 
@@ -91,7 +89,7 @@ const deptTableHeight = computed(() => {
   }
 });
 
-function getTreeSize(treeData: MenuConfig[]): number {
+function getTreeSize(treeData: MenuView[]): number {
   if (!treeData) return 0;
   let count = 0;
   for (let item of treeData) {
@@ -112,7 +110,7 @@ function handleRowClassName(data: any): string {
   return "";
 }
 
-function handleMenuRowClick(row: MenuConfig, column: string, event: any) {
+function handleMenuRowClick(row: MenuView, column: string, event: any) {
   if (row.children && row.children.length > 0) {
     return;
   }
@@ -121,12 +119,12 @@ function handleMenuRowClick(row: MenuConfig, column: string, event: any) {
   menuTableRef.value?.toggleRowSelection(row, undefined);
 }
 
-const selectedMenus: Ref<MenuConfig[]> = ref<MenuConfig[]>([]);
-function handleMenuSelectedChange(menus: MenuConfig[]) {
+const selectedMenus: Ref<MenuView[]> = ref<MenuView[]>([]);
+function handleMenuSelectedChange(menus: MenuView[]) {
   selectedMenus.value = menus;
 }
 
-function handleCurrentChange(newRow: MenuConfig, oldRow: MenuConfig) {
+function handleCurrentChange(newRow: MenuView, oldRow: MenuView) {
   if (newRow?.children && newRow?.children?.length > 0) {
     menuTableRef.value?.setCurrentRow(oldRow);
   }
@@ -138,7 +136,7 @@ function confirmDeptDialog() {
 
 }
 
-function findTreeItem(tree: MenuConfig[], id: number): MenuConfig | undefined {
+function findTreeItem(tree: MenuView[], id: string): MenuView | undefined {
   for (let row of tree) {
     if (row.children && row.children.length > 0) {
       const ret = findTreeItem(row.children, id);

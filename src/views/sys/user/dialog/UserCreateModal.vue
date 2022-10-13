@@ -64,6 +64,24 @@
       </el-row>
       <el-row>
         <el-col :span="24">
+          <el-form-item label="角色" prop="role_ids">
+            <el-select 
+              v-model="formData.role_ids" 
+              multiple 
+              filterable
+              clearable
+              collapse-tags
+              collapse-tags-tooltip
+              fit-input-width
+              style="width: 100%"
+            >
+              <el-option v-for="item in roleData" :key="item.id" :value="item.id" :label="item.name"/>
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="24">
           <el-form-item label="头像" prop="avatar">
             <el-input v-model="formData.avatar"></el-input>
           </el-form-item>
@@ -75,9 +93,10 @@
 
 <script lang="ts" setup>
 import VDialog from "@/components/dialog/VDialog.vue";
-import {computed, ref} from "vue";
-import { ElForm, ElFormItem, ElRow, ElCol, ElInput, ElRadioGroup, ElRadioButton } from "element-plus";
+import { computed, onBeforeMount, ref } from "vue";
+import { ElForm, ElFormItem, ElRow, ElCol, ElInput, ElRadioGroup, ElRadioButton, ElSelect, ElOption } from "element-plus";
 import DeptSelectorInput from "@/components/common/selector/dept/DeptSelectorInput.vue";
+import { useRole } from "@/service/system/role";
 
 
 interface Props {
@@ -112,6 +131,7 @@ const formData = ref<UserAddParam | UserUpdateParam>({
   avatar: '',
   dept_id: '',
   pt_dept_ids: [],
+  role_ids: [],
   status: 0,
 })
 
@@ -132,11 +152,15 @@ function handleOpened() {
       avatar: '',
       dept_id: '',
       pt_dept_ids: [],
+      role_ids: [],
       status: 0,
     }
   }
 }
 
+const loading = ref<boolean>(false)
+const { roleData, loadRole } = useRole(loading)
+onBeforeMount(loadRole)
 </script>
 
 <style scoped>

@@ -39,6 +39,7 @@ declare interface UserUpdateParam {
   avatar?: string;
   dept_id: string
   pt_dept_ids: string[]
+  role_ids: string[],
   status?: number;
 }
 
@@ -54,6 +55,7 @@ declare interface UserView {
   update_by?: string;
   label?: string;
   pt_dept_ids?: string[]
+  role_ids?: string[]
 }
 
 declare interface UserPageAdditional {

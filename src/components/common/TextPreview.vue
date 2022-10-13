@@ -1,6 +1,6 @@
 <template>
   <el-dialog v-model="dialogVisible" @closed="handleDialogClosed" :draggable="true" :append-to-body="true"
-             :fullscreen="fullScreen" :show-close="false" custom-class="user-ext-dialog">
+             :fullscreen="fullScreen" :show-close="false" class="user-ext-dialog">
     <template #header>
       <div
         style="display: flex; justify-content: space-between; align-content: center; height: 23px; box-sizing: border-box">

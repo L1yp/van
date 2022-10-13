@@ -2,7 +2,7 @@
   <el-dialog
     @opened="handleOpenDialog"
     @close="handleCloseDialog"
-    custom-class="user-ext-dialog"
+    class="user-ext-dialog"
     width="320px" v-model="visible"
     :title="props.title"
     :append-to-body="true"

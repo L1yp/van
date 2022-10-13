@@ -81,9 +81,6 @@
         <el-table-column label="操作">
           <template #default="scope">
             <el-button plain style="vertical-align: middle" text @click.stop="editUser(scope.row)" :icon="Edit">编辑</el-button>
-            <el-button plain style="vertical-align: middle" text @click.stop="relateRole(scope.row)">
-              <SVGIcon style="width: 1em; height: 1em" name="relation"/><span style="margin-left: 4px;">角色</span>
-            </el-button>
             <el-popconfirm
               title="确定删除?"
               confirmButtonText="确定"
@@ -121,7 +118,6 @@ import {
   ElSelect, ElOption, ElButton, ElInput, ElPopconfirm,
   ElTable, ElTableColumn, ElTag, ElPagination, ElMessage
 } from "element-plus"
-import SVGIcon from "@/components/common/SVGIcon.vue"
 import {mainHeightKey, mainWidthKey, themeKey} from "@/config/app.keys";
 import {useUserData} from "@/service/system/user";
 import {Delete, Plus, Download, Edit, User} from "@element-plus/icons-vue";
@@ -191,6 +187,7 @@ async function editUser(user: UserView) {
     loading.value = true
     const rawUser = toRaw(user)
     rawUser.pt_dept_ids = await UserApi.findPartTimeDept()
+    rawUser.role_ids = await UserApi.findBoundRoles(user.id)
     editUserInfo.value = rawUser
     createModalMode.value = 'update'
     createModalVisible.value = true
@@ -222,8 +219,6 @@ function submitCreateUpdateUser(v: UserAddParam | UserUpdateParam) {
 
 }
 
-function relateRole(user: UserView) {}
-function relateDept(user: UserView) {}
 
 function delUser(user: UserView) {}
 

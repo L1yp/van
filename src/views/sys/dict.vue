@@ -177,7 +177,7 @@
     </div> <!-- 字典值列表 -->
   </div>
 
-  <el-dialog v-model="dictInfoDialogVisible" :title="dictInfoDialogTitle" :draggable="true" :append-to-body="true" custom-class="user-ext-dialog" width="680px">
+  <el-dialog v-model="dictInfoDialogVisible" :title="dictInfoDialogTitle" :draggable="true" :append-to-body="true" class="user-ext-dialog" width="680px">
     <el-form ref="dictInfoFormRef" :model="dictInfoFormData" :rules="dictInfoFormRules" status-icon size="default" label-width="60px">
       <el-row :gutter="20">
         <el-col :span="12">
@@ -220,7 +220,7 @@
 
   </el-dialog>
 
-  <el-dialog v-model="dictValueDialogVisible" :title="dictValueDialogTitle" :draggable="true" :append-to-body="true" custom-class="user-ext-dialog" width="680px">
+  <el-dialog v-model="dictValueDialogVisible" :title="dictValueDialogTitle" :draggable="true" :append-to-body="true" class="user-ext-dialog" width="680px">
     <el-form ref="dictValueFormRef" :model="dictValueFormData" :rules="dictValueFormRules" status-icon size="default" label-width="60px">
       <el-row :gutter="20">
         <el-col :span="12">

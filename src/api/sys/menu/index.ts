@@ -3,10 +3,9 @@ import {request} from "@/api/request";
 
 /**
  * 获取菜单列表
- * @return {Promise<Object>}
  */
-export function findMenu(): Promise<MenuConfig[]> {
-  return request<MenuConfig[]>({
+export function findMenu() {
+  return request<MenuView[]>({
     method: 'get',
     url: `/menu/find`,
   })
@@ -61,7 +60,7 @@ export function updateMenu(id: number, title: string, name: string, route: strin
  * 删除菜单
  * @param {Number} id 角色ID
  */
-export function delMenu(id: number): Promise<void> {
+export function delMenu(id: string): Promise<void> {
   return request<void>({
     method: 'delete',
     url: `/menu/${id}`,

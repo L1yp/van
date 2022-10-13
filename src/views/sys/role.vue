@@ -97,7 +97,7 @@
     @cancel="permissionDialogVisible = false"
   />
 
-  <el-dialog v-model="dialogFormVisible" :title="dialogTitle" width="500px" draggable custom-class="user-ext-dialog">
+  <el-dialog v-model="dialogFormVisible" :title="dialogTitle" width="500px" draggable class="user-ext-dialog">
     <el-form :model="dialogFormData" size="default">
       <el-row>
         <el-col :span="24">
@@ -256,9 +256,9 @@ function delRole(role) {
 
 /* 角色关联操作开始  */
 const menuDialogVisible = ref(false); // 由于props传值会把普通类型 消除 响应式 因此需要包装成对象传值
-const boundMenus = ref<number[]>([]);
+const boundMenus = ref<string[]>([]);
 const menuOptions = ref<MenuConfig[]>([]);
-const curRoleId = ref(0);
+const curRoleId = ref('');
 const roleMenuDialogTitle = ref<string>("");
 async function relateMenu(role) {
   try {
