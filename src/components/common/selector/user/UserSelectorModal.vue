@@ -14,12 +14,12 @@
           <el-form-item label="用户名" prop="username">
             <el-input v-model="formData.username"></el-input>
           </el-form-item>
-          <el-form-item label="姓名" prop="realName">
-            <el-input v-model="formData.realName"></el-input>
+          <el-form-item label="姓名" prop="nickname">
+            <el-input v-model="formData.nickname"></el-input>
           </el-form-item>
           <!-- dept selector -->
-          <el-form-item label="部门" prop="departmentId">
-            <DeptSelectorInput v-model="formData.departmentId" multiple />
+          <el-form-item label="部门" prop="deptId">
+            <DeptSelectorInput v-model="formData.deptId" style="100%" />
           </el-form-item>
 
           <el-form-item>
@@ -74,8 +74,13 @@
             </template>
           </el-table-column>
           <el-table-column width="120" label="工号" prop="username" align="left" header-align="left"/>
-          <el-table-column width="120" label="姓名" prop="realName"/>
-          <el-table-column label="部门" prop="departmentName"/>
+          <el-table-column width="120" label="姓名" prop="nickname"/>
+          <el-table-column label="部门" prop="dept_id">
+            <template #default="scope">
+              {{ pageData.additional.dept[scope.row.dept_id].title }}
+            </template>
+          </el-table-column>
+
         </el-table>
       </div>
       <div>
@@ -97,7 +102,7 @@
             :key="item.id"
             closable @close="handleRemoveUser(item)"
           >
-            {{ item.realName + (item.departmentName ? `<${item.departmentName}>` : '') }}
+            {{ item.nickname }}
           </el-tag>
         </el-scrollbar>
 

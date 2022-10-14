@@ -14,6 +14,8 @@ export function useUserData(loading?: Ref<boolean>) {
     data: [],
   })
 
+  const tableData = ref<UserView[]>([])
+
   async function loadUserPageList(param: UserQueryParam) {
     try {
       loading && (loading.value = true)
@@ -25,9 +27,18 @@ export function useUserData(loading?: Ref<boolean>) {
     }
   }
 
-  return {
-    pageData, loadUserPageList,
+  async function searchUserList(key: string) {
+    try {
+      loading && (loading.value = true)
+      tableData.value = await UserApi.searchUserList(key)
+    } catch (e) {
+      ElMessage.error((e as Error)?.message || '加载失败')
+    } finally {
+      loading && (loading.value = false)
+    }
   }
 
-
+  return {
+    pageData, loadUserPageList, searchUserList, tableData,
+  }
 }

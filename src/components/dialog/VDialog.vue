@@ -223,7 +223,7 @@ div.btn:hover {
 }
 
 .user-ext-dialog.el-dialog .el-dialog__body {
-  padding: 10px 20px;
+  padding: 16px 20px;
   box-sizing: border-box;
 }
 

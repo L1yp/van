@@ -23,7 +23,7 @@
       <el-option
         v-for="item in options"
         :key="item.id"
-        :label="item.realName"
+        :label="item.nickname"
         :value="item"
       />
     </el-select>
@@ -45,7 +45,7 @@ import { useUserData } from "@/service/system/user";
 interface Props {
   multiple?: boolean
   placeholder?: string
-  modelValue: string | string[]
+  modelValue: string | string[] | null
   varOptions?: UserView[] // 变量选项: 本人, 本部门, 下级部门
   userMap: Map<string, UserView>
 }
@@ -64,6 +64,9 @@ const emits = defineEmits<Emits>()
 
 const selectedElems = computed<UserView[]>({
   get: () => {
+    if (!props.modelValue) {
+      return []
+    }
     if (props.multiple) {
       if(!(props.modelValue as string[]).every(it => props.userMap.has(it))) {
         console.warn('cannot find userInfo struct in userMap')
@@ -83,7 +86,7 @@ const selectedElems = computed<UserView[]>({
     if (props.multiple) {
       emits('update:modelValue', v?.length ? v.map(it => it.id) : [])
     } else {
-      emits('update:modelValue', v?.length ? v[0].id : '')
+      emits('update:modelValue', v?.length ? v[0].id : null)
     }
 
   }
@@ -123,28 +126,20 @@ function handleDblClick() {
   modalVisible.value = true
 }
 
-const { pageData, loadUserPageList } = useUserData(loading)
+const { tableData, searchUserList } = useUserData(loading)
 async function handleSearch(keyword: string) {
   if (!keyword) {
     return
   }
   try {
-    const formData: UserQueryParam = {
-      username: keyword,
-      nickname: keyword,
-      phone: keyword,
-      email: keyword,
-      pageIdx: 1,
-      pageSize: 1000,
-    }
-    await loadUserPageList(formData)
+    await searchUserList(keyword)
     const varOps = props.varOptions || []
     const varUserIds = new Set<string>(varOps.map(it => it.id))
     const selectedUserIds = new Set<string>(toRaw(selectedElems.value).map(it => it.id))
     options.value = [
       ...varOps,
       ...toRaw(selectedElems.value).filter(it => !varUserIds.has(it.id)),
-      ...toRaw(pageData.value.data).filter(it => !selectedUserIds.has(it.id))
+      ...toRaw(tableData.value).filter(it => !selectedUserIds.has(it.id))
     ]
     // nextTick(() => selectRef.value?.focus())
   } catch (e) {

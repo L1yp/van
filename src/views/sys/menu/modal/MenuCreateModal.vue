@@ -11,7 +11,7 @@
   <el-form :model="formData" label-width="100px" scroll-to-error>
     <ElRow>
       <ElFormItem label="类型" prop="type">
-        <ElRadioGroup v-model="formData.type" @change="handleTypeChanged">
+        <ElRadioGroup v-model="formData.type">
           <ElRadioButton label="FOLDER">文件夹</ElRadioButton>
           <ElRadioButton label="TAB">页面容器</ElRadioButton>
           <ElRadioButton label="PAGE">页面</ElRadioButton>
@@ -32,8 +32,7 @@
 import VDialog from '@/components/dialog/VDialog.vue';
 import { computed, markRaw, ref } from 'vue';
 import {
-  ElForm, ElFormItem, ElRadioGroup, ElRadioButton, ElInput, ElInputNumber,
-  ElRow, ElCol,
+  ElForm, ElFormItem, ElRadioGroup, ElRadioButton, ElRow, ElCol,
 } from "element-plus";
 import FolderForm from './form/FolderForm.vue'
 import TabsForm from './form/TabsForm.vue'
@@ -73,24 +72,6 @@ const formData = ref<MenuAddParam | MenuUpdateParam>({
   remark: ''
 })
 
-function handleTypeChanged(v: MenuType) {
-  formData.value = {
-    name: '',
-    pid: '',
-    type: 'PAGE',
-    path: '',
-    component: '',
-    icon: '',
-    order_no: 0,
-    closeable: null,
-    state: 0,
-    remark: ''
-  }
-  if (v === 'FOLDER') {
-
-  }
-}
-
 const configComponents = {
   FOLDER: markRaw(FolderForm),
   TAB: markRaw(TabsForm),
@@ -100,11 +81,31 @@ const configComponents = {
 }
 
 function handleConfirm() {
+  normalizeFormData()
   emits('confirm', formData.value)
 }
 
-function handleOpen() {
+function normalizeFormData() {
+  const type = formData.value.type
+  if (type === 'FOLDER') {
+    formData.value.closeable = null
+    formData.value.component = null
+    formData.value.path = null
+  }
+  else if (type === 'PAGE') {
+    formData.value.closeable = null
+  }
+  else if (type === 'PROCESS') {
+    formData.value.closeable = null
+  }
+  else if (type === 'BUTTON') {
+    formData.value.closeable = null
+    formData.value.path = null
+    formData.value.icon = null
+  }
+}
 
+function handleOpen() {
   formData.value = {
     name: '',
     pid: '',

@@ -7,7 +7,7 @@
     </el-col>
     <ElCol :span="12">
       <ElFormItem label="序号" prop="order_no">
-        <ElInputNumber v-model="formData.order_no"></ElInputNumber>
+        <ElInputNumber v-model="formData.order_no" style="width: 100%"></ElInputNumber>
       </ElFormItem>
     </ElCol>
   </el-row>
@@ -36,12 +36,26 @@
       </el-form-item>
     </el-col>
   </el-row>
+  <el-row>
+    <el-col :span="12">
+      <el-form-item label="状态" prop="state">
+        <DictInput v-model="props.formData.state" :ident="STATUS" />
+      </el-form-item>
+    </el-col>
+    <el-col :span="12">
+      <el-form-item label="备注" prop="remark">
+        <el-input v-model="formData.remark" />
+      </el-form-item>
+    </el-col>
+  </el-row>
 </template>
 
 <script lang="ts" setup>
-import { ElCol, ElFormItem, ElInput, ElRow, ElTreeSelect, ElInputNumber } from "element-plus";
+import { ElCol, ElFormItem, ElInput, ElRow, ElTreeSelect, ElRadioGroup, ElRadioButton, ElInputNumber } from "element-plus";
 import { computed, toRaw } from "vue";
 import { flatternTree, toTree } from "@/utils/common";
+import DictInput from "@/components/dict/DictInput.vue";
+import { STATUS } from "@/components/dict/dict";
 
 interface Props {
   formData: MenuUpdateParam | MenuAddParam

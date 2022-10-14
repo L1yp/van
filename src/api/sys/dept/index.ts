@@ -1,4 +1,3 @@
-import axios from "axios";
 import {request} from "@/api/request";
 
 /**
@@ -27,7 +26,7 @@ export function searchDept(keyword: string): Promise<DeptView[]> {
  * 添加部门
  * @return {Promise<void>}
  */
-export function addDept(data: AddDeptParam): Promise<void> {
+export function addDept(data: DeptAddParam): Promise<void> {
   return request<void>({
     method: 'post',
     url: '/dept/add',
@@ -40,7 +39,7 @@ export function addDept(data: AddDeptParam): Promise<void> {
  * 更新部门
  * @return {Promise<Object>}
  */
-export function updateDept(data: UpdateDeptParam): Promise<void> {
+export function updateDept(data: DeptUpdateParam): Promise<void> {
   return request<void>({
     method: 'post',
     url: '/dept/update',
@@ -50,11 +49,9 @@ export function updateDept(data: UpdateDeptParam): Promise<void> {
 
 
 /**
- * 删除角色
- * @param {Number} id 角色ID
- * @return {Promise<Object>}
+ * 删除部门
  */
-export function delDept(id: number): Promise<void> {
+export function delDept(id: string): Promise<void> {
   return request<void>({
     method: 'delete',
     url: `/dept/${id}`,

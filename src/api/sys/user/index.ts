@@ -8,6 +8,14 @@ export function pageUserList(params: UserQueryParam): Promise<PageData<UserView>
   })
 }
 
+export function searchUserList(key: string) {
+  return request<UserView[]>({
+    method: 'get',
+    url: `/user/search`,
+    params: { key },
+  })
+}
+
 export function updateUser(data: UserUpdateParam): Promise<void> {
   return request<void>({
     method: 'post',

@@ -12,7 +12,7 @@
     </el-popover>
 
   </template>
-  <template v-else>
+  <template v-else-if="!Array.isArray(data)">
     <el-popover
       trigger="click"
       width="200px"

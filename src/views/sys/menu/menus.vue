@@ -47,6 +47,11 @@
             <el-tag>{{ scope.row.closeable ? '是' : '否' }}</el-tag>
           </template>
         </el-table-column>
+        <el-table-column prop="state" align="center" header-align="center" label="允许关闭" width="120">
+          <template #default="scope">
+            <el-tag>{{ scope.row.state === 0 ? '正常' : '禁用' }}</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column label="操作">
           <template #default="scope">
             <el-button plain style="vertical-align: middle" text :icon="Edit" @click="editMenu(scope.row)">编辑</el-button>

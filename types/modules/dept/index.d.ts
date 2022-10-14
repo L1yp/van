@@ -8,28 +8,32 @@ declare interface DeptView extends Tree {
   pid?: string;
   owner?: string;
   owner_info?: UserView;
-  status?: boolean;
+  assistant?: string;
+  assistant_info?: UserView;
+  status?: number;
 }
 
-declare interface AddDeptParam {
+declare interface DeptAddParam {
   title: string;
   simple_name: string;
   description?: string;
   ident: string;
   order_no: number;
-  pid: number;
-  owner: number;
-  status: boolean;
+  pid: string;
+  owner: string;
+  assistant: string;
+  status: number;
 }
 
-declare interface UpdateDeptParam {
-  id: number;
+declare interface DeptUpdateParam {
+  id: string;
   title?: string;
   simple_name?: string;
   description?: string;
   ident?: string;
   order_no?: number;
-  pid?: number;
-  owner?: number;
-  status?: boolean;
+  pid?: string;
+  owner?: string;
+  assistant: string;
+  status?: number;
 }

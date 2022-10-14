@@ -12,26 +12,11 @@
     padding: 10px 20px;
 }
 
-.user-ext-dialog.el-dialog .el-row:last-child .el-form-item {
-    margin-bottom: 0;
-}
 
 .user-ext-dialog.el-dialog .el-form-item.is-success .el-input__validateIcon {
     color: green;
 }
 
-.user-ext-dialog.el-dialog .el-form .el-form-item:first-child {
-    margin-bottom: 0;
-}
-
-.user-ext-dialog.el-dialog .el-form-item + .el-form-item {
-    margin-bottom: 0;
-    margin-top: 16px;
-}
-
-.user-ext-dialog.el-dialog .el-form .el-row:first-child {
-    margin-bottom: 0;
-}
 
 .user-ext-dialog.el-dialog .el-table--enable-row-hover .el-table__body tr.current-row:hover>td.el-table__cell {
     background-color: var(--el-color-primary-light-3);
