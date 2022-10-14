@@ -12,7 +12,7 @@
     </ElCol>
   </el-row>
   <el-row>
-    <el-col :span="12">
+    <el-col :span="24">
       <el-form-item label="父菜单" prop="pid">
         <el-tree-select
           v-model="props.formData.pid"
@@ -21,6 +21,13 @@
           :props="{ children: 'children', label: 'name', value: 'id' }"
           :data="parentOptions"
         />
+      </el-form-item>
+    </el-col>
+  </el-row>
+  <el-row>
+    <el-col :span="12">
+      <el-form-item label="流程标识" prop="component">
+        <el-input v-model="props.formData.component"></el-input>
       </el-form-item>
     </el-col>
     <el-col :span="12">
@@ -48,7 +55,7 @@ const parentOptions = computed<MenuView[]>(() => {
 
   const flatTree: MenuView[] = flatternTree(JSON.parse(JSON.stringify(menus)))
   flatTree.forEach(it => it.children = [])
-  const filterTree = flatTree.filter(it => it.type === 'FOLDER')
+  const filterTree = flatTree.filter(it => ['TAB'].includes(it.type))
   return toTree(filterTree, 'id', 'pid')
 })
 

@@ -25,13 +25,13 @@
         :data="filterMenuList"
         style="width: 100%"
         row-key="id"
-        stripe
+        stripe border
         :tree-props="{ children: 'children' }"
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" align="center" header-align="center" width="60"/>
         <el-table-column prop="name" align="left" header-align="left" label="标题" width="150"/>
-        <el-table-column prop="id" align="center" header-align="center" label="#" width="50"/>
+        <el-table-column align="center" header-align="center" label="#" type="index" width="50"/>
         <el-table-column prop="icon" align="center" header-align="center" label="图标" width="60">
           <template #default="scope">
             <el-icon>
@@ -42,19 +42,13 @@
         <el-table-column prop="type" align="left" header-align="left" label="类型" width="100"/>
         <el-table-column prop="path" align="left" header-align="left" label="路由" width="300"/>
         <el-table-column prop="component" align="left" header-align="left" label="组件" width="300"/>
-        <el-table-column prop="closeable" align="center" header-align="center" label="允许关闭" width="80">
-          <template #default="scope">
-            <el-tag>{{ scope.row.closeable ? '是' : '否' }}</el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column prop="hidden" align="center" header-align="center" label="隐藏" width="80">
+        <el-table-column prop="closeable" align="center" header-align="center" label="允许关闭" width="120">
           <template #default="scope">
             <el-tag>{{ scope.row.closeable ? '是' : '否' }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column label="操作">
           <template #default="scope">
-            <el-button plain style="vertical-align: middle" text :icon="Plus" @click="addSubMenu(scope.row)">子菜单</el-button>
             <el-button plain style="vertical-align: middle" text :icon="Edit" @click="editMenu(scope.row)">编辑</el-button>
             <el-popconfirm title="确定删除?" confirmButtonText="确定" cancelButtonText="取消" @confirm="delMenu(scope.row)">
               <template #reference>
@@ -66,7 +60,7 @@
       </el-table>
     </div>
 
-    <MenuCreateModal v-model="createModalVisible" mode="create" :menu-tree="menuTree" />
+    <MenuCreateModal v-model="createModalVisible" :mode="createModalMode" :menu-tree="menuTree" @confirm="handleConfirm" :init-data="createModalInitData"  />
   </div>
 
 </template>
@@ -78,7 +72,7 @@ import {
   nextTick,
   Ref,
   ref,
-  onBeforeMount,
+  onBeforeMount, toRaw,
 } from "vue";
 import SVGIcon from "@/components/common/SVGIcon.vue";
 import {
@@ -121,7 +115,8 @@ onBeforeMount(loadMenuTree)
 
 const menuTitleKey = ref("")
 const createModalVisible = ref<boolean>(false)
-
+const createModalMode = ref<'create' | 'update'>('create')
+const createModalInitData = ref<MenuView>()
 
 const filterMenuList = computed<MenuView[]>(() => {
   if (!menuTitleKey.value) {
@@ -140,15 +135,35 @@ const filterMenuList = computed<MenuView[]>(() => {
 });
 
 function addMenu() {
+  createModalMode.value = 'create'
   createModalVisible.value = true
 }
 
-function addSubMenu(menu: MenuView) {
+function editMenu(menu: MenuView) {
+  createModalInitData.value = toRaw(menu)
+  createModalMode.value = 'update'
+  createModalVisible.value = true
 
 }
 
-function editMenu(menu: MenuView) {
+async function handleConfirm(param: MenuAddParam | MenuUpdateParam) {
+  try {
+    loading.value = true
+    if (createModalMode.value === 'create') {
+      await MenuApi.addMenu(param)
+    } else {
+      await MenuApi.updateMenu(param as MenuUpdateParam)
+    }
 
+    await loadMenuTree()
+    ElMessage.success('操作成功')
+  } catch (e) {
+    console.error(e)
+    ElMessage.error((e as Error)?.message || '操作成功')
+  } finally {
+    loading.value = false
+    createModalVisible.value = false
+  }
 }
 
 async function delMenu(row?: MenuView) {

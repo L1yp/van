@@ -24,11 +24,13 @@
       </el-form-item>
     </el-col>
     <el-col :span="12">
-      <el-form-item label="图标" prop="icon">
-        <el-input v-model="props.formData.icon" />
+      <el-form-item label="权限标识" prop="component">
+        <el-input v-model="props.formData.component"></el-input>
       </el-form-item>
     </el-col>
+
   </el-row>
+
 </template>
 
 <script lang="ts" setup>
@@ -48,7 +50,7 @@ const parentOptions = computed<MenuView[]>(() => {
 
   const flatTree: MenuView[] = flatternTree(JSON.parse(JSON.stringify(menus)))
   flatTree.forEach(it => it.children = [])
-  const filterTree = flatTree.filter(it => it.type === 'FOLDER')
+  const filterTree = flatTree.filter(it => ['PAGE', 'TAB', 'FOLDER'].includes(it.type))
   return toTree(filterTree, 'id', 'pid')
 })
 

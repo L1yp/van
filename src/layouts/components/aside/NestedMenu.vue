@@ -9,7 +9,7 @@
       </el-menu-item>
     </template>
     <template v-else>
-      <el-sub-menu :index="menuOption.path">
+      <el-sub-menu :index="menuOption.id">
         <template #title>
           <el-icon v-if="menuOption.icon && menuOption.icon.length > 0"><SVGIcon :name="menuOption.icon"/></el-icon>
           <span v-text="menuOption.name"></span>

@@ -2,27 +2,16 @@
   <VDialog
     v-model="visible"
     :title="props.mode === 'create' ? '创建菜单' : '更新菜单'"
+    width="800px"
+    @cancel="visible = false"
+    @confirm="handleConfirm"
+    @open="handleOpen"
   >
 
   <el-form :model="formData" label-width="100px" scroll-to-error>
-
-    <ElRow>
-
-      <ElCol :span="12">
-        <ElFormItem label="名称" prop="name">
-          <ElInput v-model="formData.name"></ElInput>
-        </ElFormItem>
-      </ElCol>
-      <ElCol :span="12">
-        <ElFormItem label="序号" prop="order_no">
-          <ElInputNumber v-model="formData.order_no"></ElInputNumber>
-        </ElFormItem>
-      </ElCol>
-    </ElRow>
-
     <ElRow>
       <ElFormItem label="类型" prop="type">
-        <ElRadioGroup v-model="formData.type">
+        <ElRadioGroup v-model="formData.type" @change="handleTypeChanged">
           <ElRadioButton label="FOLDER">文件夹</ElRadioButton>
           <ElRadioButton label="TAB">页面容器</ElRadioButton>
           <ElRadioButton label="PAGE">页面</ElRadioButton>
@@ -31,8 +20,7 @@
         </ElRadioGroup>
       </ElFormItem>
     </ElRow>
-
-
+    <component :is="configComponents[formData.type]" :form-data="formData" :menu-tree="props.menuTree" />
   </el-form>
 
 
@@ -42,20 +30,27 @@
 
 <script lang="ts" setup>
 import VDialog from '@/components/dialog/VDialog.vue';
-import { computed, ref } from 'vue';
-import { 
-  ElForm, ElFormItem, ElRadioGroup, ElRadioButton, ElInput, ElTreeSelect, ElInputNumber, 
+import { computed, markRaw, ref } from 'vue';
+import {
+  ElForm, ElFormItem, ElRadioGroup, ElRadioButton, ElInput, ElInputNumber,
   ElRow, ElCol,
 } from "element-plus";
+import FolderForm from './form/FolderForm.vue'
+import TabsForm from './form/TabsForm.vue'
+import PageForm from './form/PageForm.vue'
+import ProcessForm from './form/ProcessForm.vue'
+import ButtonForm from './form/ButtonForm.vue'
 
 interface Props {
   modelValue: boolean
   mode: 'create' | 'update'
   menuTree: MenuView[]
+  initData?: MenuView
 }
 
 interface Emits {
   (e: 'update:modelValue', v: boolean): void
+  (e: 'confirm', v: MenuAddParam | MenuUpdateParam): void
 }
 const props = defineProps<Props>()
 const emits = defineEmits<Emits>()
@@ -73,12 +68,59 @@ const formData = ref<MenuAddParam | MenuUpdateParam>({
   component: '',
   icon: '',
   order_no: 0,
-  hidden: false,
   closeable: true,
   state: 0,
   remark: ''
 })
 
+function handleTypeChanged(v: MenuType) {
+  formData.value = {
+    name: '',
+    pid: '',
+    type: 'PAGE',
+    path: '',
+    component: '',
+    icon: '',
+    order_no: 0,
+    closeable: null,
+    state: 0,
+    remark: ''
+  }
+  if (v === 'FOLDER') {
+
+  }
+}
+
+const configComponents = {
+  FOLDER: markRaw(FolderForm),
+  TAB: markRaw(TabsForm),
+  PAGE: markRaw(PageForm),
+  PROCESS: markRaw(ProcessForm),
+  BUTTON: markRaw(ButtonForm),
+}
+
+function handleConfirm() {
+  emits('confirm', formData.value)
+}
+
+function handleOpen() {
+
+  formData.value = {
+    name: '',
+    pid: '',
+    type: 'PAGE',
+    path: '',
+    component: '',
+    icon: '',
+    order_no: 0,
+    closeable: true,
+    state: 0,
+    remark: ''
+  }
+  if (props.initData) {
+    Object.assign(formData.value, props.initData)
+  }
+}
 
 </script>
 

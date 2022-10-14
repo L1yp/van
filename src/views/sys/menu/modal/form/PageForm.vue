@@ -29,10 +29,33 @@
       </el-form-item>
     </el-col>
   </el-row>
+  <el-row>
+    <el-col :span="12">
+      <el-form-item label="路由" prop="path">
+        <el-input v-model="props.formData.path"></el-input>
+      </el-form-item>
+    </el-col>
+    <el-col :span="12">
+      <el-form-item label="组件" prop="component">
+        <el-input v-model="props.formData.component"></el-input>
+      </el-form-item>
+    </el-col>
+  </el-row>
+  <el-row>
+    <el-col :span="24">
+      <el-form-item label="可关闭" prop="closeable">
+        <el-radio-group v-model="props.formData.closeable">
+          <el-radio-button :label="true">是</el-radio-button>
+          <el-radio-button :label="false">否</el-radio-button>
+        </el-radio-group>
+      </el-form-item>
+    </el-col>
+  </el-row>
+
 </template>
 
 <script lang="ts" setup>
-import { ElCol, ElFormItem, ElInput, ElRow, ElTreeSelect, ElInputNumber } from "element-plus";
+import { ElCol, ElFormItem, ElInput, ElRow, ElTreeSelect, ElRadioGroup, ElRadioButton, ElInputNumber } from "element-plus";
 import { computed, toRaw } from "vue";
 import { flatternTree, toTree } from "@/utils/common";
 
@@ -48,7 +71,7 @@ const parentOptions = computed<MenuView[]>(() => {
 
   const flatTree: MenuView[] = flatternTree(JSON.parse(JSON.stringify(menus)))
   flatTree.forEach(it => it.children = [])
-  const filterTree = flatTree.filter(it => it.type === 'FOLDER')
+  const filterTree = flatTree.filter(it => ['FOLDER', 'TAB'].includes(it.type))
   return toTree(filterTree, 'id', 'pid')
 })
 

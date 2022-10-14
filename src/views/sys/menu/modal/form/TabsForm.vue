@@ -12,7 +12,7 @@
     </ElCol>
   </el-row>
   <el-row>
-    <el-col :span="12">
+    <el-col :span="16">
       <el-form-item label="父菜单" prop="pid">
         <el-tree-select
           v-model="props.formData.pid"
@@ -23,11 +23,24 @@
         />
       </el-form-item>
     </el-col>
-    <el-col :span="12">
+    <el-col :span="8">
       <el-form-item label="图标" prop="icon">
         <el-input v-model="props.formData.icon" />
       </el-form-item>
     </el-col>
+  </el-row>
+  <el-row>
+    <el-col :span="16">
+      <el-form-item label="路由" prop="path">
+        <el-input v-model="props.formData.path"></el-input>
+      </el-form-item>
+    </el-col>
+    <el-col :span="8">
+      <el-form-item label="组件" prop="component">
+        <el-input v-model="props.formData.component"></el-input>
+      </el-form-item>
+    </el-col>
+
   </el-row>
 </template>
 
