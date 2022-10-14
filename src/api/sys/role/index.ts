@@ -26,12 +26,12 @@ export function addRole(name: string, order_no: number) {
 
 /**
  * 编辑角色
- * @param {Number} id 角色ID
- * @param {String} name 角色名称
- * @param {Number} order_no 角色排序
- * @return {Promise<unknown>}
+ * @param {string} id 角色ID
+ * @param {string} name 角色名称
+ * @param {number} order_no 角色排序
+ * @return {Promise<RoleView[]>}
  */
-export function editRole(id: number, name: string, order_no: number) {
+export function updateRole(id: string, name: string, order_no: number) {
   const data = {id, name, order_no};
   return request<RoleView[]>({
     method: 'post',
@@ -45,7 +45,7 @@ export function editRole(id: number, name: string, order_no: number) {
  * @param {Number} id 角色ID
  * @return {Promise<unknown>}
  */
-export function delRole(id: number) {
+export function deleteRole(id: string) {
   return request<RoleView[]>({
     method: 'delete',
     url: `/role/${id}`,

@@ -227,7 +227,13 @@ div.btn:hover {
   box-sizing: border-box;
 }
 
+.user-ext-dialog.el-dialog .el-dialog__body .el-row:last-child .el-form-item {
+  margin-bottom: 0;
+}
+
 .el-dialog.is-fullscreen.user-ext-dialog .el-dialog__body {
   height: calc(100vh - 44px - 54px)
 }
+
+
 </style>
