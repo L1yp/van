@@ -1,32 +1,31 @@
 <template>
   <template v-if="cMode === 'design'">
-    <el-input v-model="val" type="textarea" disabled v-bind="props.inputAreaProps" />
+    <el-input v-model="val" type="textarea" disabled v-bind="$props" />
   </template>
   <template v-else-if="cMode === 'edit'">
-    <el-input v-model="val" type="textarea" v-bind="props.inputAreaProps"  />
+    <el-input v-model="val" type="textarea" v-bind="$props"  />
   </template>
   <template v-else-if="cMode === 'read' ">
-    <span v-text="props.value"></span>
+    <span v-text="props.modelValue"></span>
   </template>
   <template v-else-if="cMode === 'hidden' ">
-    <span v-show="false" v-text="props.value"></span>
+    <span v-show="false" v-text="props.modelValue"></span>
   </template>
 </template>
 
 <script lang="ts" setup>
 import { ElInput } from 'element-plus'
-import { FormFieldMode, InputAreaProps } from "@/components/form/types";
+import { FormFieldMode } from "@/components/form/types";
 import {computed, inject} from "vue";
 import {formModeKey} from "@/components/form/state.key";
 
 interface Props {
-  mode: FormFieldMode
-  value: string
-  attrs: InputAreaProps
+  mode?: FormFieldMode
+  modelValue?: string
 }
 
 interface Emits {
-  (e: 'update:value', v: string): void
+  (e: 'update:modelValue', v: string): void
 }
 
 const props = defineProps<Props>()
@@ -34,8 +33,8 @@ const props = defineProps<Props>()
 const emits = defineEmits<Emits>()
 
 const val = computed<string>({
-  get: () => props.value,
-  set: v => emits('update:value', v)
+  get: () => props.modelValue || '',
+  set: v => emits('update:modelValue', v)
 })
 
 const formMode = inject(formModeKey)

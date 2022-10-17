@@ -27,30 +27,6 @@
           </el-row>
         </template>
 
-        <template v-else-if="'el-select' === element.component">
-          <el-form-item
-            :prop="element.id"
-            v-bind="element.formItemAttrs"
-            @click.stop="handleClickElement(element)"
-            :class="vFormActiveElement === element ? ['drag-selected'] : undefined"
-          >
-            <el-select :key="element.key" v-bind="element.attrs" v-model="formData[element.id]">
-              <template v-if="element.options?.type === 'fixed'">
-                <el-option
-                  :label="item.label"
-                  :value="item.value"
-                  :key="item.value"
-                  v-for="item in element.options?.value"
-                >
-                </el-option>
-              </template>
-              <template v-if="element.options?.type === 'url'">
-
-              </template>
-            </el-select>
-          </el-form-item>
-        </template>
-
         <template v-else>
           <el-form-item
             :prop="element.id"
@@ -61,6 +37,7 @@
             <component
               :is="element.component"
               v-bind="element.attrs"
+              v-model="formData[element.id]"
             >
             </component>
           </el-form-item>
@@ -74,7 +51,7 @@
 
 <script lang="ts">
 import Draggable from "vuedraggable";
-import {defineComponent, inject, nextTick, ref} from "vue";
+import {defineComponent, inject, ref} from "vue";
 import { ElForm, ElFormItem, ElInput, ElSelect, ElRow, ElCol, ElCheckboxGroup, ElCheckbox, ElOption } from "element-plus"
 import SVGIcon from "@/components/common/SVGIcon.vue";
 import emitter from "@/event/mitt";
@@ -82,13 +59,16 @@ import UserSelectorInput from "@/components/common/selector/user/UserSelectorInp
 import DeptSelectorInput from "@/components/common/selector/dept/DeptSelectorInput.vue";
 import TextInput from "../components/input/TextInput.vue"
 import TextAreaInput from "../components/input/TextAreaInput.vue"
+import SingleSelect from "../components/select/SingleSelect.vue"
+import MultiSelect from "../components/select/MultiSelect.vue"
+import UserSelect from "../components/select/UserSelect.vue"
 import { vFormActiveElementKey } from "@/config/app.keys";
 
 export default defineComponent({
   name: "NestedDragItem",
   components: {
     Draggable, ElForm, ElFormItem, ElInput, ElSelect, ElOption, ElRow, ElCol, SVGIcon, ElCheckboxGroup, ElCheckbox,
-    UserSelectorInput, DeptSelectorInput, TextInput, TextAreaInput,
+    UserSelectorInput, DeptSelectorInput, TextInput, TextAreaInput, SingleSelect, MultiSelect, UserSelect, 
   },
   props: {
     children: Array
@@ -106,6 +86,7 @@ export default defineComponent({
     })
 
     const vFormActiveElement = inject(vFormActiveElementKey)
+    
     const formData = ref({})
 
     function handleClickElement(elem) {

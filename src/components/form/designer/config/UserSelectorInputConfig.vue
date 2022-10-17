@@ -8,17 +8,6 @@
     style="padding: 5px;"
   >
 
-    <el-form-item prop="multiple" label="多选">
-      <el-radio-group v-model="vFormSelectElem.attrs.multiple">
-        <el-radio-button :label="true">是</el-radio-button>
-        <el-radio-button :label="false">否</el-radio-button>
-      </el-radio-group>
-    </el-form-item>
-
-<!--    <el-form-item prop="valueKey" label="valueKey">-->
-<!--      <el-input :key="vFormSelectElem.id" v-model="vFormSelectElem.attrs.valueKey"></el-input>-->
-<!--    </el-form-item>-->
-
     <el-form-item prop="placeholder" label="占位符">
       <el-input :key="vFormSelectElem.id" v-model="vFormSelectElem.attrs.placeholder"></el-input>
     </el-form-item>
@@ -28,26 +17,10 @@
 
 <script lang="ts" setup>
 import {
-  ElForm, ElFormItem, ElInput, ElSelect, ElOption, ElRadioGroup, ElRadioButton, ElInputNumber
+  ElForm, ElFormItem, ElInput, ElRadioGroup, ElRadioButton, 
 } from 'element-plus'
 import {computed, inject, watch} from "vue";
-import {dictInfosKey, vFormActiveElementKey} from "@/config/app.keys";
-import SVGIcon from "@/components/common/SVGIcon.vue";
-import FormItemTooltip from '@/components/form/FormItemTooltip.vue'
-
-const dictInfos = inject(dictInfosKey)
-
-const scopes = computed<string[]>(() => Array.from(new Set(dictInfos.value.map(it => it.scope))))
-const idents = computed<string[]>(() => {
-  const idents = dictInfos.value
-    .filter(it => it.scope === vFormSelectElem.value.attrs.scope)
-    .map(it => it.ident)
-  return Array.from(new Set(idents))
-})
-
-const isTree = computed<boolean>(() =>
-  dictInfos.value.find(it => it.scope === vFormSelectElem.value.attrs.scope && it.ident === vFormSelectElem.value.attrs.ident)?.type === 2
-)
+import { vFormActiveElementKey } from "@/config/app.keys";
 
 const vFormSelectElem = inject(vFormActiveElementKey)
 watch(vFormSelectElem, () => {

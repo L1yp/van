@@ -8,7 +8,7 @@ import {setupAxios} from "./config/axios.http"
 import * as UserApi from "@/api/sys/user"
 import {findAllDictValue, findDictInfoList} from "@/api/sys/dict/dict"
 import {remove} from "./utils/storage"
-import {dictInfosKey, dictValuesKey, menuOptionsKey, permissionKey, userInfoKey} from "./config/app.keys"
+import {dictInfosKey, dictValuesKey, menuOptionsKey, permissionKey, userInfoKey, userMapKey} from "./config/app.keys"
 import {permission} from "@/directives/permission"
 import VXETable from 'vxe-table'
 import 'vxe-table/lib/style.css'
@@ -21,6 +21,8 @@ async function startup() {
     setupAxios()
     app.use(ElLoading)
     app.use(VXETable)
+
+    app.provide(userMapKey, new Map<string, UserView>())
 
     const menuOptions = ref<MenuView[]>([])
     const userInfo = ref<UserInfo>()

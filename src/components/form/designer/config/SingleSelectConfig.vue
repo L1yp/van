@@ -1,0 +1,90 @@
+<template>
+  <el-form
+    v-if="vFormSelectElem?.attrs"
+    :model="vFormSelectElem?.attrs"
+    label-position="left"
+    label-width="120px"
+    style="padding: 5px;"
+  >
+
+
+    <el-form-item prop="id" label="键">
+      <el-input v-model="vFormSelectElem.id"></el-input>
+    </el-form-item>
+
+
+    <el-form-item prop="valueField" label="值字段">
+      <el-input v-model="vFormSelectElem.attrs.valueField"></el-input>
+    </el-form-item>
+    <el-form-item prop="labelField" label="标签字段">
+      <el-input v-model="vFormSelectElem.attrs.labelField"></el-input>
+    </el-form-item>
+    <el-form-item prop="disabledField" label="禁用字段">
+      <el-input v-model="vFormSelectElem.attrs.disabledField"></el-input>
+    </el-form-item>
+
+    <el-form-item prop="size" label="大小">
+      <el-radio-group v-model="vFormSelectElem.attrs.size">
+        <el-radio-button label="large">大</el-radio-button>
+        <el-radio-button label="default">默认</el-radio-button>
+        <el-radio-button label="small">小</el-radio-button>
+      </el-radio-group>
+    </el-form-item>
+
+    <el-form-item prop="clearable" label="是否可清空">
+      <el-radio-group v-model="vFormSelectElem.attrs.clearable">
+        <el-radio-button :label="true">是</el-radio-button>
+        <el-radio-button :label="false">否</el-radio-button>
+      </el-radio-group>
+    </el-form-item>
+
+    <el-form-item prop="placeholder" label="占位符">
+      <el-input v-model="vFormSelectElem.attrs.placeholder"></el-input>
+    </el-form-item>
+
+    <el-form-item prop="filterable" label="是否可筛选">
+      <template #label>
+        <form-item-tooltip
+          title="是否可筛选"
+          content="Select 组件是否可筛选"
+        />
+      </template>
+      <el-radio-group v-model="vFormSelectElem.attrs.filterable">
+        <el-radio-button :label="true">是</el-radio-button>
+        <el-radio-button :label="false">否</el-radio-button>
+      </el-radio-group>
+    </el-form-item>
+
+    <el-form-item prop="fitInputWidth" label="下拉宽度匹配">
+      <template #label>
+        <form-item-tooltip
+          title="下拉宽度匹配"
+          content="下拉框的宽度是否与输入框相同"
+        />
+      </template>
+      <el-radio-group v-model="vFormSelectElem.attrs.fitInputWidth">
+        <el-radio-button :label="true">是</el-radio-button>
+        <el-radio-button :label="false">否</el-radio-button>
+      </el-radio-group>
+    </el-form-item>
+
+  </el-form>
+</template>
+
+<script lang="ts" setup>
+import {
+  ElForm, ElFormItem, ElInput, ElRadioGroup, ElRadioButton,
+} from 'element-plus'
+import {inject, nextTick, ref} from "vue";
+import {vFormActiveElementKey} from "@/config/app.keys";
+import FormItemTooltip from "../../FormItemTooltip.vue"
+
+
+const vFormSelectElem = inject(vFormActiveElementKey)
+
+
+</script>
+
+<style scoped>
+
+</style>

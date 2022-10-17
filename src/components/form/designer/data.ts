@@ -3,51 +3,6 @@ import {genId} from "@/components/form/designer/util/common";
 
 
 export const InputComponents: CandidateComponentConfig[] = [
-
-  // {
-  //   id: genId(),
-  //   icon: 'TextField',
-  //   component: 'el-input',
-  //   category: 'form-item',
-  //   title: "单行文本框",
-  //   formItemAttrs: {
-  //     prop: genId(),
-  //     label: "单行文本框",
-  //     labelWidth: "120px",
-  //     required: false,
-  //     error: '',
-  //     showMessage: true,
-  //     inlineMessage: false,
-  //     size: 'default'
-  //   },
-  //   attrs: {
-  //     type: 'text',
-  //     showWordLimit: false,
-  //     placeholder: '',
-  //     clearable: false,
-  //     showPassword: false,
-  //     disabled: false,
-  //     size: 'default',
-  //     rows: 2,
-  //     autoresize: false,
-  //     autocomplete: 'off',
-  //     name: '',
-  //     readonly: false,
-  //     max: undefined,
-  //     min: undefined,
-  //     step: undefined,
-  //     resize: 'none',
-  //     autofocus: false,
-  //     form: '',
-  //     label: '',
-  //     tabindex: undefined,
-  //     validateEvent: true,
-  //     inputStyle: '',
-  //     style: {
-  //       width: '100%',
-  //     }
-  //   }
-  // },
   {
     id: genId(),
     icon: 'TextField',
@@ -66,14 +21,13 @@ export const InputComponents: CandidateComponentConfig[] = [
     },
     attrs: {
       value: '1111111',
-      inputProps: {
-        placeholder: '输入字符串',
-        clearable: false,
-        showWordLimit: false,
-      },
-      style: {
-        width: '100%',
-      }
+      placeholder: '输入字符串',
+      clearable: false,
+      showWordLimit: false,
+      size: 'default',
+      autofocus: false,
+      validateEvent: false,
+      style: `width: 100%`
     }
   },
   {
@@ -94,25 +48,27 @@ export const InputComponents: CandidateComponentConfig[] = [
     },
     attrs: {
       value: '1111111',
-      inputAreaProps: {
-        placeholder: '输入字符串',
-        clearable: false,
-        showWordLimit: false,
-      },
-      style: {
-        width: '100%',
-      }
+      placeholder: '输入字符串',
+      clearable: false,
+      showWordLimit: false,
+      size: 'default',
+      rows: 2,
+      autoresize: true,
+      resize: 'none',
+      autofocus:false,
+      validateEvent: false,
+      style: `width: 100%`
     }
   },
   {
     id: genId(),
-    icon: 'Select',
-    component: 'el-select',
+    icon: 'TextField',
+    component: 'single-select',
     category: 'form-item',
-    title: "下拉框",
+    title: "下拉单选框",
     formItemAttrs: {
       prop: genId(),
-      label: "下拉框",
+      label: "下拉单选框",
       labelWidth: "120px",
       required: false,
       error: '',
@@ -121,84 +77,113 @@ export const InputComponents: CandidateComponentConfig[] = [
       size: 'default'
     },
     attrs: {
-      multiple: false,
-      disabled: false,
-      size: 'default',
+      placeholder: '选择一个选项',
       clearable: false,
-      collapseTags: false,
-      collapseTagsTooltip: false,
-      multipleLimit: 0,
-      name: '',
-      effect: 'light',
-      autocomplete: 'off',
-      placeholder: '',
-      filterable: false,
-      allowCreate: false,
-      // filterMethod: new Function('() => {}'),
-      remote: false,
-      // remoteMethod: new Function('() => {}'),
-      loading: false,
-      loadingText: 'Loading',
-      noMatchText: 'No matching data',
-      noDataText: 'No data',
-      popperClass: '',
-      reserveKeyword: true,
-      defaultFirstOption: false,
-      teleported: true,
-      persistent: true,
-      automaticDropdown: false,
-      // clearIcon: 'CircleClose',
-      fitInputWidth: true,
-      // suffixIcon: 'ArrowUp',
-      tagType: 'info',
-      style: {
-        width: '100%',
-      }
+      showWordLimit: false,
+      size: 'default',
+      options: [
+        {
+          id: '1',
+          name: 'Option1',
+          disblaed: false,
+        },
+        {
+          id: '2',
+          name: 'Option2',
+          disblaed: true,
+        },
+        {
+          id: '3',
+          name: 'Option3',
+          disblaed: false,
+        },
+      ],
+      style: `width: 100%`
+    }
+  },
+  {
+    id: genId(),
+    icon: 'TextField',
+    component: 'multi-select',
+    category: 'form-item',
+    title: "下拉多选框",
+    formItemAttrs: {
+      prop: genId(),
+      label: "下拉多选框",
+      labelWidth: "120px",
+      required: false,
+      error: '',
+      showMessage: true,
+      inlineMessage: false,
+      size: 'default'
     },
-    options: {
-      type: 'fixed',
-      value: [
+    attrs: {
+      placeholder: '选择多个选项',
+      clearable: false,
+      showWordLimit: false,
+      size: 'default',
+      options: [
         {
-          label: 'Option1',
-          value: 1,
+          id: '1',
+          name: 'Option1',
+          disblaed: false,
         },
         {
-          label: 'Option2',
-          value: 2,
+          id: '2',
+          name: 'Option2',
+          disblaed: true,
         },
         {
-          label: 'Option3',
-          value: 3,
+          id: '3',
+          name: 'Option3',
+          disblaed: false,
         },
-        {
-          label: 'Option4',
-          value: 4,
-        },
-      ]
+      ],
+      style: `width: 100%`
     }
   },
   {
     id: genId(),
     icon: 'User',
-    component: 'user-selector-input',
+    component: 'user-select',
     category: 'form-item',
-    title: "用户输入框",
+    title: "用户单选框",
     formItemAttrs: {
       prop: genId(),
-      label: "用户输入框",
+      label: "用户单选框",
       labelWidth: "120px",
       required: false,
       error: '',
       showMessage: true,
       inlineMessage: false,
-      size: 'default'
+      size: 'default',
     },
     attrs: {
-      multiple: false,
+      multi: false,
       placeholder: '',
-      style: {
-        width: '100%'
-      }
+      style: `width: 100%`
+    }
+  },
+  {
+    id: genId(),
+    icon: 'User',
+    component: 'user-select',
+    category: 'form-item',
+    title: "用户多选框",
+    formItemAttrs: {
+      prop: genId(),
+      label: "用户多选框",
+      labelWidth: "120px",
+      required: false,
+      error: '',
+      showMessage: true,
+      inlineMessage: false,
+      size: 'default',
+    },
+    attrs: {
+      multi: true,
+      placeholder: '',
+      style: `width: 100%`
     }
   },
 ]

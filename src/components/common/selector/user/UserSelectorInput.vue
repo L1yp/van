@@ -17,6 +17,7 @@
       tag-type="success"
       :placeholder="placeholder"
       value-key="id"
+      :disabled="props.disabled"
       ref="selectRef"
       style="width: 100%"
     >
@@ -38,16 +39,17 @@
 
 <script lang="ts" setup>
 import { ElSelect, ElOption, ElMessage } from "element-plus";
-import { computed, ref, toRaw, watch } from "vue";
+import { computed, inject, ref, toRaw, watch } from "vue";
 import UserSelectorModal from "./UserSelectorModal.vue";
 import { useUserData } from "@/service/system/user";
+import { userMapKey } from "@/config/app.keys";
 
 interface Props {
   multiple?: boolean
   placeholder?: string
-  modelValue: string | string[] | null
+  modelValue?: string | string[] | null
   varOptions?: UserView[] // 变量选项: 本人, 本部门, 下级部门
-  userMap: Map<string, UserView>
+  disabled?: boolean
 }
 
 interface Emits {
@@ -56,37 +58,39 @@ interface Emits {
 
 const selectRef = ref<InstanceType<typeof ElSelect>>()
 const props = withDefaults(defineProps<Props>(), {
+  disabled: false,
   multiple: false,
   placeholder: '输入用户搜索或双击弹框',
 })
 const emits = defineEmits<Emits>()
 
+const userMap = inject(userMapKey)
 
 const selectedElems = computed<UserView[]>({
   get: () => {
-    if (!props.modelValue) {
+    if (!props.modelValue || !props.modelValue) {
       return []
     }
     if (props.multiple) {
-      if(!(props.modelValue as string[]).every(it => props.userMap.has(it))) {
+      if(!(props.modelValue as string[]).every(it => userMap.has(it))) {
         console.warn('cannot find userInfo struct in userMap')
       }
-      return (props.modelValue as string[]).map(it => props.userMap?.get(it)!)
+      return (props.modelValue as string[]).map(it => userMap?.get(it)!)
 
     } else {
-      if (props.modelValue && !props.userMap.has(props.modelValue as string)) {
+      if (props.modelValue && !userMap.has(props.modelValue as string)) {
         console.warn('cannot find userInfo struct in userMap')
       }
-      return props.modelValue ? [props.userMap.get(props.modelValue as string)!] : []
+      return props.modelValue ? [userMap.get(props.modelValue as string)!] : []
     }
 
   },
   set: v => {
-    v.forEach(it => props.userMap?.set(it.id, it))
+    v.forEach(it => userMap?.set(it.id, it))
     if (props.multiple) {
       emits('update:modelValue', v?.length ? v.map(it => it.id) : [])
     } else {
-      emits('update:modelValue', v?.length ? v[0].id : null)
+      emits('update:modelValue', v?.length ? v[0].id : '')
     }
 
   }

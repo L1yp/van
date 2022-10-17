@@ -50,7 +50,8 @@
     @cancel="dialogInfo.visible = false"
     @confirm="dialogInfo.visible = false"
   >
-    <v-form-render :schemes="formComponentList" :mode="'edit'"></v-form-render>
+    <v-form-render :schemes="formComponentList" :mode="'edit'" :form-data="formData"></v-form-render>
+    <pre> {{ JSON.stringify(formData) }} </pre>
   </v-dialog>
 
 </template>
@@ -63,7 +64,6 @@ import {CandidateComponentConfig, ComponentConfig, FormFieldMode} from "@/compon
 import NestedDragItem from "@/components/form/designer/NestedDragItem.vue";
 import FormPropertyPanel from "@/components/form/designer/FormPropertyPanel.vue"
 import CandidateComponentPage from "@/components/form/designer/candidate/CandidateComponentPage.vue";
-import { genId, transCloneComponent } from '@/components/form/designer/util/common'
 import {useIcon} from "@/components/common/util";
 import JsonEditor from "@/components/common/JsonEditor.vue";
 import { InputComponents, OutputComponents, LayoutComponents } from "@/components/form/designer/data"
@@ -121,6 +121,7 @@ function handleClickClear() {
   formComponentList.value = []
 }
 
+const formData = ref({})
 function handleClickPreview() {
   dialogInfo.value.visible =  true
 }

@@ -51,6 +51,10 @@
           <el-collapse-item name="component" title="组件配置">
             <input-config v-if="vFormSelectElem?.component === 'el-input'"></input-config>
             <text-input-config v-if="vFormSelectElem?.component === 'text-input'"></text-input-config>
+            <text-area-input-config v-if="vFormSelectElem?.component === 'text-area-input'"></text-area-input-config>
+            <single-select-config v-if="vFormSelectElem?.component === 'single-select'"></single-select-config>
+            <multi-select-config v-if="vFormSelectElem?.component === 'multi-select'"></multi-select-config>
+            <user-selector-input-config v-if="vFormSelectElem?.component === 'user-select'"></user-selector-input-config>
             <row-config v-if="vFormSelectElem?.component === 'el-row'"></row-config>
             <col-config v-if="vFormSelectElem?.component === 'el-col'"></col-config>
             <select-config v-if="vFormSelectElem?.component === 'el-select'"></select-config>
@@ -83,6 +87,9 @@ import {computed, inject, ref} from "vue";
 import {vFormActiveElementKey} from "@/config/app.keys";
 import InputConfig from "@/components/form/designer/config/InputConfig.vue";
 import TextInputConfig from "@/components/form/designer/config/TextInputConfig.vue";
+import TextAreaInputConfig from "@/components/form/designer/config/TextAreaInputConfig.vue";
+import SingleSelectConfig from "@/components/form/designer/config/SingleSelectConfig.vue";
+import MultiSelectConfig from "@/components/form/designer/config/MultiSelectConfig.vue";
 import RowConfig from "@/components/form/designer/config/RowConfig.vue";
 import ColConfig from "@/components/form/designer/config/ColConfig.vue";
 import SelectConfig from "@/components/form/designer/config/SelectConfig.vue";
