@@ -50,7 +50,17 @@
     @cancel="dialogInfo.visible = false"
     @confirm="dialogInfo.visible = false"
   >
-    <v-form-render :schemes="formComponentList" :mode="'edit'" :form-data="formData"></v-form-render>
+    <div>
+      <el-radio-group v-model="formMode">
+        <el-radio-button label="design">设计</el-radio-button>
+        <el-radio-button label="edit">编辑</el-radio-button>
+        <el-radio-button label="read">预览</el-radio-button>
+      </el-radio-group>
+    </div>
+
+    <div style="margin-top: 16px"></div>
+
+    <v-form-render :schemes="formComponentList" :mode="formMode" :form-data="formData"></v-form-render>
     <pre> {{ JSON.stringify(formData) }} </pre>
   </v-dialog>
 
@@ -59,7 +69,7 @@
 <script lang="ts" setup>
 import {computed, inject, ref, provide} from "vue";
 import {mainHeightKey, mainWidthKey, themeKey, vFormActiveElementKey} from "@/config/app.keys";
-import { ElForm, ElScrollbar, ElTabs, ElTabPane, ElButton } from "element-plus"
+import { ElForm, ElScrollbar, ElTabs, ElTabPane, ElButton, ElRadioGroup, ElRadioButton } from "element-plus"
 import {CandidateComponentConfig, ComponentConfig, FormFieldMode} from "@/components/form/types";
 import NestedDragItem from "@/components/form/designer/NestedDragItem.vue";
 import FormPropertyPanel from "@/components/form/designer/FormPropertyPanel.vue"
@@ -90,6 +100,8 @@ const formPropertyPanelHeight = computed<string>(() => `calc(${containerHeight.v
 
 const vFormActiveElement = ref<ComponentConfig>(null)
 provide(vFormActiveElementKey, vFormActiveElement)
+
+const formMode = ref<FormFieldMode>('edit')
 
 const mode = computed<FormFieldMode>(() => 'design')
 provide(formModeKey, mode)

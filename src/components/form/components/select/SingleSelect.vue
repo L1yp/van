@@ -39,7 +39,7 @@ import { formModeKey } from "@/components/form/state.key";
 
 interface Props {
   mode?: FormFieldMode
-  modelValue?: string
+  value?: string
   options: object[]
   labelField?: string
   valueField?: string
@@ -47,7 +47,7 @@ interface Props {
 }
 
 interface Emits {
-  (e: 'update:modelValue', v: string): void
+  (e: 'update:value', v: string): void
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -59,12 +59,12 @@ const props = withDefaults(defineProps<Props>(), {
 const emits = defineEmits<Emits>()
 
 const val = computed({
-  get: () => props.modelValue,
-  set: v => emits('update:modelValue', v)
+  get: () => props.value,
+  set: v => emits('update:value', v)
 })
 
 const displayValue = computed(() => {
-  return props.options.find(it => it[props.valueField] === props.modelValue)?.[props.labelField] || ''
+  return props.options.find(it => it[props.valueField] === props.value)?.[props.labelField] || ''
 })
 
 const formMode = inject(formModeKey)

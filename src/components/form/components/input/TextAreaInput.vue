@@ -6,10 +6,10 @@
     <el-input v-model="val" type="textarea" v-bind="$props"  />
   </template>
   <template v-else-if="cMode === 'read' ">
-    <span v-text="props.modelValue"></span>
+    <span v-text="props.value"></span>
   </template>
   <template v-else-if="cMode === 'hidden' ">
-    <span v-show="false" v-text="props.modelValue"></span>
+    <span v-show="false" v-text="props.value"></span>
   </template>
 </template>
 
@@ -21,11 +21,11 @@ import {formModeKey} from "@/components/form/state.key";
 
 interface Props {
   mode?: FormFieldMode
-  modelValue?: string
+  value?: string
 }
 
 interface Emits {
-  (e: 'update:modelValue', v: string): void
+  (e: 'update:value', v: string): void
 }
 
 const props = defineProps<Props>()
@@ -33,8 +33,8 @@ const props = defineProps<Props>()
 const emits = defineEmits<Emits>()
 
 const val = computed<string>({
-  get: () => props.modelValue || '',
-  set: v => emits('update:modelValue', v)
+  get: () => props.value || '',
+  set: v => emits('update:value', v)
 })
 
 const formMode = inject(formModeKey)

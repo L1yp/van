@@ -22,13 +22,13 @@ import { userMapKey } from "@/config/app.keys";
 
 interface Props {
   mode?: FormFieldMode
-  modelValue?: string
+  value?: string
   multi?: boolean
   placeholder?: string
 }
 
 interface Emits {
-  (e: 'update:modelValue', v: string): void
+  (e: 'update:value', v: string): void
 }
 
 const userMap = inject(userMapKey)
@@ -39,16 +39,16 @@ const emits = defineEmits<Emits>()
 const val = computed({
   get: () => {
     if (props.multi) {
-      return props.modelValue?.split(',') || []
+      return props.value?.split(',') || []
     } else {
-      return props.modelValue || ''
+      return props.value || ''
     }
   },
   set: v => {
     if (props.multi) {
-      emits('update:modelValue', (v as string[])?.join(',') || '')
+      emits('update:value', (v as string[])?.join(',') || '')
     } else {
-      emits('update:modelValue', v as string)
+      emits('update:value', v as string)
     }
   }
 })
@@ -66,7 +66,7 @@ const cMode = computed<FormFieldMode>(() => {
 })
 
 const displayValue = computed(() => {
-  const userIds = props.modelValue?.split(',') || []
+  const userIds = props.value?.split(',') || []
   return userIds.map(it => userMap.get(it)?.nickname || it).join(',')
 })
 

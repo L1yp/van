@@ -10,7 +10,7 @@
 
 
       <template v-else>
-        <component :is="item.component" v-bind="item.attrs" v-model="formData[item.id]"></component>
+        <component :is="item.component" v-bind="item.attrs" v-model:value="formData[item.id]"></component>
       </template>
     </el-form-item>
   </template>

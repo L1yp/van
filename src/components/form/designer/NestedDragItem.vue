@@ -37,7 +37,7 @@
             <component
               :is="element.component"
               v-bind="element.attrs"
-              v-model="formData[element.id]"
+              v-model:value="formData[element.id]"
             >
             </component>
           </el-form-item>

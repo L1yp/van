@@ -79,23 +79,22 @@ export const InputComponents: CandidateComponentConfig[] = [
     attrs: {
       placeholder: '选择一个选项',
       clearable: false,
-      showWordLimit: false,
       size: 'default',
       options: [
         {
           id: '1',
           name: 'Option1',
-          disblaed: false,
+          disabled: false,
         },
         {
           id: '2',
           name: 'Option2',
-          disblaed: true,
+          disabled: true,
         },
         {
           id: '3',
           name: 'Option3',
-          disblaed: false,
+          disabled: false,
         },
       ],
       style: `width: 100%`
@@ -120,23 +119,22 @@ export const InputComponents: CandidateComponentConfig[] = [
     attrs: {
       placeholder: '选择多个选项',
       clearable: false,
-      showWordLimit: false,
       size: 'default',
       options: [
         {
           id: '1',
           name: 'Option1',
-          disblaed: false,
+          disabled: false,
         },
         {
           id: '2',
           name: 'Option2',
-          disblaed: true,
+          disabled: true,
         },
         {
           id: '3',
           name: 'Option3',
-          disblaed: false,
+          disabled: false,
         },
       ],
       style: `width: 100%`

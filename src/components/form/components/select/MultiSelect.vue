@@ -1,6 +1,12 @@
 <template>
   <template v-if="cMode === 'design'">
-    <el-select v-model="val" multiple disabled v-bind="$props">
+    <el-select 
+      v-model="val" 
+      multiple 
+      disabled 
+      :value-key="props.valueField" 
+      v-bind="$props"
+    >
       <el-option
         v-for="option in props.options"
         :key="option[props.valueField]"
@@ -12,7 +18,14 @@
     </el-select>
   </template>
   <template v-else-if="cMode === 'edit'">
-    <el-select v-model="val" multiple collapse-tags collapse-tags-tooltip v-bind="$props">
+    <el-select 
+      v-model="val" 
+      multiple
+      collapse-tags
+      collapse-tags-tooltip
+      :value-key="props.valueField" 
+      v-bind="$props"
+    >
       <el-option
         v-for="option in props.options"
         :key="option[props.valueField]"
@@ -34,12 +47,12 @@
 <script lang="ts" setup>
 import { ElSelect, ElOption } from 'element-plus'
 import { FormFieldMode } from "@/components/form/types";
-import { computed, inject } from "vue";
+import { computed, inject, ref } from "vue";
 import { formModeKey } from "@/components/form/state.key";
 
 interface Props {
   mode?: FormFieldMode
-  modelValue?: string
+  value?: string
   options: object[]
   labelField?: string
   valueField?: string
@@ -47,7 +60,7 @@ interface Props {
 }
 
 interface Emits {
-  (e: 'update:modelValue', v: string): void
+  (e: 'update:value', v: string): void
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -59,12 +72,32 @@ const props = withDefaults(defineProps<Props>(), {
 const emits = defineEmits<Emits>()
 
 const val = computed({
-  get: () => props.modelValue?.split(',') || [],
-  set: v => emits('update:modelValue', v?.join(',') || '')
+  get: () => {
+    if (props.value) {
+      const result = props.value?.split(',') || []
+      console.log('multi select modelValue get', result);
+      return result
+    } else {
+      return []
+    }
+  },
+  set: v => {
+    const value = v?.join(',') || ''
+    console.log('multi select modelValue set', value);
+    
+    emits('update:value', value)
+  }
 })
 
 const displayValue = computed(() => {
-  return props.options.find(it => it[props.valueField] === props.modelValue)?.[props.labelField] || ''
+  let vals = []
+  if (props.value) {
+    vals = props.value.split(',')
+  }
+  const optionsMap = new Map(props.options.map(it => [it[props.valueField], it]))
+  const display = vals.map(it => optionsMap.get(it)?.[props.labelField] || it).join(',')
+
+  return display
 })
 
 const formMode = inject(formModeKey)
