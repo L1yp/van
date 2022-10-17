@@ -13,6 +13,7 @@
           <el-row
             v-bind="element.attrs"
             @click.stop="handleClickElement(element)"
+            style="min-height: 120px"
             :class="vFormActiveElement === element ? ['drag-selected'] : []"
           >
             <el-col
@@ -20,9 +21,11 @@
               v-for="item in element.children"
               :key="item.id"
               @click.stop="handleClickElement(item)"
+              class="layout-col"
               :class="vFormActiveElement === item ? ['drag-selected'] : []"
+              style="min-height: 80px; padding: 6px; border: 2px inset rgba(0,0,0,.1)"
             >
-              <nested-drag-item style="width: 100%; height: 100%; " :children="item.children"></nested-drag-item>
+              <nested-drag-item style="width: 100%; height: 100%; background-color: #fff; " :children="item.children"></nested-drag-item>
             </el-col>
           </el-row>
         </template>
@@ -68,7 +71,7 @@ export default defineComponent({
   name: "NestedDragItem",
   components: {
     Draggable, ElForm, ElFormItem, ElInput, ElSelect, ElOption, ElRow, ElCol, SVGIcon, ElCheckboxGroup, ElCheckbox,
-    UserSelectorInput, DeptSelectorInput, TextInput, TextAreaInput, SingleSelect, MultiSelect, UserSelect, 
+    UserSelectorInput, DeptSelectorInput, TextInput, TextAreaInput, SingleSelect, MultiSelect, UserSelect,
   },
   props: {
     children: Array
@@ -86,7 +89,7 @@ export default defineComponent({
     })
 
     const vFormActiveElement = inject(vFormActiveElementKey)
-    
+
     const formData = ref({})
 
     function handleClickElement(elem) {
@@ -132,6 +135,10 @@ export default defineComponent({
 
 .drag-selected {
   outline: 2px solid #409EFF;
+}
+
+.layout-col {
+  padding: 6px;
 }
 
 </style>

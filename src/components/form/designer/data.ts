@@ -32,7 +32,7 @@ export const InputComponents: CandidateComponentConfig[] = [
   },
   {
     id: genId(),
-    icon: 'TextField',
+    icon: 'Edit',
     component: 'text-area-input',
     category: 'form-item',
     title: "多行文本框",
@@ -62,7 +62,7 @@ export const InputComponents: CandidateComponentConfig[] = [
   },
   {
     id: genId(),
-    icon: 'TextField',
+    icon: 'RadioButton',
     component: 'single-select',
     category: 'form-item',
     title: "下拉单选框",
@@ -102,7 +102,7 @@ export const InputComponents: CandidateComponentConfig[] = [
   },
   {
     id: genId(),
-    icon: 'TextField',
+    icon: 'CheckboxChecked',
     component: 'multi-select',
     category: 'form-item',
     title: "下拉多选框",
@@ -193,10 +193,6 @@ export const LayoutComponents: CandidateComponentConfig[] = [
     category: 'layout',
     title: "栅格",
     attrs: {
-      style: {
-        minHeight: '120px',
-        marginTop: '16px'
-      },
       gutter: 0,
       justify: 'start',
       align: 'top',
@@ -207,16 +203,13 @@ export const LayoutComponents: CandidateComponentConfig[] = [
         id: genId(),
         component: 'el-col',
         category: 'layout',
-        title: "栅格",
+        title: "格子",
         attrs: {
           span: 12,
           offset: 0,
           push: 0,
           pull: 0,
           tag: 'div',
-          style: {
-            minHeight: '80px'
-          }
         },
         children: [],
       },
@@ -224,16 +217,13 @@ export const LayoutComponents: CandidateComponentConfig[] = [
         id: genId(),
         component: 'el-col',
         category: 'layout',
-        title: "栅格",
+        title: "格子",
         attrs: {
           span: 12,
           offset: 0,
           push: 0,
           pull: 0,
           tag: 'div',
-          style: {
-            minHeight: '80px'
-          }
         },
         children: [],
       }

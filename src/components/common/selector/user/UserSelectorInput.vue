@@ -127,7 +127,7 @@ const selectKey = ref<number>(Math.random())
 const loading = ref<boolean>(false)
 
 function handleDblClick() {
-  modalVisible.value = true
+  !props.disabled && (modalVisible.value = true)
 }
 
 const { tableData, searchUserList } = useUserData(loading)
