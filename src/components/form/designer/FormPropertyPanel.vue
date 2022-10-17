@@ -50,6 +50,7 @@
           </el-collapse-item>
           <el-collapse-item name="component" title="组件配置">
             <input-config v-if="vFormSelectElem?.component === 'el-input'"></input-config>
+            <text-input-config v-if="vFormSelectElem?.component === 'text-input'"></text-input-config>
             <row-config v-if="vFormSelectElem?.component === 'el-row'"></row-config>
             <col-config v-if="vFormSelectElem?.component === 'el-col'"></col-config>
             <select-config v-if="vFormSelectElem?.component === 'el-select'"></select-config>
@@ -81,6 +82,7 @@ import {
 import {computed, inject, ref} from "vue";
 import {vFormActiveElementKey} from "@/config/app.keys";
 import InputConfig from "@/components/form/designer/config/InputConfig.vue";
+import TextInputConfig from "@/components/form/designer/config/TextInputConfig.vue";
 import RowConfig from "@/components/form/designer/config/RowConfig.vue";
 import ColConfig from "@/components/form/designer/config/ColConfig.vue";
 import SelectConfig from "@/components/form/designer/config/SelectConfig.vue";

@@ -1,3 +1,23 @@
+export type FormFieldMode = 'design' | 'edit' | 'read' | 'hidden'
+export type InputFormatter = (value: string | number) => string
+export type InputParser = (string) => string
+export type InputProps = {
+  placeholder?: string
+  clearable?: boolean
+  formatter?: InputFormatter
+  parser?: InputParser
+  showWordLimit?: boolean
+}
+
+export type InputAreaProps = {
+  placeholder?: string
+  clearable?: boolean
+  formatter?: InputFormatter
+  parser?: InputParser
+}
+
+
+
 export interface VFormDesignerScheme {
   width: string
   labelPosition: 'left' | 'right' | 'top'

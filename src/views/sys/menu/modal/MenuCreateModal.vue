@@ -11,7 +11,7 @@
   <el-form :model="formData" label-width="100px" scroll-to-error>
     <ElRow>
       <ElFormItem label="类型" prop="type">
-        <ElRadioGroup v-model="formData.type">
+        <ElRadioGroup v-model="formData.type" :disabled="props.mode === 'update'">
           <ElRadioButton label="FOLDER">文件夹</ElRadioButton>
           <ElRadioButton label="TAB">页面容器</ElRadioButton>
           <ElRadioButton label="PAGE">页面</ElRadioButton>

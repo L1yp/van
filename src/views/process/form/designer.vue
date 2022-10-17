@@ -50,7 +50,7 @@
     @cancel="dialogInfo.visible = false"
     @confirm="dialogInfo.visible = false"
   >
-    <v-form-render :schemes="formComponentList"></v-form-render>
+    <v-form-render :schemes="formComponentList" :mode="'edit'"></v-form-render>
   </v-dialog>
 
 </template>
@@ -59,7 +59,7 @@
 import {computed, inject, ref, provide} from "vue";
 import {mainHeightKey, mainWidthKey, themeKey, vFormActiveElementKey} from "@/config/app.keys";
 import { ElForm, ElScrollbar, ElTabs, ElTabPane, ElButton } from "element-plus"
-import {CandidateComponentConfig, ComponentConfig} from "@/components/form/types";
+import {CandidateComponentConfig, ComponentConfig, FormFieldMode} from "@/components/form/types";
 import NestedDragItem from "@/components/form/designer/NestedDragItem.vue";
 import FormPropertyPanel from "@/components/form/designer/FormPropertyPanel.vue"
 import CandidateComponentPage from "@/components/form/designer/candidate/CandidateComponentPage.vue";
@@ -69,6 +69,7 @@ import JsonEditor from "@/components/common/JsonEditor.vue";
 import { InputComponents, OutputComponents, LayoutComponents } from "@/components/form/designer/data"
 import VDialog from "@/components/dialog/VDialog.vue";
 import VFormRender from "@/components/form/designer/VFormRender.vue";
+import {formModeKey} from "@/components/form/state.key";
 
 const viewIcon = useIcon('View')
 const deleteIcon = useIcon('Delete')
@@ -90,7 +91,8 @@ const formPropertyPanelHeight = computed<string>(() => `calc(${containerHeight.v
 const vFormActiveElement = ref<ComponentConfig>(null)
 provide(vFormActiveElementKey, vFormActiveElement)
 
-
+const mode = computed<FormFieldMode>(() => 'design')
+provide(formModeKey, mode)
 
 const formComponentList = ref<ComponentConfig[]>([])
 

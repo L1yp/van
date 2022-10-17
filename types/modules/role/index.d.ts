@@ -6,6 +6,16 @@ declare interface RoleView {
   update_by: string;
 }
 
-declare interface RolePageParam extends PageParam {
+declare interface RoleAddParam {
   name: string
+  order_no: number
+}
+
+declare interface RoleUpdateParam extends RoleAddParam {
+  id: string
+}
+
+declare interface RoleMenuBindParam {
+  role_id: string
+  menu_ids: string[]
 }

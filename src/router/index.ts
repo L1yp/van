@@ -114,7 +114,7 @@ export function uninstallLayoutContentRoute() {
 
 function transMenuToRoute(options: MenuView[]) {
   for (let menuOption of options) {
-    if (!menuOption.children?.length) {
+    if (['PAGE', 'TAB'].includes(menuOption.type)) {
       let parentNode: MenuView | undefined = menuOption
       // 找不到图标就找上层 直到根节点为止
       while(parentNode && !parentNode.icon) {
@@ -123,19 +123,17 @@ function transMenuToRoute(options: MenuView[]) {
 
       let icon = parentNode?.icon || null
 
-      if (menuOption.type === 'PAGE') {
-        const child = {
-          path: menuOption.path,
-          name: menuOption.name,
-          component: routeToView(menuOption.component),
-          redirect: "",
-          meta: {
-            ...toRaw(menuOption),
-            icon,
-          }
+      const child = {
+        path: menuOption.path,
+        name: menuOption.name,
+        component: routeToView(menuOption.component),
+        redirect: "",
+        meta: {
+          ...toRaw(menuOption),
+          icon,
         }
-        layoutRoute.children?.push(child)
       }
+      layoutRoute.children?.push(child)
 
 
     } else {

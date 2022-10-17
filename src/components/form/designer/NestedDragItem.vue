@@ -44,17 +44,6 @@
                 >
                 </el-option>
               </template>
-              <template v-if="element.options?.type === 'dict'">
-                <el-option
-                  :label="item.label"
-                  :value="item.value"
-                  :key="item.value"
-                  v-for="item in filterDictValue(element.options?.value?.scope, element.options?.value?.ident)"
-                >
-
-                </el-option>
-
-              </template>
               <template v-if="element.options?.type === 'url'">
 
               </template>
@@ -88,18 +77,18 @@ import Draggable from "vuedraggable";
 import {defineComponent, inject, nextTick, ref} from "vue";
 import { ElForm, ElFormItem, ElInput, ElSelect, ElRow, ElCol, ElCheckboxGroup, ElCheckbox, ElOption } from "element-plus"
 import SVGIcon from "@/components/common/SVGIcon.vue";
-import {dictValuesKey, vFormActiveElementKey} from "@/config/app.keys";
 import emitter from "@/event/mitt";
-import DictInput from "@/components/dict/DictInput.vue";
-import DictTag from "@/components/dict/DictTag.vue";
 import UserSelectorInput from "@/components/common/selector/user/UserSelectorInput.vue";
 import DeptSelectorInput from "@/components/common/selector/dept/DeptSelectorInput.vue";
+import TextInput from "../components/input/TextInput.vue"
+import TextAreaInput from "../components/input/TextAreaInput.vue"
+import { vFormActiveElementKey } from "@/config/app.keys";
 
 export default defineComponent({
   name: "NestedDragItem",
   components: {
     Draggable, ElForm, ElFormItem, ElInput, ElSelect, ElOption, ElRow, ElCol, SVGIcon, ElCheckboxGroup, ElCheckbox,
-    DictInput, DictTag, UserSelectorInput, DeptSelectorInput,
+    UserSelectorInput, DeptSelectorInput, TextInput, TextAreaInput,
   },
   props: {
     children: Array
@@ -124,13 +113,8 @@ export default defineComponent({
       vFormActiveElement.value = elem
     }
 
-    const dictValues = inject(dictValuesKey)
-    function filterDictValue(scope: string, ident: string) {
-      return dictValues.value.filter(it => it.scope === scope && it.ident === ident)
-    }
-
     return {
-      vFormActiveElement, handleClickElement, formData, filterDictValue
+      vFormActiveElement, handleClickElement, formData
     }
   }
 })

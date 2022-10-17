@@ -1,6 +1,6 @@
 <template>
   <template v-for="menuOption in props.menuOptions" :key="menuOption.id">
-    <template v-if="!menuOption.children || menuOption.children.length === 0">
+    <template v-if="!menuOption.children?.length || ['PAGE', 'TAB'].includes(menuOption.type) ">
       <el-menu-item v-if="!menuOption.hidden" :index="menuOption.path">
         <el-icon  v-if="menuOption.icon && menuOption.icon.length > 0"><SVGIcon :name="menuOption.icon"/></el-icon>
         <template #title>

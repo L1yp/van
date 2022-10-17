@@ -12,11 +12,8 @@ export function findRole() {
 
 /**
  * 添加角色
- * @param name 角色名称
- * @param order_no 角色排序
  */
-export function addRole(name: string, order_no: number) {
-  const data = {name, order_no};
+export function addRole(data: RoleAddParam) {
   return request<RoleView[]>({
     method: 'post',
     url: `/role/add`,
@@ -26,13 +23,8 @@ export function addRole(name: string, order_no: number) {
 
 /**
  * 编辑角色
- * @param {string} id 角色ID
- * @param {string} name 角色名称
- * @param {number} order_no 角色排序
- * @return {Promise<RoleView[]>}
  */
-export function updateRole(id: string, name: string, order_no: number) {
-  const data = {id, name, order_no};
+export function updateRole(data: RoleUpdateParam) {
   return request<RoleView[]>({
     method: 'post',
     url: `/role/update`,
@@ -69,49 +61,20 @@ export function batchDelRole(ids: string) {
  * @param {number} roleId
  * @returns {Promise<number[]>}
  */
-export function menuBound(roleId: string) {
+export function menu(roleId: string) {
   return request<string[]>({
     method: 'get',
-    url: `/role/menu/bound?roleId=${roleId}`
+    url: `/role/menu?roleId=${roleId}`
   })
 }
 
 /**
  * 绑定菜单
- * @param {string} role_id
- * @param {string[]} menu_ids
  */
-export function bindMenu(role_id: string, menu_ids: string[]) {
-  const data = { role_id, menu_ids }
+export function bindMenu(data: RoleMenuBindParam) {
   return request<void>({
     method: 'post',
     url: `/role/menu/bind`,
     data
-  })
-}
-
-
-/**
- * 查询角色绑定的权限列表
- * @param {string} roleId
- * @returns {Promise<string[]>}
- */
-export function permissionBound(roleId: string) {
-  return request<string[]>({
-    method: 'get',
-    url: `/role/permission/bound?roleId=${roleId}`,
-  })
-}
-
-/**
- * 绑定菜单
- * @param {number} role_id
- * @param {number[]} permission_ids
- */
-export function bindPermission(role_id: string, permission_ids: string[]) {
-  return request<void>({
-    method: 'post',
-    url: `/role/permission/bind`,
-    data: { role_id, permission_ids }
   })
 }

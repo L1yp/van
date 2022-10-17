@@ -76,7 +76,7 @@
 <script lang="ts" setup>
 import { ElScrollbar, ElCollapse, ElCollapseItem } from 'element-plus'
 import Draggable from "vuedraggable";
-import {CandidateComponentConfig, ComponentConfig} from "@/components/form/types";
+import { CandidateComponentConfig } from "@/components/form/types";
 import { genId, transCloneComponent } from "../util/common"
 import SVGIcon from "@/components/common/SVGIcon.vue";
 import {computed, inject, ref} from "vue";

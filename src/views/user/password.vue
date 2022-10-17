@@ -1,10 +1,8 @@
 <template>
 
-  <expression-editor/>
 </template>
 
 <script lang="ts" setup>
-import ExpressionEditor from '@/components/expression/editor/ExpressionEditor.vue'
 import { ref } from 'vue'
 
 const columns = ref([

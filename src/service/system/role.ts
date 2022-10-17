@@ -17,10 +17,10 @@ export function useRole(loading?: Ref<boolean>) {
     }
   }
 
-  async function addRole(name: string, orderNo: number) {
+  async function addRole(param: RoleAddParam) {
     try {
       loading && (loading.value = true)
-      await RoleApi.addRole(name, orderNo)
+      await RoleApi.addRole(param)
       roleData.value = await RoleApi.findRole()
       ElMessage.success('新增成功')
     } catch (e) {
@@ -30,10 +30,10 @@ export function useRole(loading?: Ref<boolean>) {
     }
   }
 
-  async function updateRole(id: string, name: string, orderNo: number) {
+  async function updateRole(param: RoleUpdateParam) {
     try {
       loading && (loading.value = true)
-      await RoleApi.updateRole(id, name, orderNo)
+      await RoleApi.updateRole(param)
       roleData.value = await RoleApi.findRole()
       ElMessage.success('更新成功')
     } catch (e) {
@@ -56,7 +56,7 @@ export function useRole(loading?: Ref<boolean>) {
     }
   }
 
-  
+
   async function deleteRoleByIds(ids: string[]) {
     if (!ids?.length) {
       return
@@ -73,8 +73,33 @@ export function useRole(loading?: Ref<boolean>) {
     }
   }
 
+  async function bindMenu(param: RoleMenuBindParam) {
+    try {
+      loading && (loading.value = true)
+      await RoleApi.bindMenu(param)
+      ElMessage.success('绑定成功')
+    } catch (e) {
+      console.error(e)
+      ElMessage.error((e as Error)?.message || '绑定失败')
+    } finally {
+      loading && (loading.value = false)
+    }
+  }
+
+  async function boundMenu(roleId: string) {
+    try {
+      loading && (loading.value = true)
+      return await RoleApi.menu(roleId)
+    } catch (e) {
+      console.error(e)
+      ElMessage.error((e as Error)?.message || '查询绑定菜单失败')
+      return []
+    } finally {
+      loading && (loading.value = false)
+    }
+  }
 
   return {
-    roleData, loadRole, addRole, updateRole, deleteRoleById, deleteRoleByIds,
+    roleData, loadRole, addRole, updateRole, deleteRoleById, deleteRoleByIds, bindMenu, boundMenu
   }
 }

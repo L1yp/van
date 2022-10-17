@@ -3,10 +3,55 @@ import {genId} from "@/components/form/designer/util/common";
 
 
 export const InputComponents: CandidateComponentConfig[] = [
+
+  // {
+  //   id: genId(),
+  //   icon: 'TextField',
+  //   component: 'el-input',
+  //   category: 'form-item',
+  //   title: "单行文本框",
+  //   formItemAttrs: {
+  //     prop: genId(),
+  //     label: "单行文本框",
+  //     labelWidth: "120px",
+  //     required: false,
+  //     error: '',
+  //     showMessage: true,
+  //     inlineMessage: false,
+  //     size: 'default'
+  //   },
+  //   attrs: {
+  //     type: 'text',
+  //     showWordLimit: false,
+  //     placeholder: '',
+  //     clearable: false,
+  //     showPassword: false,
+  //     disabled: false,
+  //     size: 'default',
+  //     rows: 2,
+  //     autoresize: false,
+  //     autocomplete: 'off',
+  //     name: '',
+  //     readonly: false,
+  //     max: undefined,
+  //     min: undefined,
+  //     step: undefined,
+  //     resize: 'none',
+  //     autofocus: false,
+  //     form: '',
+  //     label: '',
+  //     tabindex: undefined,
+  //     validateEvent: true,
+  //     inputStyle: '',
+  //     style: {
+  //       width: '100%',
+  //     }
+  //   }
+  // },
   {
     id: genId(),
     icon: 'TextField',
-    component: 'el-input',
+    component: 'text-input',
     category: 'form-item',
     title: "单行文本框",
     formItemAttrs: {
@@ -20,28 +65,40 @@ export const InputComponents: CandidateComponentConfig[] = [
       size: 'default'
     },
     attrs: {
-      type: 'text',
-      showWordLimit: false,
-      placeholder: '',
-      clearable: false,
-      showPassword: false,
-      disabled: false,
-      size: 'default',
-      rows: 2,
-      autoresize: false,
-      autocomplete: 'off',
-      name: '',
-      readonly: false,
-      max: undefined,
-      min: undefined,
-      step: undefined,
-      resize: 'none',
-      autofocus: false,
-      form: '',
-      label: '',
-      tabindex: undefined,
-      validateEvent: true,
-      inputStyle: '',
+      value: '1111111',
+      inputProps: {
+        placeholder: '输入字符串',
+        clearable: false,
+        showWordLimit: false,
+      },
+      style: {
+        width: '100%',
+      }
+    }
+  },
+  {
+    id: genId(),
+    icon: 'TextField',
+    component: 'text-area-input',
+    category: 'form-item',
+    title: "多行文本框",
+    formItemAttrs: {
+      prop: genId(),
+      label: "多行文本框",
+      labelWidth: "120px",
+      required: false,
+      error: '',
+      showMessage: true,
+      inlineMessage: false,
+      size: 'default'
+    },
+    attrs: {
+      value: '1111111',
+      inputAreaProps: {
+        placeholder: '输入字符串',
+        clearable: false,
+        showWordLimit: false,
+      },
       style: {
         width: '100%',
       }
@@ -122,30 +179,6 @@ export const InputComponents: CandidateComponentConfig[] = [
   },
   {
     id: genId(),
-    icon: 'config',
-    component: 'dict-input',
-    category: 'form-item',
-    title: "字典输入框",
-    formItemAttrs: {
-      prop: genId(),
-      label: "字典输入框",
-      labelWidth: "120px",
-      required: false,
-      error: '',
-      showMessage: true,
-      inlineMessage: false,
-      size: 'default'
-    },
-    attrs: {
-      multiple: false,
-      checkStrictly: false,
-      scope: 'global',
-      ident: 'common_status',
-      valType: 'id'
-    }
-  },
-  {
-    id: genId(),
     icon: 'User',
     component: 'user-selector-input',
     category: 'form-item',
@@ -168,7 +201,6 @@ export const InputComponents: CandidateComponentConfig[] = [
       }
     }
   },
-
 ]
 export const OutputComponents: CandidateComponentConfig[] = []
 export const LayoutComponents: CandidateComponentConfig[] = [

@@ -8,9 +8,6 @@
         </el-select>
       </template>
 
-      <template v-else-if="item.component === 'dict-input'">
-        <dict-input :key="item.id" v-bind="item.attrs" v-model="item.modelValue"></dict-input>
-      </template>
 
       <template v-else>
         <component :is="item.component" v-bind="item.attrs" v-model="item.modelValue"></component>
@@ -47,12 +44,13 @@ import DictInput from "@/components/dict/DictInput.vue";
 import DictTag from "@/components/dict/DictTag.vue";
 import UserSelectorInput from "@/components/common/selector/user/UserSelectorInput.vue";
 import DeptSelectorInput from "@/components/common/selector/dept/DeptSelectorInput.vue";
-
+import TextInput from '@/components/form/components/input/TextInput.vue'
+import TextAreaInput from '@/components/form/components/input/TextAreaInput.vue'
 
 export default defineComponent({
   name: 'VFormNestedItem',
   components: {
-    ElFormItem, ElSelect, ElOption, ElInput, ElRow, ElCol, DictInput, DictTag, UserSelectorInput, DeptSelectorInput,
+    ElFormItem, ElSelect, ElOption, ElInput, ElRow, ElCol, DictInput, DictTag, UserSelectorInput, DeptSelectorInput, TextInput, TextAreaInput,
   },
   props: {
     item: {
