@@ -52,20 +52,20 @@ npm run build
 
 | 模块  | 功能       | 截图                                               |
 |-----|----------|--------------------------------------------------|
-| 系统  | 用户管理     | ![用户管理](docs/images/user-manage.png)             |
-| 系统  | 角色管理     | ![角色管理](docs/images/role-manage.png)             |
-| 系统  | 菜单管理     | ![菜单管理](docs/images/menu-manage.png)             |
-| 系统  | 部门管理     | ![部门管理](docs/images/dept-manage.png)             |
-| 系统  | 字典管理     | ![字典管理](docs/images/dict-manage.png)             |
-| 流程  | 流程模型     | ![流程模型](docs/images/process-model-list.png)      |
-| 流程  | 流程字段     | ![流程字段](docs/images/process-field-list.png)      |
-| 流程  | 流程表单     | ![流程页面(表单)](docs/images/process-page-list.png)   |
-| 流程  | 表单配置     | ![流程表单配置](docs/images/process-page-config.png)   |
-| 流程  | 流程视图(实例) | ![流程实例列表](docs/images/process-instance-list.png) |
-| 流程  | 流程设计器    | ![流程设计器](docs/images/process-designer.png)       |
-| 流程  | 流程详情     | ![流程详情](docs/images/process-info.png)            |
-| 流程  | 流程历史     | ![流程历史](docs/images/process-history.png)         |
-| 流程  | 在线表单     | ![在线表单](docs/images/online-form.png)             |
+| 系统  | 用户管理     | ![用户管理](images/user-manage.png)             |
+| 系统  | 角色管理     | ![角色管理](images/role-manage.png)             |
+| 系统  | 菜单管理     | ![菜单管理](images/menu-manage.png)             |
+| 系统  | 部门管理     | ![部门管理](images/dept-manage.png)             |
+| 系统  | 字典管理     | ![字典管理](images/dict-manage.png)             |
+| 流程  | 流程模型     | ![流程模型](images/process-model-list.png)      |
+| 流程  | 流程字段     | ![流程字段](images/process-field-list.png)      |
+| 流程  | 流程表单     | ![流程页面(表单)](images/process-page-list.png)   |
+| 流程  | 表单配置     | ![流程表单配置](images/process-page-config.png)   |
+| 流程  | 流程视图(实例) | ![流程实例列表](images/process-instance-list.png) |
+| 流程  | 流程设计器    | ![流程设计器](images/process-designer.png)       |
+| 流程  | 流程详情     | ![流程详情](images/process-info.png)            |
+| 流程  | 流程历史     | ![流程历史](images/process-history.png)         |
+| 流程  | 在线表单     | ![在线表单](images/online-form.png)             |
 
 
 
@@ -177,7 +177,7 @@ npm run build
 </div>
 ```
 
-![组件例子](docs/images/component-demo.png)
+![组件例子](images/component-demo.png)
 
 
 ## 字典组件
@@ -197,7 +197,7 @@ interface DictTagProps {
 }
 ```
 #### 样式
-![字典标签](docs/images/dict-tag.png)
+![字典标签](images/dict-tag.png)
 
 
 ### DictInput 字典输入组件
@@ -219,7 +219,7 @@ interface DictInputProps {
 ```
 
 #### 样式
-![字典标签](docs/images/dict-input.png)
+![字典标签](images/dict-input.png)
 
 ### SVGIcon组件
 
@@ -251,9 +251,9 @@ interface DeptSelectorInputProps {
 }
 ```
 #### 演示截图
-![下拉搜索部门](docs/images/dept-selector-dialog-search.png.png)
+![下拉搜索部门](images/dept-selector-dialog-search.png.png)
 
-![弹框选择部门](docs/images/dept-selector-dropdown-search.png)
+![弹框选择部门](images/dept-selector-dropdown-search.png)
 
 ### UserSelectorInput用户选择器组件
 #### 示例
@@ -273,9 +273,9 @@ interface UserSelectorInputProps {
 
 
 #### 演示截图
-![下拉搜索用户](docs/images/user-selector-dialog-search.png.png)
+![下拉搜索用户](images/user-selector-dialog-search.png.png)
 
-![弹框选择用户](docs/images/user-selector-dropdown-search.png)
+![弹框选择用户](images/user-selector-dropdown-search.png)
 
 ### VDialog 弹框组件
 
@@ -357,21 +357,21 @@ interface FormScheme {
 ## 模型
 > 每个流程模型拥有多个bpmn版本，每个流程模型只允许发布一个版本，默认使用已发布的bpmn版本发起流程。
 
-![流程模型](docs/images/process_model_bpmn.png)
+![流程模型](images/process_model_bpmn.png)
 
 ## 字段
 > 流程模型需要定义字段类型(用于配置 **页面**/**审核人**)
 
-![流程模型字段](docs/images/process_model_field.png)
+![流程模型字段](images/process_model_field.png)
 
 ## 页面
 > 通过字段配置流程页面
 
-![流程模型页面](docs/images/process-model-page-designer.jpg)
+![流程模型页面](images/process-model-page-designer.jpg)
 
 ## 流程设计器
 > 支持的节点列表：用户任务/开始/结束/网关
 
 ### 约定
 如下图，流程走到当前节点，**审核者**可选择**提交**或**驳回**，内部采用瞬时变量控制条件流转。
-![设计器](docs/images/process-designer.png)
+![设计器](images/process-designer.png)
