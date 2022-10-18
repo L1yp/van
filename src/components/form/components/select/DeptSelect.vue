@@ -1,16 +1,5 @@
 <template>
-  <template v-if="cMode === 'design'">
-    <DeptSelectorInput disabled :multiple="props.multiple" :placeholder="props.placeholder" v-model="val"  />
-  </template>
-  <template v-else-if="cMode === 'edit'">
-    <DeptSelectorInput :multiple="props.multiple" :placeholder="props.placeholder" v-model="val" />
-  </template>
-  <template v-else-if="cMode === 'read' ">
-    <span v-text="displayValue"></span>
-  </template>
-  <template v-else-if="cMode === 'hidden' ">
-    <span v-show="false" v-text="displayValue"></span>
-  </template>
+  <DeptSelectorInput v-show="cMode !== 'hidden'" :disabled="cMode === 'design'" :preview="cMode === 'read'" :multiple="props.multiple" :placeholder="props.placeholder" v-model="val"  />
 </template>
 
 <script lang="ts" setup>
@@ -39,14 +28,30 @@ const emits = defineEmits<Emits>()
 const val = computed({
   get: () => {
     if (props.multiple) {
-      return props.value?.split(',') || []
+      if (props.value) {
+        return props.value.split(',')
+      } else {
+        return []
+      }
     } else {
-      return props.value || ''
+      if (props.value) {
+        return props.value
+      }
+      return ''
     }
   },
   set: v => {
     if (props.multiple) {
-      emits('update:value', (v as string[])?.join(',') || '')
+      if (Array.isArray(v)) {
+        if (v.length) {
+          const result = v?.join(',') || ''
+          emits('update:value', result)
+        } else {
+          emits('update:value', '')
+        }
+      } else {
+        console.error(`[error] multiple is true, but modelValue is not array`)
+      }
     } else {
       emits('update:value', v as string)
     }
@@ -67,11 +72,6 @@ const cMode = computed<FormFieldMode>(() => {
 
 const { tableData, loadDept } = useDeptInfo()
 onBeforeMount(loadDept)
-
-const displayValue = computed(() => {
-  const userIds = props.value?.split(',') || []
-  return userIds.map(it => findTreeItemById(tableData.value, 'id', it)?.title || it)?.join(', ')
-})
 
 </script>
 

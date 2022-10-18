@@ -39,9 +39,13 @@ const emits = defineEmits<Emits>()
 const val = computed({
   get: () => {
     if (props.multiple) {
-      return props.value?.split(',') || []
+      if (props.value) {
+        return props.value.split(',')
+      } else {
+        return []
+      }
     } else {
-      return props.value || ''
+      return props.value
     }
   },
   set: v => {

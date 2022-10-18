@@ -1,36 +1,42 @@
 <template>
   <div class="user-selector-input">
-    <el-tree-select
-      :key="selectKey"
-      v-model="selectedElems"
-      :disabled="props.disabled"
-      filterable
-      clearable
-      collapse-tags
-      collapse-tags-tooltip
-      fit-input-width
-      :multiple="props.multiple"
-      @dblclick="handleDblClick"
-      :loading="loading"
-      tag-type="success"
-      :placeholder="placeholder"
-      node-key="id"
-      check-strictly
-      default-expand-all
-      ref="selectRef"
-      style="width: 100%"
-      :props="{ label: 'title', children: 'children' }"
-      :data="varTableOptions"
-    >
+    <template v-if="props.preview">
+      <span v-text="displayValue"></span>
+    </template>
+    <template v-else>
+      <el-tree-select
+        :key="selectKey"
+        v-model="selectedElems"
+        :disabled="props.disabled"
+        filterable
+        clearable
+        collapse-tags
+        collapse-tags-tooltip
+        fit-input-width
+        :multiple="props.multiple"
+        @dblclick="handleDblClick"
+        :loading="loading"
+        tag-type="success"
+        :placeholder="placeholder"
+        node-key="id"
+        check-strictly
+        default-expand-all
+        ref="selectRef"
+        style="width: 100%"
+        :props="{ label: 'title', children: 'children' }"
+        :data="varTableOptions"
+      >
 
-    </el-tree-select>
-    <dept-selector-modal
-      v-model:visible="modalVisible"
-      v-model="selectedElems"
-      :data="varTableOptions"
-      :multiple="props.multiple"
-      @confirm="handleConfirm"
-    />
+      </el-tree-select>
+      <dept-selector-modal
+        v-model:visible="modalVisible"
+        v-model="selectedElems"
+        :data="varTableOptions"
+        :multiple="props.multiple"
+        @confirm="handleConfirm"
+      />
+    </template>
+
   </div>
 </template>
 
@@ -47,6 +53,7 @@ interface Props {
   modelValue: string | string[] | null
   varOptions?: DeptView[]
   disabled?: boolean
+  preview?: boolean
 }
 
 interface Emits {
@@ -59,13 +66,17 @@ const props = withDefaults(defineProps<Props>(), {
   multiple: false,
   disabled: false,
   placeholder: '输入部门名称搜索或双击弹框选择',
+  preview: false,
 })
 const emits = defineEmits<Emits>()
 
 
 const selectedElems = computed<string[] | string>({
   get: () => {
-    return props.modelValue || ''
+    if (props.multiple) {
+      return props.modelValue?.length ? props.modelValue : []
+    }
+    return props.modelValue ? props.modelValue : null
   },
   set: v => {
     emits('update:modelValue', v)
@@ -79,14 +90,6 @@ const loading = ref<boolean>(false)
 
 const { tableData, loadDept } = useDeptInfo(loading)
 onBeforeMount(loadDept)
-
-function findDeptView(id: string): DeptView | undefined {
-  return findTreeItemById(tableData.value, 'id', id)
-}
-
-defineExpose({
-  findDeptView
-})
 
 const varTableOptions = computed<DeptView[]>(() => {
   const data = tableData.value
@@ -112,5 +115,14 @@ function handleConfirm() {
 }
 
 const modalVisible = ref<boolean>(false)
+
+
+const displayValue = computed(() => {
+  if (Array.isArray(props.modelValue)) {
+    return props.modelValue.map(it => findTreeItemById(tableData.value, 'id', it)).filter(it => !!it).map(it => it.title).join(', ') 
+  } else {
+    return findTreeItemById(tableData.value, 'id', props.modelValue)?.title || props.modelValue
+  }
+})
 
 </script>
