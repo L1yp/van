@@ -3,6 +3,7 @@
     <el-tree-select
       :key="selectKey"
       v-model="selectedElems"
+      :disabled="props.disabled"
       filterable
       clearable
       collapse-tags
@@ -38,12 +39,14 @@ import { ElSelect, ElTreeSelect } from "element-plus";
 import { computed, onBeforeMount, ref } from "vue";
 import DeptSelectorModal from "./DeptSelectorModal.vue";
 import {useDeptInfo} from "@/service/system/dept";
+import { findTreeItemById } from "@/utils/common";
 
 interface Props {
   multiple?: boolean
   placeholder?: string
   modelValue: string | string[] | null
   varOptions?: DeptView[]
+  disabled?: boolean
 }
 
 interface Emits {
@@ -54,6 +57,7 @@ interface Emits {
 const selectRef = ref<InstanceType<typeof ElSelect>>()
 const props = withDefaults(defineProps<Props>(), {
   multiple: false,
+  disabled: false,
   placeholder: '输入部门名称搜索或双击弹框选择',
 })
 const emits = defineEmits<Emits>()
@@ -75,6 +79,14 @@ const loading = ref<boolean>(false)
 
 const { tableData, loadDept } = useDeptInfo(loading)
 onBeforeMount(loadDept)
+
+function findDeptView(id: string): DeptView | undefined {
+  return findTreeItemById(tableData.value, 'id', id)
+}
+
+defineExpose({
+  findDeptView
+})
 
 const varTableOptions = computed<DeptView[]>(() => {
   const data = tableData.value

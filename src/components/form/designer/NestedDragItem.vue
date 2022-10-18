@@ -65,13 +65,14 @@ import TextAreaInput from "../components/input/TextAreaInput.vue"
 import SingleSelect from "../components/select/SingleSelect.vue"
 import MultiSelect from "../components/select/MultiSelect.vue"
 import UserSelect from "../components/select/UserSelect.vue"
+import DeptSelect from "../components/select/DeptSelect.vue"
 import { vFormActiveElementKey } from "@/config/app.keys";
 
 export default defineComponent({
   name: "NestedDragItem",
   components: {
     Draggable, ElForm, ElFormItem, ElInput, ElSelect, ElOption, ElRow, ElCol, SVGIcon, ElCheckboxGroup, ElCheckbox,
-    UserSelectorInput, DeptSelectorInput, TextInput, TextAreaInput, SingleSelect, MultiSelect, UserSelect,
+    UserSelectorInput, DeptSelectorInput, TextInput, TextAreaInput, SingleSelect, MultiSelect, UserSelect, DeptSelect, 
   },
   props: {
     children: Array

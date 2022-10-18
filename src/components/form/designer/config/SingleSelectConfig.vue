@@ -12,6 +12,33 @@
       <el-input v-model="vFormSelectElem.id"></el-input>
     </el-form-item>
 
+    
+    <el-form-item prop="expand" label="展开选项">
+      <template #label>
+        <form-item-tooltip
+          title="展开选项"
+          content="展开为选项列表"
+        />
+      </template>
+      <el-radio-group v-model="vFormSelectElem.attrs.expand" @change="v => v === false ? (vFormSelectElem.attrs.buttonOption = false) : (vFormSelectElem.attrs.buttonOption = true)">
+        <el-radio-button :label="true">是</el-radio-button>
+        <el-radio-button :label="false">否</el-radio-button>
+      </el-radio-group>
+    </el-form-item>
+
+    <el-form-item prop="buttonOption" label="按钮样式">
+      <template #label>
+        <form-item-tooltip
+          title="按钮样式"
+          content="是否使用按钮选项"
+        />
+      </template>
+      <el-radio-group v-model="vFormSelectElem.attrs.buttonOption" :disabled="vFormSelectElem.attrs.expand === false">
+        <el-radio-button :label="true">是</el-radio-button>
+        <el-radio-button :label="false">否</el-radio-button>
+      </el-radio-group>
+    </el-form-item>
+
 
     <el-form-item prop="valueField" label="值字段">
       <el-input v-model="vFormSelectElem.attrs.valueField"></el-input>
@@ -67,7 +94,9 @@
         <el-radio-button :label="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
-
+    <el-form-item prop="style" label="样式">
+      <el-input v-model="vFormSelectElem.attrs.style"></el-input>
+    </el-form-item>
   </el-form>
 </template>
 

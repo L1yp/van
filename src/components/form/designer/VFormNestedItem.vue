@@ -51,12 +51,13 @@ import TextAreaInput from '@/components/form/components/input/TextAreaInput.vue'
 import SingleSelect from "../components/select/SingleSelect.vue"
 import MultiSelect from "../components/select/MultiSelect.vue"
 import UserSelect from "../components/select/UserSelect.vue"
+import DeptSelect from "../components/select/DeptSelect.vue"
 
 export default defineComponent({
   name: 'VFormNestedItem',
   components: {
     ElFormItem, ElSelect, ElOption, ElInput, ElRow, ElCol, DictInput, DictTag, UserSelectorInput, DeptSelectorInput, TextInput, TextAreaInput,
-    SingleSelect, MultiSelect, UserSelect,
+    SingleSelect, MultiSelect, UserSelect, DeptSelect, 
   },
   props: {
     item: {

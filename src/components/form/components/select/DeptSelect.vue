@@ -1,9 +1,9 @@
 <template>
   <template v-if="cMode === 'design'">
-    <UserSelectorInput disabled :multiple="props.multiple" :placeholder="props.placeholder" v-model="val" />
+    <DeptSelectorInput disabled :multiple="props.multiple" :placeholder="props.placeholder" v-model="val"  />
   </template>
   <template v-else-if="cMode === 'edit'">
-    <UserSelectorInput :multiple="props.multiple" :placeholder="props.placeholder" v-model="val" />
+    <DeptSelectorInput :multiple="props.multiple" :placeholder="props.placeholder" v-model="val" />
   </template>
   <template v-else-if="cMode === 'read' ">
     <span v-text="displayValue"></span>
@@ -15,10 +15,12 @@
 
 <script lang="ts" setup>
 import { FormFieldMode } from "@/components/form/types";
-import { computed, inject } from "vue";
+import { computed, inject, onBeforeMount, ref } from "vue";
 import { formModeKey } from "@/components/form/state.key";
-import UserSelectorInput from "@/components/common/selector/user/UserSelectorInput.vue";
-import { userMapKey } from "@/config/app.keys";
+import DeptSelectorInput from "@/components/common/selector/dept/DeptSelectorInput.vue";
+import { useDeptInfo } from "@/service/system/dept";
+import { findTreeItemById } from "@/utils/common";
+
 
 interface Props {
   mode?: FormFieldMode
@@ -30,8 +32,6 @@ interface Props {
 interface Emits {
   (e: 'update:value', v: string): void
 }
-
-const userMap = inject(userMapKey)
 
 const props = defineProps<Props>()
 const emits = defineEmits<Emits>()
@@ -65,9 +65,12 @@ const cMode = computed<FormFieldMode>(() => {
   return "edit"
 })
 
+const { tableData, loadDept } = useDeptInfo()
+onBeforeMount(loadDept)
+
 const displayValue = computed(() => {
   const userIds = props.value?.split(',') || []
-  return userIds.map(it => userMap.get(it)?.nickname || it)?.join(', ')
+  return userIds.map(it => findTreeItemById(tableData.value, 'id', it)?.title || it)?.join(', ')
 })
 
 </script>

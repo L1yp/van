@@ -65,10 +65,10 @@ export const InputComponents: CandidateComponentConfig[] = [
     icon: 'RadioButton',
     component: 'single-select',
     category: 'form-item',
-    title: "下拉单选框",
+    title: "单选框",
     formItemAttrs: {
       prop: genId(),
-      label: "下拉单选框",
+      label: "单选框",
       labelWidth: "120px",
       required: false,
       error: '',
@@ -80,6 +80,8 @@ export const InputComponents: CandidateComponentConfig[] = [
       placeholder: '选择一个选项',
       clearable: false,
       size: 'default',
+      expand: false,
+      buttonOption: false,
       options: [
         {
           id: '1',
@@ -105,10 +107,10 @@ export const InputComponents: CandidateComponentConfig[] = [
     icon: 'CheckboxChecked',
     component: 'multi-select',
     category: 'form-item',
-    title: "下拉多选框",
+    title: "多选框",
     formItemAttrs: {
       prop: genId(),
-      label: "下拉多选框",
+      label: "多选框",
       labelWidth: "120px",
       required: false,
       error: '',
@@ -120,6 +122,8 @@ export const InputComponents: CandidateComponentConfig[] = [
       placeholder: '选择多个选项',
       clearable: false,
       size: 'default',
+      expand: false,
+      buttonOption: false,
       options: [
         {
           id: '1',
@@ -157,7 +161,7 @@ export const InputComponents: CandidateComponentConfig[] = [
       size: 'default',
     },
     attrs: {
-      multi: false,
+      multiple: false,
       placeholder: '',
       style: `width: 100%`
     }
@@ -179,7 +183,51 @@ export const InputComponents: CandidateComponentConfig[] = [
       size: 'default',
     },
     attrs: {
-      multi: true,
+      multiple: true,
+      placeholder: '',
+      style: `width: 100%`
+    }
+  },
+  {
+    id: genId(),
+    icon: 'Department',
+    component: 'dept-select',
+    category: 'form-item',
+    title: "部门单选框",
+    formItemAttrs: {
+      prop: genId(),
+      label: "部门单选框",
+      labelWidth: "120px",
+      required: false,
+      error: '',
+      showMessage: true,
+      inlineMessage: false,
+      size: 'default',
+    },
+    attrs: {
+      multiple: false,
+      placeholder: '',
+      style: `width: 100%`
+    }
+  },
+  {
+    id: genId(),
+    icon: 'Department',
+    component: 'dept-select',
+    category: 'form-item',
+    title: "部门多选框",
+    formItemAttrs: {
+      prop: genId(),
+      label: "部门多选框",
+      labelWidth: "120px",
+      required: false,
+      error: '',
+      showMessage: true,
+      inlineMessage: false,
+      size: 'default',
+    },
+    attrs: {
+      multiple: true,
       placeholder: '',
       style: `width: 100%`
     }

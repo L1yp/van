@@ -55,6 +55,7 @@
             <single-select-config v-if="vFormSelectElem?.component === 'single-select'"></single-select-config>
             <multi-select-config v-if="vFormSelectElem?.component === 'multi-select'"></multi-select-config>
             <user-selector-input-config v-if="vFormSelectElem?.component === 'user-select'"></user-selector-input-config>
+            <dept-selector-input-config v-if="vFormSelectElem?.component === 'dept-select'"></dept-selector-input-config>
             <row-config v-if="vFormSelectElem?.component === 'el-row'"></row-config>
             <col-config v-if="vFormSelectElem?.component === 'el-col'"></col-config>
             <select-config v-if="vFormSelectElem?.component === 'el-select'"></select-config>
@@ -95,6 +96,7 @@ import ColConfig from "@/components/form/designer/config/ColConfig.vue";
 import SelectConfig from "@/components/form/designer/config/SelectConfig.vue";
 import DictInputConfig from "@/components/form/designer/config/DictInputConfig.vue";
 import UserSelectorInputConfig from "@/components/form/designer/config/UserSelectorInputConfig.vue";
+import DeptSelectorInputConfig from "@/components/form/designer/config/DeptSelectorInputConfig.vue";
 
 interface Props {
   height: string

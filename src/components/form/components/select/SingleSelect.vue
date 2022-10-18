@@ -1,27 +1,68 @@
 <template>
   <template v-if="cMode === 'design'">
-    <el-select v-model="val" disabled v-bind="$props">
-      <el-option
-        v-for="option in props.options"
-        :key="option[props.valueField]"
-        :label="option[props.labelField]"
-        :value="option[props.valueField]"
-        :disabled="option[props.disabledField]"
-      >
-      </el-option>
-    </el-select>
+    <div>
+      <el-select v-model="val" disabled v-bind="$attrs" v-if="props.expand === false">
+        <el-option
+          v-for="option in props.options"
+          :key="option[props.valueField]"
+          :label="option[props.labelField]"
+          :value="option[props.valueField]"
+          :disabled="option[props.disabledField]"
+        >
+        </el-option>
+      </el-select>
+      <el-radio-group disabled v-model="val" v-bind="$attrs" v-if="props.expand === true">
+        <template v-if="props.buttonOption === false">
+          <el-radio
+            v-for="option in props.options"
+            :key="option[props.valueField]"
+            :label="option[props.valueField]"
+            :disabled="option[props.disabledField]"
+          >{{ option[props.labelField] }}</el-radio>
+        </template>
+        <template v-else>
+          <el-radio-button
+            v-for="option in props.options"
+            :key="option[props.valueField]"
+            :label="option[props.valueField]"
+            :disabled="option[props.disabledField]"
+          >{{ option[props.labelField] }}</el-radio-button>
+        </template>
+      </el-radio-group>
+    </div>
+
   </template>
   <template v-else-if="cMode === 'edit'">
-    <el-select v-model="val" v-bind="$props">
-      <el-option
-        v-for="option in props.options"
-        :key="option[props.valueField]"
-        :label="option[props.labelField]"
-        :value="option[props.valueField]"
-        :disabled="option[props.disabledField]"
-      >
-      </el-option>
-    </el-select>
+    <div>
+      <el-select v-model="val" v-bind="$attrs" v-if="props.expand === false">
+        <el-option
+          v-for="option in props.options"
+          :key="option[props.valueField]"
+          :label="option[props.labelField]"
+          :value="option[props.valueField]"
+          :disabled="option[props.disabledField]"
+        >
+        </el-option>
+      </el-select>
+      <el-radio-group v-model="val" v-bind="$attrs" v-if="props.expand === true">
+        <template v-if="props.buttonOption === false">
+          <el-radio
+            v-for="option in props.options"
+            :key="option[props.valueField]"
+            :label="option[props.valueField]"
+            :disabled="option[props.disabledField]"
+          >{{ option[props.labelField] }}</el-radio>
+        </template>
+        <template v-else>
+          <el-radio-button
+            v-for="option in props.options"
+            :key="option[props.valueField]"
+            :label="option[props.valueField]"
+            :disabled="option[props.disabledField]"
+          >{{ option[props.labelField] }}</el-radio-button>
+        </template>
+      </el-radio-group>
+    </div>
   </template>
   <template v-else-if="cMode === 'read' ">
     <span v-text="displayValue"></span>
@@ -32,7 +73,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ElSelect, ElOption } from 'element-plus'
+import { ElSelect, ElOption, ElRadioGroup, ElRadio, ElRadioButton } from 'element-plus'
 import { FormFieldMode } from "@/components/form/types";
 import { computed, inject } from "vue";
 import { formModeKey } from "@/components/form/state.key";
@@ -40,6 +81,8 @@ import { formModeKey } from "@/components/form/state.key";
 interface Props {
   mode?: FormFieldMode
   value?: string
+  expand?: boolean
+  buttonOption?: boolean
   options: object[]
   labelField?: string
   valueField?: string
@@ -54,6 +97,8 @@ const props = withDefaults(defineProps<Props>(), {
   labelField: 'name',
   valueField: 'id',
   disabledField: 'disabled',
+  expand: false,
+  buttonOption: false,
 })
 
 const emits = defineEmits<Emits>()
