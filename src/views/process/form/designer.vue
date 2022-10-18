@@ -47,6 +47,7 @@
     v-model="dialogInfo.visible"
     draggable
     title="预览表单"
+    width="600px"
     @cancel="dialogInfo.visible = false"
     @confirm="dialogInfo.visible = false"
   >

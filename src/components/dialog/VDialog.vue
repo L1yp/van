@@ -53,8 +53,9 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue"
+import {computed, provide} from "vue"
 import { ElDialog, ElButton } from "element-plus"
+import {dialogBodyHeightKey} from "@/components/dialog/keys";
 
 
 interface Props {
@@ -164,6 +165,7 @@ function handleClose() {
 }
 
 function handleOpened() {
+  dialogBodyHeight.effect.scheduler()
   emits("opened")
 }
 
@@ -178,6 +180,20 @@ function handleOpenAutoFocus() {
 function handleCloseAutoFocus() {
   emits("close-auto-focus")
 }
+
+const dialogBodyHeight = computed(() => {
+  console.log('dialog body height', props.title, props.fullScreen, fullScreen.value)
+  if (fullScreen.value) {
+    return `calc(100vh - 44px - 54px)`
+  } else {
+    const marginTop = `15vh`
+    const marginBottom = `50px`
+    return `calc(100vh - ${marginTop} - 44px - 54px - ${marginBottom})`
+  }
+})
+
+provide(dialogBodyHeightKey, dialogBodyHeight)
+
 
 </script>
 
@@ -198,6 +214,8 @@ div.btn:hover {
 </style>
 
 <style>
+
+
 
 .user-ext-dialog {
   box-sizing: border-box;
@@ -227,8 +245,13 @@ div.btn:hover {
   box-sizing: border-box;
 }
 
-.el-dialog.is-fullscreen.user-ext-dialog .el-dialog__body {
-  height: calc(100vh - 44px - 54px)
+.el-dialog.user-ext-dialog.is-fullscreen .el-dialog__body {
+  height: calc(100vh - 44px - 54px);
+  max-height: calc(100vh - 44px - 54px);
+}
+
+.el-dialog.user-ext-dialog .el-dialog__body {
+  max-height: calc(100vh - 15vh - 44px - 54px - 50px);
 }
 
 

@@ -6,7 +6,7 @@ export function genId(): string {
 
 export function transCloneComponent(original: CandidateComponentConfig) {
   const newItem: ComponentConfig = {
-    id: genId(),
+    id: 'field' + genId(),
     component: original.component,
     category: original.category,
     formItemAttrs: original.formItemAttrs ? JSON.parse(JSON.stringify(original.formItemAttrs)) : undefined,
@@ -21,6 +21,5 @@ export function transCloneComponent(original: CandidateComponentConfig) {
     return newItem;
   }
 
-  console.log("newItem", newItem)
   return newItem;
 }

@@ -6,10 +6,10 @@
     <UserSelectorInput :multiple="props.multiple" :placeholder="props.placeholder" v-model="val" />
   </template>
   <template v-else-if="cMode === 'read' ">
-    <span v-text="displayValue"></span>
-  </template>
-  <template v-else-if="cMode === 'hidden' ">
-    <span v-show="false" v-text="displayValue"></span>
+    <div>
+      <el-tag v-for="option in selectedElems" :key="option.id" v-text="option.nickname" ></el-tag>
+    </div>
+<!--    <span v-text="displayValue"></span>-->
   </template>
 </template>
 
@@ -19,6 +19,7 @@ import { computed, inject } from "vue";
 import { formModeKey } from "@/components/form/state.key";
 import UserSelectorInput from "@/components/common/selector/user/UserSelectorInput.vue";
 import { userMapKey } from "@/config/app.keys";
+import { ElTag } from 'element-plus'
 
 interface Props {
   mode?: FormFieldMode
@@ -69,13 +70,20 @@ const cMode = computed<FormFieldMode>(() => {
   return "edit"
 })
 
-const displayValue = computed(() => {
+const selectedElems = computed(() => {
   const userIds = props.value?.split(',') || []
-  return userIds.map(it => userMap.get(it)?.nickname || it)?.join(', ')
+  return userIds.map(it => userMap.get(it) || it)
 })
+
+// const displayValue = computed(() => {
+//   const userIds = props.value?.split(',') || []
+//   return userIds.map(it => userMap.get(it)?.nickname || it)?.join(', ')
+// })
 
 </script>
 
 <style scoped>
-
+span.el-tag + span.el-tag {
+  margin-left: 6px;
+}
 </style>

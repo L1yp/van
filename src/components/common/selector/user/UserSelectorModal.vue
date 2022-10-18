@@ -19,7 +19,7 @@
           </el-form-item>
           <!-- dept selector -->
           <el-form-item label="部门" prop="deptId">
-            <DeptSelectorInput v-model="formData.deptId" style="100%" />
+            <DeptSelectorInput v-model="formData.deptId" style="width: 100%" />
           </el-form-item>
 
           <el-form-item>
@@ -27,12 +27,12 @@
           </el-form-item>
         </el-form>
       </div>
-      <div :style="{ width: '100%', height: tableHeight }">
+      <div :style="{ width: '100%' }">
         <el-table
           v-loading="loading"
           ref="tableRef"
           :data="pageData.data"
-          height="100%"
+          :max-height="tableHeight"
           row-key="id"
           stripe border
           :row-style="{cursor: 'pointer'}"
@@ -114,7 +114,7 @@
 
 <script lang="ts" setup>
 import VDialog from '@/components/dialog/VDialog.vue';
-import { computed, nextTick, ref } from 'vue';
+import {computed, inject, nextTick, onMounted, ref} from 'vue';
 import {
   ElTable, ElTableColumn, ElRadio, ElForm, ElFormItem, ElInput, ElButton, ElScrollbar, ElTag,
   ElIcon, ElPagination,
@@ -122,6 +122,7 @@ import {
 import { useUserData } from "@/service/system/user";
 import { Plus, Minus } from "@element-plus/icons-vue";
 import DeptSelectorInput from "../dept/DeptSelectorInput.vue";
+import {dialogBodyHeightKey} from "@/components/dialog/keys";
 
 interface Props {
   multiple?: boolean
@@ -185,11 +186,14 @@ const formRef = ref<InstanceType<typeof ElForm>>()
 const pagerRef = ref<InstanceType<typeof ElPagination>>()
 
 const tableHeight = computed<string>(() => {
-  const formHeight = formRef.value?.$el.clientHeight || 0
-  const pagerHeight = pagerRef.value?.$el.clientHeight || 0
+  const formHeight = formRef.value?.$el.clientHeight || 52
+  const pagerHeight = pagerRef.value?.$el.clientHeight || 28
   const selectedContainerHeight = 200 + 10 // marginTop
-  return `calc(100% - ${formHeight + selectedContainerHeight + pagerHeight}px)`
+  const padding = 32
+  return `calc((calc(100vh - 44px - 54px)) - ${formHeight + selectedContainerHeight + pagerHeight + 32}px)`
 })
+onMounted(() => tableHeight.effect.scheduler())
+
 
 const { pageData, loadUserPageList } = useUserData(loading)
 const formData = ref<UserQueryParam>({

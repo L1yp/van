@@ -1,7 +1,11 @@
 <template>
   <div class="user-selector-input">
     <template v-if="props.preview">
-      <span v-text="displayValue"></span>
+<!--      <span v-text="displayValue"></span>-->
+      <div>
+        <el-tag v-for="option in selectedOptions" :key="option.id" v-text="option.title" type="success"></el-tag>
+
+      </div>
     </template>
     <template v-else>
       <el-tree-select
@@ -41,7 +45,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ElSelect, ElTreeSelect } from "element-plus";
+import { ElSelect, ElTreeSelect ,ElTag } from "element-plus";
 import { computed, onBeforeMount, ref } from "vue";
 import DeptSelectorModal from "./DeptSelectorModal.vue";
 import {useDeptInfo} from "@/service/system/dept";
@@ -76,9 +80,10 @@ const selectedElems = computed<string[] | string>({
     if (props.multiple) {
       return props.modelValue?.length ? props.modelValue : []
     }
-    return props.modelValue ? props.modelValue : null
+    return props.modelValue ? props.modelValue : ''
   },
   set: v => {
+    console.log('dept select setter', v)
     emits('update:modelValue', v)
     emits('change', v)
   }
@@ -116,13 +121,26 @@ function handleConfirm() {
 
 const modalVisible = ref<boolean>(false)
 
-
-const displayValue = computed(() => {
+const selectedOptions = computed(() => {
   if (Array.isArray(props.modelValue)) {
-    return props.modelValue.map(it => findTreeItemById(tableData.value, 'id', it)).filter(it => !!it).map(it => it.title).join(', ') 
+    return props.modelValue.map(it => findTreeItemById(tableData.value, 'id', it)).filter(it => !!it)
   } else {
-    return findTreeItemById(tableData.value, 'id', props.modelValue)?.title || props.modelValue
+    return findTreeItemById(tableData.value, 'id', props.modelValue)
   }
 })
 
+// const displayValue = computed(() => {
+//   if (Array.isArray(props.modelValue)) {
+//     return props.modelValue.map(it => findTreeItemById(tableData.value, 'id', it)).filter(it => !!it).map(it => it.title).join(', ')
+//   } else {
+//     return findTreeItemById(tableData.value, 'id', props.modelValue)?.title || props.modelValue
+//   }
+// })
+
 </script>
+
+<style scoped>
+span.el-tag + span.el-tag {
+  margin-left: 6px;
+}
+</style>

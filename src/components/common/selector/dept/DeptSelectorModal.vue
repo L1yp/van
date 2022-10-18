@@ -8,13 +8,13 @@
     @confirm="handleConfirm"
     @cancel="visible = false"
   >
-    <div class="user-selector-modal" style="height: 100%">
-      <div :style="{ width: '100%', height: tableHeight, marginTop: '10px' }">
+    <div class="user-selector-modal">
+      <div :style="{ width: '100%' }">
         <el-table
           v-loading="loading"
           ref="tableRef"
           :data="treeData"
-          height="100%"
+          :height="tableHeight"
           row-key="id"
           stripe border default-expand-all
           :row-style="{cursor: 'pointer'}"
@@ -95,13 +95,14 @@
 
 <script lang="ts" setup>
 import VDialog from '@/components/dialog/VDialog.vue';
-import { computed, ref, toRaw } from 'vue';
+import {computed, inject, ref, toRaw} from 'vue';
 import {
   ElTable, ElTableColumn, ElRadio, ElInput, ElScrollbar, ElTag,
   ElIcon,
 } from "element-plus";
 import { Plus, Minus } from "@element-plus/icons-vue";
 import { filterDataWithTitle, findTreeItemById, isArray, flatternTree } from '@/utils/common'
+import {dialogBodyHeightKey} from "@/components/dialog/keys";
 
 
 interface Props {
@@ -133,7 +134,6 @@ const visible = computed<boolean>({
 const loading = ref<boolean>(false)
 
 function handleCellClassName({ column, columnIndex }): string | undefined {
-  console.log(column);
   if (columnIndex === 0) {
     return 'column-index-no-place-holder'
   }
@@ -178,11 +178,11 @@ const selectedElems = computed<DeptView[]>(() => {
 
 const isAllAdd = computed<boolean>(() => flatDataIds.value.filter(it => !selectedIdMap.value.has(it)).length === 0)
 
+
 const tableRef = ref<InstanceType<typeof ElTable>>()
 const tableHeight = computed<string>(() => {
   const selectedContainerHeight = props.multiple ? (200 + 10) : 0 // marginTop
-  const marginTop = 10
-  return `calc(100% - ${selectedContainerHeight + marginTop}px)`
+  return `calc((calc(100vh - 15vh - 50px - 44px - 54px)) - 32px - ${selectedContainerHeight}px)`
 })
 
 const flatData = computed<DeptView[]>(() => flatternTree(props.data))
@@ -213,7 +213,7 @@ function handleConfirm() {
 function handleAddDept(item: DeptView) {
   if (props.multiple) {
     // TODO: add cascader sub tree
-    (selectedIds.value as string[]).push(item.id)
+    selectedIds.value = [...(selectedIds.value as string[]), item.id] as string[]
   } else {
     selectedIds.value = item.id
   }
@@ -222,14 +222,20 @@ function handleAddDept(item: DeptView) {
 function handleRemoveDept(item: DeptView) {
   if (props.multiple) {
     const idx = (selectedIds.value as string[]).indexOf(item.id)
-    idx !== -1 && (selectedIds.value as string[]).splice(idx, 1)
+    if (idx !== -1) {
+      (selectedIds.value as string[]).splice(idx, 1)
+      selectedIds.value = [...(selectedIds.value as string)]
+    }
   } else {
     selectedIds.value = ''
   }
 }
 
 function handleAddAll() {
-  props.multiple && flatData.value.filter(it => !selectedIdMap.value.has(it.id)).forEach(it => (selectedIds.value as string[]).push(it.id))
+  if ((props.multiple)) {
+    const result = flatData.value.filter(it => !selectedIdMap.value.has(it.id)).map(it => it.id)
+    selectedIds.value = [...(selectedIds.value as string[]), ...result] as string[]
+  }
 }
 
 function handleRemoveAll() {
