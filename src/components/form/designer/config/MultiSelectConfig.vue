@@ -8,8 +8,8 @@
   >
 
 
-    <el-form-item prop="id" label="键">
-      <el-input v-model="vFormSelectElem.id"></el-input>
+    <el-form-item prop="id" label="表单字段">
+      <el-input type="text" v-model="vFormSelectElem.id"></el-input>
     </el-form-item>
 
         

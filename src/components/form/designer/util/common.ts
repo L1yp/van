@@ -6,7 +6,7 @@ export function genId(): string {
 
 export function transCloneComponent(original: CandidateComponentConfig) {
   const newItem: ComponentConfig = {
-    id: 'field' + genId(),
+    id: 'field_' + genId().substring(0, 6),
     component: original.component,
     category: original.category,
     formItemAttrs: original.formItemAttrs ? JSON.parse(JSON.stringify(original.formItemAttrs)) : undefined,
@@ -15,11 +15,7 @@ export function transCloneComponent(original: CandidateComponentConfig) {
     key: 1,
   }
 
-  if (original.component === 'el-select') {
-    (newItem as SelectConfig).options = JSON.parse(JSON.stringify(original.options))
-    console.log("newItem", newItem)
-    return newItem;
-  }
+  newItem.attrs.id = newItem.id
 
   return newItem;
 }

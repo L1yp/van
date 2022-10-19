@@ -8,10 +8,9 @@
   >
 
 
-    <el-form-item prop="id" label="键">
-      <el-input v-model="vFormSelectElem.id"></el-input>
+    <el-form-item prop="id" label="表单字段">
+      <el-input type="text" v-model="vFormSelectElem.attrs.id"></el-input>
     </el-form-item>
-
     
     <el-form-item prop="expand" label="展开选项">
       <template #label>

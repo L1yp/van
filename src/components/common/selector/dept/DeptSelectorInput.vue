@@ -122,10 +122,12 @@ function handleConfirm() {
 const modalVisible = ref<boolean>(false)
 
 const selectedOptions = computed(() => {
-  if (Array.isArray(props.modelValue)) {
-    return props.modelValue.map(it => findTreeItemById(tableData.value, 'id', it)).filter(it => !!it)
+  if (props.multiple && Array.isArray(props.modelValue)) {
+    const options = props.modelValue.map(it => findTreeItemById(tableData.value, 'id', it)).filter(it => !!it)
+    return options?.length ? options : []
   } else {
-    return findTreeItemById(tableData.value, 'id', props.modelValue)
+    const option = findTreeItemById(tableData.value, 'id', props.modelValue as string)
+    return option ? [option] : []
   }
 })
 

@@ -55,7 +55,6 @@
 <script lang="ts" setup>
 import {computed, provide} from "vue"
 import { ElDialog, ElButton } from "element-plus"
-import {dialogBodyHeightKey} from "@/components/dialog/keys";
 
 
 interface Props {
@@ -165,7 +164,6 @@ function handleClose() {
 }
 
 function handleOpened() {
-  dialogBodyHeight.effect.scheduler()
   emits("opened")
 }
 
@@ -180,21 +178,6 @@ function handleOpenAutoFocus() {
 function handleCloseAutoFocus() {
   emits("close-auto-focus")
 }
-
-const dialogBodyHeight = computed(() => {
-  console.log('dialog body height', props.title, props.fullScreen, fullScreen.value)
-  if (fullScreen.value) {
-    return `calc(100vh - 44px - 54px)`
-  } else {
-    const marginTop = `15vh`
-    const marginBottom = `50px`
-    return `calc(100vh - ${marginTop} - 44px - 54px - ${marginBottom})`
-  }
-})
-
-provide(dialogBodyHeightKey, dialogBodyHeight)
-
-
 </script>
 
 

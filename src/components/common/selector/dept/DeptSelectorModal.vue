@@ -102,8 +102,6 @@ import {
 } from "element-plus";
 import { Plus, Minus } from "@element-plus/icons-vue";
 import { filterDataWithTitle, findTreeItemById, isArray, flatternTree } from '@/utils/common'
-import {dialogBodyHeightKey} from "@/components/dialog/keys";
-
 
 interface Props {
   multiple?: boolean

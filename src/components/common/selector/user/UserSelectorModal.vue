@@ -122,7 +122,6 @@ import {
 import { useUserData } from "@/service/system/user";
 import { Plus, Minus } from "@element-plus/icons-vue";
 import DeptSelectorInput from "../dept/DeptSelectorInput.vue";
-import {dialogBodyHeightKey} from "@/components/dialog/keys";
 
 interface Props {
   multiple?: boolean

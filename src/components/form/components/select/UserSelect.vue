@@ -9,7 +9,9 @@
     <div>
       <el-tag v-for="option in selectedElems" :key="option.id" v-text="option.nickname" ></el-tag>
     </div>
-<!--    <span v-text="displayValue"></span>-->
+  </template>
+  <template v-else>
+    <div></div>
   </template>
 </template>
 
@@ -72,7 +74,7 @@ const cMode = computed<FormFieldMode>(() => {
 
 const selectedElems = computed(() => {
   const userIds = props.value?.split(',') || []
-  return userIds.map(it => userMap.get(it) || it)
+  return userIds.map(it => userMap.get(it)).filter(it => !!it)
 })
 
 // const displayValue = computed(() => {
