@@ -12,11 +12,30 @@
         <router-view/>
         <div
           v-show="pageScreen"
-          style="position: absolute; right: 0; top: 0; width: 30px; height: 30px; border-bottom-left-radius: 100%; background-color: #FFFFFF; cursor: pointer"
+          class="close-page-full-screen"
           title="关闭全屏"
           @click.stop="cancelPageScreen"
         >
-          <s-v-g-icon class="close-page-full-screen" name="close" style="width: 16px; height: 16px; position: absolute; left: 10px; top: 4px"></s-v-g-icon>
+          <s-v-g-icon class="close-icon" name="close" style="width: 16px; height: 16px; position: absolute; left: 10px; top: 4px"></s-v-g-icon>
+        </div>
+        <div
+          v-show="maskVisible"
+          style="position: absolute; right: 0; top: 0; z-index: 2000"
+          :style="{ width: mainWidth, height: mainHeight }"
+        >
+          <div
+            ref="maskContainerRef"
+            style="padding: 20px; background-color: #f6f8f9; box-sizing: border-box; "
+            :style="{ width: mainWidth, height: mainHeight }"
+          >
+          </div>
+          <div
+            title="关闭蒙版"
+            class="close-mask"
+            @click.stop="closeMask"
+          >
+            <s-v-g-icon class="close-icon" name="close" style="width: 16px; height: 16px; position: absolute; right: 10px; top: 4px"></s-v-g-icon>
+          </div>
         </div>
       </el-main>
       <el-footer :style="pageScreen ? { display: 'none' } : undefined"></el-footer>
@@ -26,7 +45,7 @@
 
 <script lang="ts" setup>
 import {computed, provide, Ref, ref, watch} from "vue"
-import {ElContainer, ElHeader, ElAside, ElMain, ElFooter, ElScrollbar} from "element-plus"
+import {ElContainer, ElHeader, ElAside, ElMain, ElFooter, ElScrollbar, ElIcon } from "element-plus"
 import Theme from "../config/theme"
 import {HeaderBar} from "./components/header"
 import {AsideBar} from "./components/aside"
@@ -36,9 +55,11 @@ import {
   mainHeightKey,
   asideWidthKey,
   asideCollapsedKey,
-  themeKey, mainWidthKey, pageFullScreenKey,
+  themeKey, mainWidthKey, pageFullScreenKey, maskVisibleKey, maskContainerKey,
 } from "@/config/app.keys"
 import SVGIcon from "@/components/common/SVGIcon.vue";
+import { Close } from "@element-plus/icons-vue";
+
 
 const asideCollapsed: Ref<boolean> = ref(false);
 provide(asideCollapsedKey, asideCollapsed);
@@ -80,6 +101,15 @@ function cancelPageScreen() {
   pageScreen.value = false
 }
 
+const maskVisible = ref<boolean>(false)
+provide(maskVisibleKey, maskVisible)
+
+const maskContainerRef = ref<HTMLDivElement>()
+provide(maskContainerKey, maskContainerRef)
+
+function closeMask() {
+  maskVisible.value = false
+}
 
 </script>
 
@@ -119,10 +149,35 @@ function cancelPageScreen() {
   height: v-bind(footerHeight);
 }
 
-.close-page-full-screen:hover{
-  color: blue
+.close-page-full-screen {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 30px;
+  height: 30px;
+  border-bottom-left-radius: 100%;
+  background-color: #FFFFFF;
+  cursor: pointer;
 }
 
+.close-page-full-screen:hover, .close-page-full-screen:hover .close-icon {
+  background-color: #ecf5ff;
+}
+
+.close-mask {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 30px;
+  height: 30px;
+  border-bottom-right-radius: 100%;
+  background-color: #FFFFFF;
+  cursor: pointer
+}
+
+.close-mask:hover, .close-mask:hover .close-icon {
+  background-color: #ecf5ff;
+}
 
 
 </style>

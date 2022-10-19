@@ -1,4 +1,3 @@
-import axios from "axios";
 import {request} from "@/api/request";
 
 

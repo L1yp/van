@@ -23,7 +23,12 @@
           </Tag>
           <template #dropdown>
             <el-dropdown-menu>
+              <el-dropdown-item command="refresh" :icon="Refresh">刷新</el-dropdown-item>
               <el-dropdown-item command="fullscreen" :icon="useIcon('FullScreenMaximize', { style: { width: '1em', height: '1em' } })">全屏</el-dropdown-item>
+              <el-dropdown-item command="closeThis" :icon="useIcon('close', { style: { width: '1em', height: '1em' } })">关闭当前</el-dropdown-item>
+              <el-dropdown-item command="closeLeft" :icon="useIcon('close', { style: { width: '1em', height: '1em' } })">关闭左侧</el-dropdown-item>
+              <el-dropdown-item command="closeRight" :icon="useIcon('close', { style: { width: '1em', height: '1em' } })">关闭右侧</el-dropdown-item>
+              <el-dropdown-item command="closeAll" :icon="useIcon('close', { style: { width: '1em', height: '1em' } })">关闭全部</el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
@@ -49,6 +54,7 @@ import {useIcon} from "@/components/common/util";
 import {RouteMetaRecord} from "@/router";
 import {pageFullScreenKey, themeKey} from "@/config/app.keys";
 import {useTitle} from "@vueuse/core";
+import { Refresh } from '@element-plus/icons-vue'
 
 const theme = inject<Ref<ThemeConfig>>(themeKey)
 
