@@ -1,5 +1,5 @@
 <template>
-  <el-tabs>
+  <el-tabs type="border-card" >
     <el-tab-pane label="基本信息">
       <div>基本信息</div>
     </el-tab-pane>

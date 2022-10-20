@@ -6,7 +6,6 @@
           <candidate-component-page
             :height="designerContainerHeight"
             :input-components="InputComponents"
-            :output-components="OutputComponents"
             :layout-components="LayoutComponents"
           >
           </candidate-component-page>
@@ -79,7 +78,7 @@ import FormPropertyPanel from "@/components/form/designer/FormPropertyPanel.vue"
 import CandidateComponentPage from "@/components/form/designer/candidate/CandidateComponentPage.vue";
 import {useIcon} from "@/components/common/util";
 import JsonEditor from "@/components/common/JsonEditor.vue";
-import { InputComponents, OutputComponents, LayoutComponents } from "@/components/form/designer/data"
+import { InputComponents, LayoutComponents } from "@/components/form/designer/data"
 import VDialog from "@/components/dialog/VDialog.vue";
 import VFormRender from "@/components/form/designer/VFormRender.vue";
 import {formModeKey} from "@/components/form/state.key";

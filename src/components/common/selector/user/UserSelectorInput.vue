@@ -54,6 +54,7 @@ interface Props {
 
 interface Emits {
   (e: 'update:modelValue', val: string | string[]): void
+  (e: 'change', val: string | string[])
 }
 
 const selectRef = ref<InstanceType<typeof ElSelect>>()
@@ -89,8 +90,10 @@ const selectedElems = computed<UserView[]>({
     v.forEach(it => userMap?.set(it.id, it))
     if (props.multiple) {
       emits('update:modelValue', v?.length ? v.map(it => it.id) : [])
+      emits('change', v?.length ? v.map(it => it.id) : [])
     } else {
       emits('update:modelValue', v?.length ? v[0].id : '')
+      emits('change', v?.length ? v[0].id : '')
     }
 
   }

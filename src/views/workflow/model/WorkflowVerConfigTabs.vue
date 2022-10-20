@@ -1,8 +1,5 @@
 <template>
-  <el-tabs>
-    <el-tab-pane></el-tab-pane>
-  </el-tabs>
-
+  <div>66</div>
 </template>
 
 <script lang="ts" setup>

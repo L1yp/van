@@ -10,14 +10,7 @@ export const InputComponents: CandidateComponentConfig[] = [
     category: 'form-item',
     title: "单行文本框",
     formItemAttrs: {
-      prop: genId(),
       label: "单行文本框",
-      labelWidth: "120px",
-      required: false,
-      error: '',
-      showMessage: true,
-      inlineMessage: false,
-      size: 'default'
     },
     attrs: {
       value: '1111111',
@@ -37,14 +30,7 @@ export const InputComponents: CandidateComponentConfig[] = [
     category: 'form-item',
     title: "多行文本框",
     formItemAttrs: {
-      prop: genId(),
       label: "多行文本框",
-      labelWidth: "120px",
-      required: false,
-      error: '',
-      showMessage: true,
-      inlineMessage: false,
-      size: 'default'
     },
     attrs: {
       value: '1111111',
@@ -67,14 +53,7 @@ export const InputComponents: CandidateComponentConfig[] = [
     category: 'form-item',
     title: "单选框",
     formItemAttrs: {
-      prop: genId(),
       label: "单选框",
-      labelWidth: "120px",
-      required: false,
-      error: '',
-      showMessage: true,
-      inlineMessage: false,
-      size: 'default'
     },
     attrs: {
       placeholder: '选择一个选项',
@@ -109,14 +88,9 @@ export const InputComponents: CandidateComponentConfig[] = [
     category: 'form-item',
     title: "多选框",
     formItemAttrs: {
-      prop: genId(),
       label: "多选框",
       labelWidth: "120px",
       required: false,
-      error: '',
-      showMessage: true,
-      inlineMessage: false,
-      size: 'default'
     },
     attrs: {
       placeholder: '选择多个选项',
@@ -151,14 +125,9 @@ export const InputComponents: CandidateComponentConfig[] = [
     category: 'form-item',
     title: "用户单选框",
     formItemAttrs: {
-      prop: genId(),
       label: "用户单选框",
       labelWidth: "120px",
       required: false,
-      error: '',
-      showMessage: true,
-      inlineMessage: false,
-      size: 'default',
     },
     attrs: {
       multiple: false,
@@ -173,14 +142,9 @@ export const InputComponents: CandidateComponentConfig[] = [
     category: 'form-item',
     title: "用户多选框",
     formItemAttrs: {
-      prop: genId(),
       label: "用户多选框",
       labelWidth: "120px",
       required: false,
-      error: '',
-      showMessage: true,
-      inlineMessage: false,
-      size: 'default',
     },
     attrs: {
       multiple: true,
@@ -195,14 +159,9 @@ export const InputComponents: CandidateComponentConfig[] = [
     category: 'form-item',
     title: "部门单选框",
     formItemAttrs: {
-      prop: genId(),
       label: "部门单选框",
       labelWidth: "120px",
       required: false,
-      error: '',
-      showMessage: true,
-      inlineMessage: false,
-      size: 'default',
     },
     attrs: {
       multiple: false,
@@ -217,14 +176,9 @@ export const InputComponents: CandidateComponentConfig[] = [
     category: 'form-item',
     title: "部门多选框",
     formItemAttrs: {
-      prop: genId(),
       label: "部门多选框",
       labelWidth: "120px",
       required: false,
-      error: '',
-      showMessage: true,
-      inlineMessage: false,
-      size: 'default',
     },
     attrs: {
       multiple: true,
@@ -233,7 +187,6 @@ export const InputComponents: CandidateComponentConfig[] = [
     }
   },
 ]
-export const OutputComponents: CandidateComponentConfig[] = []
 export const LayoutComponents: CandidateComponentConfig[] = [
   {
     id: genId(),

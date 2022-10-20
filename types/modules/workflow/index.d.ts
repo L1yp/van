@@ -1,6 +1,8 @@
 declare interface WorkflowTypeDefPageParam extends PageParam {
   name?: string
   remark?: string
+  updateBy?: string[]
+  createBy?: string[]
 }
 
 declare interface WorkflowTypeDefView {
@@ -30,3 +32,26 @@ declare interface WorkflowTypeVerView {
   create_time: string
 }
 
+declare type CodeGenType = 'class' | 'fixed'
+declare type CodeGenByClass = {
+  className: string
+}
+
+declare type GenFixedCode = {
+  prefix: string
+  delimiter?: string
+  dateFormat: string
+  joiner?: string
+  numFormat: string
+}
+
+declare type CodeGenContent<T extends CodeGenType> = T extends 'class' ? CodeGenByClass : GenFixedCode
+
+
+declare interface CodeGenRule<T extends CodeGenType> {
+  type: CodeGenType
+  content: CodeGenContent<T>
+}
+
+type FixedGenRule = CodeGenRule<'fixed'>
+type ClassGenRule = CodeGenRule<'class'>

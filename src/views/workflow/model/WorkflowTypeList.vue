@@ -7,13 +7,16 @@
       v-loading="loading"
       :data="pageData.data"
       :max-height="tableHeight"
-      border stripe
+      border stripe scrollbar-always-on
       row-key="id"
       :tree-props="{ children: 'children' }"
       @row-dblclick="handleRowDbClick"
       style="margin-top: 10px"
     >
-      <el-table-column type="index" label="#" width="50" align="center" header-align="center" />
+      <el-table-column>
+        <el-table-column type="index" label="#" width="50" align="center" header-align="center" />
+      </el-table-column>
+      
       <el-table-column>
         <template #header>
           <el-input v-model="param.name" @change="loadPage(param)" />
@@ -24,17 +27,33 @@
         <template #header>
           <el-input v-model="param.remark" @change="loadPage(param)" />
         </template>
-        <el-table-column prop="remark" label="备注" />
+        <el-table-column prop="remark" label="备注" :resizable="false" />
       </el-table-column>
-      <el-table-column prop="update_by" label="更新人" width="100" :resizable="false" :formatter="formatUser" align="center" header-align="center" />
-      <el-table-column prop="update_time" label="更新时间" width="160" :resizable="false" align="center" header-align="center" />
-      <el-table-column prop="create_by" label="创建人" width="100" :resizable="false" :formatter="formatUser" align="center" header-align="center" />
-      <el-table-column prop="create_time" label="创建时间" width="160" :resizable="false" align="center" header-align="center" />
+      <el-table-column>
+        <template #header>
+          <UserSelectorInput v-model="param.updateBy" placeholder="" multiple @change="loadPage(param)" />
+        </template>
+        <el-table-column prop="update_by" label="更新人" width="200" :resizable="false" :formatter="formatUser" align="center" header-align="center" />
+      </el-table-column>
+      <el-table-column>
+        <template #header>
+          <UserSelectorInput v-model="param.createBy" placeholder="" multiple @change="loadPage(param)" />
+        </template>
+        <el-table-column prop="create_by" label="创建人" width="200" :resizable="false" :formatter="formatUser" align="center" header-align="center" />
+      </el-table-column>
+      
+      <el-table-column>
+        <el-table-column prop="update_time" label="更新时间" width="160" :resizable="false" align="center" header-align="center" />
+      </el-table-column>
+      <el-table-column>
+        <el-table-column prop="create_time" label="创建时间" width="160" :resizable="false" align="center" header-align="center" />
+      </el-table-column>
     </el-table>
-    <Teleport :to="maskContainer || 'body'">
-      <WorkflowTypeConfigTabs  />
-      <WorkflowVerConfigTabs/>
+    <Teleport v-if="maskVisible" :to="maskContainer">
+      <WorkflowTypeConfigTabs v-show="typeMaskVisible" />
+      <WorkflowVerConfigTabs v-show="verMaskVisible" />
     </Teleport>
+
   </div>
 </template>
 
@@ -46,6 +65,7 @@ import { Plus } from "@element-plus/icons-vue";
 import {mainHeightKey, maskContainerKey, maskVisibleKey, themeKey} from "@/config/app.keys";
 import WorkflowTypeConfigTabs from "@/views/workflow/model/WorkflowTypeConfigTabs.vue";
 import WorkflowVerConfigTabs from "@/views/workflow/model/WorkflowVerConfigTabs.vue";
+import UserSelectorInput from '@/components/common/selector/user/UserSelectorInput.vue'
 
 const maskVisible = inject(maskVisibleKey)
 const maskContainer = inject(maskContainerKey)
@@ -73,10 +93,18 @@ const tableHeight = computed(() => {
   return `${mainHeight.value} - ${theme.value.mainPadding * 2 + 32 + 10}px`
 })
 
-
+const typeMaskVisible = ref(false)
+const verMaskVisible = ref(false)
 function handleRowDbClick(row, column, event) {
   if (row.children?.length) {
     const item = row as WorkflowTypeDefView
+    verMaskVisible.value = false
+    typeMaskVisible.value = true
+    maskVisible.value = true
+  } else {
+    const item = row as WorkflowTypeVerView
+    verMaskVisible.value = true
+    typeMaskVisible.value = false
     maskVisible.value = true
   }
 }
