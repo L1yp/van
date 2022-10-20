@@ -16,7 +16,7 @@
       <el-table-column>
         <el-table-column type="index" label="#" width="50" align="center" header-align="center" />
       </el-table-column>
-      
+
       <el-table-column>
         <template #header>
           <el-input v-model="param.name" @change="loadPage(param)" />
@@ -41,7 +41,7 @@
         </template>
         <el-table-column prop="create_by" label="创建人" width="200" :resizable="false" :formatter="formatUser" align="center" header-align="center" />
       </el-table-column>
-      
+
       <el-table-column>
         <el-table-column prop="update_time" label="更新时间" width="160" :resizable="false" align="center" header-align="center" />
       </el-table-column>
@@ -50,8 +50,8 @@
       </el-table-column>
     </el-table>
     <Teleport v-if="maskVisible" :to="maskContainer">
-      <WorkflowTypeConfigTabs v-show="typeMaskVisible" />
-      <WorkflowVerConfigTabs v-show="verMaskVisible" />
+      <WorkflowTypeConfigTabs v-show="typeMaskVisible" :src="srcRow" />
+      <WorkflowVerConfigTabs v-show="verMaskVisible" :src="srcRow" />
     </Teleport>
 
   </div>
@@ -59,7 +59,7 @@
 
 <script lang="ts" setup>
 import { useWorkflowApi } from "@/service/workflow";
-import {computed, inject, onBeforeMount, ref} from "vue";
+import {computed, inject, onBeforeMount, onUnmounted, ref} from "vue";
 import { ElTable, ElTableColumn, ElInput, ElButton } from "element-plus";
 import { Plus } from "@element-plus/icons-vue";
 import {mainHeightKey, maskContainerKey, maskVisibleKey, themeKey} from "@/config/app.keys";
@@ -69,6 +69,7 @@ import UserSelectorInput from '@/components/common/selector/user/UserSelectorInp
 
 const maskVisible = inject(maskVisibleKey)
 const maskContainer = inject(maskContainerKey)
+onUnmounted(() => maskVisible.value = false)
 
 const loading = ref<boolean>(false)
 const param = ref<WorkflowTypeDefPageParam>({
@@ -95,13 +96,16 @@ const tableHeight = computed(() => {
 
 const typeMaskVisible = ref(false)
 const verMaskVisible = ref(false)
+const srcRow = ref<WorkflowTypeDefView | WorkflowTypeVerView>()
 function handleRowDbClick(row, column, event) {
   if (row.children?.length) {
     const item = row as WorkflowTypeDefView
+    srcRow.value = row
     verMaskVisible.value = false
     typeMaskVisible.value = true
     maskVisible.value = true
   } else {
+    srcRow.value = row
     const item = row as WorkflowTypeVerView
     verMaskVisible.value = true
     typeMaskVisible.value = false

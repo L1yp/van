@@ -10,7 +10,7 @@ declare interface WorkflowTypeDefView {
   key: string
   name: string
   remark: string
-  code_gen_rule: string
+  code_gen_rule: CodeGenRule
   status: string
   update_by: string
   update_time: string
@@ -32,26 +32,36 @@ declare interface WorkflowTypeVerView {
   create_time: string
 }
 
-declare type CodeGenType = 'class' | 'fixed'
-declare type CodeGenByClass = {
-  className: string
+declare type CodeGenType = 'fixed' | 'class'
+
+declare interface CodeGenRule {
+  type: CodeGenType
 }
 
-declare type GenFixedCode = {
+declare interface FixedGenRule extends CodeGenRule {
   prefix: string
   delimiter?: string
-  dateFormat: string
+  date_format: string
   joiner?: string
-  numFormat: string
+  num_format: string
 }
 
-declare type CodeGenContent<T extends CodeGenType> = T extends 'class' ? CodeGenByClass : GenFixedCode
-
-
-declare interface CodeGenRule<T extends CodeGenType> {
-  type: CodeGenType
-  content: CodeGenContent<T>
+declare interface ClassGenRule extends CodeGenRule {
+  class_name: string
 }
 
-type FixedGenRule = CodeGenRule<'fixed'>
-type ClassGenRule = CodeGenRule<'class'>
+
+declare interface WorkflowTypeDefAddParam {
+  name: string
+  remark: string
+  code_gen_rule: CodeGenRule
+  status: string
+}
+
+declare interface WorkflowTypeDefUpdateParam {
+  id: string
+  name: string
+  remark: string
+  code_gen_rule: CodeGenRule
+  status: string
+}

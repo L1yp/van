@@ -6,7 +6,7 @@
     <div style="display: flex; align-items: center; margin-left: 6px;">
       <el-tooltip
         raw-content
-        effect="light"
+        effect="dark"
         :content="props.content"
         popper-class="form-item-tooltip"
       >
