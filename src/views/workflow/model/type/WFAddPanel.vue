@@ -70,6 +70,7 @@ import { useWorkflowApi } from "@/service/workflow";
 
 interface Emits {
   (e: 'close'): void
+  (e: 'success'): void
 }
 
 const emits = defineEmits<Emits>()
@@ -96,9 +97,10 @@ function handleCancel() {
 }
 
 async function handleConfirm() {
-  const result = addDef(formData.value)
+  const result = await addDef(formData.value)
   if (result) {
     emits('close')
+    emits('success')
   }
 }
 

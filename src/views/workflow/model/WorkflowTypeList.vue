@@ -52,7 +52,7 @@
     <Teleport v-if="maskVisible" :to="maskContainer">
       <WorkflowTypeConfigTabs v-if="typeMaskVisible" :src="(srcRow as WorkflowTypeDefView)" />
       <WorkflowVerConfigTabs v-if="verMaskVisible" :src="srcRow" />
-      <WFAddPanel v-if="addPanelVisible" @close="addPanelVisible = false, maskVisible = false" />
+      <WFAddPanel v-if="addPanelVisible" @success="loadPage(param)" @close="addPanelVisible = false, maskVisible = false" />
     </Teleport>
 
   </div>
