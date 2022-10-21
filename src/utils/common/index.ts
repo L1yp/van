@@ -46,7 +46,7 @@ export function primitiveArrayEquals(a, b): boolean {
 }
 
 
-export function toTree<T extends Tree>(src: T[], keyField: string, parentField: string): T[] {
+export function toTree<T extends Tree>(src: T[], keyField: keyof T, parentField: keyof T): T[] {
   const map = new Map<unknown, T>(src.map(it => [it[keyField], it]))
   src.forEach(it => {
     if (map.has(it[parentField])) {
@@ -69,7 +69,7 @@ export function toTree<T extends Tree>(src: T[], keyField: string, parentField: 
  * @param {String} prop 字段
  * @returns 此树是否包含关键字
  */
-export function filterDataWithTitle<T extends Tree>(result: T[], list: T[], key: string, prop: string, parent?: T): boolean {
+export function filterDataWithTitle<T extends Tree>(result: T[], list: T[], key: string, prop: keyof T, parent?: T): boolean {
   if (!key) {
     result = list
     return true
@@ -84,7 +84,7 @@ export function filterDataWithTitle<T extends Tree>(result: T[], list: T[], key:
         hasKey = keyExists;
       }
       // 此项或其子项 包含关键字 则展示
-      if (keyExists || item[prop].indexOf(key) > -1) {
+      if (keyExists || String(item[prop]).indexOf(key) > -1) {
         hasKey = true
         if (parent) {
           parent.children?.push(currentNode);
@@ -93,7 +93,7 @@ export function filterDataWithTitle<T extends Tree>(result: T[], list: T[], key:
         }
       }
     } else {
-      if (key && item[prop].indexOf(key) <= -1) {
+      if (key && String(item[prop]).indexOf(key) <= -1) {
         continue;
       }
       hasKey = true;
@@ -114,7 +114,7 @@ export function filterDataWithTitle<T extends Tree>(result: T[], list: T[], key:
  * @param key 键值
  * @returns 条目
  */
-export function findTreeItemById<T extends Tree>(src: T[], keyField: string, key: string): T | undefined {
+export function findTreeItemById<T extends Tree>(src: T[], keyField: keyof T, key: string): T | undefined {
 
   for (const item of src) {
     if (item[keyField] === key) {

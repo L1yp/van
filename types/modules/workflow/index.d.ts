@@ -52,6 +52,7 @@ declare interface ClassGenRule extends CodeGenRule {
 
 
 declare interface WorkflowTypeDefAddParam {
+  key: string
   name: string
   remark: string
   code_gen_rule: CodeGenRule

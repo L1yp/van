@@ -6,9 +6,8 @@ import 'element-plus/dist/index.css';
 import {ElLoading} from 'element-plus';
 import {setupAxios} from "./config/axios.http"
 import * as UserApi from "@/api/sys/user"
-import {findAllDictValue, findDictInfoList} from "@/api/sys/dict/dict"
 import {remove} from "./utils/storage"
-import {dictInfosKey, dictValuesKey, menuOptionsKey, permissionKey, userInfoKey, userMapKey} from "./config/app.keys"
+import {menuOptionsKey, userInfoKey, userMapKey} from "./config/app.keys"
 import {permission} from "@/directives/permission"
 import VXETable from 'vxe-table'
 import 'vxe-table/lib/style.css'

@@ -6,7 +6,7 @@
       <el-button v-if="mode === 'edit'" @click="handleCancel">取消</el-button>
       <el-button v-if="mode === 'edit'" @click="handleConfirm" type="primary" plain>确定</el-button>
     </div>
-    <el-form :model="formData" style="margin-top: 10px">
+    <el-form :model="formData" style="margin-top: 10px" label-width="70px">
       <el-divider content-position="left">基本信息</el-divider>
       <el-form-item label="名称" prop="name">
         <el-input v-model="formData.name" v-if="mode === 'edit'" />

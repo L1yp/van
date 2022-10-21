@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <el-button :icon="Plus" type="primary">新增</el-button>
+      <el-button :icon="Plus" type="primary" @click="handleAdd">新增</el-button>
     </div>
     <el-table
       v-loading="loading"
@@ -50,8 +50,9 @@
       </el-table-column>
     </el-table>
     <Teleport v-if="maskVisible" :to="maskContainer">
-      <WorkflowTypeConfigTabs v-show="typeMaskVisible" :src="srcRow" />
-      <WorkflowVerConfigTabs v-show="verMaskVisible" :src="srcRow" />
+      <WorkflowTypeConfigTabs v-if="typeMaskVisible" :src="(srcRow as WorkflowTypeDefView)" />
+      <WorkflowVerConfigTabs v-if="verMaskVisible" :src="srcRow" />
+      <WFAddPanel v-if="addPanelVisible" @close="addPanelVisible = false, maskVisible = false" />
     </Teleport>
 
   </div>
@@ -66,6 +67,7 @@ import {mainHeightKey, maskContainerKey, maskVisibleKey, themeKey} from "@/confi
 import WorkflowTypeConfigTabs from "@/views/workflow/model/WorkflowTypeConfigTabs.vue";
 import WorkflowVerConfigTabs from "@/views/workflow/model/WorkflowVerConfigTabs.vue";
 import UserSelectorInput from '@/components/common/selector/user/UserSelectorInput.vue'
+import WFAddPanel from "./type/WFAddPanel.vue";
 
 const maskVisible = inject(maskVisibleKey)
 const maskContainer = inject(maskContainerKey)
@@ -94,6 +96,7 @@ const tableHeight = computed(() => {
   return `${mainHeight.value} - ${theme.value.mainPadding * 2 + 32 + 10}px`
 })
 
+const addPanelVisible = ref(false)
 const typeMaskVisible = ref(false)
 const verMaskVisible = ref(false)
 const srcRow = ref<WorkflowTypeDefView | WorkflowTypeVerView>()
@@ -102,15 +105,27 @@ function handleRowDbClick(row, column, event) {
     const item = row as WorkflowTypeDefView
     srcRow.value = row
     verMaskVisible.value = false
+    addPanelVisible.value = false
     typeMaskVisible.value = true
     maskVisible.value = true
   } else {
     srcRow.value = row
     const item = row as WorkflowTypeVerView
     verMaskVisible.value = true
+    addPanelVisible.value = false
     typeMaskVisible.value = false
     maskVisible.value = true
   }
+}
+
+
+function handleAdd() {
+  addPanelVisible.value = true
+  typeMaskVisible.value = false
+  verMaskVisible.value = false
+
+  maskVisible.value = true
+
 }
 
 </script>

@@ -22,3 +22,11 @@ export function updateWorkflowDef(data: WorkflowTypeDefUpdateParam) {
     data,
   })
 }
+
+export function addWorkflowDef(data: WorkflowTypeDefAddParam) {
+  return request<void>({
+    url: `/workflow/type/def/add`,
+    method: 'POST',
+    data,
+  })
+}
