@@ -43,7 +43,7 @@ declare interface FixedGenRule extends CodeGenRule {
   delimiter?: string
   date_format: string
   joiner?: string
-  num_format: string
+  num_format: number
 }
 
 declare interface ClassGenRule extends CodeGenRule {
@@ -56,7 +56,7 @@ declare interface WorkflowTypeDefAddParam {
   name: string
   remark: string
   code_gen_rule: CodeGenRule
-  status: string
+  status: number
 }
 
 declare interface WorkflowTypeDefUpdateParam {

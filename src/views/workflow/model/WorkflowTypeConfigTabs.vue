@@ -1,10 +1,10 @@
 <template>
-  <el-tabs type="border-card" >
+  <el-tabs type="border-card" style="height: 100%">
     <el-tab-pane label="基本信息">
-      <WFBasicConfig :src="props.src" />
+      <DefUpdatePanel/>
     </el-tab-pane>
     <el-tab-pane label="字段">
-      <div>字段</div>
+      <FieldPanel />
     </el-tab-pane>
     <el-tab-pane label="视图配置">
       <div>视图配置</div>
@@ -18,13 +18,19 @@
 
 <script lang="ts" setup>
 import { ElTabs, ElTabPane } from "element-plus";
-import WFBasicConfig from "@/views/workflow/model/type/WFBasicConfig.vue";
-
-interface Props {
-  src?: WorkflowTypeDefView
-}
-
-const props = defineProps<Props>()
+import DefUpdatePanel from "@/views/workflow/model/type/DefUpdatePanel.vue";
+import FieldPanel from "@/views/workflow/model/type/FieldPanel.vue";
 
 
 </script>
+
+<style scoped>
+:deep(.el-tabs__content) {
+  /* header = 39px; padding = 15 * 2 = 30px */
+  height: calc(100% - 69px);
+}
+
+:deep(.el-tab-pane) {
+  height: 100%;
+}
+</style>

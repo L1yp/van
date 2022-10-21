@@ -50,9 +50,9 @@
       </el-table-column>
     </el-table>
     <Teleport v-if="maskVisible" :to="maskContainer">
-      <WorkflowTypeConfigTabs v-if="typeMaskVisible" :src="(srcRow as WorkflowTypeDefView)" />
-      <WorkflowVerConfigTabs v-if="verMaskVisible" :src="srcRow" />
-      <WFAddPanel v-if="addPanelVisible" @success="loadPage(param)" @close="addPanelVisible = false, maskVisible = false" />
+      <WorkflowTypeConfigTabs v-if="typeMaskVisible" />
+      <WorkflowVerConfigTabs v-if="verMaskVisible" />
+      <DefAddPanel v-if="addPanelVisible" @success="loadPage(param)" @close="addPanelVisible = false, maskVisible = false" />
     </Teleport>
 
   </div>
@@ -60,14 +60,15 @@
 
 <script lang="ts" setup>
 import { useWorkflowApi } from "@/service/workflow";
-import {computed, inject, onBeforeMount, onUnmounted, ref} from "vue";
+import {computed, inject, onBeforeMount, onUnmounted, provide, ref} from "vue";
 import { ElTable, ElTableColumn, ElInput, ElButton } from "element-plus";
 import { Plus } from "@element-plus/icons-vue";
 import {mainHeightKey, maskContainerKey, maskVisibleKey, themeKey} from "@/config/app.keys";
 import WorkflowTypeConfigTabs from "@/views/workflow/model/WorkflowTypeConfigTabs.vue";
 import WorkflowVerConfigTabs from "@/views/workflow/model/WorkflowVerConfigTabs.vue";
 import UserSelectorInput from '@/components/common/selector/user/UserSelectorInput.vue'
-import WFAddPanel from "./type/WFAddPanel.vue";
+import DefAddPanel from "./type/DefAddPanel.vue";
+import { workflowDefKey, workflowVerKey } from "./keys";
 
 const maskVisible = inject(maskVisibleKey)
 const maskContainer = inject(maskContainerKey)
@@ -100,7 +101,9 @@ const addPanelVisible = ref(false)
 const typeMaskVisible = ref(false)
 const verMaskVisible = ref(false)
 const srcRow = ref<WorkflowTypeDefView | WorkflowTypeVerView>()
-function handleRowDbClick(row, column, event) {
+provide(workflowDefKey, srcRow)
+function handleRowDbClick(row: WorkflowTypeDefView | WorkflowTypeVerView) {
+  /** @ts-ignore */
   if (row.children?.length) {
     const item = row as WorkflowTypeDefView
     srcRow.value = row
@@ -110,7 +113,6 @@ function handleRowDbClick(row, column, event) {
     maskVisible.value = true
   } else {
     srcRow.value = row
-    const item = row as WorkflowTypeVerView
     verMaskVisible.value = true
     addPanelVisible.value = false
     typeMaskVisible.value = false
