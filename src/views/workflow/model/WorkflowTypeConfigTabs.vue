@@ -5,6 +5,7 @@
     </el-tab-pane>
     <el-tab-pane label="字段">
       <FieldPanel />
+      <div id="field-container"></div>
     </el-tab-pane>
     <el-tab-pane label="视图配置">
       <div>视图配置</div>
@@ -19,7 +20,7 @@
 <script lang="ts" setup>
 import { ElTabs, ElTabPane } from "element-plus";
 import DefUpdatePanel from "@/views/workflow/model/type/DefUpdatePanel.vue";
-import FieldPanel from "@/views/workflow/model/type/FieldPanel.vue";
+import FieldPanel from "@/views/workflow/model/field/FieldPanel.vue";
 
 
 </script>
@@ -33,4 +34,5 @@ import FieldPanel from "@/views/workflow/model/type/FieldPanel.vue";
 :deep(.el-tab-pane) {
   height: 100%;
 }
+
 </style>

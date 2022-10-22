@@ -9,7 +9,13 @@
       </el-header>
       <tag-bar :style="pageScreen ? { display: 'none' } : undefined"/>
       <el-main style="position: relative" :style="{ width: mainWidth, height: mainHeight }">
-        <router-view/>
+        <router-view>
+          <template #default="{ Component, route }">
+            <transition name="fade" mode="out-in" appear>
+              <component :is="Component" :key="route.fullPath" />
+            </transition>
+          </template>
+        </router-view>
         <div
           v-show="pageScreen"
           class="close-page-full-screen"
@@ -18,24 +24,8 @@
         >
           <s-v-g-icon class="close-icon" name="close" style="width: 16px; height: 16px; position: absolute; left: 10px; top: 4px"></s-v-g-icon>
         </div>
-        <div
-          v-show="maskVisible"
-          style="position: absolute; right: 0; top: 0; z-index: 2000"
-          :style="{ width: mainWidth, height: mainHeight }"
-        >
-          <div
-            ref="maskContainerRef"
-            style="padding: 20px; background-color: #f6f8f9; box-sizing: border-box; "
-            :style="{ width: mainWidth, height: mainHeight }"
-          >
-          </div>
-          <div
-            title="关闭蒙版"
-            class="close-mask"
-            @click.stop="closeMask"
-          >
-            <s-v-g-icon class="close-icon" name="close" style="width: 16px; height: 16px; position: absolute; right: 10px; top: 4px"></s-v-g-icon>
-          </div>
+        <div ref="maskContainerRef" style="position: absolute; top: 0px; left: 0; ">
+
         </div>
       </el-main>
       <el-footer :style="pageScreen ? { display: 'none' } : undefined"></el-footer>
@@ -44,7 +34,7 @@
 </template>
 
 <script lang="ts" setup>
-import {computed, provide, Ref, ref, watch} from "vue"
+import {computed, onMounted, provide, Ref, ref, watch} from "vue"
 import {ElContainer, ElHeader, ElAside, ElMain, ElFooter, ElScrollbar, ElIcon } from "element-plus"
 import Theme from "../config/theme"
 import {HeaderBar} from "./components/header"
@@ -55,10 +45,9 @@ import {
   mainHeightKey,
   asideWidthKey,
   asideCollapsedKey,
-  themeKey, mainWidthKey, pageFullScreenKey, maskVisibleKey, maskContainerKey,
+  themeKey, mainWidthKey, pageFullScreenKey, maskContainerKey,
 } from "@/config/app.keys"
 import SVGIcon from "@/components/common/SVGIcon.vue";
-import { Close } from "@element-plus/icons-vue";
 
 
 const asideCollapsed: Ref<boolean> = ref(false);
@@ -101,15 +90,9 @@ function cancelPageScreen() {
   pageScreen.value = false
 }
 
-const maskVisible = ref<boolean>(false)
-provide(maskVisibleKey, maskVisible)
-
-const maskContainerRef = ref<HTMLDivElement>()
+const maskContainerRef = ref()
 provide(maskContainerKey, maskContainerRef)
 
-function closeMask() {
-  maskVisible.value = false
-}
 
 </script>
 
@@ -164,21 +147,15 @@ function closeMask() {
   background-color: #ecf5ff;
 }
 
-.close-mask {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 30px;
-  height: 30px;
-  border-bottom-right-radius: 100%;
-  background-color: #FFFFFF;
-  cursor: pointer
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
 }
 
-.close-mask:hover, .close-mask:hover .close-icon {
-  background-color: #ecf5ff;
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
-
 
 </style>
 

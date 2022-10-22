@@ -23,7 +23,6 @@ export const vFormActiveElementKey = Symbol('vFormActiveElementKey') as Injectio
 
 export const userMapKey = Symbol('userMapKey') as InjectionKey<Map<string, UserView>>
 
-export const maskVisibleKey = Symbol('maskVisibleKey') as InjectionKey<Ref<boolean>>
 export const maskContainerKey = Symbol('maskContainerKey') as InjectionKey<Ref<HTMLDivElement | undefined>>
 
 

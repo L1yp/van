@@ -18,9 +18,9 @@
       @row-click="row => ['PAGE', 'BUTTON'].includes(row.type) && tableRef.toggleRowSelection(row, undefined)"
     >
       <el-table-column type="selection" :selectable="row => ['PAGE', 'BUTTON'].includes(row.type)" />
-      <el-table-column prop="name" label="名称" />
+      <el-table-column prop="name" label="名称" width="300"  />
       <el-table-column prop="type" label="类型" width="100" />
-      <el-table-column prop="component" label="组件" width="200" />
+      <el-table-column prop="component" label="组件" />
     </el-table>
   </VDialog>
 

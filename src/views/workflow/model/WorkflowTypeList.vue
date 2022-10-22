@@ -49,30 +49,31 @@
         <el-table-column prop="create_time" label="创建时间" width="160" :resizable="false" align="center" header-align="center" />
       </el-table-column>
     </el-table>
-    <Teleport v-if="maskVisible" :to="maskContainer">
-      <WorkflowTypeConfigTabs v-if="typeMaskVisible" />
-      <WorkflowVerConfigTabs v-if="verMaskVisible" />
-      <DefAddPanel v-if="addPanelVisible" @success="loadPage(param)" @close="addPanelVisible = false, maskVisible = false" />
-    </Teleport>
-
+    <MaskWindow v-model="typeMaskVisible">
+      <WorkflowTypeConfigTabs />
+    </MaskWindow>
+    <MaskWindow v-model="verMaskVisible">
+      <WorkflowVerConfigTabs />
+    </MaskWindow>
+    <MaskWindow v-model="addPanelVisible">
+      <DefAddPanel @success="loadPage(param)" @close="addPanelVisible = false" />
+    </MaskWindow>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { useWorkflowApi } from "@/service/workflow";
-import {computed, inject, onBeforeMount, onUnmounted, provide, ref} from "vue";
+import {computed, inject, onBeforeMount, provide, ref} from "vue";
 import { ElTable, ElTableColumn, ElInput, ElButton } from "element-plus";
 import { Plus } from "@element-plus/icons-vue";
-import {mainHeightKey, maskContainerKey, maskVisibleKey, themeKey} from "@/config/app.keys";
+import {mainHeightKey, maskContainerKey, themeKey} from "@/config/app.keys";
 import WorkflowTypeConfigTabs from "@/views/workflow/model/WorkflowTypeConfigTabs.vue";
 import WorkflowVerConfigTabs from "@/views/workflow/model/WorkflowVerConfigTabs.vue";
 import UserSelectorInput from '@/components/common/selector/user/UserSelectorInput.vue'
 import DefAddPanel from "./type/DefAddPanel.vue";
-import { workflowDefKey, workflowVerKey } from "./keys";
+import { workflowDefKey } from "./keys";
+import MaskWindow from "@/components/dialog/MaskWindow.vue";
 
-const maskVisible = inject(maskVisibleKey)
-const maskContainer = inject(maskContainerKey)
-onUnmounted(() => maskVisible.value = false)
 
 const loading = ref<boolean>(false)
 const param = ref<WorkflowTypeDefPageParam>({
@@ -107,27 +108,17 @@ function handleRowDbClick(row: WorkflowTypeDefView | WorkflowTypeVerView) {
   if (row.children?.length) {
     const item = row as WorkflowTypeDefView
     srcRow.value = row
-    verMaskVisible.value = false
-    addPanelVisible.value = false
     typeMaskVisible.value = true
-    maskVisible.value = true
+
   } else {
     srcRow.value = row
     verMaskVisible.value = true
-    addPanelVisible.value = false
-    typeMaskVisible.value = false
-    maskVisible.value = true
   }
 }
 
 
 function handleAdd() {
   addPanelVisible.value = true
-  typeMaskVisible.value = false
-  verMaskVisible.value = false
-
-  maskVisible.value = true
-
 }
 
 </script>

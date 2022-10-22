@@ -38,33 +38,35 @@
     <div class="property-panel-container">
       <form-property-panel :height="formPropertyPanelHeight"></form-property-panel>
     </div>
+
+    
+    <JsonEditor v-model:visible="editorInfo.visible" :code="editorInfo.code"></JsonEditor>
+
+    <v-dialog
+      v-model="dialogInfo.visible"
+      draggable
+      title="预览表单"
+      width="600px"
+      @cancel="dialogInfo.visible = false"
+      @confirm="dialogInfo.visible = false"
+    >
+      <div>
+        <el-radio-group v-model="formMode">
+          <el-radio-button label="design">设计</el-radio-button>
+          <el-radio-button label="edit">编辑</el-radio-button>
+          <el-radio-button label="read">预览</el-radio-button>
+        </el-radio-group>
+      </div>
+
+      <div style="margin-top: 16px"></div>
+
+      <v-form-render :schemes="formComponentList" :mode="formMode" :form-data="formData"></v-form-render>
+      <div style="overflow: auto">
+        <pre> {{ JSON.stringify(formData) }} </pre>
+      </div>
+    </v-dialog>
   </div>
 
-  <JsonEditor v-model:visible="editorInfo.visible" :code="editorInfo.code"></JsonEditor>
-
-  <v-dialog
-    v-model="dialogInfo.visible"
-    draggable
-    title="预览表单"
-    width="600px"
-    @cancel="dialogInfo.visible = false"
-    @confirm="dialogInfo.visible = false"
-  >
-    <div>
-      <el-radio-group v-model="formMode">
-        <el-radio-button label="design">设计</el-radio-button>
-        <el-radio-button label="edit">编辑</el-radio-button>
-        <el-radio-button label="read">预览</el-radio-button>
-      </el-radio-group>
-    </div>
-
-    <div style="margin-top: 16px"></div>
-
-    <v-form-render :schemes="formComponentList" :mode="formMode" :form-data="formData"></v-form-render>
-    <div style="overflow: auto">
-      <pre> {{ JSON.stringify(formData) }} </pre>
-    </div>
-  </v-dialog>
 
 </template>
 
