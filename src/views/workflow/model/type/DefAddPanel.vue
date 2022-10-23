@@ -5,7 +5,7 @@
       <el-button @click="handleCancel">取消</el-button>
       <el-button @click="handleConfirm" type="primary" plain>确定</el-button>
     </div>
-    <div style="height: calc(100% - 32px - 12px)">
+    <div style="width: 100%; max-width: 800px; height: calc(100% - 32px - 12px)">
       <el-scrollbar always>
         <el-divider content-position="left">基本信息</el-divider>
         <el-form :model="formData" label-width="80px" ref="formRef" :rules="rules" status-icon>

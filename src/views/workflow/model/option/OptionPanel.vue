@@ -17,7 +17,7 @@
 
     </div>
     <mask-window v-model="visible">
-      <option-add-panel :scope="props.scope" @close="visible = false" @success="findWorkflowOptionTypes(param)" />
+      <option-add-panel :wf-key="props.wfKey" :scope="props.scope" @close="visible = false" @success="findWorkflowOptionTypes(param)" />
     </mask-window>
     <mask-window v-model="valuePanelVisible">
       <option-value-panel :from-type="fromType" />

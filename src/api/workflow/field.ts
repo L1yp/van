@@ -37,6 +37,13 @@ export function unrefWorkflowField(data: WorkflowFieldRefParam) {
 }
 
 
+export function deleteWorkflowField(id: string) {
+  return request<void>({
+    url: `/workflow/field/${id}`,
+    method: 'DELETE',
+  })
+}
+
 
 export function getWorkflowFields(wfKey: string) {
   return request<WorkflowFieldDefView[]>({
@@ -52,5 +59,21 @@ export function getScopeFields(scope: FieldScope) {
     url: `/workflow/field/find`,
     method: 'GET',
     params: { scope },
+  })
+}
+
+
+export function getTables() {
+  return request<TableScheme[]>({
+    url: `/workflow/field/table/list`,
+    method: 'GET',
+  })
+}
+
+export function getTableColumns(tableName: string) {
+  return request<TableScheme[]>({
+    url: `/workflow/field/table/column/list`,
+    method: 'GET',
+    params: { tableName },
   })
 }

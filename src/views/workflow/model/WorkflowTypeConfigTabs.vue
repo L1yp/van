@@ -11,7 +11,7 @@
       <div>视图配置</div>
     </el-tab-pane>
     <el-tab-pane label="数据源">
-      <div>视图配置</div>
+      <OptionPanel :wf-key="workflowDef.key" scope="PRIVATE" />
     </el-tab-pane>
   </el-tabs>
 
@@ -21,7 +21,11 @@
 import { ElTabs, ElTabPane } from "element-plus";
 import DefUpdatePanel from "@/views/workflow/model/type/DefUpdatePanel.vue";
 import FieldPanel from "@/views/workflow/model/field/FieldPanel.vue";
+import OptionPanel from "./option/OptionPanel.vue";
+import { inject } from "vue";
+import { workflowDefKey } from "./keys";
 
+const workflowDef = inject(workflowDefKey)
 
 </script>
 

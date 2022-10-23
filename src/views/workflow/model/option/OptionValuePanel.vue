@@ -10,7 +10,7 @@
 
     </div>
     <div style="width: 100%; height: calc(100% - 32px - 12px - 1px); box-sizing: border-box; padding: 6px; border: 1px solid #E3E3E3;">
-      <el-form v-if="!isConfig" :model="formData" ref="formRef" label-width="80px">
+      <el-form v-if="!isConfig" :model="formData" ref="formRef" label-width="80px" style="width: 100%; max-width: 800px;">
         <el-form-item prop="name" label="名称" required>
           <el-input v-model="formData.name" v-if="!isView" />
           <div v-if="isView" v-text="formData.name"></div>

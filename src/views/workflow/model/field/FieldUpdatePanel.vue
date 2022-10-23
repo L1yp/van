@@ -7,12 +7,11 @@
     <div style="width: calc(100% - 12px); max-width: 800px; height: calc(100% - 32px - 12px); padding: 6px;">
       <el-scrollbar always>
         <el-form ref="formRef" :model="formData" label-width="100px" status-icon style="width: 100%">
-          <el-divider content-position="left">基本信息</el-divider>
-          <el-form-item prop="field" label="字段" required :rules="{ pattern: /^[a-zA-Z_][a-zA-Z0-9_]*$/, message: '必须以字母或下划线开头' }">
-            <el-input v-model="formData.field" />
+          <el-form-item prop="field" label="字段">
+            <div v-text="props.field.field"></div>
           </el-form-item>
-          <el-form-item prop="label" label="标签" required>
-            <el-input v-model="formData.label" />
+          <el-form-item prop="label" label="标签">
+            <div v-text="props.field.label"></div>
           </el-form-item>
           <el-form-item prop="remark" label="说明">
             <el-input v-model="formData.remark" />
@@ -21,19 +20,15 @@
             <el-input-number v-model="formData.width" :min="1" :controls="false" style="width: 100%" />
           </el-form-item>
           <el-form-item prop="type" label="类型" required>
-            <el-select v-model="formData.type" @change="v => formData.scheme.type = v" style="width: 100%">
+            <el-select v-model="props.field.type" disabled>
               <el-option label="数字" value="number" />
               <el-option label="文本" value="text" />
               <el-option label="选项" value="option" />
               <el-option label="用户" value="user" />
               <el-option label="部门" value="dept" />
-              <el-option label="时间" value="date" />
-              <el-option label="时间范围" value="daterange" />
             </el-select>
           </el-form-item>
-          <el-divider content-position="left">组件配置</el-divider>
-          <component :form-data="formData" :is="schemeConfigComponentMap[formData.type]"/>
-          
+          <component disabled :form-data="props.field" :is="schemeConfigComponentMap[props.field.type]"/>
         </el-form>
       </el-scrollbar>
     </div>
@@ -42,20 +37,26 @@
 </template>
 
 <script lang="ts" setup>
-import { ElForm, ElFormItem, ElButton, ElInput, ElInputNumber, ElSelect, ElOption, ElScrollbar, ElDivider } from "element-plus";
-import { inject, markRaw, ref } from "vue";
-import type { Component } from "vue";
+import { ElForm, ElFormItem, ElButton, ElInput, ElInputNumber, ElScrollbar, ElSelect, ElOption } from "element-plus";
+import { inject, ref, markRaw } from "vue";
 import { workflowDefKey } from "../keys";
+import { useWorkflowFieldApi } from "@/service/workflow/field";
 import NumberSchemeConfig from "./form/NumberSchemeConfig.vue";
 import TextSchemeConfig from "./form/TextSchemeConfig.vue";
 import OptionSchemeConfig from "./form/OptionSchemeConfig.vue";
 import UserSchemeConfig from "./form/UserSchemeConfig.vue";
 import DeptSchemeConfig from "./form/DeptSchemeConfig.vue";
-import DateSchemeConfig from "./form/DateSchemeConfig.vue";
-import DateRangeSchemeConfig from "./form/DateRangeSchemeConfig.vue";
-import { useWorkflowFieldApi } from "@/service/workflow/field";
+
+const schemeConfigComponentMap = {
+  number: markRaw(NumberSchemeConfig),
+  text: markRaw(TextSchemeConfig),
+  option: markRaw(OptionSchemeConfig),
+  user: markRaw(UserSchemeConfig),
+  dept: markRaw(DeptSchemeConfig),
+}
 
 interface Props {
+  field: WorkflowFieldDefView
   scope?: FieldScope
 }
 
@@ -72,44 +73,18 @@ const emits = defineEmits<Emits>()
 
 const workflowDef = inject(workflowDefKey)
 
-// @ts-ignore
-const formData = ref<WorkflowFieldAddParam>({
-  wf_key: workflowDef.value?.key,
-  field: '',
-  label: '',
-  remark: '',
-  width: 16,
-  type: 'number',
-  scope: props.scope,
-  scheme: {
-    type: 'number',
-    option_content: {
-      from: 'DEFAULT',
-
-    },
-    user_content: {
-      from: 'ALL',
-    },
-  }
+const formData = ref<WorkflowFieldUpdateParam>({
+  id: props.field.id,
+  remark: props.field.remark,
+  width: props.field.width,
 })
-
-const schemeConfigComponentMap: Record<FieldType, Component> = {
-  number: markRaw(NumberSchemeConfig),
-  text: markRaw(TextSchemeConfig),
-  option: markRaw(OptionSchemeConfig),
-  user: markRaw(UserSchemeConfig),
-  dept: markRaw(DeptSchemeConfig),
-  date: markRaw(DateSchemeConfig),
-  daterange: markRaw(DateRangeSchemeConfig),
-}
-
 
 function handleCancel() {
   emits('close')
 }
 
 const loading = ref(false)
-const { addField } = useWorkflowFieldApi(loading)
+const { updateField } = useWorkflowFieldApi(loading)
 
 const formRef = ref<InstanceType<typeof ElForm>>()
 async function handleConfirm() {
@@ -119,9 +94,7 @@ async function handleConfirm() {
     console.error(e);
     return
   }
-
-  formData.value.scope = props.scope
-  const result = await addField(formData.value)
+  const result = await updateField(formData.value)
   if (result) {
     emits('close')
     emits('success')

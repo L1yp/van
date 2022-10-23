@@ -110,12 +110,63 @@ export function useWorkflowFieldApi(loading?: Ref<boolean>) {
     }
   }
 
+  async function deleteField(id: string) {
+    try {
+      loading && (loading.value = true)
+      await FieldApi.deleteWorkflowField(id)
+      ElMessage.success('删除字段成功')
+      return true
+    } catch (e) {
+      console.error(e);
+      ElMessage.error((e as Error)?.message || '查询失败')
+      return false
+    } finally {
+      loading && (loading.value = false)
+    }
+  }
+
 
   return {
     workflowFields, findWorkflowFields,
     defaultFields, findDefaultFields,
     globalFields, findGlobalFields,
-    addField, updateField, refField, unrefField,
+    addField, updateField, refField, unrefField, deleteField, 
   }
 
+}
+
+export function useTableScheme(loading?: Ref<boolean>) {
+  const tables = ref<TableScheme[]>([])
+  const columns = ref<TableScheme[]>([])
+
+
+  async function getTables() {
+    try {
+      loading && (loading.value = true)
+      tables.value = await FieldApi.getTables()
+    } catch (e) {
+      console.error(e);
+      ElMessage.error((e as Error)?.message || '查询失败')
+    } finally {
+      loading && (loading.value = false)
+    }
+  }
+
+  
+  async function getTableColumns(tableName: string) {
+    try {
+      loading && (loading.value = true)
+      columns.value = await FieldApi.getTableColumns(tableName)
+    } catch (e) {
+      console.error(e);
+      ElMessage.error((e as Error)?.message || '查询失败')
+    } finally {
+      loading && (loading.value = false)
+    }
+  }
+
+
+  return {
+    tables, columns, getTables, getTableColumns
+  }
 }

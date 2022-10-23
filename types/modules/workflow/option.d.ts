@@ -18,6 +18,7 @@ declare interface WorkflowOptionTypeFindParam {
 }
 
 declare interface WorkflowOptionTypeAddParam {
+  wf_key: string
   name: string
   remark: string
   scope: OptionScope

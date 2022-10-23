@@ -9,7 +9,7 @@
       ref="formRef"
       :model="formData" 
       label-width="80px" 
-      style="padding: 10px; width: 100%; height: calc(100% - 32px - 12px - 1px); box-sizing: border-box; border: 1px solid #E3E3E3;"
+      style="padding: 10px; width: 100%; max-width: 800px; height: calc(100% - 32px - 12px - 1px); box-sizing: border-box; border: 1px solid #E3E3E3;"
     >
       <el-form-item prop="name" label="名称" required>
         <el-input v-model="formData.name" />
@@ -28,6 +28,7 @@ import { ElForm, ElFormItem, ElButton, ElInput } from "element-plus";
 import { ref } from "vue";
 
 interface Props {
+  wfKey?: string
   scope: OptionScope
 }
 
@@ -40,6 +41,7 @@ const props = defineProps<Props>()
 const emits = defineEmits<Emits>()
 
 const formData =  ref<WorkflowOptionTypeAddParam>({
+  wf_key: props.wfKey,
   name: '',
   remark: '',
   scope: props.scope,

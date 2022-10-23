@@ -1,15 +1,18 @@
 declare type FieldScope = 'PRIVATE' | 'GLOBAL' | 'DEFAULT'
-declare type FieldType = 'number' | 'text' | 'option' | 'user' | 'dept'
+declare type FieldType = 'number' | 'text' | 'option' | 'user' | 'dept' | 'date' | 'daterange'
 declare type OptionValueFrom = 'DEFAULT' | 'CLASS' | 'TABLE'
-declare type OptionComponent = 'radio' | 'radio-button' | 'checkbox' | 'checkbox-button' | 'select' | 'cascader' | 'tree-select'
+declare type OptionComponent = 'radio' | 'radio-button' | 'checkbox' | 'checkbox-button' | 'single-cascader' | 'multi-cascader' | 'single-select' | 'multi-select'
 declare type UserOptionFrom = 'ALL' | 'CLASS' | 'FIXED'
+declare type DateType = 'year' | 'month' | 'date' | 'datetime' | 'week'
+declare type DateRangeType = 'daterange' | 'datetimerange'
 
 declare interface FieldScheme {
   type: FieldType
 }
 
+
+
 declare interface NumberInputFieldScheme extends FieldScheme {
-  type: 'number'
   /**
    * 格式化函数
    */
@@ -25,52 +28,91 @@ declare interface NumberInputFieldScheme extends FieldScheme {
 }
 
 declare interface TextInputFieldScheme extends FieldScheme {
-  type: 'text'
   default_value: string
 }
 
 declare interface OptionFieldScheme extends FieldScheme {
-  type: 'option'
-  from: OptionValueFrom
   /**
    * ui component
    */
   component: OptionComponent
+  option_content: OptionFieldContent
+}
+ 
+declare type OptionFieldContent = DefaultOptionFieldScheme & ClassOptionFieldScheme & TableOptionFieldScheme
+
+
+declare interface OptionFieldContentScheme {
+  from: OptionValueFrom
 }
 
-
-declare interface DefaultOptionFieldScheme extends OptionFieldScheme {
+declare interface DefaultOptionFieldScheme extends OptionFieldContentScheme {
   option_type_id: string
-  default_value: string
+  default_value: string[]
 }
 
-declare interface ClassOptionFieldScheme extends OptionFieldScheme {
+declare interface ClassOptionFieldScheme extends OptionFieldContentScheme {
   class_name: string
   from_table: 'DEFAULT' | 'EXTERNAL' | string
 }
 
+declare interface TableOptionFieldScheme extends OptionFieldContentScheme {
+  table_name: string
+  parent_field: string
+  label_field: string
+  value_field: string
+  disabled_field: string
+  disabled_value: string
+  condition: string
+}
+
 declare interface UserFieldScheme extends FieldScheme {
-  type: 'user',
   multiple: boolean
+  user_content: UserFieldContent
+}
+
+declare type UserFieldContent = ClassUserFieldScheme & FixedUserFieldScheme
+
+declare interface UserFieldSchemeContent {
   from: UserOptionFrom
 }
 
-declare interface ClassUserFieldScheme extends UserFieldScheme {
-  from: 'CLASS',
+declare interface ClassUserFieldScheme extends UserFieldSchemeContent {
   class_name: string
 }
 
 
-declare interface FixedUserFieldScheme extends UserFieldScheme {
-  from: 'FIXED',
+declare interface FixedUserFieldScheme extends UserFieldSchemeContent {
   user_ids: string[]
 }
 
 
 declare interface DeptFieldScheme extends FieldScheme {
-  type: 'dept',
   multiple: boolean
 }
+
+
+declare interface DateFieldScheme extends FieldScheme {
+  date_type: DateType
+  format: string
+  value_format: string
+  default_value: string
+}
+
+declare interface DateRangeFieldScheme extends FieldScheme {
+  date_range_type: DateRangeType
+  format: string
+  value_format: string
+  default_value: string[]
+}
+
+declare type FieldSchemeContent = NumberInputFieldScheme & TextInputFieldScheme & 
+OptionFieldScheme & UserFieldScheme & 
+DeptFieldScheme & DateFieldScheme & 
+DateRangeFieldScheme
+
+
+
 
 /////////////////
 
@@ -85,6 +127,7 @@ declare interface WorkflowFieldDefView {
    */
   type: string
   scope: FieldScope
+  scheme: FieldSchemeContent
   update_by: string
   create_by: string
   update_time: string
@@ -103,7 +146,7 @@ declare interface WorkflowFieldAddParam {
    */
   type: string
   scope: FieldScope
-  scheme: FieldScheme
+  scheme: FieldSchemeContent
 }
 
 
@@ -111,11 +154,6 @@ declare interface WorkflowFieldUpdateParam {
   id: string
   remark: string
   width: number
-  /**
-   * 字段类型
-   */
-  type: FieldType
-  scheme: FieldScheme
 }
 
 declare interface WorkflowFieldRefParam {
@@ -130,3 +168,7 @@ declare interface WorkflowFieldFindParam {
 }
 
 
+declare interface TableScheme {
+  name: string
+  comment: string
+}
