@@ -55,6 +55,7 @@ declare interface WorkflowOptionValueAddParam {
   name: string
   pid: string
   order_no: number
+  disabled: boolean
 }
 
 declare interface WorkflowOptionValueUpdateParam {

@@ -82,6 +82,21 @@ export function useWorkflowOptionApi(loading?: Ref<boolean>) {
       loading && (loading.value = false)
     }
   }
+      
+  async function deleteOptionType(id: string) {
+    try {
+      loading && (loading.value = true)
+      await OptionApi.deleteOptionType(id)
+      ElMessage.success('删除选项定义成功')
+      return true
+    } catch (e) {
+      console.error(e);
+      ElMessage.error((e as Error)?.message || '删除选项定义失败')
+      return false
+    } finally {
+      loading && (loading.value = false)
+    }
+  }
 
   async function updateOptionValue(data: WorkflowOptionValueUpdateParam) {
     try {
@@ -99,10 +114,43 @@ export function useWorkflowOptionApi(loading?: Ref<boolean>) {
   }
 
 
+      
+  async function deleteOptionValue(id: string) {
+    try {
+      loading && (loading.value = true)
+      await OptionApi.deleteOptionValue(id)
+      ElMessage.success('删除选项值成功')
+      return true
+    } catch (e) {
+      console.error(e);
+      ElMessage.error((e as Error)?.message || '删除选项值失败')
+      return false
+    } finally {
+      loading && (loading.value = false)
+    }
+  }
+
+      
+  async function resetOptionValue(id: string) {
+    try {
+      loading && (loading.value = true)
+      await OptionApi.resetOptionValue(id)
+      ElMessage.success('重置选项值成功')
+      return true
+    } catch (e) {
+      console.error(e);
+      ElMessage.error((e as Error)?.message || '重置选项值失败')
+      return false
+    } finally {
+      loading && (loading.value = false)
+    }
+  }
+
+
   return {
     workflowOptionTypes, workflowOptionValues,
     findWorkflowOptionTypes, findWorkflowOptionValues,
-    addOptionType, addOptionValue, updateOptionType, updateOptionValue,
+    addOptionType, addOptionValue, updateOptionType, updateOptionValue, deleteOptionType, deleteOptionValue, resetOptionValue,
   }
 
 }

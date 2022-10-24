@@ -46,7 +46,7 @@
         :disabled="props.disabled"
         multiple
         :multiple-limit="props.formData.scheme.component?.startsWith('checkbox') || props.formData.scheme.component?.startsWith('multi') ? 0 : 1"
-        :props="{ label: 'name', children: 'children' }"
+        :props="{ label: 'name', children: 'children', disabled: 'disabled' }"
         :data="workflowOptionValues"
         style="width: 100%;"
       />

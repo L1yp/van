@@ -27,6 +27,14 @@ export function updateOptionType(data: WorkflowOptionTypeUpdateParam) {
 }
 
 
+export function deleteOptionType(id: string) {
+  return request<void>({
+    url: `/workflow/option/type/${id}`,
+    method: 'DELETE',
+  })
+}
+
+
 export function getOptionValues(params: WorkflowOptionValueFindParam) {
   return request<WorkflowOptionValueView[]>({
     url: `/workflow/option/value/find`,
@@ -48,5 +56,20 @@ export function updateOptionValue(data: WorkflowOptionValueUpdateParam) {
     url: `/workflow/option/value/update`,
     method: 'POST',
     data,
+  })
+}
+
+// 禁用选项值
+export function deleteOptionValue(id: string) {
+  return request<void>({
+    url: `/workflow/option/value/${id}`,
+    method: 'DELETE',
+  })
+}
+
+export function resetOptionValue(id: string) {
+  return request<void>({
+    url: `/workflow/option/value/reset/${id}`,
+    method: 'PUT',
   })
 }

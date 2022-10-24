@@ -5,6 +5,7 @@
       <el-button v-if="!isView" @click="isView = true">取消</el-button>
       <el-button v-if="!isView" type="primary" plain @click="handleConfirm">确定</el-button>
       <el-button v-if="isView && !isConfig" @click="isConfig = true">配置选项</el-button>
+      <el-button v-if="isView && !isConfig" @click="handleDeleteOptionType" type="danger" plain>删除</el-button>
 
       <el-button v-if="isConfig" @click="isConfig = false">取消</el-button>
 
@@ -30,7 +31,7 @@
             scrollbar-always-on default-expand-all
             row-key="id"
             :tree-props="{ children: 'children' }"
-            :row-style="{ cursor: 'pointer' }"
+            :row-style="handleRowStyle"
             @row-click="handleRowClick"
           >
             <el-table-column type="index" label="#" align="center" header-align="center" />
@@ -44,8 +45,14 @@
               <div>
                 <el-button @click="handleAdd">新增</el-button>
               </div>
-              <div style="margin-top: 6px;">
+              <div v-if="!!valueFormData.id" style="margin-top: 6px;">
                 <el-button @click="handleValueSubmit">更新</el-button>
+              </div>
+              <div v-if="!!valueFormData.id && !valueFormData.disabled" style="margin-top: 6px;">
+                <el-button @click="handleDeleteValue" type="danger" plain>删除</el-button>
+              </div>
+              <div v-if="!!valueFormData.id && valueFormData.disabled" style="margin-top: 6px;">
+                <el-button @click="handleResetValue" type="success" plain>恢复</el-button>
               </div>
             </div>
           </div>
@@ -92,7 +99,12 @@ interface Props {
   fromType: WorkflowOptionTypeView
 }
 
+interface Emits {
+  (e: 'close'): void
+}
+
 const props = defineProps<Props>()
+const emits = defineEmits<Emits>()
 
 const isView = ref(true)
 
@@ -109,7 +121,7 @@ const {
   workflowOptionValues,
   findWorkflowOptionValues,
   addOptionValue,
-  updateOptionValue,
+  updateOptionValue, deleteOptionType, deleteOptionValue, resetOptionValue, 
 } = useWorkflowOptionApi(loading)
 
 const formRef = ref<InstanceType<typeof ElForm>>()
@@ -140,6 +152,7 @@ const valueFormData = ref<WorkflowOptionValueAddParam & WorkflowOptionValueUpdat
   name: '',
   pid: null,
   order_no: 1,
+  disabled: false,
 })
 
 const valueFormRef = ref<InstanceType<typeof ElForm>>()
@@ -176,13 +189,57 @@ async function handleValueSubmit() {
 
 }
 
+async function handleDeleteValue() {
+  if (!valueFormData.value.id) {
+    ElMessage.error('请选择一个选项')
+    return
+  }
+
+  const result = await deleteOptionValue(valueFormData.value.id)
+  if (result) {
+    await findWorkflowOptionValues(param.value)
+  }
+}
+
+
+async function handleResetValue() {
+  if (!valueFormData.value.id) {
+    ElMessage.error('请选择一个选项')
+    return
+  }
+
+  const result = await resetOptionValue(valueFormData.value.id)
+  if (result) {
+    await findWorkflowOptionValues(param.value)
+  }
+}
+
+
 function handleRowClick(row: WorkflowOptionValueView) {
   valueFormData.value.id = row.id
   valueFormData.value.name = row.name
   valueFormData.value.pid = row.pid
   valueFormData.value.order_no = row.order_no
+  valueFormData.value.disabled = row.disabled
 }
 
+async function handleDeleteOptionType() {
+  const result = await deleteOptionType(props.fromType.id)
+  if (result) {
+    emits('close')
+  }
+}
+
+function handleRowStyle(params) {
+  const row: WorkflowOptionValueView = params.row
+  const style = {
+    cursor: 'pointer',
+  }
+  if (row.disabled) {
+    style['color'] = 'red'
+  }
+  return style
+}
 </script>
 
 <style scoped>
