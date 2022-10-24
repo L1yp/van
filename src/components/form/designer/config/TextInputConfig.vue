@@ -8,7 +8,7 @@
   >
 
     <el-form-item prop="id" label="表单字段">
-      <el-input type="text" v-model="vFormSelectElem.attrs.id"></el-input>
+      <el-input type="text" v-model="vFormSelectElem.id"></el-input>
     </el-form-item>
     <el-form-item prop="showWordLimit" label="展示字数统计">
       <el-radio-group v-model="vFormSelectElem.attrs.showWordLimit">

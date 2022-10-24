@@ -3,7 +3,6 @@
 </template>
 
 <script lang="ts" setup>
-import { FormFieldMode } from "@/components/form/types";
 import { computed, inject, onBeforeMount, ref } from "vue";
 import { formModeKey } from "@/components/form/state.key";
 import DeptSelectorInput from "@/components/common/selector/dept/DeptSelectorInput.vue";

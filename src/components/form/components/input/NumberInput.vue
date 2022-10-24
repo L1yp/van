@@ -1,9 +1,9 @@
 <template>
   <template v-if="cMode === 'design'">
-    <el-input v-model="val" type="textarea" disabled v-bind="$props" />
+    <el-input-number :controls="false" v-model="val" disabled v-bind="$props" />
   </template>
   <template v-else-if="cMode === 'edit'">
-    <el-input v-model="val" type="textarea" v-bind="$props"  />
+    <el-input-number :controls="false" v-model="val" v-bind="$props"  />
   </template>
   <template v-else-if="cMode === 'read' ">
     <span v-text="props.value"></span>
@@ -14,25 +14,25 @@
 </template>
 
 <script lang="ts" setup>
-import { ElInput } from 'element-plus'
-import {computed, inject} from "vue";
-import {formModeKey} from "@/components/form/state.key";
+import { ElInputNumber } from 'element-plus'
+import { computed, inject } from "vue";
+import { formModeKey } from "@/components/form/state.key";
 
 interface Props {
   mode?: FormFieldMode
-  value?: string
+  value?: number
 }
 
 interface Emits {
-  (e: 'update:value', v: string): void
+  (e: 'update:value', v: number): void
 }
 
 const props = defineProps<Props>()
 
 const emits = defineEmits<Emits>()
 
-const val = computed<string>({
-  get: () => props.value || '',
+const val = computed<number>({
+  get: () => props.value || 0,
   set: v => emits('update:value', v)
 })
 
@@ -46,7 +46,6 @@ const cMode = computed<FormFieldMode>(() => {
   }
   return "edit"
 })
-
 
 </script>
 

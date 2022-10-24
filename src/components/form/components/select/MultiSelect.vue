@@ -94,7 +94,6 @@
 
 <script lang="ts" setup>
 import { ElSelect, ElOption, ElCheckboxGroup, ElCheckbox, ElCheckboxButton } from 'element-plus'
-import { FormFieldMode } from "@/components/form/types";
 import { computed, inject, ref } from "vue";
 import { formModeKey } from "@/components/form/state.key";
 

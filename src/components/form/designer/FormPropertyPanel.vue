@@ -11,6 +11,9 @@
               label-width="120px"
               style="padding: 5px;"
             >
+              <el-form-item prop="id" label="字段名">
+                <el-input type="text" v-model="vFormSelectElem.id"></el-input>
+              </el-form-item>
               <el-form-item prop="label" label="标签文本" required>
                 <el-input v-model="vFormSelectElem.formItemAttrs.label"></el-input>
               </el-form-item>
@@ -49,18 +52,8 @@
             </el-form>
           </el-collapse-item>
           <el-collapse-item name="component" title="组件配置">
-            <input-config v-if="vFormSelectElem?.component === 'el-input'"></input-config>
-            <text-input-config v-if="vFormSelectElem?.component === 'text-input'"></text-input-config>
-            <text-area-input-config v-if="vFormSelectElem?.component === 'text-area-input'"></text-area-input-config>
-            <single-select-config v-if="vFormSelectElem?.component === 'single-select'"></single-select-config>
-            <multi-select-config v-if="vFormSelectElem?.component === 'multi-select'"></multi-select-config>
-            <user-selector-input-config v-if="vFormSelectElem?.component === 'user-select'"></user-selector-input-config>
-            <dept-selector-input-config v-if="vFormSelectElem?.component === 'dept-select'"></dept-selector-input-config>
-            <row-config v-if="vFormSelectElem?.component === 'el-row'"></row-config>
-            <col-config v-if="vFormSelectElem?.component === 'el-col'"></col-config>
-            <select-config v-if="vFormSelectElem?.component === 'el-select'"></select-config>
-            <dict-input-config v-if="vFormSelectElem?.component === 'dict-input'"></dict-input-config>
-            <user-selector-input-config v-if="vFormSelectElem?.component === 'user-selector-input'"></user-selector-input-config>
+            <component :is="configMap[vFormSelectElem?.component]" />
+            
           </el-collapse-item>
         </el-collapse>
       </el-scrollbar>
@@ -70,7 +63,7 @@
         <el-scrollbar :height="collapseScrollHeight" always>
           <el-collapse v-model="formOpenedItems" style="padding: 0 6px">
             <el-collapse-item name="component" title="组件配置" v-if="!!vFormSelectElem">
-              <el-input v-model="vFormSelectElem.injectFunc"></el-input>
+              
             </el-collapse-item>
           </el-collapse>
         </el-scrollbar>
@@ -84,17 +77,17 @@ import {
   ElScrollbar, ElTabs, ElTabPane, ElCollapse, ElRadioGroup, ElRadioButton,
   ElCollapseItem, ElForm, ElFormItem, ElInput,
 } from 'element-plus'
-import {computed, inject, ref} from "vue";
-import {vFormActiveElementKey} from "@/config/app.keys";
-import InputConfig from "@/components/form/designer/config/InputConfig.vue";
+import { computed, inject, markRaw, ref } from "vue";
+import { vFormActiveElementKey } from "@/config/app.keys";
+import NumberInputConfig from "@/components/form/designer/config/NumberInputConfig.vue";
 import TextInputConfig from "@/components/form/designer/config/TextInputConfig.vue";
 import TextAreaInputConfig from "@/components/form/designer/config/TextAreaInputConfig.vue";
 import SingleSelectConfig from "@/components/form/designer/config/SingleSelectConfig.vue";
 import MultiSelectConfig from "@/components/form/designer/config/MultiSelectConfig.vue";
 import RowConfig from "@/components/form/designer/config/RowConfig.vue";
 import ColConfig from "@/components/form/designer/config/ColConfig.vue";
-import SelectConfig from "@/components/form/designer/config/SelectConfig.vue";
-import DictInputConfig from "@/components/form/designer/config/DictInputConfig.vue";
+import DateConfig from "@/components/form/designer/config/DateConfig.vue";
+import DateRangeConfig from "@/components/form/designer/config/DateRangeConfig.vue";
 import UserSelectorInputConfig from "@/components/form/designer/config/UserSelectorInputConfig.vue";
 import DeptSelectorInputConfig from "@/components/form/designer/config/DeptSelectorInputConfig.vue";
 
@@ -112,6 +105,21 @@ const activePane = ref<string>('component')
 const openedItems = ref<string[]>(['form-item', 'component'])
 
 const formOpenedItems = ref<string[]>([])
+
+const configMap = {
+  'date-picker': markRaw(DateConfig),
+  'date-range-picker': markRaw(DateRangeConfig),
+  'number-input': markRaw(NumberInputConfig),
+  'text-input': markRaw(TextInputConfig),
+  'text-area-input': markRaw(TextAreaInputConfig),
+  'single-select': markRaw(SingleSelectConfig),
+  'multi-select': markRaw(MultiSelectConfig),
+  'user-select': markRaw(UserSelectorInputConfig),
+  'dept-select': markRaw(DeptSelectorInputConfig),
+  'el-row': markRaw(RowConfig),
+  'el-col': markRaw(ColConfig),
+}
+
 </script>
 
 <style scoped>

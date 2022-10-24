@@ -74,7 +74,6 @@
 
 <script lang="ts" setup>
 import { ElSelect, ElOption, ElRadioGroup, ElRadio, ElRadioButton } from 'element-plus'
-import { FormFieldMode } from "@/components/form/types";
 import { computed, inject } from "vue";
 import { formModeKey } from "@/components/form/state.key";
 

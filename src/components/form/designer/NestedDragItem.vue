@@ -26,6 +26,9 @@
               style="min-height: 80px; padding: 6px; "
             >
               <nested-drag-item style="width: 100%; height: 100%; background-color: #fff; " :children="item.children"></nested-drag-item>
+              <div v-if="vFormActiveElement === item" class="field-id">
+                <span v-text="item.id"></span>
+              </div>
               <div v-if="vFormActiveElement === item" class="widget-action">
                 <div title="复制" @click.stop="handleCopyElem">
                   <CopyDocument class="widget-action-icon"/>
@@ -38,6 +41,9 @@
           </el-row>
           <div v-if="vFormActiveElement === element" class="drag-handle">
             <s-v-g-icon class="drag-icon" name="Drag"/>
+          </div>
+          <div v-if="vFormActiveElement === element" class="field-id">
+            <span v-text="element.id"></span>
           </div>
           <div v-if="vFormActiveElement === element" class="widget-action">
             <div title="添加栅格列" @click.stop="handleAddCol">
@@ -65,8 +71,12 @@
 
             </component>
           </el-form-item>
+
           <div v-if="vFormActiveElement === element" class="drag-handle">
             <s-v-g-icon class="drag-icon" name="Drag"/>
+          </div>
+          <div v-if="vFormActiveElement === element" class="field-id">
+            <span v-text="element.id"></span>
           </div>
           <div v-if="vFormActiveElement === element" class="widget-action">
             <div title="复制" @click.stop="handleCopyElem">
@@ -94,7 +104,10 @@ import SVGIcon from "@/components/common/SVGIcon.vue";
 import emitter from "@/event/mitt";
 import UserSelectorInput from "@/components/common/selector/user/UserSelectorInput.vue";
 import DeptSelectorInput from "@/components/common/selector/dept/DeptSelectorInput.vue";
+import DatePicker from "../components/date/DatePicker.vue"
+import DateRangePicker from "../components/date/DateRangePicker.vue"
 import TextInput from "../components/input/TextInput.vue"
+import NumberInput from "../components/input/NumberInput.vue"
 import TextAreaInput from "../components/input/TextAreaInput.vue"
 import SingleSelect from "../components/select/SingleSelect.vue"
 import MultiSelect from "../components/select/MultiSelect.vue"
@@ -102,7 +115,6 @@ import UserSelect from "../components/select/UserSelect.vue"
 import DeptSelect from "../components/select/DeptSelect.vue"
 import { vFormActiveElementKey } from "@/config/app.keys";
 import { genId } from "@/components/form/designer/util/common";
-import { ComponentConfig } from "../types";
 import { Plus, Delete, CopyDocument } from "@element-plus/icons-vue";
 import { findTreeItemParentById } from "@/utils/common";
 
@@ -110,8 +122,8 @@ export default defineComponent({
   name: "NestedDragItem",
   components: {
     Draggable, ElForm, ElFormItem, ElInput, ElSelect, ElOption, ElRow, ElCol, SVGIcon, ElCheckboxGroup, ElCheckbox,
-    UserSelectorInput, DeptSelectorInput, TextInput, TextAreaInput, SingleSelect, MultiSelect, UserSelect, DeptSelect, 
-    Plus, Delete, CopyDocument,
+    UserSelectorInput, DeptSelectorInput, NumberInput, TextInput, TextAreaInput, SingleSelect, MultiSelect, UserSelect, DeptSelect, 
+    Plus, Delete, CopyDocument, DatePicker, DateRangePicker
   },
   props: {
     children: Array as PropType<ComponentConfig[]>
@@ -186,7 +198,7 @@ export default defineComponent({
         children: JSON.parse(JSON.stringify(original.children || [])),
         key: 1,
       }
-      parent.splice(activeIdx, 0, copyElem)
+      parent.splice(activeIdx + 1, 0, copyElem)
     }
 
     return {
@@ -223,32 +235,47 @@ div {
 
 .widget-item.active,
 .widget-col-item.active,
-.widget-col-item:hover,
 .widget-row-item.active {
   outline: 2px solid #409EFF;
   border: 1px solid #409EFF;
 }
 
 .widget-item:hover,
+.widget-col-item:hover,
 .widget-row-item:hover {
   border: 1px solid #409EFF;
 }
+
 
 .drag-handle {
   position: absolute; 
   top: 0; 
   left: 0; 
-  width: 20px; 
   height: 20px; 
   padding: 2px;
-  background-color: orange; 
+  color: white;
+  background-color: #ffa500; 
+  display: flex;
+  align-items: center;
   cursor: move;
+}
+
+.field-id {
+  position: absolute; 
+  top: 0; 
+  right: 0; 
+  height: 20px; 
+  padding: 2px;
+  color: white;
+  background-color: #ffa50080; 
+  display: flex;
+  align-items: center;
+  cursor: pointer;
 }
 
 .drag-icon {
   width: 16px;
   height: 16px;
-  color: white;
 }
 
 .widget-action {

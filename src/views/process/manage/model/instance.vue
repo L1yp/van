@@ -70,7 +70,6 @@ import SVGIcon from "@/components/common/SVGIcon.vue"
 import VDialog from "@/components/dialog/VDialog.vue";
 import {getDeviceType} from "@/utils/common";
 import VFormPro from "@/components/form/VFormPro.vue";
-import {FormScheme} from "@/components/form/types";
 import UserViewer from "@/components/common/viewer/user/UserViewer.vue";
 
 

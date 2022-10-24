@@ -8,7 +8,7 @@
     style="padding: 5px;"
   >
     <el-form-item prop="id" label="表单字段">
-      <el-input type="text" v-model="vFormSelectElem.attrs.id"></el-input>
+      <el-input type="text" v-model="vFormSelectElem.id"></el-input>
     </el-form-item>
     <el-form-item prop="placeholder" label="占位符">
       <el-input :key="vFormSelectElem.id" v-model="vFormSelectElem.attrs.placeholder"></el-input>

@@ -1,5 +1,4 @@
 import {ComputedRef, InjectionKey, Ref, ShallowRef} from "vue";
-import {ComponentConfig} from "@/components/form/types";
 
 export const mainWidthKey = Symbol("mainWidthKey") as InjectionKey<ComputedRef<string>>
 export const mainHeightKey = Symbol("mainHeight") as InjectionKey<ComputedRef<string>>

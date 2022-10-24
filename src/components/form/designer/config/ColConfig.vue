@@ -8,9 +8,9 @@
   >
 
     <el-form-item prop="span" label="栅格列数">
-      <el-input-number v-model="vFormSelectElem.attrs.span"></el-input-number>
+      <el-slider :min="0" :max="24" :marks="{ 0: '0', 12: '12' }" v-model="vFormSelectElem.attrs.span" />
     </el-form-item>
-
+<!-- 
     <el-form-item prop="offset" label="左侧间隔格数">
       <el-input-number v-model="vFormSelectElem.attrs.offset"></el-input-number>
     </el-form-item>
@@ -25,18 +25,17 @@
 
     <el-form-item prop="tag" label="元素标签">
       <el-input type="text" v-model="vFormSelectElem.attrs.tag"></el-input>
-    </el-form-item>
+    </el-form-item> -->
 
   </el-form>
 </template>
 
 <script lang="ts" setup>
 import {
-  ElForm, ElFormItem, ElInput, ElInputNumber
+  ElForm, ElFormItem, ElSlider
 } from 'element-plus'
-import {inject} from "vue";
-import {vFormActiveElementKey} from "@/config/app.keys";
-import SVGIcon from "@/components/common/SVGIcon.vue";
+import { inject } from "vue";
+import { vFormActiveElementKey } from "@/config/app.keys";
 
 const vFormSelectElem = inject(vFormActiveElementKey)
 

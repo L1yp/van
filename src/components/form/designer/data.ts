@@ -1,8 +1,69 @@
-import {CandidateComponentConfig, SelectConfig} from "@/components/form/types";
 import {genId} from "@/components/form/designer/util/common";
 
 
 export const InputComponents: CandidateComponentConfig[] = [
+  {
+    id: genId(),
+    icon: 'TextField',
+    component: 'number-input',
+    category: 'form-item',
+    title: "数字输入框",
+    formItemAttrs: {
+      label: "数字输入框",
+    },
+    attrs: {
+      value: 1111111,
+      placeholder: '输入数字',
+      min: 1,
+      max: 100,
+      clearable: false,
+      size: 'default',
+      style: `width: 100%`
+    },
+    children: []
+  },
+  {
+    id: genId(),
+    icon: 'TextField',
+    component: 'date-picker',
+    category: 'form-item',
+    title: "日期输入框",
+    formItemAttrs: {
+      label: "日期输入框",
+    },
+    attrs: {
+      date_type: 'date',
+      value: '2022-10-24',
+      placeholder: '输入日期',
+      format: 'YYYY-MM-DD',
+      valueFormat: 'YYYY-MM-DD',
+      clearable: false,
+      size: 'default',
+      style: `width: 100%`
+    },
+    children: []
+  },
+  {
+    id: genId(),
+    icon: 'TextField',
+    component: 'date-range-picker',
+    category: 'form-item',
+    title: "日期范围输入框",
+    formItemAttrs: {
+      label: "日期范围输入框",
+    },
+    attrs: {
+      date_range_type: 'daterange',
+      value: ['2022-10-24', '2022-10-26'],
+      format: 'YYYY-MM-DD',
+      valueFormat: 'YYYY-MM-DD',
+      placeholder: '输入日期范围',
+      clearable: false,
+      size: 'default',
+      style: `width: 100%`
+    },
+    children: []
+  },
   {
     id: genId(),
     icon: 'TextField',
@@ -207,10 +268,6 @@ export const LayoutComponents: CandidateComponentConfig[] = [
         title: "格子",
         attrs: {
           span: 12,
-          offset: 0,
-          push: 0,
-          pull: 0,
-          tag: 'div',
         },
         children: [],
       },

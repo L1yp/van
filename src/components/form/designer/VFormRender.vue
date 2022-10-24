@@ -11,7 +11,6 @@
 
 <script lang="ts" setup>
 import { ElForm } from 'element-plus'
-import {ComponentConfig, FormFieldMode} from "@/components/form/types";
 import {computed, provide, ref} from "vue";
 import VFormNestedItem from "@/components/form/designer/VFormNestedItem.vue";
 import { formModeKey, formDataKey } from "@/components/form/state.key";

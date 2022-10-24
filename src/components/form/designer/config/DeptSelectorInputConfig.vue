@@ -8,7 +8,7 @@
     style="padding: 5px;"
   >
     <el-form-item prop="id" label="表单字段">
-      <el-input type="text" v-model="vFormSelectElem.attrs.id"></el-input>
+      <el-input type="text" v-model="vFormSelectElem.id"></el-input>
     </el-form-item>
     
     <el-form-item prop="placeholder" label="占位符">
@@ -20,9 +20,9 @@
 
 <script lang="ts" setup>
 import {
-  ElForm, ElFormItem, ElInput, ElRadioGroup, ElRadioButton, 
+  ElForm, ElFormItem, ElInput
 } from 'element-plus'
-import {computed, inject, watch} from "vue";
+import { inject } from "vue";
 import { vFormActiveElementKey } from "@/config/app.keys";
 
 const vFormSelectElem = inject(vFormActiveElementKey)

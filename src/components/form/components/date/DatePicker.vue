@@ -1,9 +1,9 @@
 <template>
   <template v-if="cMode === 'design'">
-    <el-input v-model="val" type="textarea" disabled v-bind="$props" />
+    <el-date-picker v-model="val" disabled v-bind="$attrs" />
   </template>
   <template v-else-if="cMode === 'edit'">
-    <el-input v-model="val" type="textarea" v-bind="$props"  />
+    <el-date-picker v-model="val" v-bind="$attrs"  />
   </template>
   <template v-else-if="cMode === 'read' ">
     <span v-text="props.value"></span>
@@ -14,9 +14,9 @@
 </template>
 
 <script lang="ts" setup>
-import { ElInput } from 'element-plus'
-import {computed, inject} from "vue";
-import {formModeKey} from "@/components/form/state.key";
+import { ElDatePicker } from 'element-plus'
+import { computed, inject, useAttrs } from "vue";
+import { formModeKey } from "@/components/form/state.key";
 
 interface Props {
   mode?: FormFieldMode
@@ -31,9 +31,15 @@ const props = defineProps<Props>()
 
 const emits = defineEmits<Emits>()
 
+const attrs = useAttrs()
+
 const val = computed<string>({
   get: () => props.value || '',
-  set: v => emits('update:value', v)
+  set: v => {
+    console.log('date picker setter', attrs, v);
+    
+    emits('update:value', v)
+  }
 })
 
 const formMode = inject(formModeKey)
@@ -46,7 +52,6 @@ const cMode = computed<FormFieldMode>(() => {
   }
   return "edit"
 })
-
 
 </script>
 

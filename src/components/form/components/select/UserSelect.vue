@@ -16,7 +16,6 @@
 </template>
 
 <script lang="ts" setup>
-import { FormFieldMode } from "@/components/form/types";
 import { computed, inject } from "vue";
 import { formModeKey } from "@/components/form/state.key";
 import UserSelectorInput from "@/components/common/selector/user/UserSelectorInput.vue";

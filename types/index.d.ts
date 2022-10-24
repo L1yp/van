@@ -39,5 +39,5 @@ declare interface DialogInfo<T> {
 }
 
 declare interface Tree {
-  children: this[]
+  children?: this[]
 }

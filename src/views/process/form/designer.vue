@@ -74,7 +74,6 @@
 import {computed, inject, ref, provide} from "vue";
 import {mainHeightKey, mainWidthKey, themeKey, vFormActiveElementKey} from "@/config/app.keys";
 import { ElForm, ElScrollbar, ElTabs, ElTabPane, ElButton, ElRadioGroup, ElRadioButton } from "element-plus"
-import {ComponentConfig, FormFieldMode} from "@/components/form/types";
 import NestedDragItem from "@/components/form/designer/NestedDragItem.vue";
 import FormPropertyPanel from "@/components/form/designer/FormPropertyPanel.vue"
 import CandidateComponentPage from "@/components/form/designer/candidate/CandidateComponentPage.vue";

@@ -101,12 +101,10 @@ import {
   ElScrollbar
 } from "element-plus"
 import Sortable, { SortableEvent } from "sortablejs"
-import VForm from "@/components/form/VForm.vue";
 import VFormPro from "@/components/form/VFormPro.vue";
 import processInfo from "@/mocks/process_info.json"
 import userInfo from "@/mocks/user-info.json"
 import dictValue from "@/mocks/dict-value.json"
-import {FormScheme} from "@/components/form/types";
 
 interface TableInfo {
   tableLoading: boolean;
