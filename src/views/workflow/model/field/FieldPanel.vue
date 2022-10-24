@@ -4,6 +4,7 @@
       <div v-if="!refVisible">
         <el-button :icon="Plus" plain type="primary" @click="handleAddField">新增</el-button>
         <el-button :icon="Link" @click="handleRefField">引用</el-button>
+        <span style="color: red; font-weight: bold; margin-left: 10px;">右键编辑字段</span>
       </div>
       <div v-else>
         <el-button plain type="primary" @click="handleConfirmRef">确定</el-button>

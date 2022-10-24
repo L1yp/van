@@ -2,6 +2,7 @@
   <div>
     <div>
       <el-button :icon="Plus" type="primary" @click="handleAdd">新增</el-button>
+      <span style="color: red; font-weight: bold; margin-left: 10px;">双击进入配置</span>
     </div>
     <el-table
       v-loading="loading"

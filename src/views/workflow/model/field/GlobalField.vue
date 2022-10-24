@@ -2,6 +2,7 @@
   <div style="width: 100%; height: 100%;">
     <div style="box-sizing: border-box; padding: 6px 0; ">
       <el-button type="primary" plain :icon="Plus" @click="handleAdd">新增</el-button>
+      <span style="color: red; font-weight: bold; margin-left: 10px;">右键编辑字段</span>
     </div>
     <el-tabs v-model="scope" type="border-card" style="width: 100%; height: calc(100% - 32px - 12px);">
       <el-tab-pane name="DEFAULT" label="默认字段">

@@ -2,6 +2,7 @@
   <div v-loading="loading" style="width: 100%; height: 100%;">
     <div style="box-sizing: border-box; padding: 6px 0;">
       <el-button plain type="primary" :icon="Plus" @click="handleAdd" >新增</el-button>
+      <span style="color: red; font-weight: bold; margin-left: 10px;">双击进入配置选项</span>
     </div>
     <div style="width: 100%; height: calc(100% - 32px - 12px);">
       <el-table
