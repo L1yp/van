@@ -3,47 +3,81 @@
     :list="children || []"
     :group="{name: 'component'}"
     item-key="id"
-    handle="div.drag-form-item"
+    handle="div.drag-handle"
     ghostClass="ghost"
   >
     <template #item="{ element }">
-      <div class="drag-form-item">
+      <div class="widget-item" :class="vFormActiveElement === element ? 'active' : ''" @click.stop="handleClickElement(element)">
 
         <template v-if="'el-row' === element.component">
           <el-row
             v-bind="element.attrs"
-            @click.stop="handleClickElement(element)"
-            style="min-height: 120px"
-            :class="vFormActiveElement === element ? ['drag-selected'] : []"
+            style="min-height: 120px; padding: 6px;"
+            class="widget-row-item"
+            :class="vFormActiveElement === element ? 'active' : ''"
           >
             <el-col
               v-bind="item.attrs"
               v-for="item in element.children"
               :key="item.id"
               @click.stop="handleClickElement(item)"
-              class="layout-col"
-              :class="vFormActiveElement === item ? ['drag-selected'] : []"
-              style="min-height: 80px; padding: 6px; border: 2px inset rgba(0,0,0,.1)"
+              class="widget-col-item"
+              :class="vFormActiveElement === item ? 'active' : ''"
+              style="min-height: 80px; padding: 6px; "
             >
               <nested-drag-item style="width: 100%; height: 100%; background-color: #fff; " :children="item.children"></nested-drag-item>
+              <div v-if="vFormActiveElement === item" class="widget-action">
+                <div title="复制" @click.stop="handleCopyElem">
+                  <CopyDocument class="widget-action-icon"/>
+                </div>
+                <div title="删除" @click.stop="handleDeleteElem">
+                  <Delete class="widget-action-icon" />
+                </div>
+              </div>
             </el-col>
           </el-row>
+          <div v-if="vFormActiveElement === element" class="drag-handle">
+            <s-v-g-icon class="drag-icon" name="Drag"/>
+          </div>
+          <div v-if="vFormActiveElement === element" class="widget-action">
+            <div title="添加栅格列" @click.stop="handleAddCol">
+              <Plus class="widget-action-icon" />
+            </div>
+            <div title="复制" @click.stop="handleCopyElem">
+              <CopyDocument class="widget-action-icon"/>
+            </div>
+            <div title="删除" @click.stop="handleDeleteElem">
+              <Delete class="widget-action-icon" />
+            </div>
+          </div>
         </template>
 
         <template v-else>
           <el-form-item
             :prop="element.id"
             v-bind="element.formItemAttrs"
-            @click.stop="handleClickElement(element)"
-            :class="vFormActiveElement === element ? ['drag-selected'] : []"
           >
             <component
               :is="element.component"
               v-bind="element.attrs"
               v-model:value="formData[element.id]"
             >
+
             </component>
           </el-form-item>
+          <div v-if="vFormActiveElement === element" class="drag-handle">
+            <s-v-g-icon class="drag-icon" name="Drag"/>
+          </div>
+          <div v-if="vFormActiveElement === element" class="widget-action">
+            <div title="复制" @click.stop="handleCopyElem">
+              <CopyDocument class="widget-action-icon"/>
+            </div>
+            <div @click.stop="handleDeleteElem" title="删除">
+              <Delete class="widget-action-icon" />
+            </div>
+            
+          </div>
+
         </template>
       </div>
 
@@ -54,7 +88,7 @@
 
 <script lang="ts">
 import Draggable from "vuedraggable";
-import {defineComponent, inject, ref} from "vue";
+import { defineComponent, inject, PropType, ref, toRaw } from "vue";
 import { ElForm, ElFormItem, ElInput, ElSelect, ElRow, ElCol, ElCheckboxGroup, ElCheckbox, ElOption } from "element-plus"
 import SVGIcon from "@/components/common/SVGIcon.vue";
 import emitter from "@/event/mitt";
@@ -67,15 +101,20 @@ import MultiSelect from "../components/select/MultiSelect.vue"
 import UserSelect from "../components/select/UserSelect.vue"
 import DeptSelect from "../components/select/DeptSelect.vue"
 import { vFormActiveElementKey } from "@/config/app.keys";
+import { genId } from "@/components/form/designer/util/common";
+import { ComponentConfig } from "../types";
+import { Plus, Delete, CopyDocument } from "@element-plus/icons-vue";
+import { findTreeItemParentById } from "@/utils/common";
 
 export default defineComponent({
   name: "NestedDragItem",
   components: {
     Draggable, ElForm, ElFormItem, ElInput, ElSelect, ElOption, ElRow, ElCol, SVGIcon, ElCheckboxGroup, ElCheckbox,
     UserSelectorInput, DeptSelectorInput, TextInput, TextAreaInput, SingleSelect, MultiSelect, UserSelect, DeptSelect, 
+    Plus, Delete, CopyDocument,
   },
   props: {
-    children: Array
+    children: Array as PropType<ComponentConfig[]>
   },
   setup(props, { emit }) {
 
@@ -98,48 +137,137 @@ export default defineComponent({
       vFormActiveElement.value = elem
     }
 
+    function handleAddCol() {
+      const colElem: ComponentConfig = {
+        id: 'col_' + genId().substring(0, 6),
+        component: 'el-col',
+        category: 'layout',
+        formItemAttrs: undefined,
+        attrs: {
+          span: 12,
+          offset: 0,
+          push: 0,
+          pull: 0,
+          tag: 'div',
+        },
+        children: [],
+        key: 1,
+      }
+      vFormActiveElement.value.children.push(colElem)
+      
+    }
+
+    function handleDeleteElem() {
+      const parent = findTreeItemParentById(props.children, 'id', vFormActiveElement.value.id)
+      if (!parent.length) {
+        console.log('找不到目标节点');
+        return
+      }
+      /// find in tree idx
+      const activeIdx = parent.indexOf(vFormActiveElement.value)
+      activeIdx !== -1 && parent.splice(activeIdx, 1)
+    }
+
+    function handleCopyElem() {
+      const parent = findTreeItemParentById(props.children, 'id', vFormActiveElement.value.id)
+      if (!parent.length) {
+        console.log('找不到目标节点');
+        return
+      }
+      
+      const activeIdx = parent.indexOf(vFormActiveElement.value)
+      const original = toRaw(vFormActiveElement.value)
+      const copyElem: ComponentConfig = {
+        id: 'field_' + genId().substring(0, 6),
+        component: original.component,
+        category: original.category,
+        formItemAttrs: original.formItemAttrs ? JSON.parse(JSON.stringify(original.formItemAttrs)) : undefined,
+        attrs: original.attrs ? JSON.parse(JSON.stringify(original.attrs)) : undefined,
+        children: JSON.parse(JSON.stringify(original.children || [])),
+        key: 1,
+      }
+      parent.splice(activeIdx, 0, copyElem)
+    }
+
     return {
-      vFormActiveElement, handleClickElement, formData
+      vFormActiveElement, handleClickElement, formData, handleAddCol, handleDeleteElem, handleCopyElem
     }
   }
 })
 </script>
 
 <style scoped>
-
-:deep(.el-row) {
-  padding: 10px
+div {
+  box-sizing: border-box;
 }
-
-:deep(.el-row) {
+.widget-item {
+  position: relative;
+  background-color: #ecf5ff4d;
+  min-height: 50px;
+  overflow: hidden;
   border: 1px dashed gray;
 }
 
-:deep(.el-col) {
-  border: 1px dashed gray;
+.widget-item + .widget-item {
+  margin-top: 2px;
 }
 
-.drag-form-item {
+.widget-row-item {
   position: relative;
 }
 
-.drag-form-item + .drag-form-item {
-  margin-top: 5px;
+.widget-col-item {
+  position: relative;
+}
+
+
+.widget-item.active,
+.widget-col-item.active,
+.widget-col-item:hover,
+.widget-row-item.active {
+  outline: 2px solid #409EFF;
+  border: 1px solid #409EFF;
+}
+
+.widget-item:hover,
+.widget-row-item:hover {
+  border: 1px solid #409EFF;
 }
 
 .drag-handle {
+  position: absolute; 
+  top: 0; 
+  left: 0; 
+  width: 20px; 
+  height: 20px; 
+  padding: 2px;
+  background-color: orange; 
   cursor: move;
-  position: absolute;
-  top: 0;
-  left: 0;
 }
 
-.drag-selected {
-  outline: 2px solid #409EFF;
+.drag-icon {
+  width: 16px;
+  height: 16px;
+  color: white;
 }
 
-.layout-col {
-  padding: 6px;
+.widget-action {
+  position: absolute; 
+  right: 0; 
+  bottom: 0; 
+  background-color: orange; 
+  cursor: pointer;
+  height: 24px;
+  padding: 4px;
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+}
+
+.widget-action-icon {
+  width: 16px;
+  height: 16px;
+  color: white;
 }
 
 </style>

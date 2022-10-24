@@ -38,7 +38,7 @@ export interface FormScheme {
   componentAttrs?: Record<string, any>
 }
 
-export interface CandidateComponentConfig {
+export interface CandidateComponentConfig extends Tree {
   id: string
   component: string
   category: 'form-item' | 'layout' | 'output'
@@ -46,19 +46,17 @@ export interface CandidateComponentConfig {
   title?: string
   formItemAttrs?: Record<string, any>
   attrs?: Record<string, any>
-  children?: CandidateComponentConfig[]
   [key: string]: any
 }
 
 
-export interface ComponentConfig {
+export interface ComponentConfig extends Tree {
   id: string
   component: string
   category: 'form-item' | 'layout' | 'output'
   icon?: string
   formItemAttrs?: Record<string, any>
   attrs?: Record<string, any>,
-  children?: ComponentConfig[]
   key: number
   modelValue?: any
   injectFunc?: string

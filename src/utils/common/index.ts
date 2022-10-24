@@ -132,6 +132,31 @@ export function findTreeItemById<T extends Tree>(src: T[], keyField: keyof T, ke
 
 }
 
+/**
+ * 在树中查询条目的父级
+ * @param src 数据源
+ * @param keyField 键名
+ * @param key 键值
+ * @returns 条目
+ */
+ export function findTreeItemParentById<T extends Tree>(src: T[], keyField: keyof T, key: string): T[] {
+
+  for (const item of src) {
+    if (item[keyField] === key) {
+      return src
+    }
+    if (item.children?.length) {
+      const result = findTreeItemParentById(item.children, keyField, key)
+      if (result?.length) {
+        return result
+      }
+    }
+  }
+
+  return []
+
+}
+
 export function flatternTree<T extends Tree>(src: T[]): T[] {
   const result: T[] = []
   getSubTree(result, src)

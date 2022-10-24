@@ -214,20 +214,7 @@ export const LayoutComponents: CandidateComponentConfig[] = [
         },
         children: [],
       },
-      {
-        id: genId(),
-        component: 'el-col',
-        category: 'layout',
-        title: "格子",
-        attrs: {
-          span: 12,
-          offset: 0,
-          push: 0,
-          pull: 0,
-          tag: 'div',
-        },
-        children: [],
-      }
+      
     ],
   }
 ]
