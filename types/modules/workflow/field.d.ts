@@ -1,7 +1,7 @@
 declare type FieldScope = 'PRIVATE' | 'GLOBAL' | 'DEFAULT'
 declare type FieldType = 'number' | 'text' | 'option' | 'user' | 'dept' | 'date' | 'daterange'
 declare type OptionValueFrom = 'DEFAULT' | 'CLASS' | 'TABLE'
-declare type OptionComponent = 'radio' | 'radio-button' | 'checkbox' | 'checkbox-button' | 'single-cascader' | 'multi-cascader' | 'single-select' | 'multi-select'
+declare type OptionComponent = 'radio' | 'radio-button' | 'checkbox' | 'checkbox-button' | 'single-select' | 'multi-select'
 declare type UserOptionFrom = 'ALL' | 'CLASS' | 'FIXED'
 declare type DateType = 'year' | 'month' | 'date' | 'datetime' | 'week'
 declare type DateRangeType = 'daterange' | 'datetimerange'

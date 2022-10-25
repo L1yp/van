@@ -17,43 +17,27 @@
               <el-form-item prop="label" label="标签文本" required>
                 <el-input v-model="vFormSelectElem.formItemAttrs.label"></el-input>
               </el-form-item>
-              <el-form-item prop="labelWidth" label="标签宽度">
-                <el-input v-model="vFormSelectElem.formItemAttrs.labelWidth"></el-input>
+              <el-form-item prop="hiddenLabel" label="隐藏标签">
+                <el-radio-group v-model="vFormSelectElem.formItemAttrs.hiddenLabel">
+                  <el-radio-button :label="true">是</el-radio-button>
+                  <el-radio-button :label="false">否</el-radio-button>
+                </el-radio-group>
               </el-form-item>
+              <el-divider content-position="left">数据校验</el-divider>
               <el-form-item prop="required" label="是否必填">
                 <el-radio-group v-model="vFormSelectElem.formItemAttrs.required">
                   <el-radio-button :label="true">是</el-radio-button>
                   <el-radio-button :label="false">否</el-radio-button>
                 </el-radio-group>
               </el-form-item>
-              <el-form-item prop="showMessage" label="显示错误信息">
-                <el-radio-group v-model="vFormSelectElem.formItemAttrs.showMessage">
-                  <el-radio-button :label="true">显示</el-radio-button>
-                  <el-radio-button :label="false">隐藏</el-radio-button>
-                </el-radio-group>
-              </el-form-item>
-              <el-form-item prop="error" label="错误提示内容">
-                <el-input v-model="vFormSelectElem.formItemAttrs.error"></el-input>
+              <el-form-item v-if="vFormSelectElem.formItemAttrs.required" prop="requiredMessage" label="未填提示">
+                <el-input v-model="vFormSelectElem.formItemAttrs.requiredMessage" />
               </el-form-item>
 
-              <el-form-item prop="inlineMessage" label="行内错误信息">
-                <el-radio-group v-model="vFormSelectElem.formItemAttrs.inlineMessage">
-                  <el-radio-button :label="true">显示</el-radio-button>
-                  <el-radio-button :label="false">隐藏</el-radio-button>
-                </el-radio-group>
-              </el-form-item>
-              <el-form-item prop="size" label="大小">
-                <el-radio-group v-model="vFormSelectElem.formItemAttrs.size">
-                  <el-radio-button label="large">大</el-radio-button>
-                  <el-radio-button label="default">默认</el-radio-button>
-                  <el-radio-button label="small">小</el-radio-button>
-                </el-radio-group>
-              </el-form-item>
             </el-form>
           </el-collapse-item>
           <el-collapse-item name="component" title="组件配置">
             <component :is="configMap[vFormSelectElem?.component]" />
-            
           </el-collapse-item>
         </el-collapse>
       </el-scrollbar>
@@ -71,7 +55,7 @@
 <script lang="ts" setup>
 import {
   ElScrollbar, ElTabs, ElTabPane, ElCollapse, ElRadioGroup, ElRadioButton,
-  ElCollapseItem, ElForm, ElFormItem, ElInput,
+  ElCollapseItem, ElForm, ElFormItem, ElInput, ElDivider,
 } from 'element-plus'
 import { computed, inject, markRaw, ref } from "vue";
 import { vFormActiveElementKey } from "@/components/form/state.key";

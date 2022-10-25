@@ -52,6 +52,15 @@
         <el-radio-button :label="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
+    <el-form-item prop="defaultValue" label="默认值">
+      <el-date-picker
+        :key="defKey"
+        :type="vFormSelectElem?.attrs.dateRangeType"
+        v-model="vFormSelectElem.attrs.defaultValue"
+        :format="vFormSelectElem?.attrs.format"
+        :value-format="vFormSelectElem?.attrs.valueFormat"
+      />
+    </el-form-item>
     <el-form-item prop="style" label="样式">
       <el-input v-model="vFormSelectElem.attrs.style"></el-input>
     </el-form-item>
@@ -60,7 +69,7 @@
 
 <script lang="ts" setup>
 import {
-  ElForm, ElFormItem, ElSelect, ElOption, ElRadioGroup, ElRadioButton, ElInput,
+  ElForm, ElFormItem, ElSelect, ElOption, ElRadioGroup, ElRadioButton, ElInput, ElDatePicker,
 } from 'element-plus'
 import { inject, ref } from "vue";
 import { vFormActiveElementKey } from "@/components/form/state.key";
@@ -80,6 +89,9 @@ function handleDateRangeTypeChange(v: DateRangeType) {
     vFormSelectElem.value.attrs.format = 'YYYY-MM-DD HH:mm:ss'
     vFormSelectElem.value.attrs.valueFormat = 'YYYY-MM-DD HH:mm:ss'
   }
+
+
+  vFormSelectElem.value.attrs.defaultValue = []
 
   defKey.value ++
 

@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, inject } from "vue";
+import { computed, inject, nextTick } from "vue";
 import { formModeKey } from "@/components/form/state.key";
 import UserSelectorInput from "@/components/common/selector/user/UserSelectorInput.vue";
 import { userMapKey } from "@/config/app.keys";
@@ -25,6 +25,7 @@ import { ElTag } from 'element-plus'
 interface Props {
   mode?: FormFieldMode
   value?: string
+  defaultValue?: string
   multiple?: boolean
   placeholder?: string
 }
@@ -43,11 +44,21 @@ const val = computed({
     if (props.multiple) {
       if (props.value) {
         return props.value.split(',')
-      } else {
-        return []
       }
+      if (props.defaultValue) {
+        nextTick(() => emits('update:value', props.defaultValue))
+        return props.defaultValue?.split(',')
+      }
+      return []
     } else {
-      return props.value
+      if (props.value) {
+        return props.value
+      }
+      if (props.defaultValue) {
+        nextTick(() => emits('update:value', props.defaultValue))
+        return props.defaultValue
+      }
+      return ''
     }
   },
   set: v => {

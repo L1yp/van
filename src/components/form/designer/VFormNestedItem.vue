@@ -1,6 +1,13 @@
 <template>
   <template v-if="item.category === 'form-item'">
-    <el-form-item :key="item.id" v-bind="item.formItemAttrs">
+    <el-form-item 
+      v-bind="item.formItemAttrs" 
+      :key="item.id" 
+      :prop="item.id" 
+      :label-width="item.formItemAttrs.hiddenLabel ? '0px' : undefined"
+      :label="item.formItemAttrs.hiddenLabel ? '' : item.formItemAttrs.label"
+      :rules="getRules(item)"
+    >
       <template v-if="item.component === 'el-select'">
         <el-select v-model="formData[item.id]" v-bind="item.attrs">
           <el-option label="Option1" value="1" key="1"></el-option>
@@ -39,7 +46,7 @@
 </template>
 
 <script lang="ts">
-import { ElFormItem, ElSelect, ElOption, ElInput, ElRow, ElCol } from 'element-plus'
+import { ElFormItem, ElSelect, ElOption, ElInput, ElRow, ElCol, FormItemRule } from 'element-plus'
 import { defineComponent, PropType } from "vue";
 import UserSelectorInput from "@/components/common/selector/user/UserSelectorInput.vue";
 import DeptSelectorInput from "@/components/common/selector/dept/DeptSelectorInput.vue";
@@ -69,7 +76,25 @@ export default defineComponent({
     }
   },
   setup(props, ctx) {
+    function getRules(element: ComponentConfig) {
+      const rules = []
+      const requiredMessage = element.formItemAttrs.requiredMessage
+      const label = element.formItemAttrs.label
+      const field = element.id
+      if (element.formItemAttrs.required) {
+        const rule: FormItemRule = {
+          required: true,
+          message: requiredMessage || `${label}(${field})必填`
+        }
+        rules.push(rule)
+      }
 
+      return rules
+    }
+
+    return {
+      getRules,
+    }
   },
 })
 

@@ -7,6 +7,12 @@
     style="padding: 5px;"
   >
 
+    <el-form-item prop="minlength" label="最小长度">
+      <el-input-number v-model="vFormSelectElem.attrs.minlength"></el-input-number>
+    </el-form-item>
+    <el-form-item prop="maxlength" label="最大长度">
+      <el-input-number v-model="vFormSelectElem.attrs.maxlength"></el-input-number>
+    </el-form-item>
 
     <el-form-item prop="showWordLimit" label="展示字数统计">
       <el-radio-group v-model="vFormSelectElem.attrs.showWordLimit">
@@ -26,7 +32,7 @@
 
     
     <el-form-item prop="textarea" label="多行文本">
-      <el-radio-group v-model="vFormSelectElem.attrs.textarea">
+      <el-radio-group v-model="vFormSelectElem.attrs.textarea" @change="handleChangeTextType" >
         <el-radio-button :label="true">是</el-radio-button>
         <el-radio-button :label="false">否</el-radio-button>
       </el-radio-group>
@@ -85,7 +91,7 @@
 
 <script lang="ts" setup>
 import {
-  ElForm, ElFormItem, ElInput, ElCheckboxGroup, ElRadioGroup, ElRadioButton, ElCheckboxButton,
+  ElForm, ElFormItem, ElInput, ElCheckboxGroup, ElRadioGroup, ElRadioButton, ElCheckboxButton, ElSelect, ElOption, ElInputNumber, 
 } from 'element-plus'
 import { computed, inject } from "vue";
 import { vFormActiveElementKey } from "@/components/form/state.key";
@@ -102,6 +108,18 @@ const mode = computed({
     }
   }
 })
+
+function handleChangeTextType(textarea: boolean) {
+  if (textarea) {
+    vFormSelectElem.value.attrs.rows = 2
+    vFormSelectElem.value.attrs.autoresize = true
+    vFormSelectElem.value.attrs.resize = 'both'
+  } else {
+    vFormSelectElem.value.attrs.rows = undefined
+    vFormSelectElem.value.attrs.autoresize = undefined
+    vFormSelectElem.value.attrs.resize = undefined
+  }
+}
 
 </script>
 

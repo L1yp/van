@@ -13,7 +13,5 @@ export function transCloneComponent(original: CandidateComponentConfig) {
     key: 1,
   }
 
-  newItem.attrs.id = newItem.id
-
   return newItem;
 }

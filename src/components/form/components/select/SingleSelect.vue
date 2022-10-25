@@ -80,6 +80,7 @@ import { formModeKey } from "@/components/form/state.key";
 interface Props {
   mode?: FormFieldMode
   value?: string
+  defaultValue?: string
   expand?: boolean
   buttonOption?: boolean
   options: object[]
@@ -103,7 +104,16 @@ const props = withDefaults(defineProps<Props>(), {
 const emits = defineEmits<Emits>()
 
 const val = computed({
-  get: () => props.value,
+  get: () => {
+    if (props.value) {
+      return props.value
+    }
+    if (props.defaultValue) {
+      emits('update:value', props.defaultValue)
+      return props.defaultValue
+    }
+    return ''
+  },
   set: v => emits('update:value', v)
 })
 

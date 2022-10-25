@@ -94,12 +94,13 @@
 
 <script lang="ts" setup>
 import { ElSelect, ElOption, ElCheckboxGroup, ElCheckbox, ElCheckboxButton } from 'element-plus'
-import { computed, inject, ref } from "vue";
+import { computed, inject, nextTick, ref } from "vue";
 import { formModeKey } from "@/components/form/state.key";
 
 interface Props {
   mode?: FormFieldMode
   value?: string
+  defaultValue?: string
   expand?: boolean
   buttonOption?: boolean
   options: object[]
@@ -126,15 +127,18 @@ const val = computed({
   get: () => {
     if (props.value) {
       const result = props.value?.split(',') || []
-      console.log('multi select modelValue get', result);
+      // console.log('multi select modelValue get', result);
       return result
-    } else {
-      return []
     }
+    if (props.defaultValue) {
+      nextTick(() => emits('update:value', props.defaultValue))
+      return props.defaultValue?.split(',')
+    }
+    return []
   },
   set: v => {
     const value = v?.join(',') || ''
-    console.log('multi select modelValue set', value);
+    // console.log('multi select modelValue set', value);
     
     emits('update:value', value)
   }

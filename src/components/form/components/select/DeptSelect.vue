@@ -3,11 +3,11 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, inject, onBeforeMount, ref } from "vue";
+import { computed, inject, nextTick, onBeforeMount, ref } from "vue";
 import { formModeKey } from "@/components/form/state.key";
 import DeptSelectorInput from "@/components/common/selector/dept/DeptSelectorInput.vue";
 import { useDeptInfo } from "@/service/system/dept";
-import { findTreeItemById } from "@/utils/common";
+
 
 
 interface Props {
@@ -15,10 +15,11 @@ interface Props {
   value?: string
   multiple?: boolean
   placeholder?: string
+  defaultValue?: string | string[]
 }
 
 interface Emits {
-  (e: 'update:value', v: string): void
+  (e: 'update:value', v: string | string[]): void
 }
 
 const props = defineProps<Props>()
@@ -30,11 +31,19 @@ const val = computed({
       if (props.value) {
         return props.value.split(',')
       } else {
+        if (props.defaultValue?.length) {
+          nextTick(() => emits('update:value', props.defaultValue))
+          return props.defaultValue
+        }
         return []
       }
     } else {
       if (props.value) {
         return props.value
+      }
+      if (props.defaultValue) {
+        nextTick(() => emits('update:value', props.defaultValue))
+        return props.defaultValue
       }
       return ''
     }

@@ -1,5 +1,6 @@
 <template>
   <el-form 
+    ref="formRef"
     :model="props.formData" 
     :size="props.scheme.size" 
     :label-width="props.scheme.labelWidth"
@@ -17,7 +18,7 @@
 
 <script lang="ts" setup>
 import { ElForm } from 'element-plus'
-import { computed, provide } from "vue";
+import { computed, provide, ref } from "vue";
 import VFormNestedItem from "@/components/form/designer/VFormNestedItem.vue";
 import { formModeKey } from "@/components/form/state.key";
 
@@ -33,6 +34,13 @@ const props = defineProps<Props>()
 const mode = computed<FormFieldMode>(() => props.mode)
 provide(formModeKey, mode)
 
+const formRef = ref<InstanceType<typeof ElForm>>()
+
+defineExpose({
+  validate() {
+    formRef.value.validate()
+  },
+})
 
 </script>
 

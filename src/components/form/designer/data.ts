@@ -12,16 +12,34 @@ export const InputComponents: CandidateComponentConfig[] = [
       label: "数字",
     },
     attrs: {
-      value: 1111111,
       placeholder: '输入数字',
       min: 1,
       max: 100,
       clearable: false,
-      size: 'default',
       style: `width: 100%`
     },
     children: []
   },
+  {
+    id: genId(),
+    icon: 'TextField',
+    component: 'text-input',
+    category: 'form-item',
+    title: "文本框",
+    formItemAttrs: {
+      label: "文本框",
+    },
+    attrs: {
+      placeholder: '输入字符串',
+      textarea: false,
+      clearable: false,
+      showWordLimit: false,
+      autofocus: false,
+      validateEvent: false,
+      style: `width: 100%`
+    }
+  },
+
   {
     id: genId(),
     icon: 'TimeField',
@@ -56,27 +74,6 @@ export const InputComponents: CandidateComponentConfig[] = [
       style: `width: 100%`
     },
     children: []
-  },
-  {
-    id: genId(),
-    icon: 'TextField',
-    component: 'text-input',
-    category: 'form-item',
-    title: "文本框",
-    formItemAttrs: {
-      label: "文本框",
-    },
-    attrs: {
-      value: '1111111',
-      placeholder: '输入字符串',
-      textarea: false,
-      clearable: false,
-      showWordLimit: false,
-      size: 'default',
-      autofocus: false,
-      validateEvent: false,
-      style: `width: 100%`
-    }
   },
 
   {

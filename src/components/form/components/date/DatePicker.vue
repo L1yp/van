@@ -15,13 +15,14 @@
 
 <script lang="ts" setup>
 import { ElDatePicker } from 'element-plus'
-import { computed, inject, useAttrs } from "vue";
+import { computed, inject, nextTick } from "vue";
 import { formModeKey } from "@/components/form/state.key";
 
 interface Props {
   mode?: FormFieldMode
   dateType: DateType
   value?: string
+  defaultValue?: string
 }
 
 interface Emits {
@@ -29,16 +30,20 @@ interface Emits {
 }
 
 const props = defineProps<Props>()
-
 const emits = defineEmits<Emits>()
 
-const attrs = useAttrs()
-
 const val = computed<string>({
-  get: () => props.value || '',
+  get: () => {
+    if (props.value) {
+      return props.value
+    }
+    if (props.defaultValue) {
+      nextTick(() => emits('update:value', props.defaultValue))
+      return props.defaultValue
+    }
+    return ''
+  },
   set: v => {
-    console.log('date picker setter', attrs, v);
-    
     emits('update:value', v)
   }
 })

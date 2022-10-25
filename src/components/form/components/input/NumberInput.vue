@@ -15,12 +15,13 @@
 
 <script lang="ts" setup>
 import { ElInputNumber } from 'element-plus'
-import { computed, inject } from "vue";
+import { computed, inject, nextTick } from "vue";
 import { formModeKey } from "@/components/form/state.key";
 
 interface Props {
   mode?: FormFieldMode
   value?: number
+  defaultValue?: number
 }
 
 interface Emits {
@@ -32,7 +33,16 @@ const props = defineProps<Props>()
 const emits = defineEmits<Emits>()
 
 const val = computed<number>({
-  get: () => props.value || 0,
+  get: () => {
+    if (props.value) {
+      return props.value
+    }
+    if (props.defaultValue) {
+      nextTick(() => emits('update:value', props.defaultValue))
+      return props.defaultValue
+    }
+    return 0
+  },
   set: v => emits('update:value', v)
 })
 

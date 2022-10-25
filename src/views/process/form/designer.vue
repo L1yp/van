@@ -63,11 +63,12 @@
           <el-radio-button label="edit">编辑</el-radio-button>
           <el-radio-button label="read">预览</el-radio-button>
         </el-radio-group>
+        <el-button @click="handleClickValidateForm">校验表单</el-button>
       </div>
 
       <div style="margin-top: 16px"></div>
 
-      <v-form-render :scheme="formScheme" :mode="formMode" :form-data="dialogInfo.formData"></v-form-render>
+      <v-form-render ref="formRenderRef" :scheme="formScheme" :mode="formMode" :form-data="dialogInfo.formData"></v-form-render>
       <div style="overflow: auto">
         <pre> {{ JSON.stringify(dialogInfo.formData) }} </pre>
       </div>
@@ -155,6 +156,15 @@ function handleClickPreview() {
 function handleClickViewJSON() {
   editorInfo.value.code = JSON.stringify(formScheme.value, null, 4)
   editorInfo.value.visible = true
+}
+
+const formRenderRef = ref<InstanceType<typeof VFormRender>>()
+async function handleClickValidateForm() {
+  try {
+    await formRenderRef.value.validate()
+  } catch(e) {
+    console.error(e);
+  }
 }
 </script>
 

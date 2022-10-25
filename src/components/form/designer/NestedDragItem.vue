@@ -62,6 +62,9 @@
           <el-form-item
             :prop="element.id"
             v-bind="element.formItemAttrs"
+            :label-width="element.formItemAttrs.hiddenLabel ? '0px' : undefined"
+            :label="element.formItemAttrs.hiddenLabel ? '' : element.formItemAttrs.label"
+            :rules="getRules(element)"
           >
             <component
               :is="element.component"
@@ -99,7 +102,7 @@
 <script lang="ts">
 import Draggable from "vuedraggable";
 import { defineComponent, inject, PropType, ref, toRaw } from "vue";
-import { ElForm, ElFormItem, ElInput, ElSelect, ElRow, ElCol, ElCheckboxGroup, ElCheckbox, ElOption } from "element-plus"
+import { ElForm, ElFormItem, ElInput, ElSelect, ElRow, ElCol, ElCheckboxGroup, ElCheckbox, ElOption, FormItemRule } from "element-plus"
 import SVGIcon from "@/components/common/SVGIcon.vue";
 import emitter from "@/event/mitt";
 import UserSelectorInput from "@/components/common/selector/user/UserSelectorInput.vue";
@@ -200,8 +203,24 @@ export default defineComponent({
       parent.splice(activeIdx + 1, 0, copyElem)
     }
 
+    function getRules(element: ComponentConfig) {
+      const rules = []
+      const requiredMessage = element.formItemAttrs.requiredMessage
+      const label = element.formItemAttrs.label
+      const field = element.id
+      if (element.formItemAttrs.required) {
+        const rule: FormItemRule = {
+          required: true,
+          message: requiredMessage || `${label}(${field})必填`
+        }
+        rules.push(rule)
+      }
+
+      return rules
+    }
+
     return {
-      vFormActiveElement, handleClickElement, formData, handleAddCol, handleDeleteElem, handleCopyElem
+      vFormActiveElement, handleClickElement, formData, handleAddCol, handleDeleteElem, handleCopyElem, getRules
     }
   }
 })
