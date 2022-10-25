@@ -11,18 +11,18 @@
       <el-option label="下拉多选框" value="multi-select" />
     </el-select>
   </el-form-item>
-  <el-form-item :prop="['scheme', 'option_content', 'from']" label="数据来源">
-    <el-radio-group v-model="props.formData.scheme.option_content.from" :disabled="props.disabled">
+  <el-form-item :prop="['scheme', 'optionContent', 'from']" label="数据来源">
+    <el-radio-group v-model="props.formData.scheme.optionContent.from" :disabled="props.disabled">
       <el-radio-button label="DEFAULT">默认</el-radio-button>
       <el-radio-button label="CLASS">Java类</el-radio-button>
       <el-radio-button label="TABLE">指定表</el-radio-button>
     </el-radio-group>
   </el-form-item>
 
-  <template v-if="props.formData.scheme.option_content.from === 'DEFAULT'">
-    <el-form-item :prop="['scheme', 'option_content', 'option_type_id']" label="数据源" required>
+  <template v-if="props.formData.scheme.optionContent.from === 'DEFAULT'">
+    <el-form-item :prop="['scheme', 'optionContent', 'optionTypeId']" label="数据源" required>
       <el-select 
-        v-model="props.formData.scheme.option_content.option_type_id" 
+        v-model="props.formData.scheme.optionContent.optionTypeId" 
         @change="v => findWorkflowOptionValues({typeId: v})"
         :disabled="props.disabled"
         style="width: 100%;"
@@ -34,10 +34,10 @@
         />
       </el-select>
     </el-form-item>
-    <el-form-item :prop="['scheme', 'option_content', 'default_value']" label="默认值">
+    <el-form-item :prop="['scheme', 'optionContent', 'defaultValue']" label="默认值">
       <el-tree-select
         :key="defValKey"
-        v-model="props.formData.scheme.option_content.default_value"
+        v-model="props.formData.scheme.optionContent.defaultValue"
         filterable clearable fit-input-width
         :loading="loading"
         node-key="id"
@@ -52,13 +52,13 @@
       />
     </el-form-item>
   </template>
-  <template v-if="props.formData.scheme.option_content.from === 'CLASS'">
-    <el-form-item :prop="['scheme', 'class_name']" label="类名" required>
-      <el-input v-model="props.formData.scheme.option_content.class_name" :disabled="props.disabled" />
+  <template v-if="props.formData.scheme.optionContent.from === 'CLASS'">
+    <el-form-item :prop="['scheme', 'className']" label="类名" required>
+      <el-input v-model="props.formData.scheme.optionContent.className" :disabled="props.disabled" />
     </el-form-item>
-    <el-form-item :prop="['scheme', 'from_table']" label="数据来源" required>
+    <el-form-item :prop="['scheme', 'fromTable']" label="数据来源" required>
       <el-select 
-        v-model="props.formData.scheme.option_content.from_table" 
+        v-model="props.formData.scheme.optionContent.fromTable" 
         allow-create 
         filterable 
         default-first-option 
@@ -72,10 +72,10 @@
     </el-form-item>
   </template>
 
-  <template v-if="props.formData.scheme.option_content.from === 'TABLE'">
-    <el-form-item :prop="['scheme', 'option_content', 'table_name']" label="表名" required>
+  <template v-if="props.formData.scheme.optionContent.from === 'TABLE'">
+    <el-form-item :prop="['scheme', 'optionContent', 'tableName']" label="表名" required>
       <el-select 
-        v-model="props.formData.scheme.option_content.table_name"
+        v-model="props.formData.scheme.optionContent.tableName"
         fit-input-width
         :disabled="props.disabled"
         @change="v => getTableColumns(v)"
@@ -89,9 +89,9 @@
         </el-option>
       </el-select>
     </el-form-item>
-    <el-form-item :prop="['scheme', 'option_content', 'label_field']" label="标签字段" required>
+    <el-form-item :prop="['scheme', 'optionContent', 'labelField']" label="标签字段" required>
       <el-select 
-        v-model="props.formData.scheme.option_content.label_field"
+        v-model="props.formData.scheme.optionContent.labelField"
         fit-input-width
         :disabled="props.disabled"
         style="width: 100%;"
@@ -104,9 +104,9 @@
         </el-option>
       </el-select>
     </el-form-item>
-    <el-form-item :prop="['scheme', 'option_content', 'value_field']" label="值字段" required>
+    <el-form-item :prop="['scheme', 'optionContent', 'valueField']" label="值字段" required>
       <el-select 
-        v-model="props.formData.scheme.option_content.value_field"
+        v-model="props.formData.scheme.optionContent.valueField"
         fit-input-width
         :disabled="props.disabled"
         style="width: 100%;"
@@ -119,9 +119,9 @@
         </el-option>
       </el-select>
     </el-form-item>
-    <el-form-item :prop="['scheme', 'option_content', 'parent_field']" label="父级字段" required>
+    <el-form-item :prop="['scheme', 'optionContent', 'parentField']" label="父级字段" required>
       <el-select 
-        v-model="props.formData.scheme.option_content.parent_field"
+        v-model="props.formData.scheme.optionContent.parentField"
         fit-input-width
         :disabled="props.disabled"
         style="width: 100%;"
@@ -134,9 +134,9 @@
         </el-option>
       </el-select>
     </el-form-item>
-    <el-form-item :prop="['scheme', 'option_content', 'disabled_field']" label="禁用字段" required>
+    <el-form-item :prop="['scheme', 'optionContent', 'disabledField']" label="禁用字段" required>
       <el-select 
-        v-model="props.formData.scheme.option_content.disabled_field"
+        v-model="props.formData.scheme.optionContent.disabledField"
         fit-input-width 
         :disabled="props.disabled"
         style="width: 100%;"
@@ -149,11 +149,11 @@
         </el-option>
       </el-select>
     </el-form-item>
-    <el-form-item :prop="['scheme', 'option_content', 'disabled_value']" label="禁用值" required>
-      <el-input v-model="props.formData.scheme.option_content.disabled_value" :disabled="props.disabled" />
+    <el-form-item :prop="['scheme', 'optionContent', 'disabledValue']" label="禁用值" required>
+      <el-input v-model="props.formData.scheme.optionContent.disabledValue" :disabled="props.disabled" />
     </el-form-item>
-    <el-form-item :prop="['scheme', 'option_content', 'condition']" label="过滤条件" required>
-      <el-input v-model="props.formData.scheme.option_content.condition" :disabled="props.disabled" />
+    <el-form-item :prop="['scheme', 'optionContent', 'condition']" label="过滤条件" required>
+      <el-input v-model="props.formData.scheme.optionContent.condition" :disabled="props.disabled" />
     </el-form-item>
   </template>
 
@@ -189,7 +189,7 @@ const defValKey = ref(0)
 
 function handleComponentChange() {
   defValKey.value++;
-  props.formData.scheme.option_content.default_value = []
+  props.formData.scheme.optionContent.defaultValue = []
 }
 
 </script>

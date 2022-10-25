@@ -6,8 +6,8 @@
     label-width="120px"
     style="padding: 5px;"
   >
-    <el-form-item prop="date_type" label="时间类型" required>
-      <el-select v-model="vFormSelectElem.attrs.date_type" @change="handleDateTypeChange">
+    <el-form-item prop="dateType" label="时间类型" required>
+      <el-select v-model="vFormSelectElem.attrs.dateType" @change="handleDateTypeChange">
         <el-option label="年份" value="year" />
         <el-option label="月份" value="month" />
         <el-option label="日期" value="date" />
@@ -28,14 +28,14 @@
         <el-option label="YYYY-MM-DD HH:mm:ss" value="YYYY-MM-DD HH:mm:ss" />
       </el-select>
     </el-form-item>
-    <el-form-item prop="value_format" label="值格式" required>
+    <el-form-item prop="valueFormat" label="值格式" required>
       <template #label>
         <form-item-tooltip
           title="值格式"
           content="格式说明：https://dayjs.gitee.io/docs/zh-CN/display/format#list-of-all-available-formats"
         />
       </template>
-      <el-select v-model="vFormSelectElem.attrs.value_format" filterable allow-create default-first-option>
+      <el-select v-model="vFormSelectElem.attrs.valueFormat" filterable allow-create default-first-option>
         <el-option label="YYYY" value="YYYY" />
         <el-option label="YYYY-MM" value="YYYY-MM" />
         <el-option label="YYYY-MM-DD" value="YYYY-MM-DD" />
@@ -43,24 +43,30 @@
         <el-option label="YYYY-MM-DD d" value="YYYY-MM-DD d" />
       </el-select>
     </el-form-item>
-    <el-form-item prop="default_value" label="默认值">
-      <el-date-picker
-        :key="defKey"
-        :type="vFormSelectElem?.attrs.date_type"
-        v-model="vFormSelectElem.attrs.default_value"
-        :format="vFormSelectElem?.attrs.format"
-        :value-format="vFormSelectElem?.attrs.value_format"
-      />
+    <el-form-item label="可清空" prop="clearable">
+      <el-radio-group v-model="vFormSelectElem.attrs.clearable">
+        <el-radio-button :label="true">是</el-radio-button>
+        <el-radio-button :label="false">否</el-radio-button>
+      </el-radio-group>
+    </el-form-item>
+    <el-form-item label="可编辑" prop="editable">
+      <el-radio-group v-model="vFormSelectElem.attrs.editable">
+        <el-radio-button :label="true">是</el-radio-button>
+        <el-radio-button :label="false">否</el-radio-button>
+      </el-radio-group>
+    </el-form-item>
+    <el-form-item prop="style" label="样式">
+      <el-input v-model="vFormSelectElem.attrs.style"></el-input>
     </el-form-item>
   </el-form>
 </template>
 
 <script lang="ts" setup>
 import {
-  ElForm, ElFormItem, ElDatePicker, ElSelect, ElOption,
+  ElForm, ElFormItem, ElSelect, ElOption, ElRadioGroup, ElRadioButton, ElInput,
 } from 'element-plus'
-import {computed, inject, ref} from "vue";
-import {vFormActiveElementKey} from "@/config/app.keys";
+import { inject, ref } from "vue";
+import {vFormActiveElementKey} from "@/components/form/state.key";
 import FormItemTooltip from "@/components/form/FormItemTooltip.vue";
 
 
@@ -72,27 +78,26 @@ const defKey = ref<number>(0)
 function handleDateTypeChange(v: DateType) {
   if (v === 'year') {
     vFormSelectElem.value.attrs.format = 'YYYY'
-    vFormSelectElem.value.attrs.value_format = 'YYYY'
+    vFormSelectElem.value.attrs.valueFormat = 'YYYY'
   }
   else if (v === 'month') {
     vFormSelectElem.value.attrs.format = 'YYYY-MM'
-    vFormSelectElem.value.attrs.value_format = 'YYYY-MM'
+    vFormSelectElem.value.attrs.valueFormat = 'YYYY-MM'
   }
   else if (v === 'date') {
     vFormSelectElem.value.attrs.format = 'YYYY-MM-DD'
-    vFormSelectElem.value.attrs.value_format = 'YYYY-MM-DD'
+    vFormSelectElem.value.attrs.valueFormat = 'YYYY-MM-DD'
   }
   else if (v === 'datetime') {
     vFormSelectElem.value.attrs.format = 'YYYY-MM-DD HH:mm:ss'
-    vFormSelectElem.value.attrs.value_format = 'YYYY-MM-DD HH:mm:ss'
+    vFormSelectElem.value.attrs.valueFormat = 'YYYY-MM-DD HH:mm:ss'
   }
   else if (v === 'week') {
     vFormSelectElem.value.attrs.format = 'd'
-    vFormSelectElem.value.attrs.value_format = 'd'
+    vFormSelectElem.value.attrs.valueFormat = 'd'
   }
 
-  //@ts-ignore
-  vFormSelectElem.value.attrs.default_value = ''
+
 
   defKey.value ++
 

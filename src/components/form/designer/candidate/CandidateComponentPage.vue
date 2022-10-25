@@ -54,11 +54,10 @@
 <script lang="ts" setup>
 import { ElScrollbar, ElCollapse, ElCollapseItem } from 'element-plus'
 import Draggable from "vuedraggable";
-import { CandidateComponentConfig } from "@/components/form/types";
-import { genId, transCloneComponent } from "../util/common"
+import { transCloneComponent } from "../util/common"
 import SVGIcon from "@/components/common/SVGIcon.vue";
 import {computed, inject, ref} from "vue";
-import {vFormActiveElementKey} from "@/config/app.keys";
+import {vFormActiveElementKey} from "@/components/form/state.key";
 
 interface Props {
   height: string
@@ -73,12 +72,6 @@ const openedItems = ref<string[]>(['input', 'output', 'layout'])
 
 const vFormSelectedItem = inject(vFormActiveElementKey)
 
-function handleCloneHook(original: CandidateComponentConfig) {
-  const newItem = transCloneComponent(original)
-  vFormSelectedItem.value = newItem
-  return newItem
-}
-
 </script>
 
 <style scoped>
@@ -89,7 +82,7 @@ function handleCloneHook(original: CandidateComponentConfig) {
 }
 
 .component-item {
-  width: 135px;
+  width: 119px;
   background-color: #f6f8f9;
   cursor: move;
   border-radius: 8px;

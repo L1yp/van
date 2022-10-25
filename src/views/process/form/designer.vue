@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="component-list">
-      <el-tabs v-model="candidateActiveTab">
+      <el-tabs type="border-card" v-model="candidateActiveTab">
         <el-tab-pane label="组件" name="component">
           <candidate-component-page
             :height="designerContainerHeight"
@@ -23,11 +23,18 @@
         <el-button text type="primary" :icon="viewIcon" @click="handleClickViewJSON">查看JSON</el-button>
       </div>
       <el-scrollbar style="height: calc(100% - 40px)" :height="designerContainerHeight" always>
-        <el-form style="padding: 10px">
+        <el-form
+          :size="formScheme.size" 
+          :label-width="formScheme.labelWidth"
+          :label-position="formScheme.labelPosition"
+          :style="formScheme.style"
+          style="padding: 10px" 
+          @click.stop="vFormActiveElement = null"
+        >
           <!-- 若(nested-drag-item).height + padding*2 > designerContainerHeight 则会出现滚动条  -->
           <nested-drag-item
             :style="{width: '100%', minHeight: `calc(${designerContainerHeight} - 20px)`}"
-            :children="formComponentList"
+            :children="formScheme.children"
             group="component"
           >
           </nested-drag-item>
@@ -60,9 +67,9 @@
 
       <div style="margin-top: 16px"></div>
 
-      <v-form-render :schemes="formComponentList" :mode="formMode" :form-data="formData"></v-form-render>
+      <v-form-render :scheme="formScheme" :mode="formMode" :form-data="dialogInfo.formData"></v-form-render>
       <div style="overflow: auto">
-        <pre> {{ JSON.stringify(formData) }} </pre>
+        <pre> {{ JSON.stringify(dialogInfo.formData) }} </pre>
       </div>
     </v-dialog>
   </div>
@@ -71,18 +78,18 @@
 </template>
 
 <script lang="ts" setup>
-import {computed, inject, ref, provide} from "vue";
-import {mainHeightKey, mainWidthKey, themeKey, vFormActiveElementKey} from "@/config/app.keys";
+import { computed, inject, ref, provide } from "vue";
+import { mainHeightKey, mainWidthKey, themeKey } from "@/config/app.keys";
 import { ElForm, ElScrollbar, ElTabs, ElTabPane, ElButton, ElRadioGroup, ElRadioButton } from "element-plus"
 import NestedDragItem from "@/components/form/designer/NestedDragItem.vue";
 import FormPropertyPanel from "@/components/form/designer/FormPropertyPanel.vue"
 import CandidateComponentPage from "@/components/form/designer/candidate/CandidateComponentPage.vue";
-import {useIcon} from "@/components/common/util";
+import { useIcon } from "@/components/common/util";
 import JsonEditor from "@/components/common/JsonEditor.vue";
 import { InputComponents, LayoutComponents } from "@/components/form/designer/data"
 import VDialog from "@/components/dialog/VDialog.vue";
 import VFormRender from "@/components/form/designer/VFormRender.vue";
-import {formModeKey} from "@/components/form/state.key";
+import { formModeKey, vFormActiveElementKey, vFormSchemeKey } from "@/components/form/state.key";
 
 const viewIcon = useIcon('View')
 const deleteIcon = useIcon('Delete')
@@ -109,7 +116,14 @@ const formMode = ref<FormFieldMode>('edit')
 const mode = computed<FormFieldMode>(() => 'design')
 provide(formModeKey, mode)
 
-const formComponentList = ref<ComponentConfig[]>([])
+const formScheme = ref<VFormScheme>({
+  labelPosition: 'left',
+  labelWidth: '120px',
+  size: 'default',
+  style: '',
+  children: []
+})
+provide(vFormSchemeKey, formScheme)
 
 interface JSONEditorInfo {
   visible: boolean
@@ -120,29 +134,26 @@ const editorInfo = ref<JSONEditorInfo>({
   code: ''
 })
 
-interface DialogInfo<T> {
-  visible: boolean
-  formData: T
-}
 
 const dialogInfo = ref<DialogInfo<object>>({
   visible: false,
-  formData: {
-
-  }
+  title: '',
+  loading: false,
+  formData: {}
 })
 
 function handleClickClear() {
-  formComponentList.value = []
+  formScheme.value.children = []
 }
 
-const formData = ref({})
+
 function handleClickPreview() {
+  dialogInfo.value.formData = {}
   dialogInfo.value.visible =  true
 }
 
 function handleClickViewJSON() {
-  editorInfo.value.code = JSON.stringify(formComponentList.value, null, 4)
+  editorInfo.value.code = JSON.stringify(formScheme.value, null, 4)
   editorInfo.value.visible = true
 }
 </script>

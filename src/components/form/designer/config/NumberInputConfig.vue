@@ -12,8 +12,8 @@
     <el-form-item prop="max" label="最大值">
       <el-input-number :controls="false" v-model="vFormSelectElem.attrs.max" style="width: 100%"/>
     </el-form-item>
-    <el-form-item prop="default_value" label="默认值">
-      <el-input-number :controls="false" v-model="vFormSelectElem.attrs.default_value" style="width: 100%" />
+    <el-form-item prop="defaultValue" label="默认值">
+      <el-input-number :controls="false" v-model="vFormSelectElem.attrs.defaultValue" style="width: 100%" />
     </el-form-item>
     <el-form-item prop="precision" label="精度">
       <el-input-number :controls="false" v-model="vFormSelectElem.attrs.precision" style="width: 100%" />
@@ -32,7 +32,7 @@ import {
   ElForm, ElFormItem, ElInput, ElInputNumber,
 } from 'element-plus'
 import {computed, inject, ref} from "vue";
-import {vFormActiveElementKey} from "@/config/app.keys";
+import {vFormActiveElementKey} from "@/components/form/state.key";
 
 const vFormSelectElem = inject(vFormActiveElementKey)
 

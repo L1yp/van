@@ -1,7 +1,13 @@
 <template>
-  <el-form :model="formData">
+  <el-form 
+    :model="props.formData" 
+    :size="props.scheme.size" 
+    :label-width="props.scheme.labelWidth"
+    :label-position="props.scheme.labelPosition"
+    v-bind="$attrs"
+  >
     <v-form-nested-item
-      v-for="item in props.schemes"
+      v-for="item in props.scheme.children"
       :item="item"
       :key="item.id"
       :form-data="props.formData"
@@ -11,13 +17,13 @@
 
 <script lang="ts" setup>
 import { ElForm } from 'element-plus'
-import {computed, provide, ref} from "vue";
+import { computed, provide } from "vue";
 import VFormNestedItem from "@/components/form/designer/VFormNestedItem.vue";
-import { formModeKey, formDataKey } from "@/components/form/state.key";
+import { formModeKey } from "@/components/form/state.key";
 
 
 interface Props {
-  schemes: ComponentConfig[]
+  scheme: VFormScheme
   mode: FormFieldMode
   formData: object
 }

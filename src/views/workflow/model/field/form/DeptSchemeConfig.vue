@@ -1,6 +1,6 @@
 <template>
   <el-form-item :prop="['scheme', 'multiple']" label="多选">
-    <el-radio-group v-model="(props.formData.scheme as DeptFieldScheme).multiple" :disabled="props.disabled">
+    <el-radio-group v-model="props.formData.scheme.multiple" :disabled="props.disabled">
       <el-radio-button :label="true">是</el-radio-button>
       <el-radio-button :label="false">否</el-radio-button>
     </el-radio-group>

@@ -1,6 +1,8 @@
 import {ComputedRef, InjectionKey, Ref} from "vue";
-import {FormFieldMode} from "@/components/form/types";
 
 export const formModeKey = Symbol("formModeKey") as InjectionKey<ComputedRef<FormFieldMode>>
 
 export const formDataKey = Symbol('formDataKey') as InjectionKey<Ref<object>>
+
+export const vFormActiveElementKey = Symbol('vFormActiveElementKey') as InjectionKey<Ref<ComponentConfig>>
+export const vFormSchemeKey = Symbol('vFormSchemeKey') as InjectionKey<Ref<VFormScheme>>

@@ -1,6 +1,6 @@
 <template>
   <el-form-item :prop="['scheme', 'date_type']" label="时间类型" required>
-    <el-select v-model="props.formData.scheme.date_type" @change="handleDateTypeChange" :disabled="props.disabled">
+    <el-select v-model="props.formData.scheme.dateType" @change="handleDateTypeChange" :disabled="props.disabled">
       <el-option label="年份" value="year" />
       <el-option label="月份" value="month" />
       <el-option label="日期" value="date" />
@@ -28,7 +28,7 @@
         content="格式说明：https://dayjs.gitee.io/docs/zh-CN/display/format#list-of-all-available-formats"
       />
     </template>
-    <el-select v-model="props.formData.scheme.value_format" filterable allow-create default-first-option :disabled="props.disabled">
+    <el-select v-model="props.formData.scheme.valueFormat" filterable allow-create default-first-option :disabled="props.disabled">
       <el-option label="YYYY" value="YYYY" />
       <el-option label="YYYY-MM" value="YYYY-MM" />
       <el-option label="YYYY-MM-DD" value="YYYY-MM-DD" />
@@ -36,14 +36,14 @@
       <el-option label="YYYY-MM-DD d" value="YYYY-MM-DD d" />
     </el-select>
   </el-form-item>
-  <el-form-item :prop="['scheme', 'default_value']" label="默认值">
+  <el-form-item :prop="['scheme', 'defaultValue']" label="默认值">
     <el-date-picker
       :disabled="props.disabled"
       :key="defKey"
-      :type="props.formData.scheme.date_type"
-      v-model="props.formData.scheme.default_value"
+      :type="props.formData.scheme.dateType"
+      v-model="props.formData.scheme.defaultValue"
       :format="props.formData.scheme.format"
-      :value-format="props.formData.scheme.value_format"
+      :value-format="props.formData.scheme.valueFormat"
     />
   </el-form-item>
 </template>
@@ -66,27 +66,27 @@ const defKey = ref<number>(0)
 function handleDateTypeChange(v: DateType) {
   if (v === 'year') {
     props.formData.scheme.format = 'YYYY'
-    props.formData.scheme.value_format = 'YYYY'
+    props.formData.scheme.valueFormat = 'YYYY'
   }
   else if (v === 'month') {
     props.formData.scheme.format = 'YYYY-MM'
-    props.formData.scheme.value_format = 'YYYY-MM'
+    props.formData.scheme.valueFormat = 'YYYY-MM'
   }
   else if (v === 'date') {
     props.formData.scheme.format = 'YYYY-MM-DD'
-    props.formData.scheme.value_format = 'YYYY-MM-DD'
+    props.formData.scheme.valueFormat = 'YYYY-MM-DD'
   }
   else if (v === 'datetime') {
     props.formData.scheme.format = 'YYYY-MM-DD HH:mm:ss'
-    props.formData.scheme.value_format = 'YYYY-MM-DD HH:mm:ss'
+    props.formData.scheme.valueFormat = 'YYYY-MM-DD HH:mm:ss'
   }
   else if (v === 'week') {
     props.formData.scheme.format = 'd'
-    props.formData.scheme.value_format = 'd'
+    props.formData.scheme.valueFormat = 'd'
   }
 
   //@ts-ignore
-  props.formData.scheme.default_value = ''
+  props.formData.scheme.defaultValue = ''
 
   defKey.value ++
 

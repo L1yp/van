@@ -1,6 +1,6 @@
 <template>
-  <el-form-item :prop="['scheme', 'default_value']" label="默认值">
-    <el-input type="textarea" :rows="2" v-model="(props.formData.scheme as NumberInputFieldScheme).default_value" :disabled="props.disabled" />
+  <el-form-item :prop="['scheme', 'defaultValue']" label="默认值">
+    <el-input type="textarea" :rows="2" v-model="(props.formData.scheme as NumberInputFieldScheme).defaultValue" :disabled="props.disabled" />
   </el-form-item>
 </template>
 <script lang="ts" setup>

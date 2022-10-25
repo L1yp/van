@@ -30,6 +30,7 @@ declare interface VFormScheme {
   labelPosition: 'left' | 'right' | 'top'
   labelWidth: string
   size: Size
+  style: string
   children: ComponentConfig[]
 }
 

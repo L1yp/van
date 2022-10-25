@@ -1,15 +1,15 @@
 <template>
   <template v-if="cMode === 'design'">
-    <el-date-picker v-model="val" disabled v-bind="$attrs" />
+    <el-date-picker v-model="val" :type="props.dateRangeType" disabled v-bind="$attrs" />
   </template>
   <template v-else-if="cMode === 'edit'">
-    <el-date-picker v-model="val" v-bind="$attrs"  />
+    <el-date-picker v-model="val" :type="props.dateRangeType" v-bind="$attrs"  />
   </template>
   <template v-else-if="cMode === 'read' ">
-    <span v-text="props.value"></span>
+    <span v-text="displayValue"></span>
   </template>
   <template v-else-if="cMode === 'hidden' ">
-    <span v-show="false" v-text="props.value"></span>
+    <span v-show="false" v-text="displayValue"></span>
   </template>
 </template>
 
@@ -20,6 +20,7 @@ import { formModeKey } from "@/components/form/state.key";
 
 interface Props {
   mode?: FormFieldMode
+  dateRangeType: DateRangeType
   value?: string[]
 }
 
@@ -45,6 +46,13 @@ const cMode = computed<FormFieldMode>(() => {
     return formMode.value
   }
   return "edit"
+})
+
+const displayValue = computed(() => {
+  if (props.value?.length === 2 && props.value[0] && props.value[1]) {
+    return props.value[0] + ' ~ ' + props.value[1]
+  }
+  return ''
 })
 
 </script>

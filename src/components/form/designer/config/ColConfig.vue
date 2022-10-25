@@ -35,7 +35,7 @@ import {
   ElForm, ElFormItem, ElSlider
 } from 'element-plus'
 import { inject } from "vue";
-import { vFormActiveElementKey } from "@/config/app.keys";
+import { vFormActiveElementKey } from "@/components/form/state.key";
 
 const vFormSelectElem = inject(vFormActiveElementKey)
 

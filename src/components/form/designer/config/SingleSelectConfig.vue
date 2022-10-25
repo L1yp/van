@@ -7,11 +7,6 @@
     style="padding: 5px;"
   >
 
-
-    <el-form-item prop="id" label="表单字段">
-      <el-input type="text" v-model="vFormSelectElem.id"></el-input>
-    </el-form-item>
-    
     <el-form-item prop="expand" label="展开选项">
       <template #label>
         <form-item-tooltip
@@ -103,8 +98,8 @@
 import {
   ElForm, ElFormItem, ElInput, ElRadioGroup, ElRadioButton,
 } from 'element-plus'
-import {inject, nextTick, ref} from "vue";
-import {vFormActiveElementKey} from "@/config/app.keys";
+import { inject } from "vue";
+import {vFormActiveElementKey} from "@/components/form/state.key";
 import FormItemTooltip from "../../FormItemTooltip.vue"
 
 

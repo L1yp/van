@@ -42,8 +42,7 @@ import {
   ElForm, ElFormItem, ElInput, ElSelect, ElOption, ElInputNumber
 } from 'element-plus'
 import {inject} from "vue";
-import {vFormActiveElementKey} from "@/config/app.keys";
-import SVGIcon from "@/components/common/SVGIcon.vue";
+import {vFormActiveElementKey} from "@/components/form/state.key";
 
 const vFormSelectElem = inject(vFormActiveElementKey)
 

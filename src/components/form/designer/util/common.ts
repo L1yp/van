@@ -1,12 +1,10 @@
-import {CandidateComponentConfig, ComponentConfig, SelectConfig} from "@/components/form/types";
-
 export function genId(): string {
   return Math.random().toString().replaceAll("0.", "");
 }
 
 export function transCloneComponent(original: CandidateComponentConfig) {
   const newItem: ComponentConfig = {
-    id: 'field_' + genId().substring(0, 6),
+    id: 'field_' + Date.now().toString(36),
     component: original.component,
     category: original.category,
     formItemAttrs: original.formItemAttrs ? JSON.parse(JSON.stringify(original.formItemAttrs)) : undefined,

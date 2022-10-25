@@ -7,12 +7,6 @@
     style="padding: 5px;"
   >
 
-
-    <el-form-item prop="id" label="表单字段">
-      <el-input type="text" v-model="vFormSelectElem.id"></el-input>
-    </el-form-item>
-
-        
     <el-form-item prop="expand" label="展开选项">
       <template #label>
         <form-item-tooltip
@@ -48,15 +42,7 @@
       <el-input v-model="vFormSelectElem.attrs.valueKey"></el-input>
     </el-form-item>
 
-    <el-form-item prop="size" label="大小">
-      <el-radio-group v-model="vFormSelectElem.attrs.size">
-        <el-radio-button label="large">大</el-radio-button>
-        <el-radio-button label="default">默认</el-radio-button>
-        <el-radio-button label="small">小</el-radio-button>
-      </el-radio-group>
-    </el-form-item>
-
-    <el-form-item v-show="!vFormSelectElem.attrs.multiple" prop="clearable" label="是否可清空">
+    <el-form-item v-show="!vFormSelectElem.attrs.clearable" prop="clearable" label="可清空">
       <el-radio-group v-model="vFormSelectElem.attrs.clearable">
         <el-radio-button :label="true">是</el-radio-button>
         <el-radio-button :label="false">否</el-radio-button>
@@ -83,7 +69,7 @@
       <template #label>
         <form-item-tooltip
           title="Tooltip主题"
-          content="Tooltip 主题，内置了 <code>dark</code> / <code>light</code> 两种"
+          content="Tooltip 主题，内置了 dark / light 两种"
         />
       </template>
       <el-radio-group v-model="vFormSelectElem.attrs.effect">
@@ -131,11 +117,9 @@
 <script lang="ts" setup>
 import {
   ElForm, ElFormItem, ElInput, ElSelect, ElOption, ElInputNumber, ElRadioGroup, ElRadioButton,
-  ElTooltip
 } from 'element-plus'
-import {inject, nextTick, ref} from "vue";
-import {vFormActiveElementKey} from "@/config/app.keys";
-import SVGIcon from "@/components/common/SVGIcon.vue";
+import { inject, ref} from "vue";
+import { vFormActiveElementKey } from "@/components/form/state.key";
 import FormItemTooltip from "../../FormItemTooltip.vue"
 import emitter from "@/event/mitt";
 

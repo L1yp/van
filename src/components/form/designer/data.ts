@@ -4,12 +4,12 @@ import {genId} from "@/components/form/designer/util/common";
 export const InputComponents: CandidateComponentConfig[] = [
   {
     id: genId(),
-    icon: 'TextField',
+    icon: 'NumberField',
     component: 'number-input',
     category: 'form-item',
-    title: "数字输入框",
+    title: "数字",
     formItemAttrs: {
-      label: "数字输入框",
+      label: "数字",
     },
     attrs: {
       value: 1111111,
@@ -24,42 +24,35 @@ export const InputComponents: CandidateComponentConfig[] = [
   },
   {
     id: genId(),
-    icon: 'TextField',
+    icon: 'TimeField',
     component: 'date-picker',
     category: 'form-item',
-    title: "日期输入框",
+    title: "日期",
     formItemAttrs: {
-      label: "日期输入框",
+      label: "日期",
     },
     attrs: {
-      date_type: 'date',
-      value: '2022-10-24',
+      dateType: 'date',
       placeholder: '输入日期',
       format: 'YYYY-MM-DD',
       valueFormat: 'YYYY-MM-DD',
-      clearable: false,
-      size: 'default',
       style: `width: 100%`
     },
     children: []
   },
   {
     id: genId(),
-    icon: 'TextField',
+    icon: 'TimeField',
     component: 'date-range-picker',
     category: 'form-item',
-    title: "日期范围输入框",
+    title: "日期范围",
     formItemAttrs: {
-      label: "日期范围输入框",
+      label: "日期范围",
     },
     attrs: {
-      date_range_type: 'daterange',
-      value: ['2022-10-24', '2022-10-26'],
+      dateRangeType: 'daterange',
       format: 'YYYY-MM-DD',
       valueFormat: 'YYYY-MM-DD',
-      placeholder: '输入日期范围',
-      clearable: false,
-      size: 'default',
       style: `width: 100%`
     },
     children: []
@@ -69,13 +62,14 @@ export const InputComponents: CandidateComponentConfig[] = [
     icon: 'TextField',
     component: 'text-input',
     category: 'form-item',
-    title: "单行文本框",
+    title: "文本框",
     formItemAttrs: {
-      label: "单行文本框",
+      label: "文本框",
     },
     attrs: {
       value: '1111111',
       placeholder: '输入字符串',
+      textarea: false,
       clearable: false,
       showWordLimit: false,
       size: 'default',
@@ -84,29 +78,7 @@ export const InputComponents: CandidateComponentConfig[] = [
       style: `width: 100%`
     }
   },
-  {
-    id: genId(),
-    icon: 'Edit',
-    component: 'text-area-input',
-    category: 'form-item',
-    title: "多行文本框",
-    formItemAttrs: {
-      label: "多行文本框",
-    },
-    attrs: {
-      value: '1111111',
-      placeholder: '输入字符串',
-      clearable: false,
-      showWordLimit: false,
-      size: 'default',
-      rows: 2,
-      autoresize: true,
-      resize: 'none',
-      autofocus:false,
-      validateEvent: false,
-      style: `width: 100%`
-    }
-  },
+
   {
     id: genId(),
     icon: 'RadioButton',
@@ -253,6 +225,7 @@ export const LayoutComponents: CandidateComponentConfig[] = [
     id: genId(),
     component: 'el-row',
     category: 'layout',
+    icon: 'Table',
     title: "栅格",
     attrs: {
       gutter: 0,

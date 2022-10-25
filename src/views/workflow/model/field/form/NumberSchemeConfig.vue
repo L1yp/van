@@ -5,8 +5,8 @@
   <el-form-item :prop="['scheme', 'max']" label="最大值">
     <el-input-number :controls="false" v-model="(props.formData.scheme as NumberInputFieldScheme).max" :disabled="props.disabled" style="width: 100%"/>
   </el-form-item>
-  <el-form-item :prop="['scheme', 'default_value']" label="默认值">
-    <el-input-number :controls="false" v-model="(props.formData.scheme as NumberInputFieldScheme).default_value" :disabled="props.disabled" style="width: 100%" />
+  <el-form-item :prop="['scheme', 'defaultValue']" label="默认值">
+    <el-input-number :controls="false" v-model="(props.formData.scheme as NumberInputFieldScheme).defaultValue" :disabled="props.disabled" style="width: 100%" />
   </el-form-item>
   <el-form-item :prop="['scheme', 'precision']" label="精度">
     <el-input-number :controls="false" v-model="(props.formData.scheme as NumberInputFieldScheme).precision" :disabled="props.disabled" style="width: 100%" />

@@ -1,5 +1,5 @@
 <template>
-  <ElTabs v-model="activePane">
+  <ElTabs type="border-card" v-model="activePane">
     <el-tab-pane label="组件属性" name="component">
       <el-scrollbar :height="collapseScrollHeight" always>
         <el-collapse v-model="openedItems" style="padding: 0 6px">
@@ -61,11 +61,7 @@
     <el-tab-pane label="表单属性" name="form">
       <div>
         <el-scrollbar :height="collapseScrollHeight" always>
-          <el-collapse v-model="formOpenedItems" style="padding: 0 6px">
-            <el-collapse-item name="component" title="组件配置" v-if="!!vFormSelectElem">
-              
-            </el-collapse-item>
-          </el-collapse>
+          <form-config/>
         </el-scrollbar>
       </div>
     </el-tab-pane>
@@ -78,10 +74,9 @@ import {
   ElCollapseItem, ElForm, ElFormItem, ElInput,
 } from 'element-plus'
 import { computed, inject, markRaw, ref } from "vue";
-import { vFormActiveElementKey } from "@/config/app.keys";
+import { vFormActiveElementKey } from "@/components/form/state.key";
 import NumberInputConfig from "@/components/form/designer/config/NumberInputConfig.vue";
 import TextInputConfig from "@/components/form/designer/config/TextInputConfig.vue";
-import TextAreaInputConfig from "@/components/form/designer/config/TextAreaInputConfig.vue";
 import SingleSelectConfig from "@/components/form/designer/config/SingleSelectConfig.vue";
 import MultiSelectConfig from "@/components/form/designer/config/MultiSelectConfig.vue";
 import RowConfig from "@/components/form/designer/config/RowConfig.vue";
@@ -90,6 +85,8 @@ import DateConfig from "@/components/form/designer/config/DateConfig.vue";
 import DateRangeConfig from "@/components/form/designer/config/DateRangeConfig.vue";
 import UserSelectorInputConfig from "@/components/form/designer/config/UserSelectorInputConfig.vue";
 import DeptSelectorInputConfig from "@/components/form/designer/config/DeptSelectorInputConfig.vue";
+import FormConfig from "@/components/form/designer/config/FormConfig.vue";
+
 
 interface Props {
   height: string
@@ -111,7 +108,6 @@ const configMap = {
   'date-range-picker': markRaw(DateRangeConfig),
   'number-input': markRaw(NumberInputConfig),
   'text-input': markRaw(TextInputConfig),
-  'text-area-input': markRaw(TextAreaInputConfig),
   'single-select': markRaw(SingleSelectConfig),
   'multi-select': markRaw(MultiSelectConfig),
   'user-select': markRaw(UserSelectorInputConfig),

@@ -108,12 +108,11 @@ import DatePicker from "../components/date/DatePicker.vue"
 import DateRangePicker from "../components/date/DateRangePicker.vue"
 import TextInput from "../components/input/TextInput.vue"
 import NumberInput from "../components/input/NumberInput.vue"
-import TextAreaInput from "../components/input/TextAreaInput.vue"
 import SingleSelect from "../components/select/SingleSelect.vue"
 import MultiSelect from "../components/select/MultiSelect.vue"
 import UserSelect from "../components/select/UserSelect.vue"
 import DeptSelect from "../components/select/DeptSelect.vue"
-import { vFormActiveElementKey } from "@/config/app.keys";
+import { vFormActiveElementKey } from "@/components/form/state.key";
 import { genId } from "@/components/form/designer/util/common";
 import { Plus, Delete, CopyDocument } from "@element-plus/icons-vue";
 import { findTreeItemParentById } from "@/utils/common";
@@ -122,7 +121,7 @@ export default defineComponent({
   name: "NestedDragItem",
   components: {
     Draggable, ElForm, ElFormItem, ElInput, ElSelect, ElOption, ElRow, ElCol, SVGIcon, ElCheckboxGroup, ElCheckbox,
-    UserSelectorInput, DeptSelectorInput, NumberInput, TextInput, TextAreaInput, SingleSelect, MultiSelect, UserSelect, DeptSelect, 
+    UserSelectorInput, DeptSelectorInput, NumberInput, TextInput, SingleSelect, MultiSelect, UserSelect, DeptSelect, 
     Plus, Delete, CopyDocument, DatePicker, DateRangePicker
   },
   props: {
@@ -241,8 +240,7 @@ div {
 }
 
 .widget-item:hover,
-.widget-col-item:hover,
-.widget-row-item:hover {
+.widget-col-item:hover {
   border: 1px solid #409EFF;
 }
 

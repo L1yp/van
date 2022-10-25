@@ -313,11 +313,9 @@
 <script lang="ts" setup>
 import {
   ElForm, ElFormItem, ElInput, ElSelect, ElOption, ElInputNumber, ElRadioGroup, ElRadioButton,
-  ElTooltip
 } from 'element-plus'
-import {inject, nextTick, ref} from "vue";
-import {vFormActiveElementKey} from "@/config/app.keys";
-import SVGIcon from "@/components/common/SVGIcon.vue";
+import { inject, ref } from "vue";
+import { vFormActiveElementKey } from "@/components/form/state.key";
 import FormItemTooltip from "../../FormItemTooltip.vue"
 import emitter from "@/event/mitt";
 

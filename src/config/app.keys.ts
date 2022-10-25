@@ -18,7 +18,6 @@ export const processModelFieldKey = Symbol("processModelFieldKey") as InjectionK
 export const processInstanceDetailInfoKey = Symbol("processInstanceDetailInfoKey") as InjectionKey<Ref<ProcessInstanceInfoView>>
 export const processNodePageListKey = Symbol("processNodePageListKey") as InjectionKey<ShallowRef<ProcessModelNodePageView[]>>
 export const pageFullScreenKey = Symbol("pageFullScreenKey") as InjectionKey<Ref<boolean>>
-export const vFormActiveElementKey = Symbol('vFormActiveElementKey') as InjectionKey<Ref<ComponentConfig>>
 
 export const userMapKey = Symbol('userMapKey') as InjectionKey<Map<string, UserView>>
 

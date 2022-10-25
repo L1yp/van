@@ -23,12 +23,12 @@ declare interface NumberInputFieldScheme extends FieldScheme {
   parser: string
   min: number
   max: number
-  default_value: number
+  defaultValue: number
   precision: number
 }
 
 declare interface TextInputFieldScheme extends FieldScheme {
-  default_value: string
+  defaultValue: string
 }
 
 declare interface OptionFieldScheme extends FieldScheme {
@@ -36,7 +36,7 @@ declare interface OptionFieldScheme extends FieldScheme {
    * ui component
    */
   component: OptionComponent
-  option_content: OptionFieldContent
+  optionContent: OptionFieldContent
 }
  
 declare type OptionFieldContent = DefaultOptionFieldScheme & ClassOptionFieldScheme & TableOptionFieldScheme
@@ -47,28 +47,28 @@ declare interface OptionFieldContentScheme {
 }
 
 declare interface DefaultOptionFieldScheme extends OptionFieldContentScheme {
-  option_type_id: string
-  default_value: string[]
+  optionTypeId: string
+  defaultValue: string[]
 }
 
 declare interface ClassOptionFieldScheme extends OptionFieldContentScheme {
-  class_name: string
-  from_table: 'DEFAULT' | 'EXTERNAL' | string
+  className: string
+  fromTable: 'DEFAULT' | 'EXTERNAL' | string
 }
 
 declare interface TableOptionFieldScheme extends OptionFieldContentScheme {
-  table_name: string
-  parent_field: string
-  label_field: string
-  value_field: string
-  disabled_field: string
-  disabled_value: string
+  tableName: string
+  parentField: string
+  labelField: string
+  valueField: string
+  disabledField: string
+  disabledValue: string
   condition: string
 }
 
 declare interface UserFieldScheme extends FieldScheme {
   multiple: boolean
-  user_content: UserFieldContent
+  userContent: UserFieldContent
 }
 
 declare type UserFieldContent = ClassUserFieldScheme & FixedUserFieldScheme
@@ -78,12 +78,12 @@ declare interface UserFieldSchemeContent {
 }
 
 declare interface ClassUserFieldScheme extends UserFieldSchemeContent {
-  class_name: string
+  className: string
 }
 
 
 declare interface FixedUserFieldScheme extends UserFieldSchemeContent {
-  user_ids: string[]
+  userIds: string[]
 }
 
 
@@ -93,17 +93,17 @@ declare interface DeptFieldScheme extends FieldScheme {
 
 
 declare interface DateFieldScheme extends FieldScheme {
-  date_type: DateType
+  dateType: DateType
   format: string
-  value_format: string
-  default_value: string
+  valueFormat: string
+  defaultValue: string
 }
 
 declare interface DateRangeFieldScheme extends FieldScheme {
-  date_range_type: DateRangeType
+  dateRangeType: DateRangeType
   format: string
-  value_format: string
-  default_value: string[]
+  valueFormat: string
+  defaultValue: string[]
 }
 
 declare type FieldSchemeContent = NumberInputFieldScheme & TextInputFieldScheme & 

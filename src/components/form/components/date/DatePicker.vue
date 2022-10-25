@@ -1,9 +1,9 @@
 <template>
   <template v-if="cMode === 'design'">
-    <el-date-picker v-model="val" disabled v-bind="$attrs" />
+    <el-date-picker :type="props.dateType" v-model="val" disabled v-bind="$attrs" />
   </template>
   <template v-else-if="cMode === 'edit'">
-    <el-date-picker v-model="val" v-bind="$attrs"  />
+    <el-date-picker :type="props.dateType" v-model="val" v-bind="$attrs"  />
   </template>
   <template v-else-if="cMode === 'read' ">
     <span v-text="props.value"></span>
@@ -20,6 +20,7 @@ import { formModeKey } from "@/components/form/state.key";
 
 interface Props {
   mode?: FormFieldMode
+  dateType: DateType
   value?: string
 }
 

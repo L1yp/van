@@ -83,11 +83,11 @@ const formData = ref<WorkflowFieldAddParam>({
   scope: props.scope,
   scheme: {
     type: 'number',
-    option_content: {
+    optionContent: {
       from: 'DEFAULT',
 
     },
-    user_content: {
+    userContent: {
       from: 'ALL',
     },
   }
