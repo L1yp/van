@@ -57,7 +57,7 @@
       @cancel="dialogInfo.visible = false"
       @confirm="dialogInfo.visible = false"
     >
-      <div>
+      <div style="display: flex; align-items: center; gap: 6px;">
         <el-radio-group v-model="formMode">
           <el-radio-button label="design">设计</el-radio-button>
           <el-radio-button label="edit">编辑</el-radio-button>
@@ -69,8 +69,11 @@
       <div style="margin-top: 16px"></div>
 
       <v-form-render ref="formRenderRef" :scheme="formScheme" :mode="formMode" :form-data="dialogInfo.formData"></v-form-render>
-      <div style="overflow: auto">
-        <pre> {{ JSON.stringify(dialogInfo.formData) }} </pre>
+      <div>
+        <el-scrollbar always>
+          <pre> {{ JSON.stringify(dialogInfo.formData) }} </pre>
+        </el-scrollbar>
+        
       </div>
     </v-dialog>
   </div>

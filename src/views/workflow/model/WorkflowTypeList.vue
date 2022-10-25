@@ -6,11 +6,14 @@
     </div>
     <el-table
       v-loading="loading"
+      ref="tableRef"
       :data="pageData.data"
       :max-height="tableHeight"
       border stripe scrollbar-always-on
       row-key="id"
       :tree-props="{ children: 'children' }"
+      :row-style="{ cursor: 'pointer' }"
+      @row-click="row => row.children?.length && tableRef.toggleRowExpansion(row, undefined)"
       @row-dblclick="handleRowDbClick"
       style="margin-top: 10px"
     >
@@ -54,7 +57,7 @@
       <WorkflowTypeConfigTabs />
     </MaskWindow>
     <MaskWindow v-model="verMaskVisible">
-      <WorkflowVerConfigTabs />
+      <WorkflowVerDesigner :ver-id="srcRow.id" />
     </MaskWindow>
     <MaskWindow v-model="addPanelVisible">
       <DefAddPanel @success="loadPage(param)" @close="addPanelVisible = false" />
@@ -69,7 +72,7 @@ import { ElTable, ElTableColumn, ElInput, ElButton } from "element-plus";
 import { Plus } from "@element-plus/icons-vue";
 import {mainHeightKey, maskContainerKey, themeKey} from "@/config/app.keys";
 import WorkflowTypeConfigTabs from "@/views/workflow/model/WorkflowTypeConfigTabs.vue";
-import WorkflowVerConfigTabs from "@/views/workflow/model/WorkflowVerConfigTabs.vue";
+import WorkflowVerDesigner from "@/views/workflow/bpmn/designer.vue";
 import UserSelectorInput from '@/components/common/selector/user/UserSelectorInput.vue'
 import DefAddPanel from "./type/DefAddPanel.vue";
 import { workflowDefKey } from "./keys";
@@ -121,6 +124,8 @@ function handleRowDbClick(row: WorkflowTypeDefView | WorkflowTypeVerView) {
 function handleAdd() {
   addPanelVisible.value = true
 }
+
+const tableRef = ref<InstanceType<typeof ElTable>>()
 
 </script>
 

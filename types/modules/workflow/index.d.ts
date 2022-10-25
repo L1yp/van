@@ -26,6 +26,8 @@ declare interface WorkflowTypeVerView {
   ver: number
   remark: string
   status: string
+  xml: string
+  process_definition_id: string
   update_by: string
   update_time: string
   create_by: string
@@ -65,4 +67,20 @@ declare interface WorkflowTypeDefUpdateParam {
   remark: string
   code_gen_rule: CodeGenRule
   status: string
+}
+
+declare interface WorkflowTypeVerUpdateXmlParam {
+  id: string
+  xml: string
+}
+
+
+declare interface WorkflowTypeVerActiveParam {
+  id: string
+  remark: string
+}
+
+
+declare interface WorkflowTypeVerPendingParam {
+  id: string
 }
