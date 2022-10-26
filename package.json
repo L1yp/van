@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "vite --mode dev",
-    "build": "vite build --mode prod",
+    "build": "vite build --mode prod && scp -r ./dist/assets/* root@122.51.216.214:/usr/share/nginx/html/admin/assets/ && scp ./dist/index.html root@122.51.216.214:/usr/share/nginx/html/admin/index.html",
     "preview": "vite preview --port 5050"
   },
   "dependencies": {
