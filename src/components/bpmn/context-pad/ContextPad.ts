@@ -1,4 +1,3 @@
-import { assign } from "min-dash";
 
 export default class CustomContextPad {
 
@@ -9,8 +8,9 @@ export default class CustomContextPad {
   translate: any
   autoPlace: any
   modeling: any
+  eventBus: any
 
-  constructor(config, contextPad, create, elementFactory, injector, translate, modeling) {
+  constructor(config, contextPad, create, elementFactory, injector, translate, modeling, eventBus) {
     this.create = create
     this.elementFactory = elementFactory
     this.translate = translate
@@ -20,6 +20,10 @@ export default class CustomContextPad {
     this.modeling = modeling
     contextPad.registerProvider(this)
     console.log('init pad');
+    eventBus.on('contextPad.getProviders', function(event) {
+      console.log('contextPad.getProviders', event);
+      event.providers = [] // TODO: 覆盖 providers
+    })
   }
 
 
@@ -77,4 +81,5 @@ CustomContextPad.$inject = [
   'injector',
   'translate',
   'modeling',
+  'eventBus',
 ]
