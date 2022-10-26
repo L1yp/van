@@ -55,6 +55,13 @@ export default function ContextPadProvider(
     this._autoPlace = injector.get('autoPlace', false);
   }
 
+  const that = this
+  eventBus.on('contextPad.getProviders', function(event) {
+    console.log('event', event);
+    
+    event.providers = [that]
+  })
+
   eventBus.on('create.end', 250, function(event) {
     var context = event.context,
         shape = context.shape;
@@ -88,7 +95,8 @@ ContextPadProvider.$inject = [
 
 
 ContextPadProvider.prototype.getContextPadEntries = function(element) {
-
+  console.log('getContextPadEntries', element);
+  
   var contextPad = this._contextPad,
       modeling = this._modeling,
 
@@ -182,6 +190,52 @@ ContextPadProvider.prototype.getContextPadEntries = function(element) {
       }
     };
   }
+
+    /**
+   * Create an append action
+   *
+   * @param {string} group
+   * @param {string} type
+   * @param {string} className
+   * @param {string} [title]
+   * @param {Object} [options]
+   *
+   * @return {Object} descriptor
+   */
+  function appendGroupAction(group, type, className, title?, options?) {
+
+    if (typeof title !== 'string') {
+      options = title;
+      title = translate('Append {type}', { type: type.replace(/^bpmn:/, '') });
+    }
+
+    function appendStart(event, element) {
+
+      var shape = elementFactory.createShape(assign({ type: type }, options));
+      create.start(event, shape, {
+        source: element
+      });
+    }
+
+
+    var append = autoPlace ? function(event, element) {
+      var shape = elementFactory.createShape(assign({ type: type }, options));
+
+      autoPlace.append(element, shape);
+    } : appendStart;
+
+
+    return {
+      group,
+      className: className,
+      title: title,
+      action: {
+        dragstart: appendStart,
+        click: append
+      }
+    };
+  }
+  
 
   function splitLaneHandler(count) {
 
@@ -323,19 +377,19 @@ ContextPadProvider.prototype.getContextPadEntries = function(element) {
         ),
         'append.gateway': appendAction(
           'bpmn:ExclusiveGateway',
-          'bpmn-icon-gateway-none',
+          'bpmn-icon-gateway-xor',
           translate('Append Gateway')
         ),
         'append.append-task': appendAction(
-          'bpmn:Task',
-          'bpmn-icon-task',
-          translate('Append Task')
+          'bpmn:UserTask',
+          'bpmn-icon-user-task',
+          translate('Append UserTask')
         ),
-        'append.intermediate-event': appendAction(
-          'bpmn:IntermediateThrowEvent',
-          'bpmn-icon-intermediate-event-none',
-          translate('Append Intermediate/Boundary Event')
-        )
+        // 'append.intermediate-event': appendAction(
+        //   'bpmn:IntermediateThrowEvent',
+        //   'bpmn-icon-intermediate-event-none',
+        //   translate('Append Intermediate/Boundary Event')
+        // )
       });
     }
   }
@@ -371,11 +425,11 @@ ContextPadProvider.prototype.getContextPadEntries = function(element) {
     ])
   ) {
     assign(actions, {
-      'append.text-annotation': appendAction(
+      'append.text-annotation': appendGroupAction(
+        'connect',
         'bpmn:TextAnnotation',
         'bpmn-icon-text-annotation'
       ),
-
       'connect': {
         group: 'connect',
         className: 'bpmn-icon-connection-multi',
@@ -462,7 +516,7 @@ function isEventType(eventBo, type, definition) {
   var isDefinition = false;
 
   var definitions = eventBo.eventDefinitions || [];
-  forEach(definitions, function(def) {
+  forEach(definitions, function(def: any) {
     if (def.$type === definition) {
       isDefinition = true;
     }
