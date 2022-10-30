@@ -15,7 +15,14 @@
             @clickTag="router.push(element.path)"
           >
             <template #icon>
-              <el-icon size="0.8em"><SVGIcon :name="element.icon"></SVGIcon></el-icon>
+              <el-icon size="0.8em">
+                <template v-if="Icons[element.icon]">
+                  <component :is="Icons[element.icon]" />
+                </template>
+                <template v-else>
+                  <SVGIcon :name="element.icon"/>
+                </template>
+              </el-icon>
             </template>
             <template #text>
               <span style="margin-left: 0.5em;" v-text="element.title"></span>
@@ -23,7 +30,7 @@
           </Tag>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item command="refresh" :icon="Refresh">刷新</el-dropdown-item>
+              <el-dropdown-item command="refresh" :icon="Icons.Refresh">刷新</el-dropdown-item>
               <el-dropdown-item command="fullscreen" :icon="useIcon('FullScreenMaximize', { style: { width: '1em', height: '1em' } })">全屏</el-dropdown-item>
               <el-dropdown-item command="closeThis" :icon="useIcon('close', { style: { width: '1em', height: '1em' } })">关闭当前</el-dropdown-item>
               <el-dropdown-item command="closeLeft" :icon="useIcon('close', { style: { width: '1em', height: '1em' } })">关闭左侧</el-dropdown-item>
@@ -55,6 +62,8 @@ import {RouteMetaRecord} from "@/router";
 import {pageFullScreenKey, themeKey} from "@/config/app.keys";
 import {useTitle} from "@vueuse/core";
 import { Refresh } from '@element-plus/icons-vue'
+import * as Icons from "@element-plus/icons-vue";
+import { incMaskZIndex } from "@/components/dialog/mask";
 
 const theme = inject<Ref<ThemeConfig>>(themeKey)
 
@@ -65,9 +74,6 @@ const router = useRouter();
 const tags = reactive<TagInfo[]>([]);
 const activeTag = ref<TagInfo>()
 
-onMounted(() => {
-
-});
 
 function closeTag(tag: TagInfo) {
   const length = tags.length;
@@ -149,13 +155,13 @@ watch(() => route.fullPath, (newPath, oldPath)=>{
 
 const tagBarHeight = computed(() => `${theme.value.tagBarHeight}px`)
 
-const pageScreen = inject(pageFullScreenKey)
+const setPageScreen = inject(pageFullScreenKey)
 function handleContextMenuCommand(command: string, element: TagInfo) {
   if (command === 'fullscreen') {
     if (element.path === activeTag.value.path) {
-      pageScreen.value = true
+      setPageScreen()
     } else {
-      router.push(element.path).then(() => pageScreen.value = true)
+      router.push(element.path).then(setPageScreen)
     }
   }
 }

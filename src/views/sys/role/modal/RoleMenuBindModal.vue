@@ -15,9 +15,9 @@
       max-height="calc(100vh - 15vh - 50px - 44px - 54px - 32px)"
       border stripe default-expand-all
       :row-style="{ cursor: 'pointer' }"
-      @row-click="row => ['PAGE', 'BUTTON'].includes(row.type) && tableRef.toggleRowSelection(row, undefined)"
+      @row-click="row => ['TAB', 'PAGE', 'BUTTON', 'PROCESS', 'ENTITY'].includes(row.type) && tableRef.toggleRowSelection(row, undefined)"
     >
-      <el-table-column type="selection" :selectable="row => ['PAGE', 'BUTTON'].includes(row.type)" />
+      <el-table-column type="selection" :selectable="row => ['TAB', 'PAGE', 'BUTTON', 'PROCESS', 'ENTITY'].includes(row.type)" />
       <el-table-column prop="name" label="名称" width="300"  />
       <el-table-column prop="type" label="类型" width="100" />
       <el-table-column prop="component" label="组件" />

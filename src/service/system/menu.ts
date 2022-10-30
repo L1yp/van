@@ -11,7 +11,7 @@ export function useMenuData(loading?: Ref<boolean>) {
     try {
       loading && (loading.value = true)
       const data = await MenuApi.findMenu()
-      menuTree.value = toTree(data, 'id', 'pid')
+      menuTree.value = toTree(data, 'id', 'pid', 'order_no')
     } catch (e) {
       console.error(e);
       ElMessage.error((e as Error)?.message || '加载菜单列表失败')
@@ -19,7 +19,8 @@ export function useMenuData(loading?: Ref<boolean>) {
       loading && (loading.value = false)
     }
   }
- 
+
+
 
   return {
     menuTree, loadMenuTree,

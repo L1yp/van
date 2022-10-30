@@ -171,7 +171,11 @@ function handleRowClick(row: UserView) {
 
 function handleRowDbClick(row: UserView) {
   selectedRowId.value = row.id
-  handleConfirm()
+  if (!props.multiple) {
+    handleConfirm()
+  } else {
+    handleAddUser(row)
+  }
 }
 
 

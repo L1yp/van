@@ -17,7 +17,7 @@ export const propertyPanelOpenedKey = Symbol("propertyPanelOpenedKey") as Inject
 export const processModelFieldKey = Symbol("processModelFieldKey") as InjectionKey<ShallowRef<ProcessFieldDefinition[]>>
 export const processInstanceDetailInfoKey = Symbol("processInstanceDetailInfoKey") as InjectionKey<Ref<ProcessInstanceInfoView>>
 export const processNodePageListKey = Symbol("processNodePageListKey") as InjectionKey<ShallowRef<ProcessModelNodePageView[]>>
-export const pageFullScreenKey = Symbol("pageFullScreenKey") as InjectionKey<Ref<boolean>>
+export const pageFullScreenKey = Symbol("pageFullScreenKey") as InjectionKey<() => void>
 
 export const userMapKey = Symbol('userMapKey') as InjectionKey<Map<string, UserView>>
 

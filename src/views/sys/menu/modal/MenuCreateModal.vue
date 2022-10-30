@@ -16,6 +16,7 @@
           <ElRadioButton label="TAB">页面容器</ElRadioButton>
           <ElRadioButton label="PAGE">页面</ElRadioButton>
           <ElRadioButton label="PROCESS">流程</ElRadioButton>
+          <ElRadioButton label="ENTITY">实体</ElRadioButton>
           <ElRadioButton label="BUTTON">按钮</ElRadioButton>
         </ElRadioGroup>
       </ElFormItem>
@@ -77,6 +78,7 @@ const configComponents = {
   TAB: markRaw(TabsForm),
   PAGE: markRaw(PageForm),
   PROCESS: markRaw(ProcessForm),
+  ENTITY: markRaw(ProcessForm),
   BUTTON: markRaw(ButtonForm),
 }
 
@@ -95,7 +97,7 @@ function normalizeFormData() {
   else if (type === 'PAGE') {
     formData.value.closeable = null
   }
-  else if (type === 'PROCESS') {
+  else if (['PROCESS', 'ENTITY'].includes(type)) {
     formData.value.closeable = null
   }
   else if (type === 'BUTTON') {

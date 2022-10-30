@@ -46,7 +46,7 @@ export function primitiveArrayEquals(a, b): boolean {
 }
 
 
-export function toTree<T extends Tree>(src: T[], keyField: keyof T, parentField: keyof T): T[] {
+export function toTree<T extends Tree>(src: T[], keyField: keyof T, parentField: keyof T, orderField?: keyof T): T[] {
   const map = new Map<unknown, T>(src.map(it => [it[keyField], it]))
   src.forEach(it => {
     if (map.has(it[parentField])) {
@@ -57,6 +57,10 @@ export function toTree<T extends Tree>(src: T[], keyField: keyof T, parentField:
       parent.children.push(it)
     }
   })
+  if (orderField) {
+    src.filter(it => it.children?.length).forEach(it => it.children.sort((a, b) => Number(a[orderField]) - Number(b[orderField])))
+  }
+  
   return src.filter(it => !it[parentField])
 }
 

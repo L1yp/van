@@ -16,7 +16,10 @@ const viewModules = import.meta.globEager("../views/**/*.vue")
  * 路由映射视图文件
  * @param route
  */
-function routeToView(route: string) {
+export function routeToView(route: string) {
+  if (!viewModules[`../views${route}.vue`]) {
+    console.log('err', route)
+  }
   return viewModules[`../views${route}.vue`].default // if globEager
   // return viewModules[`../views${route}.vue`] // if glob
 }

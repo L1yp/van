@@ -1,7 +1,7 @@
 <template>
 
-  <div>
-    <div class="op-line">
+  <div style="width: 100%; height: 100%;">
+    <div>
       <el-button plain type="primary" @click="handleCreateRole" :icon="Plus">新增</el-button>
 
       <el-popconfirm
@@ -17,13 +17,13 @@
       <el-button size="default" plain :icon="Download" type="warning" @click="addRole">导出</el-button>
     </div>
 
-    <div class="data-table">
+    <div style="width: 100%; height: calc(100% - 32px - 10px); margin-top: 10px">
       <el-table
         v-loading="loading"
         ref="tableRef"
         row-key="id"
         :data="roleData"
-        :height="dataTableHeight"
+        height="100%"
         style="width: 100%"
         :row-style="{ cursor: 'pointer' }"
         table-layout="auto"
@@ -55,6 +55,8 @@
               </template>
             </el-popconfirm>
             <el-button plain style="vertical-align: middle;" text @click.stop="relateMenu(scope.row)" :icon="Link">关联菜单</el-button>
+            <el-button plain text @click.stop="openPermissionPanel('ENTITY', scope.row)" :icon="Link">实体权限</el-button>
+            <el-button plain text @click.stop="openPermissionPanel('WORKFLOW', scope.row)" :icon="Link">流程权限</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -63,11 +65,12 @@
 
     <RoleCreateModal v-model="roleCreateModalVisible" :mode="roleCreateModalMode" :init-data="updateRoleItem" @confirm="handleCreateModalConfirm" />
     <RoleMenuBindModal v-model="bindModalVisible" :menu-options="menuTree" :select-ids="selectIds" @confirm="handleConfirmBind" />
+
+    <MaskWindow v-model="permissionVisible">
+      <PermissionEntity/>
+    </MaskWindow>
+
   </div>
-
-
-
-
 
 </template>
 
@@ -82,23 +85,11 @@ import { useRole } from "@/service/system/role";
 import RoleCreateModal from "@/views/sys/role/modal/RoleCreateModal.vue";
 import { useMenuData } from "@/service/system/menu";
 import RoleMenuBindModal from "@/views/sys/role/modal/RoleMenuBindModal.vue";
+import MaskWindow from "@/components/dialog/MaskWindow.vue";
+import PermissionEntity from "@/views/sys/role/permission/PermissionEntity.vue";
 
 
 const loading = ref<boolean>(true);
-
-const mainHeight = inject(mainHeightKey)
-
-const theme = inject<Ref<ThemeConfig>>(themeKey)
-
-
-const dataTableHeight = computed<string>(() => {
-  /**
-   * 32px op height
-   * 10px marginTop
-   */
-  return `calc(${mainHeight.value} - ${theme.value.mainPadding + theme.value.mainPadding + 32 + 10}px)`;
-});
-
 const { roleData, loadRole, deleteRoleByIds, deleteRoleById, addRole, updateRole, boundMenu, bindMenu } = useRole(loading)
 onBeforeMount(loadRole)
 
@@ -145,8 +136,6 @@ function relateMenu(role: RoleView) {
   boundMenu(role.id)
     .then(menuIds => selectIds.value = menuIds)
     .then(_ => bindModalVisible.value = true)
-
-
 }
 
 function handleConfirmBind(rows: MenuView[]) {
@@ -167,6 +156,13 @@ function handleRowClick(row) {
   tableRef.value.toggleRowSelection(row, undefined)
 }
 
+const permissionVisible = ref(false)
+const permModule = ref<FieldModule>()
+function openPermissionPanel(module: FieldModule, role: RoleView) {
+  selectRole.value = role
+  permModule.value = module
+  permissionVisible.value = true
+}
 </script>
 
 <style scoped>

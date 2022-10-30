@@ -20,13 +20,12 @@
           v-show="pageScreen"
           class="close-page-full-screen"
           title="关闭全屏"
-          @click.stop="cancelPageScreen"
+          @click.stop="pageScreen = false"
+          :style="{ 'z-index': pageScreenZIndex }"
         >
           <s-v-g-icon class="close-icon" name="close" style="width: 16px; height: 16px; position: absolute; left: 10px; top: 4px"></s-v-g-icon>
         </div>
-        <div ref="maskContainerRef" style="position: absolute; top: 0px; left: 0; ">
-
-        </div>
+        <div ref="maskContainerRef" style="position: absolute; top: 0; left: 0; "></div>
       </el-main>
       <el-footer :style="pageScreen ? { display: 'none' } : undefined"></el-footer>
     </el-container>
@@ -34,8 +33,8 @@
 </template>
 
 <script lang="ts" setup>
-import {computed, onMounted, provide, Ref, ref, watch} from "vue"
-import {ElContainer, ElHeader, ElAside, ElMain, ElFooter, ElScrollbar, ElIcon } from "element-plus"
+import { computed, provide, Ref, ref } from "vue"
+import { ElContainer, ElHeader, ElAside, ElMain, ElFooter, ElScrollbar, ElIcon } from "element-plus"
 import Theme from "../config/theme"
 import {HeaderBar} from "./components/header"
 import {AsideBar} from "./components/aside"
@@ -48,6 +47,7 @@ import {
   themeKey, mainWidthKey, pageFullScreenKey, maskContainerKey,
 } from "@/config/app.keys"
 import SVGIcon from "@/components/common/SVGIcon.vue";
+import {incMaskZIndex} from "@/components/dialog/mask";
 
 
 const asideCollapsed: Ref<boolean> = ref(false);
@@ -83,12 +83,14 @@ const footerHeight = computed(() => `${theme.value.footerHeight}px`)
 const mainPadding = computed(() => `${theme.value.mainPadding}px`)
 const footerPadding = computed(() => `${theme.value.footerPadding}px`)
 
+const pageScreenZIndex = ref<number>(1000)
 const pageScreen = ref<boolean>(false)
-provide(pageFullScreenKey, pageScreen)
 
-function cancelPageScreen() {
-  pageScreen.value = false
+function setFullScreen() {
+  pageScreenZIndex.value = incMaskZIndex()
+  pageScreen.value = true
 }
+provide(pageFullScreenKey, setFullScreen)
 
 const maskContainerRef = ref()
 provide(maskContainerKey, maskContainerRef)

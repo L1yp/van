@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig } from "axios";
 
-export function request<T>(config: AxiosRequestConfig): Promise<T> {
-  return new Promise((resolve, reject) => {
+export function request<T>(config: AxiosRequestConfig) {
+  return new Promise<T>((resolve, reject) => {
     axios.request(config).then(response => {
       if (response.data.code === 200) {
         resolve(response.data.data);

@@ -1,9 +1,9 @@
-import {createApp, ref} from 'vue'
+import { createApp, ref } from 'vue'
 import App from './App.vue'
 import {isReady, setupRouter} from './router'
 import 'virtual:svg-icons-register'
 import 'element-plus/dist/index.css';
-import {ElLoading} from 'element-plus';
+import { ElLoading, ElMessage } from 'element-plus';
 import {setupAxios} from "./config/axios.http"
 import * as UserApi from "@/api/sys/user"
 import {remove} from "./utils/storage"
@@ -12,6 +12,7 @@ import {permission} from "@/directives/permission"
 import VXETable from 'vxe-table'
 import 'vxe-table/lib/style.css'
 import {toTree} from "@/utils/common";
+import { varOptions } from '@/components/permission/components/condition'
 
 async function startup() {
   try {
@@ -21,14 +22,16 @@ async function startup() {
     app.use(ElLoading)
     app.use(VXETable)
 
-    app.provide(userMapKey, new Map<string, UserView>())
+    const map = new Map<string, UserView>()
+    varOptions.forEach(it => map.set(it.id, it))
+    app.provide(userMapKey, map)
 
     const menuOptions = ref<MenuView[]>([])
     const userInfo = ref<UserInfo>()
 
     try {
       const data = await UserApi.menu()
-      data.menus = toTree(data.menus, 'id', 'pid')
+      data.menus = toTree(data.menus, 'id', 'pid', 'order_no')
       menuOptions.value = data.menus
       userInfo.value = data.user_info
       console.log("menu list", data);

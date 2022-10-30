@@ -26,8 +26,8 @@
   </el-row>
   <el-row>
     <el-col :span="12">
-      <el-form-item label="流程标识" prop="component">
-        <el-input v-model="props.formData.component"></el-input>
+      <el-form-item label="流程标识" prop="path">
+        <el-input v-model="props.formData.path"></el-input>
       </el-form-item>
     </el-col>
     <el-col :span="12">
