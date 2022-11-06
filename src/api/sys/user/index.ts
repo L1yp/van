@@ -98,3 +98,13 @@ export function permission(): Promise<string[]> {
     url: `/user/permission`,
   })
 }
+
+/**
+ * 权限列表
+ */
+ export function listByIdList(id_list: string[]) {
+  return request<UserView[]>({
+    method: 'get',
+    url: `/user/list/${id_list.join(',')}`,
+  })
+}

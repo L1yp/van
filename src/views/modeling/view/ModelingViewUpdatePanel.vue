@@ -29,7 +29,6 @@ import {computed, onBeforeMount, ref, watch} from "vue";
 import ModelingViewBasic from "@/views/modeling/view/ModelingViewBasic.vue";
 import {useModelingFieldApi} from "@/service/modeling/field";
 import { ElForm, FormRules, ElButton, ElScrollbar, ElFormItem } from "element-plus";
-import {InternalRuleItem, ValidateOption, Value, Values} from "async-validator/dist-types/interface";
 import {useViewApi} from "@/service/modeling/view";
 import ModelingViewColumnConfig from "@/views/modeling/view/ModelingViewColumnConfig.vue";
 
@@ -95,7 +94,7 @@ const formRules: FormRules = {
   ],
   collation: [
     {
-      validator: (rule: InternalRuleItem, value: Value, callback: (error?: string | Error) => void, source: Values, options: ValidateOption) => {
+      validator: (rule, value, callback: (error?: string | Error) => void, source, options) => {
         const items = value as Collation[]
         console.log(items)
         const result = items.every(it => !!it.field && it.field?.trim().length > 0)
@@ -106,7 +105,7 @@ const formRules: FormRules = {
   ],
   columns: [
     {
-      validator: (rule: InternalRuleItem, value: Value, callback: (error?: string | Error) => void, source: Values, options: ValidateOption) => {
+      validator: (rule, value, callback: (error?: string | Error) => void, source, options) => {
         const columns = value as ModelingViewColumnParam[]
         const fields = new Set(columns.map(it => it.field.field))
         const collation = formData.value.collation

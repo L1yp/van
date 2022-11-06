@@ -1,6 +1,6 @@
 <template>
   <div style="width: 100%; height: 100%;">
-    <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #E3E3E3; padding: 4px;">
+    <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #E3E3E3; padding: 4px 0;">
       <div>
         <el-button>新建</el-button>
         <el-button>导出</el-button>
@@ -36,6 +36,12 @@
         <template v-for="column in (activeView.columns || [])">
           <vxe-colgroup>
             <template #header>
+              <template v-if="column.field.type === 'option'">
+                <el-tree-select
+                  :props="{ label: 'name', children: 'children'}"
+                  node-key="id"
+                />
+              </template>
               <template v-if="column.field.type === 'text'">
                 <el-input v-model="param.condition_map[column.field.field]" style="width: calc(100% - 20px);" @change="reloadTableData" />
               </template>
@@ -79,8 +85,8 @@
 
 <script lang="ts" setup>
 import { useViewApi } from '@/service/modeling/view';
-import {ElButton, ElSelect, ElOption, ElMessage, ElInput, ElDatePicker} from 'element-plus'
-import {computed, nextTick, onBeforeMount, onMounted, ref, toRaw} from 'vue';
+import { ElButton, ElSelect, ElOption, ElMessage, ElInput, ElTreeSelect } from 'element-plus'
+import { computed, nextTick, onMounted, ref, toRaw } from 'vue';
 import { Setting } from "@element-plus/icons-vue";
 import UserSelectorInput from "@/components/common/selector/user/UserSelectorInput.vue";
 import DateRangePicker from "@/views/modeling/view/condition/DateRangePicker.vue";

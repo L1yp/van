@@ -33,21 +33,6 @@ const varUserOptions: UserView[] = [
     dept_id: 1,
   },
 ]
-
-const dateVal = computed<string[]>({
-  get: () => {
-    if (props.column.condition) {
-      return props.column.condition.split(',')
-    }
-    return []
-  },
-  set: v => {
-    if (v?.length) {
-      props.column.condition = v.join(',')
-    }
-  }
-})
-
 </script>
 
 <style scoped>

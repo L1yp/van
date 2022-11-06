@@ -8,10 +8,10 @@
             <div
               class="field-wrapper"
               v-for="field in props.fields"
-              :key="field.id"
+              :key="field.field"
             >
               <el-radio
-                :label="field.id"
+                :label="field.field"
                 size="small"
               >
                 {{field.label}}
@@ -27,10 +27,10 @@
       <el-select v-model="operator" style="width: 100px" :disabled="!selectedFieldId">
         <el-option
           v-for="item in operators"
-          :key="item"
-          :value="item"
-          :label="item"
-        ></el-option>
+          :key="item.value"
+          :value="item.value"
+          :label="item.label"
+        />
       </el-select>
       <div>
         <div>
@@ -67,7 +67,7 @@
 
         <!-- 字典 -->
         <div v-show="['option'].includes(selectedField.type)">
-          <OptionConditionPanel v-model="optionConditionModel" :options="selectedField.scheme.options || []" />
+          <OptionConditionPanel v-model="optionConditionModel.option_value_id_list" :options="selectedField.scheme.options || []" />
         </div>
 
         <!-- 时间 -->
@@ -77,10 +77,7 @@
       </template>
 
     </div>
-
   </div>
-
-
 </template>
 
 <script lang="ts" setup>
@@ -94,14 +91,13 @@ import DeptConditionPanel from './condition/DeptConditionPanel.vue';
 import OptionConditionPanel from './condition/OptionConditionPanel.vue';
 import DateConditionPanel from './condition/DateConditionPanel.vue';
 
-
 interface Props {
   fields: ModelingFieldDefView[]
   state: BlockExpressionModel
 }
 
 interface Emits {
-  (e: 'confirm', field: ModelingFieldDefView, operator: string, val: FieldConditionUnionModel): void
+  (e: 'confirm', field: ModelingFieldDefView, operator: ConditionOperator, val: FieldConditionUnionModel): void
   (e: 'cancel'): void
   (e: 'update:state', state: BlockExpressionModel): void
 }
@@ -116,20 +112,29 @@ const selectedField = computed<ModelingFieldDefView>(() => {
   if (!selectedFieldId.value) {
     return null
   } else {
-    return props.fields?.find(it => it.id === selectedFieldId.value) || null
+    return props.fields?.find(it => it.field === selectedFieldId.value) || null
   }
 })
 
-const operators = computed<string[]>(() => {
-  const field = props.fields?.find(it => it.id === selectedFieldId.value)
-  let options: ConditionOperator[] = []
+type Operator = {
+  label: string
+  value: ConditionOperator
+}
+
+const operators = computed<Operator[]>(() => {
+  const field = props.fields?.find(it => it.field === selectedFieldId.value)
+  let options: Operator[] = []
   if (['text'].includes(field?.type)) {
-    options = ['EQ', 'LIKE', 'NOT_LIKE']
+    options = [
+      { label: '=', value: 'EQ' },
+      { label: 'like', value: 'LIKE' },
+      { label: 'not like', value: 'NOT_LIKE' },
+    ]
   } else {
-    options = ['EQ']
+    options = [ { label: '=', value: 'EQ' } ]
   }
-  if (!options.includes(operator.value)) {
-    nextTick(() => operator.value = options[0])
+  if (!options.map(it => it.value).includes(operator.value)) {
+    nextTick(() => operator.value = options[0].value)
   }
   return options
 })
@@ -186,15 +191,15 @@ function setState() {
   console.log('update panel setState type val', type, data);
 
   if (['text'].includes(type)) {
-    strConditionModel.value = data
+    strConditionModel.value = data as TextFieldConditionModel
   } else if (['option'].includes(type)) {
-    optionConditionModel.value = data.value
+    optionConditionModel.value = data as OptionFieldConditionModel
   }else if (['user'].includes(type)) {
-    userConditionModel.value = data
+    userConditionModel.value = data as UserFieldConditionModel
   } else if (['dept'].includes(type)) {
-    deptConditionModel.value = data
+    deptConditionModel.value = data as DeptFieldConditionModel
   } else if (['date'].includes(type)) {
-    dateConditionModel.value = data
+    dateConditionModel.value = data as DateFieldConditionModel
   }
 }
 
@@ -228,7 +233,7 @@ defineExpose({
 
 
 function handleConfirm() {
-  const field = props.fields.find(it => it.id === selectedFieldId.value)
+  const field = props.fields.find(it => it.field === selectedFieldId.value)
   if (!field || !operator.value) {
     ElMessage.warning(`请先选择字段 & 操作符`)
     return
@@ -271,7 +276,7 @@ function handleConfirm() {
     }
     emits('update:state', state)
     emits('confirm', field, operator.value, userConditionModel.value)
-  } else if (['MDepartment'].includes(field.type)) {
+  } else if (['dept'].includes(field.type)) {
     if (!deptConditionModel.value.dept_id) {
       ElMessage.error(`请选择部门`)
       return

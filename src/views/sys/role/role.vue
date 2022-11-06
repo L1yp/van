@@ -67,7 +67,7 @@
     <RoleMenuBindModal v-model="bindModalVisible" :menu-options="menuTree" :select-ids="selectIds" @confirm="handleConfirmBind" />
 
     <MaskWindow v-model="permissionVisible">
-      <PermissionEntity/>
+      <PermissionEntity :role-id="selectRole.id" />
     </MaskWindow>
 
   </div>
@@ -75,11 +75,10 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, inject, Ref, onBeforeMount } from "vue"
+import { ref, onBeforeMount } from "vue"
 import {
   ElTable, ElTableColumn, ElTag, ElButton, ElPopconfirm,
 } from "element-plus"
-import {mainHeightKey, themeKey} from "@/config/app.keys";
 import { Plus, Edit, Delete, Download, Link } from "@element-plus/icons-vue";
 import { useRole } from "@/service/system/role";
 import RoleCreateModal from "@/views/sys/role/modal/RoleCreateModal.vue";

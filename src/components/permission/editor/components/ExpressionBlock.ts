@@ -6,7 +6,7 @@ import {
   useSelf,
   useRef,
   jsx,
-  ExtractComponentInstanceType,
+  ExtractComponentInstanceType, VElement,
 } from '@textbus/core'
 import {ref, shallowRef} from "vue";
 import { transformToVElementLang } from "../util";
@@ -26,7 +26,7 @@ export type Content = {
 
 export interface ExpressionBlockState {
   text: string
-  content: Content
+  content: ExpressionModel
 }
 
 export const popoverElem = shallowRef<HTMLSpanElement | null>(null)
@@ -42,7 +42,7 @@ export const ExpressionBlock = defineComponent({
   type: ContentType.Text,
   name: "ExpressionBlock",
   setup(initData: ComponentInitData<ExpressionBlockState>) {
-    console.log('setup start', initData)
+    // console.log('setup start', initData)
 
     const self = useSelf<any, ExpressionBlockState>()
     const compRef = useRef<HTMLSpanElement>()
@@ -51,12 +51,12 @@ export const ExpressionBlock = defineComponent({
 
     return {
       render() {
-        console.log('render start', self.state)
+        // console.log('render start', self.state)
         const attrs = {
           'textbus-type': 'expression-block',
           state: JSON.stringify(self.state),
           class: 'expression-block',
-          tpye: self.state.content.type,
+          type: self.state.content.type,
           ref: compRef,
           onClick() {
             if (self.state.content.type === 'BLOCK') {
@@ -71,9 +71,13 @@ export const ExpressionBlock = defineComponent({
               }
               popoverElem.value = compRef.current
 
-              editState.value.field = self.state.content.attrs.field
-              editState.value.operator = self.state.content.attrs.operator
-              editState.value.value = self.state.content.attrs.value
+              // editState.value.field = self.state.content.attrs.field
+              // editState.value.operator = self.state.content.attrs.operator
+              // editState.value.value = self.state.content.attrs.value
+
+              editState.value = self.state.content.content
+              // editState.value = JSON.parse(JSON.stringify(self.state.content.attrs))
+
 
               editBlockRef.value = self
               editPopoverVisible.value = true
@@ -89,9 +93,9 @@ export const ExpressionBlock = defineComponent({
           const elems = transformToVElementLang(self.state.text)
           console.log('transform elems', elems);
 
-          return jsx('span', attrs, elems)
+          return VElement.createElement('span', attrs, elems)
         } else {
-          return jsx('span', attrs, [ self.state.text ])
+          return VElement.createElement('span', attrs, [ self.state.text ])
         }
 
       }

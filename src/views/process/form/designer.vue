@@ -82,7 +82,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, inject, ref, provide } from "vue";
+import { computed, inject, ref, provide, onBeforeMount } from "vue";
 import { mainHeightKey, mainWidthKey, themeKey } from "@/config/app.keys";
 import { ElForm, ElScrollbar, ElTabs, ElTabPane, ElButton, ElRadioGroup, ElRadioButton } from "element-plus"
 import NestedDragItem from "@/components/form/designer/NestedDragItem.vue";
@@ -94,7 +94,9 @@ import { InputComponents, LayoutComponents } from "@/components/form/designer/da
 import VDialog from "@/components/dialog/VDialog.vue";
 import VFormRender from "@/components/form/designer/VFormRender.vue";
 import { formModeKey, vFormActiveElementKey, vFormSchemeKey } from "@/components/form/state.key";
+import { useModelingFieldApi } from "@/service/modeling/field";
 
+const loading = ref(false)
 const viewIcon = useIcon('View')
 const deleteIcon = useIcon('Delete')
 
@@ -169,6 +171,11 @@ async function handleClickValidateForm() {
     console.error(e);
   }
 }
+
+const { modelingFields, findModelingFields } = useModelingFieldApi(loading)
+onBeforeMount(() => {
+  findModelingFields('ENTITY', 'product_line')
+})
 </script>
 
 <style scoped>

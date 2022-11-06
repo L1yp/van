@@ -9,7 +9,7 @@
         border stripe scrollbar-always-on
         row-key="id"
         :row-style="{ cursor: 'pointer' }"
-        @row-dblclick="handleRowDbClick"
+        @row-click="handleRowClick"
       >
         <el-table-column>
           <el-table-column type="index" label="#" width="50" align="center" header-align="center" />
@@ -58,20 +58,32 @@
         @current-change="searchEntity(param)"
       />
     </div>
-    <MaskWindow v-model="permissionPanelVisible">
-      <permission-editor module="ENTITY" :mkey="srcRow?.mkey" />
-    </MaskWindow>
-
+    <v-dialog
+      v-model="permissionPanelVisible"
+      :title="`绑定 【${srcRow?.name || ''}】 权限`"
+      @confirm="handleConfirm"
+      @cancel="permissionPanelVisible = false"
+      destroy-on-close
+    >
+      <expression-editor ref="editorRef" :role-id="props.roleId" module="ENTITY" :mkey="srcRow?.mkey" />
+    </v-dialog>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { useEntityApi } from "@/service/modeling/entity";
-import { onBeforeMount, provide, ref } from "vue";
+import { onBeforeMount, ref } from "vue";
 import { ElTable, ElTableColumn, ElInput, ElPagination } from "element-plus";
 import UserSelectorInput from '@/components/common/selector/user/UserSelectorInput.vue'
-import MaskWindow from "@/components/dialog/MaskWindow.vue";
-import PermissionEditor from "@/views/modeling/permission/PermissionEditor.vue";
+import VDialog from "@/components/dialog/VDialog.vue";
+import ExpressionEditor from "@/components/permission/editor/ExpressionEditor.vue";
+import {useModelingPermissionApi} from "@/service/modeling/permission";
+
+interface Props {
+  roleId: string
+}
+
+const props = defineProps<Props>()
 
 const loading = ref<boolean>(false)
 const param = ref<Partial<ModelingEntityFindParam>>({
@@ -82,21 +94,38 @@ const param = ref<Partial<ModelingEntityFindParam>>({
 const { pageData, searchEntity } = useEntityApi(loading)
 onBeforeMount(() => searchEntity(param.value))
 
+const { permissionContent, getPermissionContent, bindPermissionContent } = useModelingPermissionApi(loading)
+
 function formatUser(row, column, cellValue, index) {
   return pageData.value.additional?.[cellValue]?.nickname || ''
 }
 
 const permissionPanelVisible = ref(false)
 const srcRow = ref<ModelingEntityView>()
-
-
-function handleRowDbClick(row: ModelingEntityView) {
+function handleRowClick(row: ModelingEntityView) {
   srcRow.value = row
   permissionPanelVisible.value = true
 }
 
 
 const tableRef = ref<InstanceType<typeof ElTable>>()
+const editorRef = ref<InstanceType<typeof ExpressionEditor>>()
+
+function handleConfirm() {
+  const states: ExpressionModel[] = editorRef.value.readEditorState()
+  console.log('states', states)
+
+
+  const param: ModelingPermissionBindParam = {
+    role_id: props.roleId,
+    module: 'ENTITY',
+    mkey: srcRow.value.mkey,
+    flags: 1,
+    content: states,
+  }
+  bindPermissionContent(param).then(flag => flag && (permissionPanelVisible.value = false))
+
+}
 
 </script>
 

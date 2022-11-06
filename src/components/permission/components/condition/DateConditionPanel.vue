@@ -10,7 +10,7 @@
           <div class="field-wrapper"><el-radio label="YEAR" size="small">今年</el-radio></div>
           <div class="field-wrapper">
             <el-radio label="FIXED" size="small">固定</el-radio>
-            <ElDatePicker
+            <date-range-picker
               :disabled="val.data_type !== 'FIXED'"
               style="width: 250px;"
               v-model="val.range"
@@ -18,7 +18,6 @@
               range-separator="~"
               start-placeholder="Start date"
               end-placeholder="End date"
-              value-format="YYYY-MM-DD"
               size="small"
             />
           </div>
@@ -31,6 +30,7 @@
 <script lang="ts" setup>
 import { ElScrollbar, ElRadioGroup, ElRadio, ElDatePicker } from "element-plus";
 import { computed } from "vue";
+import DateRangePicker from "@/views/modeling/view/condition/DateRangePicker.vue";
 
 interface Props {
   modelValue: DateFieldConditionModel

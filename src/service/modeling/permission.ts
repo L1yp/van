@@ -2,7 +2,7 @@ import * as PermissionApi from "@/api/modeling/permission";
 import { ref, Ref } from "vue";
 import { ElMessage } from "element-plus";
 
-export function useModelingPerimissionApi(loading?: Ref<boolean>) {
+export function useModelingPermissionApi(loading?: Ref<boolean>) {
   const permissionContent = ref<ModelingPermissionView>()
 
   async function getPermissionContent(param: ModelingPermissionFindParam) {

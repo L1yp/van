@@ -4,6 +4,7 @@ declare interface PageParam {
 }
 
 declare interface UserInfo {
+  id: string
   username: string;
   nickname?: string;
   phone?: string;

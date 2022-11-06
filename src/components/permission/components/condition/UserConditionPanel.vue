@@ -26,9 +26,9 @@
 import UserSelectorInput from "@/components/common/selector/user/UserSelectorInput.vue";
 import DeptSelectorInput from "@/components/common/selector/dept/DeptSelectorInput.vue";
 import { computed, inject } from "vue";
-import { UserConditionModel, varOptions } from './'
+import { varOptions } from './'
 import { ElCheckbox } from "element-plus";
-import {userMapKey} from "@/config/app.keys";
+import { userMapKey } from "@/config/app.keys";
 
 interface Props {
   modelValue: UserFieldConditionModel

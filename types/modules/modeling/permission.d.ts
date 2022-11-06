@@ -1,5 +1,5 @@
 declare interface ModelingPermissionFindParam {
-  role_id: string
+  roleId: string
   module: FieldModule
   mkey: string
 }

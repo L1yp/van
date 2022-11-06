@@ -10,7 +10,7 @@ import { ElDatePicker } from "element-plus";
 import { computed } from "vue";
 
 interface Props {
-  modelValue: string
+  modelValue?: string
 }
 
 interface Emits {
@@ -38,7 +38,7 @@ const val = computed({
     } else {
       emits('update:modelValue', '')
     }
-    
+
   }
 })
 

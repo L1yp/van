@@ -1,52 +1,39 @@
 <template>
   <div style="border: 1px solid #E3E3E3; height: 298px">
     <el-scrollbar height="298px" always>
-      <el-checkbox-group v-model="val.option_value_id_list">
-        <div>
-          <div
-            class="field-wrapper"
-            v-for="option in props.options"
-          >
-            <el-checkbox :label="option.id" size="small" :disabled="option.disabled">{{option.name}}</el-checkbox>
-          </div>
-        </div>
-      </el-checkbox-group>
+      <el-tree
+        ref="treeRef"
+        :props="{ label: 'name', children: 'children' }"
+        :data="props.options"
+        node-key="id"
+        check-strictly show-checkbox default-expand-all check-on-click-node
+        :expand-on-click-node="false"
+        :default-checked-keys="props.modelValue"
+        @check-change="handleCheckChange"
+      />
     </el-scrollbar>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ElCheckbox, ElScrollbar, ElCheckboxGroup } from "element-plus";
-import { computed } from "vue";
+import { ElCheckbox, ElScrollbar, ElCheckboxGroup, ElTree } from "element-plus";
+import {computed, ref} from "vue";
 import { OptionConditionModel } from ".";
 
 interface Props {
   options: ModelingOptionValueView[]
-  modelValue: OptionFieldConditionModel
+  modelValue: string[]
 }
-
 interface Emits {
-  (e: 'update:modelValue', val: OptionConditionModel): void
+  (e: 'update:modelValue', val: string[]): void
 }
-
 const props = defineProps<Props>()
 const emits = defineEmits<Emits>()
 
-const val = computed<OptionFieldConditionModel>({
-  get: () => {
-    return props.modelValue
-  },
-  set: v => {
-    emits('update:modelValue', v)
-  },
-})
-</script>
-
-<style scoped>
-.field-wrapper {
-  box-sizing: border-box;
-  width: 100%;
-  padding: 6px;
+const treeRef = ref<InstanceType<typeof ElTree>>()
+function handleCheckChange() {
+  const keys = treeRef.value.getCheckedKeys(false) as string[]
+  emits('update:modelValue', keys)
 }
 
-</style>
+</script>

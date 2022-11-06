@@ -17,7 +17,7 @@ export function transformToVElementLang(html: string): VElement[] {
     const children = []
     const attrs = NamedNodeMapToObject(child.attributes);
     transformToVElement(child, children);
-    const elem = jsx(child.tagName, attrs, children)
+    const elem = VElement.createElement(child.tagName, attrs, children)
     result.push(elem)
   }
 
@@ -41,7 +41,7 @@ function transformToVElement(elem: Element | Node, children: Array<VElement | st
       const attrs = NamedNodeMapToObject((child as HTMLElement).attributes)
       const nodes = [];
       transformToVElement(child, nodes);
-      const velem = jsx(child.nodeName, attrs, nodes);
+      const velem = VElement.createElement(child.nodeName, attrs, nodes);
       children.push(velem);
     }
   })
