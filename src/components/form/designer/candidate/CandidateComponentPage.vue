@@ -1,5 +1,5 @@
 <template>
-  <el-scrollbar :height="collapseScrollHeight" always>
+  <el-scrollbar always>
     <el-collapse v-model="openedItems">
       <el-collapse-item name="layout" title="布局">
         <draggable
@@ -56,17 +56,14 @@ import { ElScrollbar, ElCollapse, ElCollapseItem } from 'element-plus'
 import Draggable from "vuedraggable";
 import { transCloneComponent } from "../util/common"
 import SVGIcon from "@/components/common/SVGIcon.vue";
-import {computed, ref} from "vue";
+import { ref } from "vue";
 
 interface Props {
-  height: string
   inputComponents: CandidateComponentConfig[]
   layoutComponents: CandidateComponentConfig[]
 }
 
 const props = defineProps<Props>()
-const collapseScrollHeight = computed<string>(() => `calc(${props.height} - 15px)`)
-
 const openedItems = ref<string[]>(['input', 'output', 'layout'])
 
 </script>

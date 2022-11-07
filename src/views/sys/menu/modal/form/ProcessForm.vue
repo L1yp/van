@@ -53,7 +53,7 @@
 <script lang="ts" setup>
 import { ElCol, ElFormItem, ElInput, ElRow, ElTreeSelect, ElRadioGroup, ElRadioButton, ElInputNumber } from "element-plus";
 import { computed, toRaw } from "vue";
-import { flatternTree, toTree } from "@/utils/common";
+import { flattenTree, toTree } from "@/utils/common";
 import DictInput from "@/components/dict/DictInput.vue";
 import { STATUS } from "@/components/dict/dict";
 
@@ -67,9 +67,10 @@ const props = defineProps<Props>()
 const parentOptions = computed<MenuView[]>(() => {
   const menus = toRaw(props.menuTree)
 
-  const flatTree: MenuView[] = flatternTree(JSON.parse(JSON.stringify(menus)))
+  const flatTree: MenuView[] = flattenTree(JSON.parse(JSON.stringify(menus)))
   flatTree.forEach(it => it.children = [])
-  const filterTree = flatTree.filter(it => ['TAB'].includes(it.type))
+  const filterTree = flatTree.filter(it => ['TAB', 'FOLDER'].includes(it.type))
+  console.log('filterTree', filterTree)
   return toTree(filterTree, 'id', 'pid')
 })
 

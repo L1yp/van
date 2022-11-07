@@ -239,7 +239,7 @@ div {
 }
 
 .widget-item + .widget-item {
-  margin-top: 2px;
+  margin-top: 4px;
 }
 
 .widget-row-item {

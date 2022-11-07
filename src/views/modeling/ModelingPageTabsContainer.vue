@@ -11,7 +11,7 @@
         <ModelingViewContainer module="ENTITY" :mkey="item.path" />
       </template>
       <template v-else-if="item.type === 'PROCESS'">
-        <ModelingViewContainer module="PROCESS" :mkey="item.path" />
+        <ModelingViewContainer module="WORKFLOW" :mkey="item.path" />
       </template>
       <template v-else-if="item.type === 'PAGE'">
         <component :is="routeToView(item.component)" />

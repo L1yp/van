@@ -81,7 +81,7 @@ import {computed} from "@vue/reactivity";
 import {Plus} from '@element-plus/icons-vue'
 import {varDptOptions} from "../components/condition";
 import {useDeptInfo} from "@/service/system/dept";
-import {findTreeItemById, flatternTree} from "@/utils/common";
+import {findTreeItemById, flattenTree} from "@/utils/common";
 import {useModelingFieldApi} from "@/service/modeling/field";
 import {useModelingOptionApi} from "@/service/modeling/option";
 import {userInfoKey, userMapKey} from "@/config/app.keys";
@@ -267,10 +267,10 @@ function initEditorState(permission: ModelingPermissionView) {
   if (!permission) {
     return
   }
-  
+
   popoverElem.value = null
   popoverVisible.value = false
-  
+
   const elems = permission.content
   const states: ExpressionBlockState[] = []
   const map = new Map<string, string>([['AND', '且'], ['OR', '或'], ['(', '('], [')', ')']])
@@ -353,7 +353,7 @@ function buildText(field: ModelingFieldDefView, operator: ConditionOperator, val
   // 字典单选 字典多选
   else if (['option'].includes(field.type)) {
     const data = val as OptionFieldConditionModel
-    const flatOptions = flatternTree(field.scheme.options)
+    const flatOptions = flattenTree(field.scheme.options)
     const fieldMap = new Map<string, ModelingOptionValueView>(flatOptions.map(it => [it.id, it]))
     const options = data.option_value_id_list.map(it => fieldMap.get(it)!)
     const labels = options.map(it => it.name).join(',')

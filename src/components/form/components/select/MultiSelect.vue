@@ -1,27 +1,22 @@
 <template>
   <template v-if="cMode === 'design'">
     <div>
-      <el-select 
-        v-model="val" 
-        multiple 
-        disabled 
-        :value-key="props.valueField" 
-        v-bind="$attrs"
+      <el-tree-select
         v-if="props.expand === false"
-      >
-        <el-option
-          v-for="option in props.options"
-          :key="option[props.valueField]"
-          :label="option[props.labelField]"
-          :value="option[props.valueField]"
-          :disabled="option[props.disabledField]"
-        >
-        </el-option>
-      </el-select>
+        v-model="val"
+        multiple collapse-tags collapse-tags-tooltip
+        :loading="loading"
+        style="width: 100%;"
+        v-bind="$attrs"
+        :node-key="props.valueField"
+        disabled
+        :props="{ label: props.labelField, children: 'children', disabled: props.disabledField }"
+        :data="options"
+      />
       <el-checkbox-group disabled v-if="props.expand === true" v-model="val" v-bind="$attrs">
         <template v-if="props.buttonOption === true">
           <el-checkbox-button 
-            v-for="option in props.options"  
+            v-for="option in flattenOptions"  
             :label="option[props.valueField]"
             :key="option[props.valueField]"
             :disabled="option[props.disabledField]"
@@ -30,7 +25,7 @@
         </template>
         <template v-else>
           <el-checkbox 
-            v-for="option in props.options"  
+            v-for="option in flattenOptions"  
             :label="option[props.valueField]"
             :key="option[props.valueField]"
             :disabled="option[props.disabledField]"
@@ -44,28 +39,22 @@
   </template>
   <template v-else-if="cMode === 'edit'">
     <div>
-      <el-select 
-        v-model="val" 
-        multiple
-        collapse-tags
-        collapse-tags-tooltip
-        :value-key="props.valueField" 
+      <el-tree-select
         v-if="props.expand === false"
+        v-model="val"
+        multiple collapse-tags collapse-tags-tooltip
+        :loading="loading"
+        style="width: 100%;"
         v-bind="$attrs"
-      >
-        <el-option
-          v-for="option in props.options"
-          :key="option[props.valueField]"
-          :label="option[props.labelField]"
-          :value="option[props.valueField]"
-          :disabled="option[props.disabledField]"
-        >
-        </el-option>
-      </el-select>
+        :node-key="props.valueField"
+        :props="{ label: props.labelField, children: 'children', disabled: props.disabledField }"
+        :data="options"
+      />
+      
       <el-checkbox-group v-if="props.expand === true" v-model="val" v-bind="$attrs">
         <template v-if="props.buttonOption === true">
           <el-checkbox-button 
-            v-for="option in props.options"  
+            v-for="option in flattenOptions"  
             :label="option[props.valueField]"
             :key="option[props.valueField]"
             :disabled="option[props.disabledField]"
@@ -74,7 +63,7 @@
         </template>
         <template v-else>
           <el-checkbox 
-            v-for="option in props.options"  
+            v-for="option in flattenOptions"  
             :label="option[props.valueField]"
             :key="option[props.valueField]"
             :disabled="option[props.disabledField]"
@@ -93,17 +82,20 @@
 </template>
 
 <script lang="ts" setup>
-import { ElSelect, ElOption, ElCheckboxGroup, ElCheckbox, ElCheckboxButton } from 'element-plus'
+import { ElTreeSelect, ElCheckboxGroup, ElCheckbox, ElCheckboxButton } from 'element-plus'
 import { computed, inject, nextTick, ref } from "vue";
 import { formModeKey } from "@/components/form/state.key";
+import { useModelingOptionApi } from '@/service/modeling/option';
+import { flattenTree } from '@/utils/common';
 
 interface Props {
   mode?: FormFieldMode
   value?: string
-  defaultValue?: string
+  defaultValue?: string[]
   expand?: boolean
   buttonOption?: boolean
   options: object[]
+  optionTypeId?: string
   labelField?: string
   valueField?: string
   disabledField?: string
@@ -123,6 +115,27 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emits = defineEmits<Emits>()
 
+
+const loading = ref(false)
+const { modelingOptionValues, findModelingOptionValues } = useModelingOptionApi(loading)
+let loadFlag = false
+const options = computed(() => {
+  const remoteOptions = modelingOptionValues.value
+  if (props.options.length) {
+    return props.options
+  } else if (props.optionTypeId) {
+    if (!loadFlag) {
+      findModelingOptionValues({ typeId: props.optionTypeId })
+      loadFlag = true
+    }
+    return remoteOptions
+  } else {
+    return []
+  }
+})
+
+const flattenOptions = computed(() => flattenTree(options.value))
+
 const val = computed({
   get: () => {
     if (props.value) {
@@ -131,8 +144,8 @@ const val = computed({
       return result
     }
     if (props.defaultValue) {
-      nextTick(() => emits('update:value', props.defaultValue))
-      return props.defaultValue?.split(',')
+      nextTick(() => emits('update:value', props.defaultValue.join(',')))
+      return props.defaultValue
     }
     return []
   },
@@ -149,7 +162,7 @@ const displayValue = computed(() => {
   if (props.value) {
     vals = props.value.split(',')
   }
-  const optionsMap = new Map(props.options.map(it => [it[props.valueField], it]))
+  const optionsMap = new Map(flattenOptions.value.map(it => [it[props.valueField], it]))
   const display = vals.map(it => optionsMap.get(it)?.[props.labelField] || it)?.join(',')
 
   return display

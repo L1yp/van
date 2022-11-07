@@ -101,7 +101,7 @@ import {
   ElIcon,
 } from "element-plus";
 import { Plus, Minus } from "@element-plus/icons-vue";
-import { filterDataWithTitle, findTreeItemById, isArray, flatternTree } from '@/utils/common'
+import { filterDataWithTitle, findTreeItemById, isArray, flattenTree } from '@/utils/common'
 
 interface Props {
   multiple?: boolean
@@ -183,7 +183,7 @@ const tableHeight = computed<string>(() => {
   return `calc((calc(100vh - 15vh - 50px - 44px - 54px)) - 32px - ${selectedContainerHeight}px)`
 })
 
-const flatData = computed<DeptView[]>(() => flatternTree(props.data))
+const flatData = computed<DeptView[]>(() => flattenTree(props.data))
 const flatDataIds = computed(() => flatData.value.map(it => it.id))
 
 const treeData = computed<DeptView[]>(() => {

@@ -1,10 +1,16 @@
 <template>
-  <svg aria-hidden="true">
-    <use :xlink:href="symbolId"/>
-  </svg>
+  <template v-if="Object.hasOwn(Icon, name)">
+    <component :is="Icon[name]" />
+  </template>
+  <template v-else>
+    <svg aria-hidden="true">
+      <use :xlink:href="symbolId"/>
+    </svg>
+  </template>
 </template>
 <script lang="ts">
 import {computed, defineComponent, PropType} from 'vue'
+import * as Icon from '@element-plus/icons-vue'
 
 export default defineComponent({
   props: {
@@ -13,7 +19,7 @@ export default defineComponent({
   setup(props){
     const symbolId = computed<string>(() => `#icon-${props.name}`)
     return {
-      symbolId
+      symbolId, Icon
     }
   }
 })

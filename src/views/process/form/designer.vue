@@ -1,17 +1,16 @@
 <template>
   <div class="container">
     <div class="component-list">
-      <el-tabs type="border-card" v-model="candidateActiveTab">
-        <el-tab-pane label="组件" name="component">
+      <el-tabs type="border-card" v-model="candidateActiveTab" style="width: 100%; height: 100%;">
+        <el-tab-pane label="组件" name="component" style="width: 100%; height: 100%;">
           <candidate-component-page
-            :height="designerContainerHeight"
             :input-components="InputComponents"
             :layout-components="LayoutComponents"
           >
           </candidate-component-page>
         </el-tab-pane>
-        <el-tab-pane label="字段" name="field">
-
+        <el-tab-pane label="字段" name="field" style="width: 100%; height: 100%;">
+          <ModelingFieldPage module="ENTITY" mkey="product_line" />
         </el-tab-pane>
       </el-tabs>
 
@@ -22,28 +21,30 @@
         <el-button text type="primary" :icon="viewIcon" @click="handleClickPreview">预览</el-button>
         <el-button text type="primary" :icon="viewIcon" @click="handleClickViewJSON">查看JSON</el-button>
       </div>
-      <el-scrollbar style="height: calc(100% - 40px)" :height="designerContainerHeight" always>
-        <el-form
-          :size="formScheme.size" 
-          :label-width="formScheme.labelWidth"
-          :label-position="formScheme.labelPosition"
-          :style="formScheme.style"
-          style="padding: 10px" 
-          @click.stop="vFormActiveElement = null"
-        >
-          <!-- 若(nested-drag-item).height + padding*2 > designerContainerHeight 则会出现滚动条  -->
-          <nested-drag-item
-            :style="{width: '100%', minHeight: `calc(${designerContainerHeight} - 20px)`}"
-            :children="formScheme.children"
-            group="component"
+      <div style="height: calc(100% - 40px);">
+        <el-scrollbar always>
+          <el-form
+            :size="formScheme.size" 
+            :label-width="formScheme.labelWidth"
+            :label-position="formScheme.labelPosition"
+            :style="formScheme.style"
+            style="padding: 10px; box-sizing: border-box; height: 100%;" 
+            @click.stop="vFormActiveElement = null"
           >
-          </nested-drag-item>
-        </el-form>
-      </el-scrollbar>
+            <!-- 若(nested-drag-item).height + padding*2 > designerContainerHeight 则会出现滚动条  -->
+            <nested-drag-item
+              :style="{width: '100%', minHeight: `calc(${designerContainerHeight} - 20px)`}"
+              :children="formScheme.children"
+              group="component"
+            >
+            </nested-drag-item>
+          </el-form>
+        </el-scrollbar>
+      </div>
 
     </div>
     <div class="property-panel-container">
-      <form-property-panel :height="formPropertyPanelHeight"></form-property-panel>
+      <form-property-panel></form-property-panel>
     </div>
 
     
@@ -83,11 +84,12 @@
 
 <script lang="ts" setup>
 import { computed, inject, ref, provide, onBeforeMount } from "vue";
-import { mainHeightKey, mainWidthKey, themeKey } from "@/config/app.keys";
+import { mainHeightKey, themeKey } from "@/config/app.keys";
 import { ElForm, ElScrollbar, ElTabs, ElTabPane, ElButton, ElRadioGroup, ElRadioButton } from "element-plus"
 import NestedDragItem from "@/components/form/designer/NestedDragItem.vue";
 import FormPropertyPanel from "@/components/form/designer/FormPropertyPanel.vue"
 import CandidateComponentPage from "@/components/form/designer/candidate/CandidateComponentPage.vue";
+import ModelingFieldPage from "@/components/form/designer/candidate/ModelingFieldPage.vue";
 import { useIcon } from "@/components/common/util";
 import JsonEditor from "@/components/common/JsonEditor.vue";
 import { InputComponents, LayoutComponents } from "@/components/form/designer/data"
@@ -102,17 +104,13 @@ const deleteIcon = useIcon('Delete')
 
 const candidateActiveTab = ref<string>('component')
 
-const mainWidth = inject(mainWidthKey)
 const mainHeight = inject(mainHeightKey)
 const theme = inject(themeKey)
-const containerWidth = computed<string>(() => `calc(${mainWidth.value} - ${theme.value.mainPadding * 2}px)`)
 
 // 30=padding 40=toolbar
 const containerHeight = computed<string>(() => `calc(${mainHeight.value} - ${theme.value.mainPadding * 2}px)`)
 
 const designerContainerHeight = computed<string>(() => `calc(${containerHeight.value} - 40px)`)
-
-const formPropertyPanelHeight = computed<string>(() => `calc(${containerHeight.value} - 55px)`)
 
 const vFormActiveElement = ref<ComponentConfig>(null)
 provide(vFormActiveElementKey, vFormActiveElement)
@@ -183,30 +181,36 @@ onBeforeMount(() => {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  width: v-bind(containerWidth);
-  height: v-bind(containerHeight);
+  width: 100%;
+  height: 100%;
 }
 
 .component-list {
   width: 300px;
-  height: v-bind(containerHeight);
+  height: 100%;
   background-color: #FFFFFF;
 }
 
 .form-wrapper {
   flex: 1;
-  height: v-bind(containerHeight);
+  height: 100%;
+}
+
+:deep(.el-tabs--border-card>.el-tabs__content) {
+  box-sizing: border-box;
+  height: calc(100% - 39px);
 }
 
 .property-panel-container {
   width: 400px;
-  height: v-bind(containerHeight);
+  height: 100%;
   background-color: #FFFFFF;
 }
 
 :deep(.ghost) {
   content: '';
   font-size: 0;
+  width: 100%;
   height: 3px;
   box-sizing: border-box;
   background-color: #409EFF;

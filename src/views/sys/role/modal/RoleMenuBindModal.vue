@@ -15,7 +15,7 @@
       max-height="calc(100vh - 15vh - 50px - 44px - 54px - 32px)"
       border stripe default-expand-all
       :row-style="{ cursor: 'pointer' }"
-      @row-click="row => ['TAB', 'PAGE', 'BUTTON', 'PROCESS', 'ENTITY'].includes(row.type) && tableRef.toggleRowSelection(row, undefined)"
+      @row-click="handleRowClick"
     >
       <el-table-column type="selection" :selectable="row => ['TAB', 'PAGE', 'BUTTON', 'PROCESS', 'ENTITY'].includes(row.type)" />
       <el-table-column prop="name" label="名称" width="300"  />
@@ -30,7 +30,7 @@
 import { ElTable, ElTableColumn } from 'element-plus'
 import VDialog from "@/components/dialog/VDialog.vue";
 import {computed, ref} from "vue";
-import {findTreeItemById} from "@/utils/common";
+import {findTreeItemById, getTreeItemPath} from "@/utils/common";
 
 interface Props {
   modelValue: boolean
@@ -66,6 +66,21 @@ function handleOpened() {
 
     loading.value = false
   }
+}
+
+function handleRowClick(row: MenuView) {
+  console.log(666)
+  if(!['TAB', 'PAGE', 'BUTTON', 'PROCESS', 'ENTITY'].includes(row.type)) {
+    return
+  }
+  const rows: MenuView[] = tableRef.value.getSelectionRows()
+  if (!rows.includes(row)) {
+    const result = getTreeItemPath(props.menuOptions, 'id', row.id)
+    result.forEach(it => tableRef.value.toggleRowSelection(it, true))
+  } else {
+    tableRef.value.toggleRowSelection(row, undefined)
+  }
+
 }
 
 </script>

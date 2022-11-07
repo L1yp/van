@@ -1,7 +1,7 @@
 <template>
-  <ElTabs type="border-card" v-model="activePane">
-    <el-tab-pane label="组件属性" name="component">
-      <el-scrollbar :height="collapseScrollHeight" always>
+  <ElTabs type="border-card" style="width: 100%; height: 100%;" v-model="activePane">
+    <el-tab-pane label="组件属性" name="component" style="width: 100%; height: 100%;">
+      <el-scrollbar always>
         <el-collapse v-model="openedItems" style="padding: 0 6px">
           <el-collapse-item name="form-item" title="FormItem配置" v-show="vFormSelectElem?.category === 'form-item'">
             <el-form
@@ -42,12 +42,10 @@
         </el-collapse>
       </el-scrollbar>
     </el-tab-pane>
-    <el-tab-pane label="表单属性" name="form">
-      <div>
-        <el-scrollbar :height="collapseScrollHeight" always>
-          <form-config/>
-        </el-scrollbar>
-      </div>
+    <el-tab-pane label="表单属性" name="form" style="width: 100%; height: 100%;">
+      <el-scrollbar always>
+        <form-config/>
+      </el-scrollbar>
     </el-tab-pane>
   </ElTabs>
 </template>
@@ -57,7 +55,7 @@ import {
   ElScrollbar, ElTabs, ElTabPane, ElCollapse, ElRadioGroup, ElRadioButton,
   ElCollapseItem, ElForm, ElFormItem, ElInput, ElDivider,
 } from 'element-plus'
-import { computed, inject, markRaw, ref } from "vue";
+import { inject, markRaw, ref } from "vue";
 import { vFormActiveElementKey } from "@/components/form/state.key";
 import NumberInputConfig from "@/components/form/designer/config/NumberInputConfig.vue";
 import TextInputConfig from "@/components/form/designer/config/TextInputConfig.vue";
@@ -72,20 +70,10 @@ import DeptSelectorInputConfig from "@/components/form/designer/config/DeptSelec
 import FormConfig from "@/components/form/designer/config/FormConfig.vue";
 
 
-interface Props {
-  height: string
-}
-
-const props = defineProps<Props>()
-
-const collapseScrollHeight = computed<string>(() => `calc(${props.height} - 15px)`)
-
 const vFormSelectElem = inject(vFormActiveElementKey)
 
 const activePane = ref<string>('component')
 const openedItems = ref<string[]>(['form-item', 'component'])
-
-const formOpenedItems = ref<string[]>([])
 
 const configMap = {
   'date-picker': markRaw(DateConfig),
@@ -103,8 +91,6 @@ const configMap = {
 </script>
 
 <style scoped>
-:deep(.el-tabs__content) {
-  padding: 10px;
-}
+
 
 </style>

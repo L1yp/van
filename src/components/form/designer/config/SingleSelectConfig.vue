@@ -88,6 +88,18 @@
         <el-radio-button :label="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
+    <el-form-item prop="defaultExpandAll" label="默认展开全部选项">
+      <template #label>
+        <form-item-tooltip
+          title="默认展开选项"
+          content="默认展开全部选项"
+        />
+      </template>
+      <el-radio-group v-model="vFormSelectElem.attrs.defaultExpandAll">
+        <el-radio-button :label="true">是</el-radio-button>
+        <el-radio-button :label="false">否</el-radio-button>
+      </el-radio-group>
+    </el-form-item>
     <el-form-item prop="style" label="样式">
       <el-input v-model="vFormSelectElem.attrs.style"></el-input>
     </el-form-item>

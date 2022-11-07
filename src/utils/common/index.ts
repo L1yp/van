@@ -60,7 +60,7 @@ export function toTree<T extends Tree>(src: T[], keyField: keyof T, parentField:
   if (orderField) {
     src.filter(it => it.children?.length).forEach(it => it.children.sort((a, b) => Number(a[orderField]) - Number(b[orderField])))
   }
-  
+
   return src.filter(it => !it[parentField])
 }
 
@@ -118,7 +118,7 @@ export function filterDataWithTitle<T extends Tree>(result: T[], list: T[], key:
  * @param key 键值
  * @returns 条目
  */
-export function findTreeItemById<T extends Tree>(src: T[], keyField: keyof T, key: string): T | undefined {
+export function findTreeItemById<T extends Tree>(src: T[], keyField: keyof T, key: T[keyof T]): T | undefined {
 
   for (const item of src) {
     if (item[keyField] === key) {
@@ -136,6 +136,30 @@ export function findTreeItemById<T extends Tree>(src: T[], keyField: keyof T, ke
 
 }
 
+export function getTreeItemPath<T extends Tree>(src: T[], keyField: keyof T, key: T[keyof T]): T[] {
+  // 深度遍历
+  const result = []
+  DFSTree(src, keyField, key, result)
+  return result.reverse()
+}
+
+function DFSTree<T extends Tree>(src: T[], keyField: keyof T, key: T[keyof T], result: T[]): boolean {
+  for (let item of src) {
+    if (item[keyField] === key) {
+      result.push(item)
+      return true
+    }
+    if (item.children?.length) {
+      const ret = DFSTree(item.children, keyField, key, result)
+      if (ret) {
+        result.push(item)
+        return true
+      }
+    }
+  }
+  return false
+}
+
 /**
  * 在树中查询条目的父级
  * @param src 数据源
@@ -143,7 +167,7 @@ export function findTreeItemById<T extends Tree>(src: T[], keyField: keyof T, ke
  * @param key 键值
  * @returns 条目
  */
- export function findTreeItemParentById<T extends Tree>(src: T[], keyField: keyof T, key: string): T[] {
+ export function findTreeItemParentById<T extends Tree>(src: T[], keyField: keyof T, key: T[keyof T]): T[] {
 
   for (const item of src) {
     if (item[keyField] === key) {
@@ -156,12 +180,10 @@ export function findTreeItemById<T extends Tree>(src: T[], keyField: keyof T, ke
       }
     }
   }
-
   return []
-
 }
 
-export function flatternTree<T extends Tree>(src: T[]): T[] {
+export function flattenTree<T extends Tree>(src: T[]): T[] {
   const result: T[] = []
   getSubTree(result, src)
   return result
