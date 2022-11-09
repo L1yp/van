@@ -40,7 +40,11 @@
         </div>
       </slot>
     </template>
-    <slot name="default"></slot>
+    <el-scrollbar max-height="calc(100vh - 15vh - 50px - 44px - 54px - 32px)" always>
+      <slot name="default"></slot>
+    </el-scrollbar>
+
+    
     <template #footer>
       <slot name="footer">
         <div style="display: flex; justify-content: center">
@@ -53,8 +57,8 @@
 </template>
 
 <script lang="ts" setup>
-import {computed, provide} from "vue"
-import { ElDialog, ElButton } from "element-plus"
+import { computed } from "vue"
+import { ElDialog, ElButton, ElScrollbar } from "element-plus"
 
 
 interface Props {

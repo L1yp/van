@@ -12,7 +12,7 @@
         <template v-if="'el-row' === element.component">
           <el-row
             v-bind="element.attrs"
-            style="min-height: 120px; padding: 6px;"
+            style="min-height: 100px; padding: 6px;"
             class="widget-row-item"
             :class="vFormActiveElement === element ? 'active' : ''"
           >
@@ -88,7 +88,7 @@
             <div @click.stop="handleDeleteElem" title="删除">
               <Delete class="widget-action-icon" />
             </div>
-            
+
           </div>
 
         </template>
@@ -124,7 +124,7 @@ export default defineComponent({
   name: "NestedDragItem",
   components: {
     Draggable, ElForm, ElFormItem, ElInput, ElSelect, ElOption, ElRow, ElCol, SVGIcon, ElCheckboxGroup, ElCheckbox,
-    UserSelectorInput, DeptSelectorInput, NumberInput, TextInput, SingleSelect, MultiSelect, UserSelect, DeptSelect, 
+    UserSelectorInput, DeptSelectorInput, NumberInput, TextInput, SingleSelect, MultiSelect, UserSelect, DeptSelect,
     Plus, Delete, CopyDocument, DatePicker, DateRangePicker
   },
   props: {
@@ -168,7 +168,7 @@ export default defineComponent({
         key: 1,
       }
       vFormActiveElement.value.children.push(colElem)
-      
+
     }
 
     function handleDeleteElem() {
@@ -180,6 +180,7 @@ export default defineComponent({
       /// find in tree idx
       const activeIdx = parent.indexOf(vFormActiveElement.value)
       activeIdx !== -1 && parent.splice(activeIdx, 1)
+      emitter.emit('removeFieldInDesigner', { field: vFormActiveElement.value.id })
     }
 
     function handleCopyElem() {
@@ -188,7 +189,7 @@ export default defineComponent({
         console.log('找不到目标节点');
         return
       }
-      
+
       const activeIdx = parent.indexOf(vFormActiveElement.value)
       const original = toRaw(vFormActiveElement.value)
       const copyElem: ComponentConfig = {
@@ -265,26 +266,26 @@ div {
 
 
 .drag-handle {
-  position: absolute; 
-  top: 0; 
-  left: 0; 
-  height: 20px; 
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 20px;
   padding: 2px;
   color: white;
-  background-color: #ffa500; 
+  background-color: #ffa500;
   display: flex;
   align-items: center;
   cursor: move;
 }
 
 .field-id {
-  position: absolute; 
-  top: 0; 
-  right: 0; 
-  height: 20px; 
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 20px;
   padding: 2px;
   color: white;
-  background-color: #ffa50080; 
+  background-color: #ffa50080;
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -296,10 +297,10 @@ div {
 }
 
 .widget-action {
-  position: absolute; 
-  right: 0; 
-  bottom: 0; 
-  background-color: orange; 
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  background-color: orange;
   cursor: pointer;
   height: 24px;
   padding: 4px;

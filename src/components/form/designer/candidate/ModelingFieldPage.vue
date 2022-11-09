@@ -1,12 +1,12 @@
 <template>
   <el-scrollbar always>
-    <el-collapse>
+    <el-collapse v-model="collapseNames">
       <el-collapse-item name="default" title="默认字段">
         <draggable
           style="width: 100%; height: 100%;"
           class="component-list"
-          :list="defaultFields"
-          :group="{ name: 'component', pull: 'clone', put: false}"
+          v-model="defaultFields"
+          :group="{ name: 'component', pull: true, put: false}"
           handle="div.component-item"
           item-key="id"
           :sort="false"
@@ -26,7 +26,7 @@
           style="width: 100%; height: 100%;"
           class="component-list"
           :list="privateFields"
-          :group="{ name: 'component', pull: 'clone', put: false}"
+          :group="{ name: 'component', pull: true, put: false}"
           handle="div.component-item"
           item-key="id"
           :sort="false"
@@ -46,7 +46,7 @@
           style="width: 100%; height: 100%;"
           class="component-list"
           :list="globalFields"
-          :group="{ name: 'component', pull: 'clone', put: false}"
+          :group="{ name: 'component', pull: true, put: false}"
           handle="div.component-item"
           item-key="id"
           :sort="false"
@@ -69,10 +69,10 @@
 
 <script lang="ts" setup>
 import { useModelingFieldApi } from "@/service/modeling/field";
-import { computed, onBeforeMount, ref } from "vue";
+import { onBeforeMount, ref } from "vue";
 import { ElScrollbar, ElCollapse, ElCollapseItem } from "element-plus";
 import Draggable from "vuedraggable";
-
+import emitter from "@/event/mitt";
 
 interface Props {
   module: FieldModule
@@ -81,13 +81,34 @@ interface Props {
 
 const props = defineProps<Props>()
 
+const collapseNames = ref(['default', 'private', 'global'])
+
 const loading = ref(false)
 const { modelingFields, findModelingFields } = useModelingFieldApi(loading)
-const defaultFields = computed(() => modelingFields.value.filter(it => it.scope === `${props.module}_DEFAULT`) || [])
-const privateFields = computed(() => modelingFields.value.filter(it => it.scope === `${props.module}_PRIVATE`) || [])
-const globalFields = computed(() => modelingFields.value.filter(it => it.scope === `GLOBAL`) || [])
-onBeforeMount(() => {
-  findModelingFields(props.module, props.mkey)
+
+const defaultFields = ref<ModelingFieldDefView[]>([])
+const privateFields = ref<ModelingFieldDefView[]>([])
+const globalFields = ref<ModelingFieldDefView[]>([])
+
+emitter.on('removeFieldInDesigner', (v) => {
+  const field = modelingFields.value.find(it => it.field === v.field)
+  if (!field) {
+    return
+  }
+  if (field.scope === 'GLOBAL') {
+    globalFields.value.push(field)
+  } else if (field.scope.endsWith('_DEFAULT')) {
+    defaultFields.value.push(field)
+  } else if (field.scope.endsWith('_PRIVATE')) {
+    privateFields.value.push(field)
+  }
+})
+
+onBeforeMount(async () => {
+  await findModelingFields(props.module, props.mkey)
+  defaultFields.value = modelingFields.value.filter(it => it.scope === `${props.module}_DEFAULT`) || []
+  privateFields.value = modelingFields.value.filter(it => it.scope === `${props.module}_PRIVATE`) || []
+  globalFields.value = modelingFields.value.filter(it => it.scope === `GLOBAL`) || []
 })
 
 function dragFieldToDesigner(field: ModelingFieldDefView): ComponentConfig {
@@ -111,7 +132,7 @@ function toComponentConfig(field: ModelingFieldDefView): Partial<ComponentConfig
   config.attrs.style = `width: 100%`
   if (scheme.type === 'date') {
     config.component = 'date-picker'
-    config.attrs.dataType = scheme.dateType
+    config.attrs.dateType = scheme.dateType
     config.attrs.format = scheme.format
     config.attrs.valueFormat = scheme.valueFormat
   }
@@ -176,12 +197,12 @@ function toComponentConfig(field: ModelingFieldDefView): Partial<ComponentConfig
         }
       }
       config.attrs.optionTypeId = scheme.optionTypeId
-      config.attrs.defaultValue = scheme.optionDefaultValue
+      config.attrs.defaultValue = scheme.optionDefaultValue?.[0]
       config.attrs.fitInputWidth = true
       config.attrs.clearable = true
       config.attrs.filterable = true
     }
-    
+
   }
   return config
 }

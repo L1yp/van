@@ -6,7 +6,7 @@
     <div style="display: flex; align-items: center; margin-left: 6px;">
       <el-tooltip
         raw-content
-        effect="dark"
+        :effect="props.effect"
         :content="props.content"
         popper-class="form-item-tooltip"
       >
@@ -23,9 +23,12 @@ import { ElTooltip } from 'element-plus'
 interface Props {
   title: string
   content: string
+  effect?: 'light' | 'dark'
 }
 
-const props = defineProps<Props>()
+const props = withDefaults(defineProps<Props>(), {
+  effect: 'dark'
+})
 
 </script>
 

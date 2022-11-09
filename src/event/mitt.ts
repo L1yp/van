@@ -5,8 +5,13 @@ export type SelectMultipleChangedEvent = {
   multiple: boolean
 }
 
+export type FormDesignerFieldDeleteEvent = {
+  field: string
+}
+
 export type Events = {
   selectMultipleChanged: SelectMultipleChangedEvent
+  removeFieldInDesigner: FormDesignerFieldDeleteEvent
 }
 
 export default mitt<Events>()

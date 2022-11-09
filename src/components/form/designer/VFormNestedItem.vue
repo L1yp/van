@@ -102,5 +102,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-
+:deep(.el-input-number .el-input__inner) {
+  text-align: left;
+}
 </style>

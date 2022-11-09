@@ -31,30 +31,25 @@
         <el-radio-button :label="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
-    <el-form-item prop="multiple" label="多选">
-      <el-radio-group v-model="formData.multiple" @change="handleChangeMultiple">
-        <el-radio-button :label="true">是</el-radio-button>
-        <el-radio-button :label="false">否</el-radio-button>
-      </el-radio-group>
-    </el-form-item>
 
-    <el-form-item prop="valueKey" label="值属性">
-      <el-input v-model="vFormSelectElem.attrs.valueKey"></el-input>
-    </el-form-item>
-
-    <el-form-item v-show="!vFormSelectElem.attrs.clearable" prop="clearable" label="可清空">
+    <el-form-item prop="clearable" label="可清空">
       <el-radio-group v-model="vFormSelectElem.attrs.clearable">
         <el-radio-button :label="true">是</el-radio-button>
         <el-radio-button :label="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
-
-
+    
+    <el-form-item prop="checkStrictly" label="父子不关联">
+      <el-radio-group v-model="vFormSelectElem.attrs.checkStrictly">
+        <el-radio-button :label="true">是</el-radio-button>
+        <el-radio-button :label="false">否</el-radio-button>
+      </el-radio-group>
+    </el-form-item>
     <el-form-item prop="multipleLimit" label="多选条数限制">
       <template #label>
         <form-item-tooltip
           title="多选条数限制"
-          content="<code>multiple</code> 属性设置为 true 时，代表多选场景下用户最多可以选择的项目数， 为 0 则不限制"
+          content="<code style='background-color: transparent'>multiple</code> 属性设置为 true 时，代表多选场景下用户最多可以选择的项目数， 为 0 则不限制"
         />
       </template>
       <el-input-number v-model="vFormSelectElem.attrs.multipleLimit"></el-input-number>

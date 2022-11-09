@@ -25,13 +25,12 @@ import { formModeKey } from "@/components/form/state.key";
 
 interface Props {
   scheme: VFormScheme
-  mode: FormFieldMode
   formData: object
 }
 
 const props = defineProps<Props>()
 
-const mode = computed<FormFieldMode>(() => props.mode)
+const mode = computed<FormFieldMode>(() => props.scheme.mode)
 provide(formModeKey, mode)
 
 const formRef = ref<InstanceType<typeof ElForm>>()

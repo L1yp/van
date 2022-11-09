@@ -163,7 +163,7 @@ const displayValue = computed(() => {
     vals = props.value.split(',')
   }
   const optionsMap = new Map(flattenOptions.value.map(it => [it[props.valueField], it]))
-  const display = vals.map(it => optionsMap.get(it)?.[props.labelField] || it)?.join(',')
+  const display = vals.map(it => optionsMap.get(it)?.[props.labelField] || it)?.join(', ')
 
   return display
 })

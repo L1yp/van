@@ -225,7 +225,7 @@ export const LayoutComponents: CandidateComponentConfig[] = [
     icon: 'Table',
     title: "栅格",
     attrs: {
-      gutter: 0,
+      gutter: 4,
       justify: 'start',
       align: 'top',
       tag: 'div',

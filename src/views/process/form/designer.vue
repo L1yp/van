@@ -59,7 +59,7 @@
       @confirm="dialogInfo.visible = false"
     >
       <div style="display: flex; align-items: center; gap: 6px;">
-        <el-radio-group v-model="formMode">
+        <el-radio-group v-model="formScheme.mode">
           <el-radio-button label="design">设计</el-radio-button>
           <el-radio-button label="edit">编辑</el-radio-button>
           <el-radio-button label="read">预览</el-radio-button>
@@ -69,7 +69,7 @@
 
       <div style="margin-top: 16px"></div>
 
-      <v-form-render ref="formRenderRef" :scheme="formScheme" :mode="formMode" :form-data="dialogInfo.formData"></v-form-render>
+      <v-form-render ref="formRenderRef" :scheme="formScheme" :form-data="dialogInfo.formData"></v-form-render>
       <div>
         <el-scrollbar always>
           <pre> {{ JSON.stringify(dialogInfo.formData) }} </pre>
@@ -115,15 +115,14 @@ const designerContainerHeight = computed<string>(() => `calc(${containerHeight.v
 const vFormActiveElement = ref<ComponentConfig>(null)
 provide(vFormActiveElementKey, vFormActiveElement)
 
-const formMode = ref<FormFieldMode>('edit')
-
 const mode = computed<FormFieldMode>(() => 'design')
 provide(formModeKey, mode)
 
 const formScheme = ref<VFormScheme>({
-  labelPosition: 'left',
+  labelPosition: 'right',
   labelWidth: '120px',
   size: 'default',
+  mode: 'design',
   style: '',
   children: []
 })

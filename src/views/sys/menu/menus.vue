@@ -42,6 +42,7 @@
         <el-table-column prop="type" align="left" header-align="left" label="类型" width="100"/>
         <el-table-column prop="path" align="left" header-align="left" label="路由" width="300"/>
         <el-table-column prop="component" align="left" header-align="left" label="组件" width="300"/>
+        <el-table-column prop="order_no" align="center" header-align="center" label="排序" width="60"/>
         <el-table-column prop="closeable" align="center" header-align="center" label="允许关闭" width="120">
           <template #default="scope">
             <el-tag>{{ scope.row.closeable ? '是' : '否' }}</el-tag>

@@ -77,7 +77,11 @@ export function useViewApi(loading?: Ref<boolean>) {
     }
   }
 
-  const pageData = ref<PageData<Record<string, any>[]>>({
+  const pageData = ref<PageData<Record<string, any>, {
+    userMap: Record<string, UserView>,
+    deptMap: Record<string, DeptView>
+    optionMap: Record<string, ModelingOptionValueView>
+  }>>({
     total: 0,
     data: []
   })

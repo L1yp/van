@@ -25,6 +25,14 @@
       </el-radio-group>
     </el-form-item>
 
+    <el-form-item prop="mode" label="模式">
+      <el-radio-group v-model="formScheme.mode" :min="0" :max="1">
+        <el-radio-button label="design">设计</el-radio-button>
+        <el-radio-button label="read">只读</el-radio-button>
+        <el-radio-button label="edit">编辑</el-radio-button>
+      </el-radio-group>
+    </el-form-item>
+
     <el-form-item prop="style" label="样式">
       <el-input v-model="formScheme.style"></el-input>
     </el-form-item>

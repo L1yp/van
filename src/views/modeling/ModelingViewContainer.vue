@@ -35,18 +35,22 @@
         </vxe-colgroup>
         <template v-for="column in (activeView.columns || [])">
           <vxe-colgroup>
-            <template #header>
+            <template v-if="column.filterable" #header>
               <template v-if="column.field.type === 'option'">
                 <el-tree-select
+                  v-model="param.condition_map[column.field.field]"
                   :props="{ label: 'name', children: 'children'}"
                   node-key="id"
+                  filterable clearable fit-input-width check-strictly default-expand-all
+                  :data="column.field.scheme.options || []"
+                  @change="reloadTableData"
                 />
               </template>
               <template v-if="column.field.type === 'text'">
-                <el-input v-model="param.condition_map[column.field.field]" style="width: calc(100% - 20px);" @change="reloadTableData" />
+                <el-input v-model="param.condition_map[column.field.field]" style="width: calc(100% - 4px);" @change="reloadTableData" />
               </template>
               <template v-if="column.field.type === 'user'">
-                <user-selector-input v-model="param.condition_map[column.field.field]" :var-options="varUserOptions"  @change="reloadTableData" style="width: calc(100% - 20px);" />
+                <user-selector-input v-model="param.condition_map[column.field.field]" :var-options="varUserOptions"  @change="reloadTableData" style="width: calc(100% - 4px);" />
               </template>
               <template v-if="column.field.type === 'date'">
                 <template v-if="column.field.scheme.dateType === 'date'">
@@ -54,7 +58,7 @@
                     type="daterange"
                     v-model="param.condition_map[column.field.field]"
                     @change="reloadTableData"
-                    style="width: calc(100% - 20px);"
+                    style="width: calc(100% - 24px)"
                   />
                 </template>
                 <template v-if="column.field.scheme.dateType === 'datetime'">
@@ -62,7 +66,7 @@
                     type="datetimerange"
                     v-model="param.condition_map[column.field.field]"
                     @change="reloadTableData"
-                    style="width: calc(100% - 20px);"
+                    style="width: calc(100% - 24px)"
                   />
                 </template>
                 <template v-if="column.field.scheme.dateType === 'month'">
@@ -70,12 +74,12 @@
                     type="monthrange"
                     v-model="param.condition_map[column.field.field]"
                     @change="reloadTableData"
-                    style="width: calc(100% - 20px);"
+                    style="width: calc(100% - 24px)"
                   />
                 </template>
               </template>
             </template>
-            <vxe-column :width="column.width || undefined" :field="column.field.field" :title="column.field.label" :resizable="column.resizable" :sortable="column.sortable" />
+            <vxe-column :width="column.width || undefined" :field="column.field.field" :title="column.field.label" :resizable="column.resizable" :sortable="column.sortable" :formatter="formatColumnValue" />
           </vxe-colgroup>
         </template>
       </vxe-table>
@@ -91,6 +95,7 @@ import { Setting } from "@element-plus/icons-vue";
 import UserSelectorInput from "@/components/common/selector/user/UserSelectorInput.vue";
 import DateRangePicker from "@/views/modeling/view/condition/DateRangePicker.vue";
 import { VxeTablePropTypes, VxeTableDefines } from "vxe-table";
+import { useModelingOptionApi } from '@/service/modeling/option';
 
 
 interface Props {
@@ -106,6 +111,14 @@ onMounted(async () => {
   await findView({module: props.module, mkey: props.mkey})
   if (viewSimpleInfoList.value?.length) {
     activeViewId.value = viewSimpleInfoList.value[0].id
+    for (const it of activeView.value.columns) {
+      if (it.field.type === 'option' && it.filterable) {
+        const { modelingOptionValues, findModelingOptionValues } = useModelingOptionApi(loading)
+        await findModelingOptionValues({ typeId: it.field.scheme.optionTypeId })
+        it.field.scheme.options = modelingOptionValues.value
+      } 
+    }
+
     param.value.collation = JSON.parse(JSON.stringify(toRaw(activeView.value.collation)))
     param.value.condition_map = {}
     activeView.value.columns.forEach(it => {
@@ -160,9 +173,41 @@ function handleSortChange(params: VxeTableDefines.SortChangeEventParams) {
 
 }
 
+type FormatterParam = {
+  cellValue: any
+  row: object
+  column: VxeTableDefines.ColumnInfo
+}
+
+function formatColumnValue(params: FormatterParam): string {
+  const fieldName = params.column.field
+  const columns = activeView.value.columns
+  const fieldMap = new Map(columns.map(it => [it.field.field, it.field]))
+  const field = fieldMap.get(fieldName)
+  if (!params.cellValue) {
+    return params.cellValue
+  }
+  if (field.scheme.type === 'option') {
+    return (params.cellValue as string).split(',').map(it => pageData.value.additional?.optionMap?.[it]?.name).join(',') || ''
+  }
+  else if(field.scheme.type === 'user') {
+    return (params.cellValue as string).split(',').map(it => pageData.value.additional?.userMap?.[it].nickname).join(',') || ''
+  }
+  else if(field.scheme.type === 'dept') {
+    return (params.cellValue as string).split(',').map(it => pageData.value.additional?.deptMap?.[it].title).join(',') || ''
+  }
+
+  return params.cellValue
+}
 
 </script>
 
 <style scoped>
-
+:deep(.vxe-header--column.col--group>.vxe-cell>.vxe-cell--title) {
+  width: 100%;
+}
+:deep(.vxe-header--column.col--group .vxe-cell) {
+  padding-left: 2px;
+  padding-right: 2px;
+}
 </style>

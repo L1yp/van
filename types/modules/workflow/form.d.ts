@@ -31,6 +31,7 @@ declare interface VFormScheme {
   labelWidth: string
   size: Size
   style: string
+  mode: FormFieldMode
   children: ComponentConfig[]
 }
 
