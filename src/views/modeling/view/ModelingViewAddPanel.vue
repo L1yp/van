@@ -29,7 +29,7 @@ import {useViewApi} from "@/service/modeling/view";
 import ModelingViewColumnConfig from "@/views/modeling/view/ModelingViewColumnConfig.vue";
 
 interface Props {
-  module: FieldModule
+  module: ModelingModule
   mkey: string
   fields: ModelingFieldDefView[]
 }

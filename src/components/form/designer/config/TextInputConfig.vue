@@ -6,7 +6,9 @@
     label-width="120px"
     style="padding: 5px;"
   >
-
+    <el-form-item prop="defaultValue" label="默认值">
+      <el-input v-model="vFormSelectElem.attrs.defaultValue"></el-input>
+    </el-form-item>
     <el-form-item prop="minlength" label="最小长度">
       <el-input-number v-model="vFormSelectElem.attrs.minlength"></el-input-number>
     </el-form-item>
@@ -30,7 +32,7 @@
       </el-radio-group>
     </el-form-item>
 
-    
+
     <el-form-item prop="textarea" label="多行文本">
       <el-radio-group v-model="vFormSelectElem.attrs.textarea" @change="handleChangeTextType" >
         <el-radio-button :label="true">是</el-radio-button>
@@ -91,7 +93,7 @@
 
 <script lang="ts" setup>
 import {
-  ElForm, ElFormItem, ElInput, ElCheckboxGroup, ElRadioGroup, ElRadioButton, ElCheckboxButton, ElSelect, ElOption, ElInputNumber, 
+  ElForm, ElFormItem, ElInput, ElCheckboxGroup, ElRadioGroup, ElRadioButton, ElCheckboxButton, ElSelect, ElOption, ElInputNumber,
 } from 'element-plus'
 import { computed, inject } from "vue";
 import { vFormActiveElementKey } from "@/components/form/state.key";

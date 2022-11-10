@@ -38,3 +38,38 @@ export function deleteModelingEntity(id: string) {
   })
 }
 
+// 新增实体实例
+export function createInstance(data: ModelingEntityInstanceAddParam) {
+  return request<void>({
+    url: `/modeling/entity/instance/create`,
+    method: 'POST',
+    data
+  })
+}
+
+// 更新实体实例
+export function updateInstance(data: ModelingEntityInstanceUpdateParam) {
+  return request<void>({
+    url: `/modeling/entity/instance/update`,
+    method: 'POST',
+    data
+  })
+}
+
+// 删除实体实例
+export function deleteInstance(data: ModelingEntityInstanceDeleteParam) {
+  return request<void>({
+    url: `/modeling/entity/instance`,
+    method: 'DELETE',
+    data
+  })
+}
+
+// 查询实体实例
+export function getInstance(params: ModelingEntityInstanceFindParam) {
+  return request<Record<string, any>>({
+    url: `/modeling/entity/instance`,
+    method: 'GET',
+    params
+  })
+}

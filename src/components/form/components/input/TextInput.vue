@@ -6,10 +6,10 @@
     <el-input v-model="val" v-bind="$props"  />
   </template>
   <template v-else-if="cMode === 'read' ">
-    <span v-text="props.value"></span>
+    <span v-text="val"></span>
   </template>
   <template v-else-if="cMode === 'hidden' ">
-    <span v-show="false" v-text="props.value"></span>
+    <span v-show="false" v-text="val"></span>
   </template>
 </template>
 

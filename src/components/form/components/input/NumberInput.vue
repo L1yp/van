@@ -17,10 +17,13 @@
 import { ElInputNumber } from 'element-plus'
 import { computed, inject, nextTick } from "vue";
 import { formModeKey } from "@/components/form/state.key";
+import BigNumber from "bignumber.js";
+
+
 
 interface Props {
   mode?: FormFieldMode
-  value?: number
+  value?: number | string
   defaultValue?: number
 }
 
@@ -35,7 +38,7 @@ const emits = defineEmits<Emits>()
 const val = computed<number>({
   get: () => {
     if (props.value) {
-      return props.value
+      return new BigNumber(props.value).toNumber()
     }
     if (props.defaultValue) {
       nextTick(() => emits('update:value', props.defaultValue))

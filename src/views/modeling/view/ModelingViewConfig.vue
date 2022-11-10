@@ -75,7 +75,7 @@ import {useModelingFieldApi} from "@/service/modeling/field";
 
 
 interface Props {
-  module: FieldModule
+  module: ModelingModule
   mkey: string
 }
 

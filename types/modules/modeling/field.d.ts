@@ -1,5 +1,5 @@
 declare type FieldScope = 'ENTITY_PRIVATE' | 'WORKFLOW_PRIVATE' | 'GLOBAL' | 'WORKFLOW_DEFAULT' | 'ENTITY_DEFAULT'
-declare type FieldModule = 'ENTITY' | 'WORKFLOW'
+declare type ModelingModule = 'ENTITY' | 'WORKFLOW'
 declare type FieldType = 'number' | 'text' | 'option' | 'user' | 'dept' | 'date' | 'daterange'
 declare type OptionValueFrom = 'DEFAULT' | 'CLASS' | 'TABLE'
 declare type OptionComponent = 'radio' | 'radio-button' | 'checkbox' | 'checkbox-button' | 'single-select' | 'multi-select'
@@ -126,7 +126,7 @@ declare interface ModelingFieldUpdateParam {
 
 declare interface ModelingFieldRefParam {
   mkey: string
-  module: FieldModule
+  module: ModelingModule
   field_id: string
 }
 

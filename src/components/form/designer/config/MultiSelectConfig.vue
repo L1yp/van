@@ -38,7 +38,7 @@
         <el-radio-button :label="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
-    
+
     <el-form-item prop="checkStrictly" label="父子不关联">
       <el-radio-group v-model="vFormSelectElem.attrs.checkStrictly">
         <el-radio-button :label="true">是</el-radio-button>
@@ -100,6 +100,19 @@
         />
       </template>
       <el-radio-group v-model="vFormSelectElem.attrs.defaultExpandAll">
+        <el-radio-button :label="true">是</el-radio-button>
+        <el-radio-button :label="false">否</el-radio-button>
+      </el-radio-group>
+    </el-form-item>
+
+    <el-form-item prop="renderAfterExpand" label="懒渲染">
+      <template #label>
+        <form-item-tooltip
+          title="懒渲染"
+          content="由于 render-after-expand 属性开启时，所选择的标签名可能不会及时更新显示，您可以把该属性设置为 false 来显示正确的名称"
+        />
+      </template>
+      <el-radio-group v-model="vFormSelectElem.attrs.renderAfterExpand">
         <el-radio-button :label="true">是</el-radio-button>
         <el-radio-button :label="false">否</el-radio-button>
       </el-radio-group>

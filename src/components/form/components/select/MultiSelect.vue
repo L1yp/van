@@ -15,8 +15,8 @@
       />
       <el-checkbox-group disabled v-if="props.expand === true" v-model="val" v-bind="$attrs">
         <template v-if="props.buttonOption === true">
-          <el-checkbox-button 
-            v-for="option in flattenOptions"  
+          <el-checkbox-button
+            v-for="option in flattenOptions"
             :label="option[props.valueField]"
             :key="option[props.valueField]"
             :disabled="option[props.disabledField]"
@@ -24,8 +24,8 @@
           </el-checkbox-button>
         </template>
         <template v-else>
-          <el-checkbox 
-            v-for="option in flattenOptions"  
+          <el-checkbox
+            v-for="option in flattenOptions"
             :label="option[props.valueField]"
             :key="option[props.valueField]"
             :disabled="option[props.disabledField]"
@@ -35,7 +35,7 @@
 
       </el-checkbox-group>
     </div>
-    
+
   </template>
   <template v-else-if="cMode === 'edit'">
     <div>
@@ -50,11 +50,11 @@
         :props="{ label: props.labelField, children: 'children', disabled: props.disabledField }"
         :data="options"
       />
-      
+
       <el-checkbox-group v-if="props.expand === true" v-model="val" v-bind="$attrs">
         <template v-if="props.buttonOption === true">
-          <el-checkbox-button 
-            v-for="option in flattenOptions"  
+          <el-checkbox-button
+            v-for="option in flattenOptions"
             :label="option[props.valueField]"
             :key="option[props.valueField]"
             :disabled="option[props.disabledField]"
@@ -62,8 +62,8 @@
           </el-checkbox-button>
         </template>
         <template v-else>
-          <el-checkbox 
-            v-for="option in flattenOptions"  
+          <el-checkbox
+            v-for="option in flattenOptions"
             :label="option[props.valueField]"
             :key="option[props.valueField]"
             :disabled="option[props.disabledField]"
@@ -152,19 +152,15 @@ const val = computed({
   set: v => {
     const value = v?.join(',') || ''
     // console.log('multi select modelValue set', value);
-    
+
     emits('update:value', value)
   }
 })
 
 const displayValue = computed(() => {
-  let vals = []
-  if (props.value) {
-    vals = props.value.split(',')
-  }
+  let values = val.value
   const optionsMap = new Map(flattenOptions.value.map(it => [it[props.valueField], it]))
-  const display = vals.map(it => optionsMap.get(it)?.[props.labelField] || it)?.join(', ')
-
+  const display = values.map(it => optionsMap.get(it)?.[props.labelField] || it)?.join(', ')
   return display
 })
 

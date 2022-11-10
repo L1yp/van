@@ -57,7 +57,7 @@ const schemeConfigComponentMap = {
 interface Props {
   field: ModelingFieldDefView
   scope?: FieldScope
-  module?: FieldModule
+  module?: ModelingModule
   mkey?: string
 }
 

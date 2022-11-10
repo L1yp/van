@@ -3,7 +3,7 @@ import {router, uninstallLayoutContentRoute} from "@/router";
 
 export function setupAxios() {
   axios.defaults.withCredentials = true
-  axios.defaults.baseURL = import.meta.env.VITE_API_ORIGIN;
+  axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
   axios.interceptors.response.use(function (response) {
     if (response.data.code === 401) {
       uninstallLayoutContentRoute()
@@ -17,5 +17,5 @@ export function setupAxios() {
     // 对响应错误做点什么
     return Promise.reject(error);
   });
-  console.log("VITE_API_ORIGIN", import.meta.env.VITE_API_ORIGIN)
+  console.log("BASE_URL", import.meta.env.VITE_BASE_URL)
 }

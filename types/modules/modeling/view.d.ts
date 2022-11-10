@@ -2,7 +2,7 @@ declare type TableAlign = 'left' | 'center' | 'right'
 declare type OrderDirection = 'asc' | 'desc'
 
 declare interface ModelingViewSearchParam {
-  module: FieldModule
+  module: ModelingModule
   mkey: string
   name?: string
   updateBy?: string
@@ -10,7 +10,7 @@ declare interface ModelingViewSearchParam {
 }
 
 declare interface ModelingViewFindParam {
-  module: FieldModule
+  module: ModelingModule
   mkey: string
 }
 
@@ -40,7 +40,7 @@ declare interface ModelingViewColumnParam {
 }
 
 declare interface ModelingViewAddParam {
-  module: FieldModule
+  module: ModelingModule
   mkey: string
   name: string
   collation: Collation[]
@@ -60,7 +60,7 @@ declare interface ModelingViewUpdateParam {
 
 declare interface ModelingViewView {
   id: string
-  module: FieldModule
+  module: ModelingModule
   mkey: string
   name: string
   collation: Collation[]
@@ -94,28 +94,23 @@ declare interface ModelingViewSimpleInfo {
   id: string
   name: string
   sn: number
+  status: boolean
   collation: Collation[]
   columns: ModelingViewColumnView[]
 }
 
 
-declare interface ModelingViewDetailInfo {
-  id: string
-  module: FieldModule
+declare interface ModelingViewDetailInfo extends ModelingViewSimpleInfo {
+  module: ModelingModule
   mkey: string
-  name: string
-  collation: Collation[]
-  sn: number
-  status: boolean
   update_by: UserView
   update_time: string
   create_by: UserView
   create_time: string
-  columns: ModelingViewColumnView[]
 }
 
-declare interface ModelingPageFindParam {
-  module: FieldModule
+declare interface ModelingInstancePageFindParam {
+  module: ModelingModule
   mkey: string
   condition_map: Record<string, any>
   collation?: Collation[]

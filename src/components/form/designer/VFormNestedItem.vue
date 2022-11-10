@@ -1,30 +1,20 @@
 <template>
   <template v-if="item.category === 'form-item'">
-    <el-form-item 
-      v-bind="item.formItemAttrs" 
-      :key="item.id" 
-      :prop="item.id" 
+    <el-form-item
+      v-bind="item.formItemAttrs"
+      :key="item.id"
+      :prop="item.id"
       :label-width="item.formItemAttrs.hiddenLabel ? '0px' : undefined"
       :label="item.formItemAttrs.hiddenLabel ? '' : item.formItemAttrs.label"
       :rules="getRules(item)"
     >
-      <template v-if="item.component === 'el-select'">
-        <el-select v-model="formData[item.id]" v-bind="item.attrs">
-          <el-option label="Option1" value="1" key="1"></el-option>
-          <el-option label="Option" value="2" key="2"></el-option>
-        </el-select>
-      </template>
-
-
-      <template v-else>
-        <component :is="item.component" v-bind="item.attrs" v-model:value="formData[item.id]"></component>
-      </template>
+      <component :is="item.component" v-bind="item.attrs" v-model:value="formData[item.id]"></component>
     </el-form-item>
   </template>
 
   <template v-if="item.category === 'layout'">
     <template v-if="item.component === 'el-row'">
-      <el-row v-bind="item.attrs">
+      <el-row v-bind="item.attrs" style="margin-left: 0; margin-right: 0">
         <el-col
           v-bind="col.attrs"
           v-for="col in item.children"
@@ -62,7 +52,7 @@ import DateRangePicker from "../components/date/DateRangePicker.vue"
 export default defineComponent({
   name: 'VFormNestedItem',
   components: {
-    ElFormItem, ElSelect, ElOption, ElInput, ElRow, ElCol, NumberInput, UserSelectorInput, DeptSelectorInput, TextInput, 
+    ElFormItem, ElSelect, ElOption, ElInput, ElRow, ElCol, NumberInput, UserSelectorInput, DeptSelectorInput, TextInput,
     SingleSelect, MultiSelect, UserSelect, DeptSelect, DatePicker, DateRangePicker,
   },
   props: {

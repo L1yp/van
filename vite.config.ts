@@ -15,8 +15,8 @@ export default defineConfig(({ command, mode }) => {
   return {
     build: {
       target: ["chrome91"],
-      sourcemap: true,
-      minify: false,
+      sourcemap: false,
+      minify: true,
     },
     plugins: createVitePlugins(env, isBuild),
     resolve: {
@@ -37,11 +37,19 @@ export default defineConfig(({ command, mode }) => {
       host: "0.0.0.0",
       port: 3003,
       proxy: {
-        '/api': {
-          target: 'http://localhost:8082',
-          rewrite: path => {
-            return path.replace(/^\/api/, '')
-          }
+        [env.VITE_BASE_URL]: {
+          secure: false,
+          target: env.VITE_ORIGIN,
+          rewrite(path: string) {
+            if (env['VITE_KEEP_API_PREFIX'] !== 'yes') {
+              return path.replace(env.VITE_BASE_URL, '')
+            }
+            return path
+          },
+          headers: {
+            Origin: env.VITE_ORIGIN,
+          },
+
         }
       }
     },

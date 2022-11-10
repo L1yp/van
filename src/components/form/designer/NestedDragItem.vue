@@ -153,7 +153,7 @@ export default defineComponent({
 
     function handleAddCol() {
       const colElem: ComponentConfig = {
-        id: 'col_' + genId().substring(0, 6),
+        id: 'col_' + Number(genId()).toString(36),
         component: 'el-col',
         category: 'layout',
         formItemAttrs: undefined,
@@ -192,16 +192,26 @@ export default defineComponent({
 
       const activeIdx = parent.indexOf(vFormActiveElement.value)
       const original = toRaw(vFormActiveElement.value)
+      const copyElem: ComponentConfig = copyWidgetItem(original)
+      parent.splice(activeIdx + 1, 0, copyElem)
+    }
+
+    function copyWidgetItem(original: ComponentConfig) {
+      let children = []
+      if (original.children?.length) {
+        children = original.children.map(copyWidgetItem)
+      }
+
       const copyElem: ComponentConfig = {
-        id: 'field_' + genId().substring(0, 6),
+        id: 'field_' + Number(genId()).toString(36),
         component: original.component,
         category: original.category,
         formItemAttrs: original.formItemAttrs ? JSON.parse(JSON.stringify(original.formItemAttrs)) : undefined,
         attrs: original.attrs ? JSON.parse(JSON.stringify(original.attrs)) : undefined,
-        children: JSON.parse(JSON.stringify(original.children || [])),
+        children,
         key: 1,
       }
-      parent.splice(activeIdx + 1, 0, copyElem)
+      return copyElem
     }
 
     function getRules(element: ComponentConfig) {

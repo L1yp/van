@@ -10,30 +10,31 @@
           </candidate-component-page>
         </el-tab-pane>
         <el-tab-pane label="字段" name="field" style="width: 100%; height: 100%;">
-          <ModelingFieldPage module="ENTITY" mkey="product_line" />
+          <ModelingFieldPage v-bind="$props" />
         </el-tab-pane>
       </el-tabs>
 
     </div>
     <div class="form-wrapper">
       <div class="form-designer-toolbar">
-        <el-button text type="primary" :icon="deleteIcon" @click="handleClickClear">清空</el-button>
-        <el-button text type="primary" :icon="viewIcon" @click="handleClickPreview">预览</el-button>
-        <el-button text type="primary" :icon="viewIcon" @click="handleClickViewJSON">查看JSON</el-button>
+        <el-button text type="primary" :icon="Delete" @click="handleClickClear">清空</el-button>
+        <el-button text type="primary" :icon="View" @click="handleClickPreview">预览</el-button>
+        <el-button text type="primary" :icon="View" @click="handleClickViewJSON">查看JSON</el-button>
+        <el-button text type="primary" :icon="saveIcon" @click="handleClickSave">保存</el-button>
       </div>
       <div style="height: calc(100% - 40px);">
         <el-scrollbar always>
           <el-form
-            :size="formScheme.size" 
+            :size="formScheme.size"
             :label-width="formScheme.labelWidth"
             :label-position="formScheme.labelPosition"
             :style="formScheme.style"
-            style="padding: 10px; box-sizing: border-box; height: 100%;" 
+            style="padding: 10px; box-sizing: border-box; height: 100%;"
             @click.stop="vFormActiveElement = null"
           >
             <!-- 若(nested-drag-item).height + padding*2 > designerContainerHeight 则会出现滚动条  -->
             <nested-drag-item
-              :style="{width: '100%', minHeight: `calc(${designerContainerHeight} - 20px)`}"
+              :style="{width: '100%', minHeight: `calc(${designerContainerHeight} - 20px - 69px)`}"
               :children="formScheme.children"
               group="component"
             >
@@ -47,7 +48,7 @@
       <form-property-panel></form-property-panel>
     </div>
 
-    
+
     <JsonEditor v-model:visible="editorInfo.visible" :code="editorInfo.code"></JsonEditor>
 
     <v-dialog
@@ -74,7 +75,7 @@
         <el-scrollbar always>
           <pre> {{ JSON.stringify(dialogInfo.formData) }} </pre>
         </el-scrollbar>
-        
+
       </div>
     </v-dialog>
   </div>
@@ -96,11 +97,22 @@ import { InputComponents, LayoutComponents } from "@/components/form/designer/da
 import VDialog from "@/components/dialog/VDialog.vue";
 import VFormRender from "@/components/form/designer/VFormRender.vue";
 import { formModeKey, vFormActiveElementKey, vFormSchemeKey } from "@/components/form/state.key";
-import { useModelingFieldApi } from "@/service/modeling/field";
+import { useModelingPageApi } from "@/service/modeling/page";
+import { Delete, View } from "@element-plus/icons-vue";
+
+const saveIcon = useIcon('Save')
+
+interface Props {
+  pageKey: string
+  module: ModelingModule
+  mkey: string
+}
+
+const props = defineProps<Props>()
 
 const loading = ref(false)
-const viewIcon = useIcon('View')
-const deleteIcon = useIcon('Delete')
+const { pageInfo, getPage, bindPage } = useModelingPageApi(loading)
+
 
 const candidateActiveTab = ref<string>('component')
 
@@ -127,6 +139,14 @@ const formScheme = ref<VFormScheme>({
   children: []
 })
 provide(vFormSchemeKey, formScheme)
+
+onBeforeMount(async () => {
+  await getPage({ ...props })
+  if (pageInfo.value?.page_scheme) {
+    formScheme.value = pageInfo.value.page_scheme
+  }
+})
+
 
 interface JSONEditorInfo {
   visible: boolean
@@ -160,6 +180,15 @@ function handleClickViewJSON() {
   editorInfo.value.visible = true
 }
 
+function handleClickSave() {
+  const param: ModelingPageBindParam = {
+    ...props,
+    page_key: props.pageKey,
+    page_scheme: formScheme.value,
+  }
+  bindPage(param)
+}
+
 const formRenderRef = ref<InstanceType<typeof VFormRender>>()
 async function handleClickValidateForm() {
   try {
@@ -168,11 +197,6 @@ async function handleClickValidateForm() {
     console.error(e);
   }
 }
-
-const { modelingFields, findModelingFields } = useModelingFieldApi(loading)
-onBeforeMount(() => {
-  findModelingFields('ENTITY', 'product_line')
-})
 </script>
 
 <style scoped>
@@ -222,9 +246,13 @@ onBeforeMount(() => {
 .form-designer-toolbar {
   width: 100%;
   height: 40px;
-  background-color: #FFFFFF;
+  background-color: #f6f8f9;
   display: flex;
   justify-content: flex-end;
   align-items: center;
+}
+
+.form-designer-toolbar :deep(.el-button + .el-button) {
+  margin-left: 0;
 }
 </style>

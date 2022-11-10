@@ -30,3 +30,27 @@ declare interface ModelingEntityView {
   update_time: string
   create_time: string
 }
+
+
+// INSTANCE
+
+declare interface ModelingEntityInstanceAddParam {
+  mkey: string
+  data: Record<string, any>
+}
+
+declare interface ModelingEntityInstanceUpdateParam {
+  mkey: string
+  id: string
+  data: Record<string, any>
+}
+
+declare interface ModelingEntityInstanceFindParam {
+  mkey: string
+  id: string
+}
+
+declare interface ModelingEntityInstanceDeleteParam {
+  mkey: string
+  id: string
+}

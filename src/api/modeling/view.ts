@@ -7,6 +7,8 @@ export function searchModelingView(params: ModelingViewSearchParam) {
     params
   })
 }
+
+
 export function findModelingView(params: ModelingViewFindParam) {
   return request<ModelingViewSimpleInfo[]>({
     url: `/modeling/view/find`,
@@ -41,7 +43,7 @@ export function deleteModelingView(id: string) {
 
 
 
-export function findModelingPage(data: ModelingPageFindParam) {
+export function findModelingPage(data: ModelingInstancePageFindParam) {
   return request<PageData<Record<string, any>[]>>({
     url: `/modeling/view/page`,
     method: 'POST',

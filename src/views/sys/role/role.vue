@@ -156,8 +156,8 @@ function handleRowClick(row) {
 }
 
 const permissionVisible = ref(false)
-const permModule = ref<FieldModule>()
-function openPermissionPanel(module: FieldModule, role: RoleView) {
+const permModule = ref<ModelingModule>()
+function openPermissionPanel(module: ModelingModule, role: RoleView) {
   selectRole.value = role
   permModule.value = module
   permissionVisible.value = true

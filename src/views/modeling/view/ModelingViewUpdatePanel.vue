@@ -33,7 +33,7 @@ import {useViewApi} from "@/service/modeling/view";
 import ModelingViewColumnConfig from "@/views/modeling/view/ModelingViewColumnConfig.vue";
 
 interface Props {
-  src: ModelingViewDetailInfo
+  src: ModelingViewSimpleInfo
   fields: ModelingFieldDefView[]
 }
 

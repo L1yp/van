@@ -1,12 +1,12 @@
 declare interface ModelingPermissionFindParam {
   roleId: string
-  module: FieldModule
+  module: ModelingModule
   mkey: string
 }
 
 declare interface ModelingPermissionBindParam {
   role_id: string
-  module: FieldModule
+  module: ModelingModule
   mkey: string
   flags: number
   content: ExpressionModel[]
@@ -66,7 +66,7 @@ declare interface DeptFieldConditionModel extends FieldConditionModel {
 declare interface ModelingPermissionView {
   id: string
   role_id: string
-  module: FieldModule
+  module: ModelingModule
   mkey: string
   flags: number
   content: ExpressionModel[]

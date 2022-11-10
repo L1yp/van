@@ -91,6 +91,7 @@ export const InputComponents: CandidateComponentConfig[] = [
       size: 'default',
       expand: false,
       buttonOption: false,
+      renderAfterExpand: false,
       options: [
         {
           id: '1',
@@ -128,6 +129,7 @@ export const InputComponents: CandidateComponentConfig[] = [
       size: 'default',
       expand: false,
       buttonOption: false,
+      renderAfterExpand: false,
       options: [
         {
           id: '1',
@@ -241,7 +243,7 @@ export const LayoutComponents: CandidateComponentConfig[] = [
         },
         children: [],
       },
-      
+
     ],
   }
 ]

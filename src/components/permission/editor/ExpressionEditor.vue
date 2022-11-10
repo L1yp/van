@@ -91,7 +91,7 @@ import { listByIdList } from "@/api/sys/user";
 
 interface Props {
   roleId: string
-  module: FieldModule
+  module: ModelingModule
   mkey: string
 }
 const props = defineProps<Props>()

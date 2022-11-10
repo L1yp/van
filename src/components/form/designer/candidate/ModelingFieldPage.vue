@@ -75,7 +75,7 @@ import Draggable from "vuedraggable";
 import emitter from "@/event/mitt";
 
 interface Props {
-  module: FieldModule
+  module: ModelingModule
   mkey: string
 }
 

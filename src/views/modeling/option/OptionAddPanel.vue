@@ -30,7 +30,7 @@ import { ref } from "vue";
 interface Props {
   scope: OptionScope
   mkey?: string
-  module: FieldModule
+  module: ModelingModule
 }
 
 interface Emits {

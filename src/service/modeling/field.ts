@@ -9,7 +9,7 @@ export function useModelingFieldApi(loading?: Ref<boolean>) {
   const defaultWorkflowFields = ref<ModelingFieldDefView[]>([])
   const globalFields = ref<ModelingFieldDefView[]>([])
 
-  async function findModelingFields(module: FieldModule, key: string) {
+  async function findModelingFields(module: ModelingModule, key: string) {
     try {
       loading && (loading.value = true)
       modelingFields.value = await FieldApi.getModelingFields(module, key)

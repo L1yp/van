@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "vite --mode dev",
-    "build": "vite build --mode prod && scp -r ./dist/assets/* root@122.51.216.214:/usr/share/nginx/html/admin/assets/ && scp ./dist/index.html root@122.51.216.214:/usr/share/nginx/html/admin/index.html",
+    "build": "vite build --mode prod && scp -r ./dist/assets/* root@43.139.123.133:/usr/share/nginx/html/admin/assets/ && scp ./dist/index.html root@43.139.123.133:/usr/share/nginx/html/admin/index.html",
     "preview": "vite preview --port 5050"
   },
   "dependencies": {
@@ -17,6 +17,7 @@
     "@textbus/editor": "^2.0.0",
     "@vueuse/core": "^7.6.1",
     "axios": "^0.26.0",
+    "bignumber.js": "^9.1.0",
     "bpmn-js": "^9.0.3",
     "clipboard": "^2.0.10",
     "codemirror": "^6.0.0",

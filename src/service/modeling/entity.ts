@@ -85,3 +85,75 @@ export function useEntityApi(loading?: Ref<boolean>) {
     pageData, modelView, findEntity, searchEntity, addEntity, updateEntity, deleteEntity
   }
 }
+
+
+export function useEntityInstanceApi(loading?: Ref<boolean>) {
+  const instanceInfo = ref<Record<string, any>>({})
+
+  async function getInstance(param: ModelingEntityInstanceFindParam) {
+    try {
+      loading && (loading.value = true)
+      instanceInfo.value = await EntityApi.getInstance(param)
+    } catch (e) {
+      console.error(e)
+      ElMessage.error((e as Error)?.message || '查询失败')
+    } finally {
+      loading && (loading.value = false)
+    }
+  }
+
+
+  async function createInstance(param: ModelingEntityInstanceAddParam) {
+    try {
+      loading && (loading.value = true)
+      await EntityApi.createInstance(param)
+      ElMessage.success('创建成功')
+      return true
+    } catch (e) {
+      console.error(e)
+      ElMessage.error((e as Error)?.message || '新增失败')
+      return false
+    } finally {
+      loading && (loading.value = false)
+    }
+  }
+
+
+  async function updateInstance(param: ModelingEntityInstanceUpdateParam) {
+    try {
+      loading && (loading.value = true)
+      await EntityApi.updateInstance(param)
+      ElMessage.success('更新成功')
+      return true
+    } catch (e) {
+      console.error(e)
+      ElMessage.error((e as Error)?.message || '更新失败')
+      return false
+    } finally {
+      loading && (loading.value = false)
+    }
+  }
+
+
+  async function deleteInstance(param: ModelingEntityInstanceDeleteParam) {
+    try {
+      loading && (loading.value = true)
+      await EntityApi.deleteInstance(param)
+      ElMessage.success('删除成功')
+      return true
+    } catch (e) {
+      console.error(e)
+      ElMessage.error((e as Error)?.message || '删除失败')
+      return false
+    } finally {
+      loading && (loading.value = false)
+    }
+  }
+
+  return {
+    instanceInfo, getInstance,
+    createInstance, updateInstance, deleteInstance,
+
+  }
+
+}

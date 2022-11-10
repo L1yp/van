@@ -9,9 +9,11 @@
     >
       <template v-if="item.type === 'ENTITY'">
         <ModelingViewContainer module="ENTITY" :mkey="item.path" />
+        <div id="modeling-entity-panel"></div>
       </template>
       <template v-else-if="item.type === 'PROCESS'">
         <ModelingViewContainer module="WORKFLOW" :mkey="item.path" />
+        <div id="modeling-entity-panel"></div>
       </template>
       <template v-else-if="item.type === 'PAGE'">
         <component :is="routeToView(item.component)" />

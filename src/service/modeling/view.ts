@@ -85,8 +85,8 @@ export function useViewApi(loading?: Ref<boolean>) {
     total: 0,
     data: []
   })
-  
-  async function pageModeling(param: ModelingPageFindParam) {
+
+  async function pageModeling(param: ModelingInstancePageFindParam) {
     try {
       loading && (loading.value = true)
       pageData.value = await ViewApi.findModelingPage(param)

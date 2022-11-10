@@ -45,7 +45,7 @@ export function deleteModelingField(id: string) {
 }
 
 
-export function getModelingFields(module: FieldModule, mkey: string) {
+export function getModelingFields(module: ModelingModule, mkey: string) {
   return request<ModelingFieldDefView[]>({
     url: `/modeling/field/find`,
     method: 'GET',

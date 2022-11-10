@@ -63,7 +63,7 @@ import FieldUpdatePanel from '@/views/modeling/field/FieldUpdatePanel.vue';
 
 interface Props {
   scope: FieldScope
-  module: FieldModule
+  module: ModelingModule
   mkey: string
 }
 
