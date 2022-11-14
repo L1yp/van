@@ -46,7 +46,7 @@ console.log(iconNames)
   flex-wrap: wrap;
   width: 150px;
 
-  background-color: #FFFFFF;
+  background-color: var(--el-bg-color);
 
 
 }
@@ -60,7 +60,7 @@ console.log(iconNames)
 }
 
 .container:hover {
-  background-color: #F8F8F9;
+  background-color: var(--el-bg-color);
 }
 
 </style>

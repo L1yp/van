@@ -1,6 +1,6 @@
 <template>
-  <div style="width: 100%; height: 100%">
-    <div style="box-sizing: border-box; padding: 6px; background-color: rgb(151 173 139 / 24%); ">
+  <div style="width: 100%; height: 100%; background-color: var(--el-bg-color)">
+    <div style="box-sizing: border-box; padding: 6px; background-color: var(--toolbar-bg-color); ">
       <el-button @click="handleCancel">取消</el-button>
       <el-button @click="handleConfirm" type="primary" plain>确定</el-button>
     </div>

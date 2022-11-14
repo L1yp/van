@@ -319,6 +319,16 @@
           "name": "priority",
           "isAttr": true,
           "type": "String"
+        },
+        {
+          "name": "assigneeType",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "assigneeFields",
+          "isAttr": true,
+          "type": "String"
         }
       ]
     },

@@ -21,7 +21,7 @@ declare interface WorkflowTypeDefView {
 
 declare interface WorkflowTypeVerView {
   id: string
-  wf_key: string
+  key: string
   name?: string // add
   ver: number
   remark: string

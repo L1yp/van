@@ -1,6 +1,6 @@
 <template>
   <div v-loading="loading" style="width: 100%; height: 100%; background-color: white; ">
-    <div style="padding: 6px; box-sizing: border-box; border-top: 1px solid #e3e3e3; ">
+    <div style="padding: 6px; box-sizing: border-box; border-top: 1px solid var(--el-border-color); ">
       <el-button v-if="isView && !isConfig" @click="isView = false">编辑</el-button>
       <el-button v-if="!isView" @click="isView = true">取消</el-button>
       <el-button v-if="!isView" type="primary" plain @click="handleConfirm">确定</el-button>

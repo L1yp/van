@@ -1,45 +1,31 @@
 <template>
-  <el-dialog v-model="dialogVisible" @opened="handleDialogOpened" @closed="handleDialogClosed" :draggable="true" :append-to-body="true" :fullscreen="fullScreen" :show-close="false" class="user-ext-dialog">
-    <template #header>
-      <div style="display: flex; justify-content: space-between; align-content: center; height: 23px; box-sizing: border-box">
-        <div style="font-size: 1.2em">预览</div>
-        <div style="display: flex; flex-direction: row; justify-content: center">
-          <div @click.stop="requestFullScreen" class="full-screen btn">
-            <s-v-g-icon style="width: 20px; height: 20px" :name="fullScreen ? 'FullScreenMinimize' : 'FullScreenMaximize'"/>
-          </div>
-          <div @click.stop="handleDialogClosed" class="close btn">
-            <s-v-g-icon style="width: 20px; height: 20px" name="close"/>
-          </div>
-        </div>
-      </div>
-    </template>
-    <el-scrollbar :max-height="scrollHeight" always>
-      <div ref="editorRef"></div>
-    </el-scrollbar>
-    <template #footer>
-      <slot name="footer">
-      </slot>
-    </template>
-  </el-dialog>
+  <v-dialog
+    v-model="visible" 
+    title="预览XML"
+    @opened="handleDialogOpened" 
+    draggable append-to-body
+    @cancel="visible = false"
+  >
+    <div ref="editorRef"></div>
+  </v-dialog>
 </template>
 
 <script lang="ts">
 import {basicSetup, EditorView} from "codemirror"
 import {EditorState, Compartment} from "@codemirror/state"
 import {xml} from "@codemirror/lang-xml"
-import {computed, ref, shallowRef, toRaw, watch, defineComponent, PropType} from "vue";
-import {ElDialog, ElScrollbar, ElButton} from "element-plus"
-import SVGIcon from "@/components/common/SVGIcon.vue"
+import { ref, shallowRef, toRaw, watch, defineComponent, PropType, computed } from "vue";
+import VDialog from "@/components/dialog/VDialog.vue";
 
 
 export default defineComponent({
   props: {
-    visible: Boolean as PropType<boolean>,
+    modelValue: Boolean as PropType<boolean>,
     code: String as PropType<string>,
   },
-  emits: ["update:visible"],
+  emits: ["update:modelValue"],
   components: {
-    ElDialog, ElScrollbar, ElButton, SVGIcon
+    VDialog
   },
   setup(props, ctx) {
 
@@ -50,19 +36,10 @@ export default defineComponent({
     const state = shallowRef<EditorState>(null)
     const view = shallowRef<EditorView>(null)
 
-
-    const dialogVisible = ref(props.visible)
-    watch(() => props.visible, () => dialogVisible.value = props.visible)
-
-    const fullScreen = ref<boolean>(false)
-    function requestFullScreen() {
-      fullScreen.value = !fullScreen.value
-    }
-    const scrollHeight = computed(() => {
-      if (fullScreen.value) {
-        return "calc(100vh - 54px - 64px - 40px)"
-      } else {
-        return "calc(100vh - 54px - 64px - 30vh - 40px)"
+    const visible = computed({
+      get() { return props.modelValue },
+      set(v) {
+        emits('update:modelValue', v)
       }
     })
 
@@ -86,15 +63,11 @@ export default defineComponent({
 
     }
 
-    function handleDialogClosed() {
-      dialogVisible.value = false
-      emits("update:visible", false)
-    }
 
     return {
       props, state, view,
-      editorRef, dialogVisible, fullScreen, requestFullScreen, scrollHeight,
-      handleDialogOpened, handleDialogClosed
+      editorRef, visible, 
+      handleDialogOpened
     }
   }
 })

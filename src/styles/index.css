@@ -1,33 +1,42 @@
-.user-ext-dialog.el-dialog .el-dialog__footer {
+:root {
+    --toolbar-bg-color: #f5f7fa;
+}
+
+.el-dialog__footer {
     padding: 10px;
-    border-top: 1px solid #e3e3e3;
+    border-top: 1px solid var(--el-border-color);
+    border-bottom: 1px solid var(--el-border-color);
+    box-sizing: border-box;
 }
-.user-ext-dialog.el-dialog .el-dialog__header {
-    padding: 16px 24px;
-    border-bottom: 1px solid #e3e3e3;
+
+.el-dialog {
+    box-sizing: border-box;
+    margin: 15vh auto;
+}
+
+.el-dialog.is-fullscreen {
+    box-sizing: border-box;
+    margin: auto;
+}
+
+.el-dialog .el-dialog__header {
+    padding: 10px 24px;
+    border-bottom: 1px solid var(--el-border-color);
     margin-right: 0;
+    box-sizing: border-box;
+    background-color: var(--toolbar-bg-color);
 }
 
-.user-ext-dialog.el-dialog .el-dialog__body {
-    padding: 10px 20px;
+.el-dialog__body {
+    padding: 16px 20px;
+    box-sizing: border-box;
 }
 
-
-.user-ext-dialog.el-dialog .el-form-item.is-success .el-input__validateIcon {
-    color: green;
+.el-dialog.is-fullscreen .el-dialog__body {
+    height: calc(100vh - 44px - 54px);
+    max-height: calc(100vh - 44px - 54px);
 }
 
-
-.user-ext-dialog.el-dialog .el-table--enable-row-hover .el-table__body tr.current-row:hover>td.el-table__cell {
-    background-color: var(--el-color-primary-light-3);
-}
-
-
-.user-ext-dialog.el-dialog .el-table--enable-row-hover .el-table__body tr.current-row>td.el-table__cell {
-    background-color: var(--el-color-primary-light-5);
-}
-
-.user-ext-dialog.el-dialog .el-row + .el-row {
-    margin-bottom: 0;
-    margin-top: 16px;
+.el-dialog .el-dialog__body {
+    max-height: calc(100vh - 15vh - 15vh - 44px - 54px);
 }

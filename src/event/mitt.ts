@@ -9,9 +9,14 @@ export type FormDesignerFieldDeleteEvent = {
   field: string
 }
 
+export type ElementChanged = {
+  element: any
+}
+
 export type Events = {
   selectMultipleChanged: SelectMultipleChangedEvent
   removeFieldInDesigner: FormDesignerFieldDeleteEvent
+  elementChanged: ElementChanged
 }
 
 export default mitt<Events>()

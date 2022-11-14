@@ -26,9 +26,9 @@
   >
     <template #header>
       <slot name="header">
-        <div style="display: flex; justify-content: space-between; align-content: center; height: 23px; box-sizing: border-box; font-weight: bold; color: rgb(107 109 114);">
+        <div style="display: flex; justify-content: center; align-content: center; height: 23px; box-sizing: border-box; font-weight: bold; color: rgb(118 131 164); position: relative">
           <div style="font-size: 1.2em" v-text="props.title"></div>
-          <div style="display: flex; flex-direction: row; justify-content: center">
+          <div style="display: flex; flex-direction: row; justify-content: center; position: absolute; right: 0">
             <div v-if="props.showFullScreen" @click.stop="requestFullScreen" class="full-screen btn">
               <svg v-if="fullScreen" style="width: 20px; height: 20px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24"><g fill="none"><path d="M8.5 3.75a.75.75 0 0 0-1.5 0v2.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 0 0 1.5h2.5A2.25 2.25 0 0 0 8.5 6.25v-2.5zm0 16.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 0-.75-.75h-2.5a.75.75 0 0 1 0-1.5h2.5a2.25 2.25 0 0 1 2.25 2.25v2.5zM16.25 3a.75.75 0 0 0-.75.75v2.5a2.25 2.25 0 0 0 2.25 2.25h2.5a.75.75 0 0 0 0-1.5h-2.5a.75.75 0 0 1-.75-.75v-2.5a.75.75 0 0 0-.75-.75zm-.75 17.25a.75.75 0 0 0 1.5 0v-2.5a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 0 0-1.5h-2.5a2.25 2.25 0 0 0-2.25 2.25v2.5z" fill="currentColor"/></g></svg>
               <svg v-if="!fullScreen" style="width: 20px; height: 20px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 20 20"><g fill="none"><path d="M3 5a2 2 0 0 1 2-2h2a.5.5 0 0 1 0 1H5a1 1 0 0 0-1 1v2a.5.5 0 0 1-1 0V5zm9.5-1.5A.5.5 0 0 1 13 3h2a2 2 0 0 1 2 2v2a.5.5 0 0 1-1 0V5a1 1 0 0 0-1-1h-2a.5.5 0 0 1-.5-.5zm-9 9a.5.5 0 0 1 .5.5v2a1 1 0 0 0 1 1h2a.5.5 0 0 1 0 1H5a2 2 0 0 1-2-2v-2a.5.5 0 0 1 .5-.5zm13 0a.5.5 0 0 1 .5.5v2a2 2 0 0 1-2 2h-2a.5.5 0 0 1 0-1h2a1 1 0 0 0 1-1v-2a.5.5 0 0 1 .5-.5z" fill="currentColor"/></g></svg>
@@ -40,11 +40,11 @@
         </div>
       </slot>
     </template>
-    <el-scrollbar max-height="calc(100vh - 15vh - 50px - 44px - 54px - 32px)" always>
+    <el-scrollbar max-height="calc(100vh - 15vh - 15vh - 44px - 54px - 32px)" always>
       <slot name="default"></slot>
     </el-scrollbar>
 
-    
+
     <template #footer>
       <slot name="footer">
         <div style="display: flex; justify-content: center">
@@ -91,7 +91,6 @@ const props = withDefaults(defineProps<Props>(), {
   modal: true,
   appendToBody: false,
   lockScroll: true,
-  customClass: 'user-ext-dialog',
   openDelay: 0,
   closeDelay: 0,
   closeOnClickModal: true,
@@ -184,7 +183,6 @@ function handleCloseAutoFocus() {
 }
 </script>
 
-
 <style scoped>
 div.btn {
   cursor: pointer;
@@ -200,46 +198,4 @@ div.btn:hover {
 }
 </style>
 
-<style>
 
-
-
-.user-ext-dialog {
-  box-sizing: border-box;
-  margin: 15vh auto;
-}
-
-.user-ext-dialog.is-fullscreen {
-  box-sizing: border-box;
-  margin: auto;
-}
-
-.user-ext-dialog.el-dialog .el-dialog__footer {
-  padding: 10px;
-  border-top: 1px solid #e3e3e3;
-  border-bottom: 1px solid #e3e3e3;
-  box-sizing: border-box;
-}
-.user-ext-dialog.el-dialog .el-dialog__header {
-  padding: 10px 24px;
-  border-bottom: 1px solid #e3e3e3;
-  margin-right: 0;
-  box-sizing: border-box;
-}
-
-.user-ext-dialog.el-dialog .el-dialog__body {
-  padding: 16px 20px;
-  box-sizing: border-box;
-}
-
-.el-dialog.user-ext-dialog.is-fullscreen .el-dialog__body {
-  height: calc(100vh - 44px - 54px);
-  max-height: calc(100vh - 44px - 54px);
-}
-
-.el-dialog.user-ext-dialog .el-dialog__body {
-  max-height: calc(100vh - 15vh - 44px - 54px - 50px);
-}
-
-
-</style>

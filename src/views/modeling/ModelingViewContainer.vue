@@ -87,7 +87,7 @@
     </div>
     <MaskWindow v-model="addPanelVisible" teleport-to="#modeling-entity-panel">
       <div style="width: 100%; height: 100%; background-color: var(--el-bg-color);">
-        <div style="box-sizing: border-box; padding: 6px; border-bottom: 1px solid var(--el-border-color);">
+        <div style="box-sizing: border-box; padding: 6px;  background-color: var(--toolbar-bg-color);">
           <el-button @click="addPanelVisible = false">取消</el-button>
           <el-button @click="handleConfirmAdd" type="primary" plain>确定</el-button>
         </div>
@@ -100,7 +100,7 @@
     </MaskWindow>
     <MaskWindow v-model="viewPanelVisible" teleport-to="#modeling-entity-panel">
       <div style="width: 100%; height: 100%; background-color: var(--el-bg-color);">
-        <div style="width: 100%; padding: 6px; border-bottom: 1px solid var(--el-border-color);">
+        <div style="width: 100%; padding: 6px;  background-color: var(--toolbar-bg-color); ">
           <el-button v-if="viewerMode" @click="viewerMode = false">编辑</el-button>
           <el-button v-if="!viewerMode" @click="viewerMode = true">取消</el-button>
           <el-button v-if="!viewerMode" @click="handleConfirmUpdate">确定</el-button>
@@ -212,7 +212,11 @@ const param = ref<ModelingInstancePageFindParam>({
 })
 const { pageData, pageModeling } =  useViewApi(loading)
 function reloadTableData() {
-  pageModeling(param.value).then(_ => Object.keys(pageData.value.additional.userMap).forEach(it => userMap.set(it, pageData.value.additional.userMap[it])))
+  pageModeling(param.value)
+    .then(_ =>
+      pageData.value?.additional?.userMap &&
+      Object.keys(pageData.value.additional.userMap).forEach(it => userMap.set(it, pageData.value.additional.userMap[it]))
+    )
 }
 
 const sortConfig = ref<VxeTablePropTypes.SortConfig>({

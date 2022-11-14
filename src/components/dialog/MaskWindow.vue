@@ -8,7 +8,7 @@
         <transition name="fade" mode="out-in" appear>
           <slot></slot>
         </transition>
-        
+
       </div>
       <div
         title="关闭蒙版"
@@ -91,31 +91,32 @@ const visible = computed({
 }
 
 .mask-root-window {
-  position: absolute; 
-  top: 0; 
-  left: 0; 
-  width: 100%; 
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
   height: 100%;
 }
 
 .mask-window-wrapper {
-  position: relative; 
-  box-sizing: border-box; 
+  position: relative;
+  box-sizing: border-box;
   width: 100%;
   height: 100%;
   padding: var(--el-main-padding);
-  background-color: #f6f8f9; 
+  background-color: var(--el-bg-color);
 }
 
 .close-mask {
   position: absolute;
-  left: 0;
+  left: -1px;
   top: 0;
   width: 30px;
   height: 30px;
   border-bottom-right-radius: 100%;
   background-color: #FFFFFF;
-  cursor: pointer
+  cursor: pointer;
+  border: 1px solid var(--el-border-color);
 }
 
 .close-mask:hover, .close-mask:hover .close-icon {
@@ -123,11 +124,11 @@ const visible = computed({
 }
 
 .close-icon {
-  position: absolute; 
+  position: absolute;
   top: 4px;
-  right: 10px; 
-  width: 16px; 
-  height: 16px; 
+  right: 10px;
+  width: 16px;
+  height: 16px;
 }
 
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <el-tabs v-model="activeName" @tab-change="handleTabChange" style="background-color: #FFFFFF">
+    <el-tabs v-model="activeName" @tab-change="handleTabChange" style="background-color: var(--el-bg-color)">
       <el-tab-pane label="基本信息" name="basic">
         <div style="width: 851px; ">
           <el-scrollbar always>
@@ -376,7 +376,7 @@ interface ComponentInfo {
 <style scoped>
 .container {
   height: v-bind(containerHeight);
-  background-color: #FFFFFF;
+  background-color: var(--el-bg-color);
   padding: 0 10px;
 }
 

@@ -1,6 +1,6 @@
 <template>
   <el-scrollbar always>
-    <el-collapse v-model="expand" accordion>
+    <el-collapse v-model="expand">
       <el-collapse-item name="base-setting">
         <template #title>
           <div class="collapse-title"><s-v-g-icon style="width: 1em; height: 1em" name="Setting" /><span style="margin-left: 6px">基本设置</span></div>
@@ -27,15 +27,6 @@
         </template>
         <ExecutionListener></ExecutionListener>
       </el-collapse-item>
-      <el-collapse-item name="global-listener" v-show="bpmnSelectedElem?.type === 'bpmn:Process'">
-        <template #title>
-          <div style="display: flex; justify-content: space-between; align-items: center; width: 100%">
-            <div class="collapse-title"><s-v-g-icon style="width: 1em; height: 1em" name="Notification" /><span style="margin-left: 6px">全局监听</span></div>
-            <div @click.stop="addGlobalListener" style="margin-right: 10px" class="event-add-btn"><s-v-g-icon style="width: 1.2em; height: 1.2em; " name="Plus" /></div>
-          </div>
-        </template>
-        <GlobalListener></GlobalListener>
-      </el-collapse-item>
       <el-collapse-item name="flow-condition" v-show="showConditionSeqFlow">
         <template #title>
           <div class="collapse-title">
@@ -52,24 +43,6 @@
           </div>
         </template>
         <approver-config></approver-config>
-      </el-collapse-item>
-      <el-collapse-item name="page" v-show="['bpmn:UserTask', 'bpmn:SequenceFlow', 'bpmn:EndEvent', 'bpmn:StartEvent'].includes(bpmnSelectedElem?.type)">
-        <template #title>
-          <div style="display: flex; justify-content: space-between; align-items: center; width: 100%">
-            <div class="collapse-title">
-              <s-v-g-icon style="width: 1em; height: 1em" name="Page" /><span style="margin-left: 6px">页面配置</span>
-            </div>
-          </div>
-        </template>
-        <PageConfig></PageConfig>
-      </el-collapse-item>
-      <el-collapse-item name="multi-instance"  v-show="['bpmn:UserTask','bpmn:ManualTask'].includes(bpmnSelectedElem?.type)">
-        <template #title>
-          <div class="collapse-title">
-            <s-v-g-icon style="width: 1em; height: 1em" name="Team" /><span style="margin-left: 6px">会签配置</span>
-          </div>
-        </template>
-        <MultiInstanceConfig></MultiInstanceConfig>
       </el-collapse-item>
     </el-collapse>
     <v-dialog
@@ -167,14 +140,11 @@ import {
 import {computed, inject, provide, ref, toRaw} from "vue";
 import ExecutionListener from "@/components/bpmn/form/ExecutionListener.vue";
 import TaskListener from "@/components/bpmn/form/TaskListener.vue";
-import GlobalListener from "@/components/bpmn/form/GlobalListener.vue";
-import MultiInstanceConfig from "@/components/bpmn/form/MultiInstanceConfig.vue";
 import SVGIcon from "@/components/common/SVGIcon.vue";
 import {bpmnModelerKey, bpmnSelectedElemKey, propertyPanelOpenedKey} from "@/config/app.keys";
 import SeqFlowConfig from "@/components/bpmn/form/SeqFlowConfig.vue";
 import BasicSetting from "@/components/bpmn/form/BasicSetting.vue";
 import ApproverConfig from "@/components/bpmn/form/ApproverConfig.vue";
-import PageConfig from "@/components/bpmn/form/PageConfig.vue";
 import VDialog from "@/components/dialog/VDialog.vue";
 import {useIcon} from "@/components/common/util";
 
@@ -288,6 +258,11 @@ defineExpose({
 </script>
 
 <style scoped>
+:deep(.el-collapse) {
+  height: 100%;
+  padding: 0 10px;
+}
+
 :deep(.el-input) {
   display: inline-block;
 }
@@ -297,17 +272,7 @@ defineExpose({
   font-size: 1.1em;
 }
 
-:deep(.el-collapse-item__header) {
-  position: relative;
-  padding-left: 20px;
-}
 
-:deep(.el-collapse-item__arrow) {
-  margin: unset;
-  position: absolute;
-  top: calc((49px - 1em)  * 0.5);
-  left: 0;
-}
 
 .event-add-btn {
   cursor: pointer;

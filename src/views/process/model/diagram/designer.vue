@@ -63,7 +63,7 @@ import {
   bpmnSelectedElemKey,
   mainHeightKey,
   updatePropertyKey,
-  processModelFieldKey,
+  modelingFieldKey,
   processNodePageListKey, mainWidthKey
 } from "@/config/app.keys";
 import 'bpmn-js/dist/assets/diagram-js.css';
@@ -120,7 +120,7 @@ const processModelFields = shallowRef()
 provide(bpmnSelectedElemKey, selectedElem)
 provide(bpmnModelerKey, bpmnModeler)
 provide(updatePropertyKey, updateProperty)
-provide(processModelFieldKey, processModelFields)
+provide(modelingFieldKey, processModelFields)
 provide(processNodePageListKey, boundPages)
 
 async function init() {

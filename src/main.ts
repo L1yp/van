@@ -13,6 +13,8 @@ import VXETable from 'vxe-table'
 import 'vxe-table/lib/style.css'
 import {toTree} from "@/utils/common";
 import { varOptions } from '@/components/permission/components/condition'
+import './styles/index.css'
+
 
 async function startup() {
   try {
@@ -61,5 +63,5 @@ async function startup() {
 
 }
 
-startup();
+startup()
 
