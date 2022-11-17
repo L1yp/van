@@ -25,7 +25,7 @@
           </div>
 
         </template>
-        <ExecutionListener></ExecutionListener>
+        <ExecutionListener/>
       </el-collapse-item>
       <el-collapse-item name="flow-condition" v-show="showConditionSeqFlow">
         <template #title>
@@ -34,7 +34,7 @@
             <span style="margin-left: 6px">流转条件</span>
           </div>
         </template>
-        <SeqFlowConfig></SeqFlowConfig>
+        <SeqFlowConfig/>
       </el-collapse-item>
       <el-collapse-item name="owner" v-show="['bpmn:UserTask'].includes(bpmnSelectedElem?.type)">
         <template #title>
@@ -42,7 +42,16 @@
             <s-v-g-icon style="width: 1em; height: 1em" name="User" /><span style="margin-left: 6px">审核者</span>
           </div>
         </template>
-        <approver-config></approver-config>
+        <approver-config/>
+      </el-collapse-item>
+      <el-collapse-item name="page" v-show="showPageConfig">
+        <template #title>
+          <div class="collapse-title">
+            <s-v-g-icon style="width: 1em; height: 1em" name="Page" />
+            <span style="margin-left: 6px">表单绑定</span>
+          </div>
+        </template>
+        <page-config/>
       </el-collapse-item>
     </el-collapse>
     <v-dialog
@@ -137,16 +146,18 @@ import {
   ElSelect, ElOption, ElButton,
   ElInput, ElDescriptions, ElDescriptionsItem,
 } from "element-plus"
-import {computed, inject, provide, ref, toRaw} from "vue";
+import {computed, inject, onUnmounted, provide, ref, toRaw} from "vue";
 import ExecutionListener from "@/components/bpmn/form/ExecutionListener.vue";
 import TaskListener from "@/components/bpmn/form/TaskListener.vue";
 import SVGIcon from "@/components/common/SVGIcon.vue";
 import {bpmnModelerKey, bpmnSelectedElemKey, propertyPanelOpenedKey} from "@/config/app.keys";
 import SeqFlowConfig from "@/components/bpmn/form/SeqFlowConfig.vue";
+import PageConfig from "@/components/bpmn/form/PageConfig.vue";
 import BasicSetting from "@/components/bpmn/form/BasicSetting.vue";
 import ApproverConfig from "@/components/bpmn/form/ApproverConfig.vue";
 import VDialog from "@/components/dialog/VDialog.vue";
 import {useIcon} from "@/components/common/util";
+import emitter, { ElementChanged } from '@/event/mitt'
 
 const plusIcon = useIcon('Plus')
 
@@ -177,14 +188,18 @@ const showConditionSeqFlow = computed<boolean>(() => {
   return !!bo?.conditionExpression;
 })
 
-/**
- * <b>bpmnSelectedElem</b>是ShallowRef浅层响应式
- * 当sequenceFlow变成Condition SequenceFlow不会触发computed重新计算
- * 因此暴漏此方法手动触发
- */
-function recalculateShowConditionSeqFlow() {
-  showConditionSeqFlow.effect.scheduler()
-}
+
+const showPageConfig = computed<boolean>(() => {
+  const selectedElem = toRaw(bpmnSelectedElem.value)
+  if (!selectedElem) {
+    return false
+  }
+  if (selectedElem?.type === 'bpmn:UserTask') {
+    return true
+  }
+  const bo = selectedElem?.businessObject
+  return bo?.sourceRef?.$type === 'bpmn:UserTask' && !!bo?.conditionExpression
+})
 
 interface DialogInfo<T> {
   visible: boolean
@@ -251,10 +266,13 @@ function addGlobalListener() {
 
 }
 
-defineExpose({
-  recalculateShowConditionSeqFlow
-})
+function handleElementChanged(event: ElementChanged) {
+  showConditionSeqFlow?.effect?.scheduler?.()
+  showPageConfig?.effect?.scheduler?.()
+}
 
+emitter.on('elementChanged',  handleElementChanged)
+onUnmounted(() => emitter.off('elementChanged',  handleElementChanged))
 </script>
 
 <style scoped>

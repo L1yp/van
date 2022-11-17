@@ -1,39 +1,26 @@
+declare interface ModelingPageModuleFindParam {
+  module: ModelingModule
+  mkey: string
+}
+
 declare interface ModelingPageFindParam {
   module: ModelingModule
   mkey: string
-  pageKey: string
+  name: string
 }
 
 declare interface ModelingPageBindParam {
-  page_key: string
-  page_id: string
+  module: ModelingModule
+  mkey: string
+  name: string
+  page_scheme: VFormScheme
 }
+
 
 declare interface ModelingPageUnbindParam {
-  page_key: string
-  page_id: string
-}
-
-declare interface ModelingPageAddParam {
   module: ModelingModule
   mkey: string
   name: string
-  page_scheme: VFormScheme
-}
-
-declare interface ModelingPageAddAndBindParam {
-  module: ModelingModule
-  mkey: string
-  name: string
-  page_id: string
-  page_key: string
-  page_scheme: VFormScheme
-}
-
-declare interface ModelingPageUpdateParam {
-  id: string
-  name: string
-  page_scheme: VFormScheme
 }
 
 declare interface ModelingPageView {

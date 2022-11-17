@@ -19,6 +19,9 @@
       </div>
     </div>
     <xml-editor v-model="previewVisible" :code="previewCode" />
+    <div id="workflow-mask-panel">
+
+    </div>
   </div>
 </template>
 
@@ -39,10 +42,17 @@ import { useIcon } from "@/components/common/util";
 import CustomModdle from '@/components/bpmn/moddle/CustomModdle'
 import Collapsed from "@/components/common/Collapsed.vue";
 import PropertyPanel from '@/components/bpmn/PropertyPanel.vue'
-import { bpmnModelerKey, bpmnSelectedElemKey, modelingFieldKey } from "@/config/app.keys";
+import {
+  bpmnModelerKey,
+  bpmnSelectedElemKey,
+  modelingFieldKey,
+  modelingPageKey,
+  workflowVerKey
+} from "@/config/app.keys";
 import {useModelingFieldApi} from "@/service/modeling/field";
 import emitter from "@/event/mitt";
 import XmlEditor from "@/components/common/XmlEditor.vue";
+import {useModelingPageApi} from "@/service/modeling/page";
 
 const SaveIcon = useIcon('Save')
 
@@ -55,8 +65,11 @@ const propertiesPanelVisible = ref(false)
 const loading = ref(false)
 const { workflowVer, findVer, updateXml } = useVerApi(loading)
 const { modelingFields, findModelingFields } = useModelingFieldApi(loading)
+const { pageList, findModulePages } = useModelingPageApi(loading)
 
+provide(workflowVerKey, workflowVer)
 provide(modelingFieldKey, modelingFields)
+provide(modelingPageKey, pageList)
 
 const diagramRef = ref<HTMLDivElement>()
 
@@ -94,6 +107,7 @@ function initDiagram() {
   loading.value = true
   findVer(props.verId)
     .then(() => findModelingFields('WORKFLOW', workflowVer.value.key))
+    .then(() => findModulePages({ module: 'WORKFLOW', mkey: workflowVer.value.key }))
     .then(() => importXML(workflowVer.value.xml))
     .finally(() => loading.value = false)
 
@@ -108,9 +122,6 @@ async function importXML(xml: string) {
     canvas.zoom(Math.ceil(scale.value / 100));
 
     const registry = bpmnModeler.value.get("elementRegistry")
-    console.log("elementRegistry", bpmnModeler.value.get("elementRegistry"))
-    console.log("root", registry.find(it => it.type === 'bpmn:Process'))
-    console.log("elem all", bpmnModeler.value.get("elementRegistry").getAll())
     bpmnSelectedElem.value = registry.find(it => it.type === 'bpmn:Process')
     bpmnModeler.value.on("selection.changed", e => {
       console.log('element select change', e);

@@ -19,7 +19,7 @@
       <div class="form-designer-toolbar">
         <div style="display: flex; align-items: center; padding-left: 10px; width: 400px">
           <span style="width: 100px; align-self: center; font-weight: bold">页面名称</span>
-          <el-input v-model="pageName" />
+          <el-input :disabled="props.module === 'ENTITY' || !!props.name" v-model="pageName" />
           <el-button text type="primary" :icon="saveIcon" @click="handleClickSave">保存</el-button>
         </div>
         <div>
@@ -110,7 +110,6 @@ import { Delete, View } from "@element-plus/icons-vue";
 const saveIcon = useIcon('Save')
 
 interface Props {
-  pageKey: string
   module: ModelingModule
   mkey: string
   name?: string
@@ -119,7 +118,8 @@ interface Props {
 const props = defineProps<Props>()
 
 const loading = ref(false)
-const { pageInfo, findPage, bindPage, addAndBindPage } = useModelingPageApi(loading)
+const { pageInfo, findPage, bindPage } = useModelingPageApi(loading)
+
 
 const pageName = ref(props.name || '')
 
@@ -151,6 +151,9 @@ provide(vFormSchemeKey, formScheme)
 
 onBeforeMount(async () => {
   await findPage({ ...props })
+  if (pageInfo.value?.name) {
+    pageName.value = pageInfo.value.name
+  }
   if (pageInfo.value?.page_scheme) {
     formScheme.value = pageInfo.value.page_scheme
   }
@@ -190,16 +193,13 @@ function handleClickViewJSON() {
 }
 
 async function handleClickSave() {
-  const param: ModelingPageAddAndBindParam = {
+  const param: ModelingPageBindParam = {
     name: pageName.value,
     module: props.module,
     mkey: props.mkey,
-    page_id: pageInfo.value?.id || '',
-    page_key: props.pageKey,
     page_scheme: formScheme.value,
   }
-
-  addAndBindPage(param)
+  bindPage(param)
 }
 
 const formRenderRef = ref<InstanceType<typeof VFormRender>>()

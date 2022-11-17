@@ -329,6 +329,11 @@
           "name": "assigneeFields",
           "isAttr": true,
           "type": "String"
+        },
+        {
+          "name": "pageId",
+          "isAttr": true,
+          "type": "String"
         }
       ]
     },
@@ -340,6 +345,11 @@
           "name": "order",
           "isAttr": true,
           "type": "Integer"
+        },
+        {
+          "name": "pageId",
+          "isAttr": true,
+          "type": "String"
         }
       ]
     },
