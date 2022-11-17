@@ -4,7 +4,7 @@
       <el-button-group>
         <el-button :icon="View" title="预览JSON" @click="handlePreviewXml" />
         <el-button :icon="FolderOpened" title="导入BPMN文件" />
-        <el-button :icon="SaveIcon" title="保存" />
+        <el-button :icon="SaveIcon" title="保存" @click="handleSaveXml" />
         <el-button :icon="Check" title="校验" />
       </el-button-group>
     </div>
@@ -53,7 +53,7 @@ interface Props {
 const props = defineProps<Props>()
 const propertiesPanelVisible = ref(false)
 const loading = ref(false)
-const { workflowVer, findVer } = useVerApi(loading)
+const { workflowVer, findVer, updateXml } = useVerApi(loading)
 const { modelingFields, findModelingFields } = useModelingFieldApi(loading)
 
 provide(modelingFieldKey, modelingFields)
@@ -114,9 +114,8 @@ async function importXML(xml: string) {
     bpmnSelectedElem.value = registry.find(it => it.type === 'bpmn:Process')
     bpmnModeler.value.on("selection.changed", e => {
       console.log('element select change', e);
-      
       const selectionArray = e.newSelection
-      bpmnSelectedElem.value = selectionArray[0]
+      bpmnSelectedElem.value = selectionArray?.length ? selectionArray[0] : registry.find(it => it.type === 'bpmn:Process')
     })
     bpmnModeler.value.on("element.changed", e => {
       console.log('element change', e);
@@ -139,6 +138,14 @@ async function handlePreviewXml() {
   previewCode.value = xml
   previewVisible.value = true
   loading.value = false
+}
+
+async function handleSaveXml() {
+  const { xml } = await bpmnModeler.value.saveXML({ format: false })
+  await updateXml({
+    id: workflowVer.value.id,
+    xml: xml
+  })
 }
 
 </script>

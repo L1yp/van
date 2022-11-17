@@ -263,10 +263,6 @@ defineExpose({
   padding: 0 10px;
 }
 
-:deep(.el-input) {
-  display: inline-block;
-}
-
 :deep(.el-collapse-item__header span) {
   font-weight: bold;
   font-size: 1.1em;

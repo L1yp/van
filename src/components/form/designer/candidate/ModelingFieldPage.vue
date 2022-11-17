@@ -69,10 +69,10 @@
 
 <script lang="ts" setup>
 import { useModelingFieldApi } from "@/service/modeling/field";
-import { onBeforeMount, ref } from "vue";
+import {onBeforeMount, onUnmounted, ref} from "vue";
 import { ElScrollbar, ElCollapse, ElCollapseItem } from "element-plus";
 import Draggable from "vuedraggable";
-import emitter from "@/event/mitt";
+import emitter, {FormDesignerFieldDeleteEvent} from "@/event/mitt";
 
 interface Props {
   module: ModelingModule
@@ -90,7 +90,7 @@ const defaultFields = ref<ModelingFieldDefView[]>([])
 const privateFields = ref<ModelingFieldDefView[]>([])
 const globalFields = ref<ModelingFieldDefView[]>([])
 
-emitter.on('removeFieldInDesigner', (v) => {
+function removeFieldInDesignerHandler(v: FormDesignerFieldDeleteEvent) {
   const field = modelingFields.value.find(it => it.field === v.field)
   if (!field) {
     return
@@ -102,7 +102,11 @@ emitter.on('removeFieldInDesigner', (v) => {
   } else if (field.scope.endsWith('_PRIVATE')) {
     privateFields.value.push(field)
   }
-})
+}
+
+emitter.on('removeFieldInDesigner', removeFieldInDesignerHandler)
+
+onUnmounted(() => emitter.off('removeFieldInDesigner', removeFieldInDesignerHandler))
 
 onBeforeMount(async () => {
   await findModelingFields(props.module, props.mkey)

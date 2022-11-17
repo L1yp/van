@@ -1,13 +1,13 @@
 <template>
   <el-tabs tab-position="left" class="entity-page-tabs">
     <el-tab-pane label="查看页面">
-      <FormDesigner page-key="VIEW" v-bind="$props" />
+      <FormDesigner page-key="VIEW" name="查看页面" v-bind="$props" />
     </el-tab-pane>
     <el-tab-pane label="新增页面">
-      <FormDesigner page-key="ADD" v-bind="$props" />
+      <FormDesigner page-key="ADD" name="新增页面" v-bind="$props" />
     </el-tab-pane>
     <el-tab-pane label="更新页面">
-      <FormDesigner page-key="UPDATE" v-bind="$props" />
+      <FormDesigner page-key="UPDATE" name="编辑页面" v-bind="$props" />
     </el-tab-pane>
   </el-tabs>
 </template>

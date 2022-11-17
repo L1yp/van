@@ -159,5 +159,8 @@ function handleEditGlobalField() {
 </script>
 
 <style scoped>
-
+:deep(.el-tabs--border-card>.el-tabs__content) {
+  box-sizing: border-box;
+  height: calc(100% - 39px);
+}
 </style>

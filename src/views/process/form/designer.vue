@@ -17,10 +17,17 @@
     </div>
     <div class="form-wrapper">
       <div class="form-designer-toolbar">
-        <el-button text type="primary" :icon="Delete" @click="handleClickClear">清空</el-button>
-        <el-button text type="primary" :icon="View" @click="handleClickPreview">预览</el-button>
-        <el-button text type="primary" :icon="View" @click="handleClickViewJSON">查看JSON</el-button>
-        <el-button text type="primary" :icon="saveIcon" @click="handleClickSave">保存</el-button>
+        <div style="display: flex; align-items: center; padding-left: 10px; width: 400px">
+          <span style="width: 100px; align-self: center; font-weight: bold">页面名称</span>
+          <el-input v-model="pageName" />
+          <el-button text type="primary" :icon="saveIcon" @click="handleClickSave">保存</el-button>
+        </div>
+        <div>
+          <el-button text type="primary" :icon="Delete" @click="handleClickClear">清空</el-button>
+          <el-button text type="primary" :icon="View" @click="handleClickPreview">预览</el-button>
+          <el-button text type="primary" :icon="View" @click="handleClickViewJSON">查看JSON</el-button>
+        </div>
+
       </div>
       <div style="height: calc(100% - 40px);">
         <el-scrollbar always>
@@ -86,7 +93,7 @@
 <script lang="ts" setup>
 import { computed, inject, ref, provide, onBeforeMount } from "vue";
 import { mainHeightKey, themeKey } from "@/config/app.keys";
-import { ElForm, ElScrollbar, ElTabs, ElTabPane, ElButton, ElRadioGroup, ElRadioButton } from "element-plus"
+import { ElForm, ElScrollbar, ElTabs, ElTabPane, ElButton, ElRadioGroup, ElRadioButton, ElInput } from "element-plus"
 import NestedDragItem from "@/components/form/designer/NestedDragItem.vue";
 import FormPropertyPanel from "@/components/form/designer/FormPropertyPanel.vue"
 import CandidateComponentPage from "@/components/form/designer/candidate/CandidateComponentPage.vue";
@@ -106,13 +113,15 @@ interface Props {
   pageKey: string
   module: ModelingModule
   mkey: string
+  name?: string
 }
 
 const props = defineProps<Props>()
 
 const loading = ref(false)
-const { pageInfo, getPage, bindPage } = useModelingPageApi(loading)
+const { pageInfo, findPage, bindPage, addAndBindPage } = useModelingPageApi(loading)
 
+const pageName = ref(props.name || '')
 
 const candidateActiveTab = ref<string>('component')
 
@@ -141,7 +150,7 @@ const formScheme = ref<VFormScheme>({
 provide(vFormSchemeKey, formScheme)
 
 onBeforeMount(async () => {
-  await getPage({ ...props })
+  await findPage({ ...props })
   if (pageInfo.value?.page_scheme) {
     formScheme.value = pageInfo.value.page_scheme
   }
@@ -180,13 +189,17 @@ function handleClickViewJSON() {
   editorInfo.value.visible = true
 }
 
-function handleClickSave() {
-  const param: ModelingPageBindParam = {
-    ...props,
+async function handleClickSave() {
+  const param: ModelingPageAddAndBindParam = {
+    name: pageName.value,
+    module: props.module,
+    mkey: props.mkey,
+    page_id: pageInfo.value?.id || '',
     page_key: props.pageKey,
     page_scheme: formScheme.value,
   }
-  bindPage(param)
+
+  addAndBindPage(param)
 }
 
 const formRenderRef = ref<InstanceType<typeof VFormRender>>()
@@ -248,7 +261,7 @@ async function handleClickValidateForm() {
   height: 40px;
   background-color: #f6f8f9;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
 }
 

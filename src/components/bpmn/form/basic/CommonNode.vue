@@ -1,32 +1,25 @@
 <template>
-  <div class="field-item">
-    <label>节点类型:&nbsp;</label>
-    <el-input disabled v-model="type" clearable></el-input>
-  </div>
-  <div class="field-item">
-    <label>节点标识:&nbsp;</label>
-    <el-input @change="val => handleInputChange('id', val)" v-model="key" clearable></el-input>
-  </div>
-  <div class="field-item">
-    <label>节点名称:&nbsp;</label>
-    <el-input @change="val => handleInputChange('name', val)" v-model="name" clearable></el-input>
-  </div>
-
-  <div class="field-item" v-show="bpmnSelectedElem?.type === 'bpmn:StartEvent'">
-    <label>发起者:&nbsp;</label>
-    <el-input @change="val => handleInputChange('creator', val)" v-model="creator" clearable></el-input>
-  </div>
-
-
-  <div class="field-item" style="margin-top: 8px">
-    <label style="align-self: flex-start">节点描述:&nbsp;</label>
-    <el-input @change="val => handleInputChange('description', val)" style="align-self: flex-start" :rows="2" type="textarea" v-model="description"></el-input>
-  </div>
+  <el-form label-width="80px" label-position="right">
+    <el-form-item label="节点类型">
+      <el-input disabled v-model="type" clearable style="width: 100%;" />
+    </el-form-item>
+    <el-form-item label="节点标识">
+      <el-input disabled v-model="key" clearable style="width: 100%;"/>
+    </el-form-item>
+    <el-form-item label="节点名称">
+      <el-input disabled v-model="name" clearable style="width: 100%;"/>
+    </el-form-item>
+    <el-form-item label="节点描述">
+      <el-input style="width: 100%; align-self: flex-start" :rows="2" type="textarea" v-model="description"/>
+      
+    </el-form-item>
+  </el-form>
+  
 </template>
 
 <script lang="ts" setup>
 import {ref, watch, computed, inject, unref, isProxy, toRaw} from "vue"
-import {ElInput} from "element-plus"
+import { ElInput, ElForm, ElFormItem } from "element-plus"
 import {bpmnModelerKey, bpmnSelectedElemKey, propertyPanelOpenedKey, updatePropertyKey} from "@/config/app.keys";
 import {BpmnUtil} from "../util"
 
@@ -102,28 +95,5 @@ function handleInputChange(from, val) {
 </script>
 
 <style scoped>
-.field-item {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  height: 40px;
-}
 
-.field-item label {
-  width: v-bind(labelWidth);
-  text-align: right;
-}
-
-:deep(.el-input) {
-  width: v-bind(inputWidth)
-}
-
-:deep(.el-textarea) {
-  width: v-bind(inputWidth)
-}
-
-:deep(.el-input__wrapper) {
-  box-sizing: border-box;
-  width: v-bind(inputWidth);
-}
 </style>

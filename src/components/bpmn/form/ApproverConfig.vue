@@ -1,5 +1,5 @@
 <template>
-  <el-form label-width="80px">
+  <el-form label-width="80px" label-position="right">
     <el-form-item label="开启会签">
       <el-switch
         v-model="openMultiInstance"
@@ -29,7 +29,7 @@
 
 <script lang="ts" setup>
 // 会签配置
-import { ref, watch, computed, inject, toRaw, nextTick } from "vue"
+import {ref, watch, computed, inject, toRaw, nextTick, onUnmounted} from "vue"
 import { ElSelect, ElOption, ElInput, ElForm, ElFormItem, ElSwitch, ElRadioGroup, ElRadioButton } from "element-plus"
 import {
   bpmnModelerKey,
@@ -37,7 +37,7 @@ import {
   modelingFieldKey,
 } from "@/config/app.keys";
 import { BpmnUtil } from "@/components/bpmn/form/util";
-import emitter from "@/event/mitt";
+import emitter, { ElementChanged } from "@/event/mitt";
 
 const modelingFields = inject(modelingFieldKey)
 const bpmnSelectedElem = inject(bpmnSelectedElemKey)
@@ -82,7 +82,6 @@ const openMultiInstance = computed({
         loopCharacteristics: undefined
       })
     }
-    openMultiInstance.effect.scheduler()
   }
 })
 
@@ -99,7 +98,6 @@ const isSequential = computed({
     bpmnUtil.updateModelingProperty(bpmnSelectedElem, elem.businessObject.loopCharacteristics, {
       isSequential: v
     })
-    isSequential.effect.scheduler()
   }
 })
 
@@ -107,7 +105,7 @@ const isSequential = computed({
 const assigneeType = computed<AssigneeType>({
   get() {
     const elem = toRaw(bpmnSelectedElem.value)
-    // FIXME: unsupport other type
+    // FIXME: unsupported other type
     if (true || !elem || !elem.businessObject || bpmnUtil.isMultiInstanceUserTask(bpmnSelectedElem)) {
       return 'user'
     }
@@ -119,7 +117,6 @@ const assigneeType = computed<AssigneeType>({
     bpmnUtil.updateProperty(bpmnSelectedElem.value, {
       assigneeType: v
     })
-    nextTick(() => assigneeType.effect.scheduler())
   }
 })
 
@@ -152,9 +149,6 @@ const assigneeValue = computed<string[]>({
         assignee: '${psr.read(execution, "' + bpmnUtil.getProcessKey() + '", "' + v.join(',') + '")}'
       })
     }
-
-
-    nextTick(() => assigneeValue.effect.scheduler())
   }
 })
 
@@ -165,26 +159,28 @@ const multipleLimit = computed(() => {
   }
   const bo = elem.businessObject
   console.log('computed multiple bo', bo);
-  
+
   if (bo.loopCharacteristics) {
     return 0
   }
   return 1
 })
 
-emitter.on('elementChanged', e => {
+function refreshState(e: ElementChanged) {
   const elem = e.element
   if (elem.type === 'bpmn:UserTask') {
     multipleLimit.effect.scheduler()
     isSequential.effect.scheduler()
     openMultiInstance.effect.scheduler()
-    
+
     assigneeType.effect.scheduler()
     assigneeValue.effect.scheduler()
   }
+}
 
-})
+emitter.on('elementChanged', refreshState)
 
+onUnmounted(() => emitter.off('elementChanged', refreshState))
 </script>
 
 <style scoped>

@@ -69,7 +69,7 @@ declare interface WorkflowTypeDefUpdateParam {
   status: string
 }
 
-declare interface WorkflowTypeVerUpdateXmlParam {
+declare type WorkflowTypeVerUpdateXmlParam = {
   id: string
   xml: string
 }

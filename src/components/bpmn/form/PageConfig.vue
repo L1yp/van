@@ -31,77 +31,13 @@
 </template>
 
 <script lang="ts" setup>
-import {ref, onMounted, watch, inject, toRaw, computed} from "vue"
+import { ref, inject } from "vue"
 import { ElRow, ElCol, ElInput, ElMessage, ElButton, ElSelect, ElOption } from "element-plus"
-import {bpmnSelectedElemKey, processNodePageListKey} from "@/config/app.keys";
-import {useRoute} from "vue-router";
-import * as ProcessModelPageApi from "@/api/sys/process/page"
-import * as ProcessModelApi from "@/api/sys/process";
+import { bpmnSelectedElemKey, processNodePageListKey } from "@/config/app.keys";
 
-const innerWidth = "360px"
-const labelWidth = "70px"
-const inputWidth = computed(() => `calc(${innerWidth} - ${labelWidth})`)
-
-const route = useRoute()
-const process_bpmn_id = Number(route.query.bpmnId)
-const process_key = route.query.processKey as string
 const bpmnSelectedElem = inject(bpmnSelectedElemKey);
 const processNodePages = inject(processNodePageListKey);
 
-const formData = ref<BindProcessModelNodePageParam>({
-  process_key, process_bpmn_id,
-  node_id: '',
-  process_model_page_id: undefined,
-  page_width: '851px',
-  label_width: '120px',
-  comment: 1
-})
-
-watch(bpmnSelectedElem, () => {
-  const selectedElem = toRaw(bpmnSelectedElem.value)
-  if (!selectedElem) return
-  const bo = toRaw(selectedElem?.businessObject)
-  formData.value.node_id = bo.id
-  const pageInfo = processNodePages.value.find(it => it.node_id === bo.id)
-  if (pageInfo) {
-    console.log("pageInfo", pageInfo)
-    formData.value.process_model_page_id = pageInfo.process_model_page_id
-    formData.value.page_width = pageInfo.page_width
-    formData.value.label_width = pageInfo.label_width
-    formData.value.comment = pageInfo.comment
-  } else {
-    formData.value.process_model_page_id = undefined
-    formData.value.page_width = '851px'
-    formData.value.label_width = '120px'
-    formData.value.comment = 1
-  }
-
-})
-
-onMounted(async () => {
-  await loadAllPage()
-})
-
-const pageList = ref<ProcessModelPageView[]>([])
-async function loadAllPage() {
-  try {
-    pageList.value = await ProcessModelPageApi.listProcessPage(process_key)
-  } catch (e) {
-    console.error(e)
-    ElMessage.error(e?.message || '加载页面失败')
-  }
-}
-
-async function handleBingPage() {
-  try {
-    await ProcessModelPageApi.bindProcessNodePage(formData.value)
-    processNodePages.value = await ProcessModelApi.listProcessPageByBpmnId(process_bpmn_id);
-    ElMessage.success("绑定成功")
-  } catch (e) {
-    console.error(e)
-    ElMessage.error(e?.message || '绑定失败')
-  }
-}
 
 </script>
 

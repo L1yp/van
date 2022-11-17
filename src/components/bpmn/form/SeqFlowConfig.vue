@@ -1,71 +1,71 @@
 <template>
-  <div class="container">
-    <div class="field-item">
-      <label>表达式:&nbsp;</label>
-      <el-input style="width: 100%" @change="handleInputChange" v-model="expression"></el-input>
-    </div>
-    <div class="field-item">
-      <label>序号:&nbsp;</label>
-      <el-input style="width: 100%" @change="handleOrderNoInputChange" v-model="orderNo"></el-input>
-    </div>
-  </div>
+  <el-form label-width="80px">
+    <el-form-item label="表达式" v-if="lineType === 'gateway'">
+      <el-input v-model="expression" clearable />
+    </el-form-item>
+    <el-form-item label="序号" v-if="lineType === 'user' ">
+      <el-input-number controls-position="right" v-model="orderNo" :min="1" />
+    </el-form-item>
+  </el-form>
 </template>
 
 <script lang="ts" setup>
 // TODO: 设置 连线类型：默认流转 条件流程 无
-import {ref, watch, inject, toRaw, nextTick} from "vue"
-import {ElInput} from "element-plus"
-import {bpmnModelerKey, bpmnSelectedElemKey, propertyPanelOpenedKey} from "@/config/app.keys";
-
-const expression = ref("")
-const orderNo = ref<string>('')
-
-const innerWidth = "360px"
-const labelWidth = "60px"
-const inputWidth = `calc(${innerWidth} - ${labelWidth})`
-
+import { inject, onUnmounted, computed } from "vue"
+import { ElForm, ElFormItem, ElInput, ElInputNumber } from "element-plus"
+import { bpmnModelerKey, bpmnSelectedElemKey } from "@/config/app.keys";
+import emitter, { ElementChanged } from "@/event/mitt";
+import { BpmnUtil } from "@/components/bpmn/form/util";
 
 const bpmnModeler = inject(bpmnModelerKey)
 const bpmnSelectedElem = inject(bpmnSelectedElemKey)
-const propertyPanelOpen = inject(propertyPanelOpenedKey)
-watch(bpmnSelectedElem, () => {
-  const selectedElem = toRaw(bpmnSelectedElem.value)
-  const bo = toRaw(selectedElem?.businessObject)
-  if (!bo || !bo?.conditionExpression) {
-    expression.value = ""
-    return
-  }
-  expression.value = bo?.conditionExpression?.body
-  orderNo.value = bo.order
-
-  if (bo?.$type === 'bpmn:SequenceFlow') {
-    // 由于computed show seq-flow-config 晚于 此watch函数会导致无法展开，因此需要将open延迟
-    nextTick(() => propertyPanelOpen.value = 'flow-condition')
+const bpmnUtil = new BpmnUtil(bpmnModeler)
+const expression = computed({
+  get() {
+    return bpmnSelectedElem.value?.businessObject?.conditionExpression?.body || ''
+  },
+  set(v) {
+    if (bpmnSelectedElem.value?.businessObject?.conditionExpression) {
+      bpmnSelectedElem.value.businessObject.conditionExpression.body = v
+    } else {
+      const bpmnFactory = bpmnModeler.value.get("bpmnFactory")
+      const conditionExpression = bpmnFactory.create('bpmn:FormalExpression')
+      conditionExpression.body = v
+      bpmnUtil.updateProperty(bpmnSelectedElem, { conditionExpression })
+      expression.effect.scheduler()
+    }
   }
 })
 
-function handleInputChange(val: string) {
-  const selectedElem = toRaw(bpmnSelectedElem.value)
-  const bo = toRaw(selectedElem.businessObject)
-  const bpmnFactory = bpmnModeler.value.get("bpmnFactory")
-  const expression = bpmnFactory.create('bpmn:FormalExpression');
-  expression.body = val
+const orderNo = computed({
+  get() {
+    return parseInt(bpmnSelectedElem.value?.businessObject?.order || '0') || 0
+  },
+  set(order) {
+    bpmnUtil.updateProperty(bpmnSelectedElem, { order })
+  }
+})
 
-  const modeling = bpmnModeler.value.get("modeling")
-  modeling.updateProperties(selectedElem, {
-    conditionExpression: expression
-  })
+const lineType = computed(() => {
+  if (bpmnSelectedElem.value?.type !== 'bpmn:SequenceFlow') {
+    return null
+  }
+  const source = bpmnSelectedElem.value?.source
+  if (source?.type === 'bpmn:UserTask') {
+    return 'user'
+  } else if (source?.type === 'bpmn:ExclusiveGateway') {
+    return 'gateway'
+  }
+  return null
+})
+
+function refreshState(e: ElementChanged) {
+  expression.effect.scheduler()
+  orderNo.effect.scheduler()
 }
 
-function handleOrderNoInputChange(val: string) {
-  const modeling = bpmnModeler.value.get("modeling")
-  const selectedElem = toRaw(bpmnSelectedElem.value)
-
-  modeling.updateProperties(selectedElem, {
-    order: val
-  })
-
-}
+emitter.on('elementChanged', refreshState)
+onUnmounted(() => emitter.off('elementChanged', refreshState))
 
 
 </script>
@@ -74,32 +74,4 @@ function handleOrderNoInputChange(val: string) {
 * {
   font-size: 14px;
 }
-
-.container {
-  display: flex;
-  flex-direction: column;
-}
-
-.field-item {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  height: 40px;
-}
-
-
-.field-item label {
-  width: v-bind(labelWidth);
-  text-align: right;
-}
-
-:deep(.el-input) {
-  width: v-bind(inputWidth)
-}
-
-:deep(.el-input__wrapper) {
-  box-sizing: border-box;
-  width: v-bind(inputWidth);
-}
-
 </style>

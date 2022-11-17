@@ -101,10 +101,10 @@
 
 <script lang="ts">
 import Draggable from "vuedraggable";
-import { defineComponent, inject, PropType, ref, toRaw } from "vue";
+import {defineComponent, inject, onUnmounted, PropType, ref, toRaw} from "vue";
 import { ElForm, ElFormItem, ElInput, ElSelect, ElRow, ElCol, ElCheckboxGroup, ElCheckbox, ElOption, FormItemRule } from "element-plus"
 import SVGIcon from "@/components/common/SVGIcon.vue";
-import emitter from "@/event/mitt";
+import emitter, {SelectMultipleChangedEvent} from "@/event/mitt";
 import UserSelectorInput from "@/components/common/selector/user/UserSelectorInput.vue";
 import DeptSelectorInput from "@/components/common/selector/dept/DeptSelectorInput.vue";
 import DatePicker from "../components/date/DatePicker.vue"
@@ -132,7 +132,7 @@ export default defineComponent({
   },
   setup(props, { emit }) {
 
-    emitter.on('selectMultipleChanged', (event) => {
+    function selectMultipleChangedHandler(event: SelectMultipleChangedEvent) {
       console.log('selectedMultipleChanged', event, formData.value[event.prop])
       vFormActiveElement.value.attrs.multiple = event.multiple
       if (event.multiple) {
@@ -140,7 +140,11 @@ export default defineComponent({
       } else {
         formData.value[event.prop] = undefined
       }
-    })
+    }
+
+    emitter.on('selectMultipleChanged', selectMultipleChangedHandler)
+
+    onUnmounted(() => emitter.off('selectMultipleChanged', selectMultipleChangedHandler))
 
     const vFormActiveElement = inject(vFormActiveElementKey)
 

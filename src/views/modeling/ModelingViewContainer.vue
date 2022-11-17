@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 100%; height: 100%;">
+  <div style="width: 100%; height: 100%;" v-loading="loading">
     <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #E3E3E3; padding: 4px 0;">
       <div>
         <el-button @click="handleAddInstance">新建</el-button>
@@ -7,7 +7,7 @@
       </div>
       <div>
         <el-button :icon="Setting" text plain circle :disabled="!activeView" @click="handleConfigView" />
-        <el-select v-model="activeViewId" @change="refreshTableKey++">
+        <el-select v-model="activeViewId" @change="loadData">
           <el-option
             v-for="item in viewSimpleInfoList"
             :key="item.id"
@@ -147,15 +147,15 @@ const props = defineProps<Props>()
 const loading = ref(false)
 
 const { instanceInfo, getInstance, createInstance, updateInstance, deleteInstance } = useEntityInstanceApi(loading)
-const { pageInfo, getPage } = useModelingPageApi(loading)
-const { pageInfo: viewPageInfo, getPage: getViewPage } = useModelingPageApi(loading)
-const { pageInfo: updatePageInfo, getPage: getUpdatePage } = useModelingPageApi(loading)
+const { pageInfo, findPage } = useModelingPageApi(loading)
+const { pageInfo: viewPageInfo, findPage: getViewPage } = useModelingPageApi(loading)
+const { pageInfo: updatePageInfo, findPage: getUpdatePage } = useModelingPageApi(loading)
 
 const { findView, viewSimpleInfoList } = useViewApi(loading)
 onMounted(initPage)
 
 async function initPage() {
-  await getPage({ ...props, pageKey: 'ADD' })
+  await findPage({ ...props, pageKey: 'ADD' })
   await getViewPage({ ...props, pageKey: 'VIEW' })
   await getUpdatePage({ ...props, pageKey: 'UPDATE' })
 
@@ -170,18 +170,22 @@ async function initPage() {
       }
     }
 
-    param.value.collation = JSON.parse(JSON.stringify(toRaw(activeView.value.collation)))
-    param.value.condition_map = {}
-    activeView.value.columns.forEach(it => {
-      param.value.condition_map[it.field.field] = it.condition
-    })
-    sortConfig.value.defaultSort = param.value.collation
-    refreshTableKey.value++
-    await nextTick()
-    reloadTableData()
+    await loadData()
   } else {
     ElMessage.error('该实体未配置显示视图')
   }
+}
+
+async function loadData() {
+  param.value.collation = JSON.parse(JSON.stringify(toRaw(activeView.value.collation)))
+  param.value.condition_map = {}
+  activeView.value.columns.forEach(it => {
+    param.value.condition_map[it.field.field] = it.condition
+  })
+  sortConfig.value.defaultSort = param.value.collation
+  refreshTableKey.value++
+  await nextTick()
+  reloadTableData()
 }
 
 const activeViewId = ref<string>('')

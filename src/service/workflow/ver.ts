@@ -22,6 +22,7 @@ export function useVerApi(loading: Ref<boolean>) {
     try {
       loading && (loading.value = true)
       await VerApi.updateXml(data)
+      ElMessage.success('更新成功')
       return true
     } catch (e) {
       console.error(e);
