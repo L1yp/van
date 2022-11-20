@@ -9,6 +9,12 @@
     <el-input-number :controls="false" v-model="(props.formData.scheme as NumberInputFieldScheme).defaultValue" :disabled="props.disabled" style="width: 100%" />
   </el-form-item>
   <el-form-item :prop="['scheme', 'precision']" label="精度" required>
+    <template #label>
+      <form-item-tooltip
+        title="精度"
+        content="小数点位数，0则为BIGINT"
+      />
+    </template>
     <el-input-number :controls="false" v-model="(props.formData.scheme as NumberInputFieldScheme).precision" :disabled="props.disabled" style="width: 100%" />
   </el-form-item>
   <el-form-item :prop="['scheme', 'formatter']" label="格式化函数">
@@ -20,6 +26,7 @@
 </template>
 <script lang="ts" setup>
 import { ElFormItem, ElInput, ElInputNumber } from "element-plus";
+import FormItemTooltip from "@/components/form/FormItemTooltip.vue";
 
 interface Props {
   disabled?: boolean

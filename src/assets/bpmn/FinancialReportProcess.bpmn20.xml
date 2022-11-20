@@ -1,54 +1,151 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:activiti="http://activiti.org/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:flowable="http://flowable.org/bpmn" id="definitions" targetNamespace="http://activiti.org/bpmn20">
-    <process id="financialReport" name="月度财务汇报流程">
-        <startEvent id="Start" flowable:formKey="financial-report-create-form" />
-        <sequenceFlow id="prepareReport" name="准备财务报告" sourceRef="Start" targetRef="writeReportTask" />
-        <userTask id="writeReportTask" name="准备财务报告" flowable:candidateUsers="${finance}">
-            <documentation>财务人员 准备 财务报告1</documentation>
-            <documentation>财务人员 准备 财务报告2</documentation>
-            <documentation>财务人员 准备 财务报告3</documentation>
-            <multiInstanceLoopCharacteristics isSequential="true" activiti:collection="assigneeUserIdList" activiti:elementVariable="assignee">
-                <loopCardinality xsi:type="tFormalExpression">12</loopCardinality>
-                <completionCondition xsi:type="tFormalExpression">${nrOfCompletedInstances/nrOfInstances&gt;=0.6}</completionCondition>
-            </multiInstanceLoopCharacteristics>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI"
+             xmlns:flowable="http://flowable.org/bpmn" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             targetNamespace="http://www.flowable.org/processdef">
+    <process id="holiday" name="请假流程">
+        <startEvent id="startEvent_39f7426" name="开始" flowable:initiator="creator">
+            <outgoing>Flow_1f48sbw</outgoing>
+        </startEvent>
+        <userTask id="Activity_184zomg" name="发起人" flowable:pageId="1593079191750696961">
+            <incoming>Flow_1f48sbw</incoming>
+            <outgoing>Flow_0kpigu3</outgoing>
         </userTask>
-        <sequenceFlow id="verifyReport" name="审核财务报告" sourceRef="writeReportTask" targetRef="verifyReportTask" />
-        <userTask id="verifyReportTask" name="审核财务月度报告" flowable:candidateUsers="${manager}">
-            <documentation>高层领导审核报告内容，然后发送给所有股东</documentation>
-            <potentialOwner>
-                <resourceAssignmentExpression>
-                    <formalExpression>management</formalExpression>
-                </resourceAssignmentExpression>
-            </potentialOwner>
+        <sequenceFlow id="Flow_1f48sbw" sourceRef="startEvent_39f7426" targetRef="Activity_184zomg"/>
+        <userTask id="Activity_0jxjobw" name="主管审核" flowable:pageId="1593079191750696961">
+            <extensionElements>
+                <flowable:executionListener expression="333" event="start">
+                    <flowable:field name="33">
+                        <flowable:string>44</flowable:string>
+                    </flowable:field>
+                    <flowable:field name="11">
+                        <flowable:expression>22</flowable:expression>
+                    </flowable:field>
+                </flowable:executionListener>
+                <flowable:executionListener expression="111" event="start">
+                    <flowable:field name="33">
+                        <flowable:string>44</flowable:string>
+                    </flowable:field>
+                    <flowable:field name="11">
+                        <flowable:expression>22</flowable:expression>
+                    </flowable:field>
+                </flowable:executionListener>
+                <flowable:executionListener expression="222" event="start">
+                    <flowable:field name="33">
+                        <flowable:string>44</flowable:string>
+                    </flowable:field>
+                    <flowable:field name="11">
+                        <flowable:expression>22</flowable:expression>
+                    </flowable:field>
+                </flowable:executionListener>
+                <flowable:executionListener expression="444" event="start">
+                    <flowable:field name="33">
+                        <flowable:string>44</flowable:string>
+                    </flowable:field>
+                    <flowable:field name="11">
+                        <flowable:expression>22</flowable:expression>
+                    </flowable:field>
+                </flowable:executionListener>
+                <flowable:executionListener expression="555" event="start">
+                    <flowable:field name="33">
+                        <flowable:string>44</flowable:string>
+                    </flowable:field>
+                    <flowable:field name="11">
+                        <flowable:expression>22</flowable:expression>
+                    </flowable:field>
+                </flowable:executionListener>
+                <flowable:executionListener expression="666" event="start">
+                    <flowable:field name="33" string="44"/>
+                    <flowable:field name="11" expression="22"/>
+                </flowable:executionListener>
+            </extensionElements>
+            <incoming>Flow_0kpigu3</incoming>
+            <outgoing>Flow_0peryzy</outgoing>
         </userTask>
-        <sequenceFlow id="flow3" sourceRef="verifyReportTask" targetRef="End" />
-        <endEvent id="End" />
+        <sequenceFlow id="Flow_0kpigu3" sourceRef="Activity_184zomg" targetRef="Activity_0jxjobw">
+            <extensionElements>
+                <flowable:executionListener expression="333" event="start">
+                    <flowable:field name="33">
+                        <flowable:string>44</flowable:string>
+                    </flowable:field>
+                    <flowable:field name="11">
+                        <flowable:expression>22</flowable:expression>
+                    </flowable:field>
+                </flowable:executionListener>
+                <flowable:executionListener expression="111" event="start">
+                    <flowable:field name="33">
+                        <flowable:string>44</flowable:string>
+                    </flowable:field>
+                    <flowable:field name="11">
+                        <flowable:expression>22</flowable:expression>
+                    </flowable:field>
+                </flowable:executionListener>
+                <flowable:executionListener expression="222" event="start">
+                    <flowable:field name="33">
+                        <flowable:string>44</flowable:string>
+                    </flowable:field>
+                    <flowable:field name="11">
+                        <flowable:expression>22</flowable:expression>
+                    </flowable:field>
+                </flowable:executionListener>
+                <flowable:executionListener expression="444" event="start">
+                    <flowable:field name="33">
+                        <flowable:string>44</flowable:string>
+                    </flowable:field>
+                    <flowable:field name="11">
+                        <flowable:expression>22</flowable:expression>
+                    </flowable:field>
+                </flowable:executionListener>
+                <flowable:executionListener expression="555" event="start">
+                    <flowable:field name="33">
+                        <flowable:string>44</flowable:string>
+                    </flowable:field>
+                    <flowable:field name="11">
+                        <flowable:expression>22</flowable:expression>
+                    </flowable:field>
+                </flowable:executionListener>
+                <flowable:executionListener expression="666" event="start">
+                    <flowable:field name="33" string="44"/>
+                    <flowable:field name="11" expression="22"/>
+                </flowable:executionListener>
+            </extensionElements>
+        </sequenceFlow>
+        <endEvent id="Event_1kummqp">
+            <incoming>Flow_0peryzy</incoming>
+        </endEvent>
+        <sequenceFlow id="Flow_0peryzy" sourceRef="Activity_0jxjobw" targetRef="Event_1kummqp"/>
     </process>
-    <bpmndi:BPMNDiagram>
-        <bpmndi:BPMNPlane bpmnElement="financialReport">
-            <bpmndi:BPMNEdge bpmnElement="flow3">
-                <omgdi:waypoint x="430" y="240" />
-                <omgdi:waypoint x="480" y="240" />
+    <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+        <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="holiday">
+            <bpmndi:BPMNEdge id="Flow_0peryzy_di" bpmnElement="Flow_0peryzy">
+                <omgdi:waypoint x="-190" y="-20"/>
+                <omgdi:waypoint x="-128" y="-20"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="verifyReport">
-                <omgdi:waypoint x="265" y="240" />
-                <omgdi:waypoint x="330" y="240" />
+            <bpmndi:BPMNEdge id="Flow_0kpigu3_di" bpmnElement="Flow_0kpigu3">
+                <omgdi:waypoint x="-350" y="-20"/>
+                <omgdi:waypoint x="-290" y="-20"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="prepareReport">
-                <omgdi:waypoint x="105" y="240" />
-                <omgdi:waypoint x="165" y="240" />
+            <bpmndi:BPMNEdge id="Flow_1f48sbw_di" bpmnElement="Flow_1f48sbw">
+                <omgdi:waypoint x="-502" y="-20"/>
+                <omgdi:waypoint x="-450" y="-20"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNShape bpmnElement="Start">
-                <omgdc:Bounds x="75" y="225" width="30" height="30" />
+            <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="startEvent_39f7426">
+                <omgdc:Bounds x="-538" y="-38" width="36" height="36"/>
+                <bpmndi:BPMNLabel>
+                    <omgdc:Bounds x="-531" y="-2" width="23" height="14"/>
+                </bpmndi:BPMNLabel>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="writeReportTask">
-                <omgdc:Bounds x="165" y="200" width="100" height="80" />
+            <bpmndi:BPMNShape id="Activity_184zomg_di" bpmnElement="Activity_184zomg">
+                <omgdc:Bounds x="-450" y="-60" width="100" height="80"/>
+                <bpmndi:BPMNLabel/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="verifyReportTask">
-                <omgdc:Bounds x="330" y="200" width="100" height="80" />
+            <bpmndi:BPMNShape id="Activity_0jxjobw_di" bpmnElement="Activity_0jxjobw">
+                <omgdc:Bounds x="-290" y="-60" width="100" height="80"/>
+                <bpmndi:BPMNLabel/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="End">
-                <omgdc:Bounds x="480" y="226" width="28" height="28" />
+            <bpmndi:BPMNShape id="Event_1kummqp_di" bpmnElement="Event_1kummqp">
+                <omgdc:Bounds x="-128" y="-38" width="36" height="36"/>
             </bpmndi:BPMNShape>
         </bpmndi:BPMNPlane>
     </bpmndi:BPMNDiagram>

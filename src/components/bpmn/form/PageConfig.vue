@@ -23,7 +23,7 @@ import { ElRow, ElCol, ElInput, ElMessage, ElButton, ElSelect, ElOption } from "
 import {bpmnModelerKey, bpmnSelectedElemKey, modelingPageKey, workflowVerKey} from "@/config/app.keys";
 import { Plus, Setting, Refresh } from '@element-plus/icons-vue'
 import { BpmnUtil } from "@/components/bpmn/form/util";
-import emitter, { ElementChanged } from '@/event/mitt'
+import emitter, { BpmnElementChanged } from '@/event/mitt'
 import {useModelingPageApi} from "@/service/modeling/page";
 import MaskWindow from "@/components/dialog/MaskWindow.vue";
 import FormDesigner from '@/views/process/form/designer.vue'
@@ -43,10 +43,10 @@ const boundPageId = computed({
       return null
     }
     const bo = elem.businessObject
-    return bo.pageId || null
+    return bo.formKey || null
   },
-  set(pageId) {
-    bpmnUtil.updateProperty(bpmnSelectedElem, { pageId })
+  set(formKey) {
+    bpmnUtil.updateProperty(bpmnSelectedElem, { formKey })
   }
 })
 
@@ -77,13 +77,13 @@ function handleUpdatePage() {
 
 }
 
-function handleElementChanged(event: ElementChanged) {
+function handleElementChanged(event: BpmnElementChanged) {
   boundPageId.effect.scheduler()
 }
 
-emitter.on('elementChanged', handleElementChanged)
+emitter.on('bpmnElementChanged', handleElementChanged)
 
-onUnmounted(() => emitter.off('elementChanged', handleElementChanged))
+onUnmounted(() => emitter.off('bpmnElementChanged', handleElementChanged))
 </script>
 
 <style scoped>

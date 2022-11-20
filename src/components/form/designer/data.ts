@@ -31,7 +31,6 @@ export const InputComponents: CandidateComponentConfig[] = [
     },
     attrs: {
       placeholder: '输入字符串',
-      textarea: false,
       clearable: false,
       showWordLimit: false,
       autofocus: false,

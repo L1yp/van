@@ -33,14 +33,14 @@
     </el-form-item>
 
 
-    <el-form-item prop="textarea" label="多行文本">
-      <el-radio-group v-model="vFormSelectElem.attrs.textarea" @change="handleChangeTextType" >
-        <el-radio-button :label="true">是</el-radio-button>
-        <el-radio-button :label="false">否</el-radio-button>
+    <el-form-item prop="type" label="多行文本">
+      <el-radio-group v-model="vFormSelectElem.attrs.type" @change="handleChangeTextType" >
+        <el-radio-button label="textarea">是</el-radio-button>
+        <el-radio-button label="text">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
 
-    <template v-if="vFormSelectElem.attrs.textarea">
+    <template v-if="vFormSelectElem.attrs.type === 'textarea'">
 
       <el-form-item prop="rows" label="行数">
         <el-input-number v-model="vFormSelectElem.attrs.rows"></el-input-number>

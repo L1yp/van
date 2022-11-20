@@ -118,6 +118,8 @@ declare module 'bpmn-js' {
     $descriptor: Descriptor
     $model: BpmnModdle
     conditionExpression?: FormalExpression
+    loopCharacteristics?: Loopcharacteristics
+    formKey?: string
   }
 
 
@@ -127,6 +129,7 @@ declare module 'bpmn-js' {
       get: () => Label
       set: (label: Label) => void
     }
+    labelTarget?: Connection
     labels: Label[]
     parent: Shape
     incoming: Connection[]
@@ -151,6 +154,7 @@ declare module 'bpmn-js' {
       set: (shape: Shape) => void
     }
     attachers: Shape[]
+    formKey?: string
   }
 
   class Root extends Shape {
@@ -175,6 +179,12 @@ declare module 'bpmn-js' {
 
   interface FormalExpression extends ModdleElement {
     body: string
+  }
+
+  interface Loopcharacteristics extends ModdleElement {
+    collection: string
+    elementVariable: string
+    isSequential: boolean
   }
 
 

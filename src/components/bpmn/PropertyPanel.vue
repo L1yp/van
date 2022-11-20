@@ -7,25 +7,24 @@
         </template>
         <BasicSetting></BasicSetting>
       </el-collapse-item>
-      <el-collapse-item name="task-listener" v-show="bpmnSelectedElem?.type?.endsWith('Task')">
+      <el-collapse-item name="task-listener" v-show="bpmnSelectedElem?.type?.endsWith('UserTask')">
         <template #title>
-          <div style="display: flex; justify-content: space-between; align-items: center; width: 100%">
-            <div class="collapse-title"><s-v-g-icon style="width: 1em; height: 1em" name="TaskListening" /><span style="margin-left: 6px">任务监听</span></div>
-            <div @click.stop="addTaskListener" style="margin-right: 10px" class="event-add-btn">
-              <s-v-g-icon style="width: 1.2em; height: 1.2em; " name="Plus" /></div>
-          </div>
+          <div class="collapse-title"><s-v-g-icon style="width: 1em; height: 1em" name="TaskListening" /><span style="margin-left: 6px">任务监听</span></div>
         </template>
-        <TaskListener></TaskListener>
+        <div style="width: 100%; height: 100%; position: relative; ">
+          <TaskListener/>
+          <div id="task-listener-panel"></div>
+        </div>
       </el-collapse-item>
-      <el-collapse-item name="execution-listener">
+      <el-collapse-item name="execution-listener" v-show="bpmnSelectedElem?.type?.endsWith('UserTask') || bpmnSelectedElem?.type?.endsWith('SequenceFlow')">
         <template #title>
-          <div style="display: flex; justify-content: space-between; align-items: center; width: 100%">
-            <div class="collapse-title"><s-v-g-icon style="width: 1em; height: 1em" name="Notification" /><span style="margin-left: 6px">执行监听</span></div>
-            <div @click.stop="addExecutionListener" style="margin-right: 10px" class="event-add-btn"><s-v-g-icon style="width: 1.2em; height: 1.2em; " name="Plus" /></div>
-          </div>
-
+          <div class="collapse-title"><s-v-g-icon style="width: 1em; height: 1em" name="Notification" /><span style="margin-left: 6px">执行监听</span></div>
         </template>
-        <ExecutionListener/>
+        <div style="width: 100%; height: 100%; position: relative; ">
+          <ExecutionListener/>
+          <div id="execution-listener-panel"></div>
+        </div>
+
       </el-collapse-item>
       <el-collapse-item name="flow-condition" v-show="showConditionSeqFlow">
         <template #title>
@@ -70,9 +69,9 @@
         </el-form-item>
         <el-form-item label="监听器类型" prop="type" required style="width: 100%">
           <el-select v-model="executionDialogInfo.formData.type" style="width: 100%">
-            <el-option label="Java类" value="class"></el-option>
-            <el-option label="表达式" value="expression"></el-option>
-            <el-option label="代理表达式" value="delegateExpression"></el-option>
+            <el-option label="Java类" value="class"/>
+            <el-option label="表达式" value="expression"/>
+            <el-option label="代理表达式" value="delegateExpression"/>
           </el-select>
         </el-form-item>
         <el-form-item v-show="!!valLabel" :label="valLabel" prop="type" required>
@@ -157,7 +156,7 @@ import BasicSetting from "@/components/bpmn/form/BasicSetting.vue";
 import ApproverConfig from "@/components/bpmn/form/ApproverConfig.vue";
 import VDialog from "@/components/dialog/VDialog.vue";
 import {useIcon} from "@/components/common/util";
-import emitter, { ElementChanged } from '@/event/mitt'
+import emitter, { BpmnElementChanged } from '@/event/mitt'
 
 const plusIcon = useIcon('Plus')
 
@@ -194,7 +193,7 @@ const showPageConfig = computed<boolean>(() => {
   if (!selectedElem) {
     return false
   }
-  if (selectedElem?.type === 'bpmn:UserTask') {
+  if (['bpmn:UserTask', 'bpmn:StartEvent', 'bpmn:EndEvent'].includes(selectedElem?.type)) {
     return true
   }
   const bo = selectedElem?.businessObject
@@ -266,13 +265,13 @@ function addGlobalListener() {
 
 }
 
-function handleElementChanged(event: ElementChanged) {
+function handleElementChanged(event: BpmnElementChanged) {
   showConditionSeqFlow?.effect?.scheduler?.()
   showPageConfig?.effect?.scheduler?.()
 }
 
-emitter.on('elementChanged',  handleElementChanged)
-onUnmounted(() => emitter.off('elementChanged',  handleElementChanged))
+emitter.on('bpmnElementChanged',  handleElementChanged)
+onUnmounted(() => emitter.off('bpmnElementChanged',  handleElementChanged))
 </script>
 
 <style scoped>
@@ -301,7 +300,4 @@ onUnmounted(() => emitter.off('elementChanged',  handleElementChanged))
   align-items: center;
 }
 
-:deep(.val-input .el-input__wrapper) {
-  width: calc(100% - 22px);
-}
 </style>

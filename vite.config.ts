@@ -1,4 +1,4 @@
-import {defineConfig, loadEnv} from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import {createVitePlugins} from "./build/vite/plugins"
 import {resolve} from "path";
 
@@ -17,6 +17,7 @@ export default defineConfig(({ command, mode }) => {
       target: ["chrome91"],
       sourcemap: false,
       minify: true,
+
     },
     plugins: createVitePlugins(env, isBuild),
     resolve: {

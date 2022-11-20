@@ -155,9 +155,9 @@ const { findView, viewSimpleInfoList } = useViewApi(loading)
 onMounted(initPage)
 
 async function initPage() {
-  await findPage({ ...props, pageKey: 'ADD' })
-  await getViewPage({ ...props, pageKey: 'VIEW' })
-  await getUpdatePage({ ...props, pageKey: 'UPDATE' })
+  await findPage({ ...props, name: 'ADD' })
+  await getViewPage({ ...props, name: 'VIEW' })
+  await getUpdatePage({ ...props, name: 'UPDATE' })
 
   await findView({module: props.module, mkey: props.mkey})
   if (viewSimpleInfoList.value?.length) {
@@ -271,6 +271,10 @@ function handleAddInstance() {
 }
 
 function handleCellDblClick(params) {
+  if (!viewPageInfo.value?.page_scheme) {
+    ElMessage.error(`请先配置一个查询页面`)
+    return
+  }
   const row = params.row
   getInstance({ mkey: props.mkey, id: row.id })
     .then(() => (viewPanelVisible.value = true, viewerMode.value = true))

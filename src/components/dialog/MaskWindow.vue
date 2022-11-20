@@ -4,12 +4,19 @@
       class="mask-root-window"
       :style="rootStyle"
     >
-      <div class="mask-window-wrapper">
-        <transition name="fade" mode="out-in" appear>
+      <transition name="fade" mode="out-in" appear>
+        <div class="mask-window-wrapper">
+          <slot v-if="showToolbar" name="toolbar">
+            <div style="box-sizing: border-box; padding: 6px;  background-color: var(--toolbar-bg-color);">
+              <el-button @click="emits('cancel')" v-text="cancelText" ></el-button>
+              <el-button @click="emits('confirm')" type="primary" plain v-text="confirmText"></el-button>
+            </div>
+          </slot>
           <slot></slot>
-        </transition>
+        </div>
+      </transition>
 
-      </div>
+
       <div
         title="关闭蒙版"
         class="close-mask"
@@ -27,17 +34,31 @@ import { mainHeightKey, mainWidthKey, maskContainerKey } from "@/config/app.keys
 import { computed, inject, RendererElement } from "vue";
 import { incMaskZIndex } from "./mask";
 import SVGIcon from "@/components/common/SVGIcon.vue";
+import { ElButton } from 'element-plus'
 
 interface Props {
   modelValue: boolean
   teleportTo?: string | RendererElement | null | undefined
+  showToolbar?: boolean
+  confirmText?: string
+  confirmButtonProps?: Record<string, any>
+  cancelText?: string
+  cancelButtonProps?: Record<string, any>
 }
 
 interface Emits {
   (e: 'update:modelValue', v: boolean): void
+  (e: 'confirm'): void
+  (e: 'cancel'): void
 }
 
-const props = defineProps<Props>()
+const props = withDefaults(defineProps<Props>(), {
+  showToolbar: false,
+  confirmText: '确定',
+  cancelText: '取消',
+  confirmButtonProps: null,
+  cancelButtonProps: null,
+})
 const emits = defineEmits<Emits>()
 
 const maskContainer = inject(maskContainerKey)

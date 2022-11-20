@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" v-loading="loading">
     <div class="component-list">
       <el-tabs type="border-card" v-model="candidateActiveTab" style="width: 100%; height: 100%;">
         <el-tab-pane label="组件" name="component" style="width: 100%; height: 100%;">

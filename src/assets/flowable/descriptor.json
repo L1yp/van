@@ -157,7 +157,7 @@
     {
       "name": "FormSupported",
       "isAbstract": true,
-      "extends": ["bpmn:StartEvent", "bpmn:UserTask"],
+      "extends": ["bpmn:StartEvent", "bpmn:UserTask", "bpmn:EndEvent", "bpmn:SequenceFlow"],
       "properties": [
         {
           "name": "formHandlerClass",
@@ -348,6 +348,16 @@
         },
         {
           "name": "pageId",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "completionRule",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "completionExpression",
           "isAttr": true,
           "type": "String"
         }

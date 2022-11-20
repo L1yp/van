@@ -20,7 +20,7 @@ import {computed, inject, onUnmounted} from "vue";
 import { bpmnModelerKey, bpmnSelectedElemKey } from "@/config/app.keys";
 import { ElInput, ElForm, ElFormItem } from "element-plus"
 import { BpmnUtil} from "./util"
-import emitter, {ElementChanged} from "@/event/mitt";
+import emitter, {BpmnElementChanged} from "@/event/mitt";
 
 
 const bpmnSelectedElem = inject(bpmnSelectedElemKey)
@@ -80,16 +80,16 @@ const elementDescription = computed({
   }
 })
 
-function refreshState(e: ElementChanged) {
+function refreshState(e: BpmnElementChanged) {
   elementType?.effect?.scheduler()
   elementId?.effect?.scheduler()
   elementName?.effect?.scheduler()
   elementDescription?.effect?.scheduler()
 }
 
-emitter.on('elementChanged', refreshState)
+emitter.on('bpmnElementChanged', refreshState)
 
-onUnmounted(() => emitter.off('elementChanged', refreshState))
+onUnmounted(() => emitter.off('bpmnElementChanged', refreshState))
 </script>
 
 <style scoped>

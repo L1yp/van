@@ -37,7 +37,7 @@ import {
   modelingFieldKey,
 } from "@/config/app.keys";
 import { BpmnUtil } from "@/components/bpmn/form/util";
-import emitter, { ElementChanged } from "@/event/mitt";
+import emitter, { BpmnElementChanged } from "@/event/mitt";
 
 const modelingFields = inject(modelingFieldKey)
 const bpmnSelectedElem = inject(bpmnSelectedElemKey)
@@ -73,6 +73,12 @@ const openMultiInstance = computed({
         assignee: '${assigneeItem}'
       })
       assigneeType.value = 'user'
+      const outgoing = bpmnSelectedElem.value.outgoing
+      for (let connection of outgoing) {
+        if (!connection.businessObject.completionRule) {
+          bpmnUtil.updateProperty(connection, { completionRule: 'all' })
+        }
+      }
     } else {
       if (assigneeValue.value?.length > 1) {
         assigneeValue.value = [assigneeValue.value[0]]
@@ -166,7 +172,7 @@ const multipleLimit = computed(() => {
   return 1
 })
 
-function refreshState(e: ElementChanged) {
+function refreshState(e: BpmnElementChanged) {
   const elem = e.element
   if (elem.type === 'bpmn:UserTask') {
     multipleLimit.effect.scheduler()
@@ -178,9 +184,9 @@ function refreshState(e: ElementChanged) {
   }
 }
 
-emitter.on('elementChanged', refreshState)
+emitter.on('bpmnElementChanged', refreshState)
 
-onUnmounted(() => emitter.off('elementChanged', refreshState))
+onUnmounted(() => emitter.off('bpmnElementChanged', refreshState))
 </script>
 
 <style scoped>

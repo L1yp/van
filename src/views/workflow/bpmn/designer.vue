@@ -5,29 +5,38 @@
         <el-button :icon="View" title="预览JSON" @click="handlePreviewXml" />
         <el-button :icon="FolderOpened" title="导入BPMN文件" />
         <el-button :icon="SaveIcon" title="保存" @click="handleSaveXml" />
-        <el-button :icon="Check" title="校验" />
+        <el-button :icon="Check" title="校验" @click="handleValidBpmn" />
       </el-button-group>
     </div>
     <div style="width: 100%; height: calc(100% - 41px); position: relative">
       <div style="width: 100%; height: 100%;" ref="diagramRef"></div>
       <div style="position: absolute; top: 0; right: 0; height: 100%">
         <Collapsed v-model="propertiesPanelVisible" position="right" style="height: 100%">
-          <div style="box-sizing: border-box; width: 400px; height: 100%; border-left: 1px solid var(--el-border-color);">
+          <div style="box-sizing: border-box; width: 600px; height: 100%; border-left: 1px solid var(--el-border-color);">
             <PropertyPanel/>
           </div>
         </Collapsed>
       </div>
     </div>
     <xml-editor v-model="previewVisible" :code="previewCode" />
-    <div id="workflow-mask-panel">
-
-    </div>
+    <div id="workflow-mask-panel"></div>
+    <el-tooltip
+      v-model:visible="errTooltipVisible"
+      placement="right"
+      :virtual-ref="errEl"
+      virtual-triggering manual
+      :auto-close="3000"
+    >
+      <template #content>
+        <span style="color: red; font-weight: bold" v-text="errText"></span>
+      </template>
+    </el-tooltip>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { useVerApi } from "@/service/workflow/ver";
-import { ElButtonGroup, ElButton, ElMessage } from "element-plus";
+import { ElButtonGroup, ElButton, ElMessage, ElTooltip } from "element-plus";
 import { View, FolderOpened, Check } from "@element-plus/icons-vue";
 import {onMounted, provide, ref, shallowRef} from "vue";
 import BpmnModeler from "bpmn-js/lib/Modeler"
@@ -53,6 +62,8 @@ import {useModelingFieldApi} from "@/service/modeling/field";
 import emitter from "@/event/mitt";
 import XmlEditor from "@/components/common/XmlEditor.vue";
 import {useModelingPageApi} from "@/service/modeling/page";
+import {ElementRegistry, ModdleElement} from "bpmn-js";
+import { validate, BpmnLintError } from './bpmnlint'
 
 const SaveIcon = useIcon('Save')
 
@@ -127,10 +138,11 @@ async function importXML(xml: string) {
       console.log('element select change', e);
       const selectionArray = e.newSelection
       bpmnSelectedElem.value = selectionArray?.length ? selectionArray[0] : registry.find(it => it.type === 'bpmn:Process')
+      emitter.emit('bpmnSelectionChanged', { element: bpmnSelectedElem.value })
     })
     bpmnModeler.value.on("element.changed", e => {
       console.log('element change', e);
-      emitter.emit('elementChanged', { element: e.element })
+      emitter.emit('bpmnElementChanged', { element: e.element })
     })
   } catch (e) {
     console.log(e.message, e.warnings);
@@ -152,11 +164,46 @@ async function handlePreviewXml() {
 }
 
 async function handleSaveXml() {
+  const result = validateBpmn()
+  if (!result) {
+    ElMessage.error('流程图信息未填写完毕, 无法保存')
+    return
+  }
   const { xml } = await bpmnModeler.value.saveXML({ format: false })
   await updateXml({
     id: workflowVer.value.id,
     xml: xml
   })
+}
+
+const errTooltipVisible = ref(false)
+const errEl = shallowRef<HTMLElement>()
+const errText = ref('')
+
+function validateBpmn(): boolean {
+  const registry: ElementRegistry = bpmnModeler.value.get("elementRegistry")
+
+  const err = validate(registry)
+  if (err) {
+    if (!err.element) {
+      ElMessage.error(err.message)
+      return false
+    }
+    errEl.value = document.querySelector(`g.djs-element[data-element-id=${err.element.id}] .djs-visual`)
+    errText.value = err.message
+    errTooltipVisible.value = true
+    return false
+  }
+  return true
+}
+
+
+
+function handleValidBpmn() {
+  const result = validateBpmn()
+  if (result) {
+    ElMessage.success('校验成功 bpmn文件正常')
+  }
 }
 
 </script>
@@ -194,5 +241,6 @@ div {
 :deep(.bjs-powered-by) {
   right: initial;
   left: 20px;
+  width: 200px;
 }
 </style>
