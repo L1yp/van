@@ -9,7 +9,7 @@
     </el-tab-pane>
     <el-tab-pane label="列表视图">
       <ModelingViewConfig module="ENTITY" :mkey="entityRow.mkey" />
-      <div id="entity-view-config"></div>
+      <div id="modeling-view-config"></div>
     </el-tab-pane>
     <el-tab-pane label="数据源">
       <OptionPanel :mkey="entityRow.mkey" scope="ENTITY_PRIVATE" />

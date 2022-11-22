@@ -2,7 +2,7 @@
   <div style="width: 100%; height: 100%;" v-loading="loading">
     <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #E3E3E3; padding: 4px 0;">
       <div>
-        <el-button @click="handleAddInstance">新建</el-button>
+        <el-button @click="handleAddInstance" :disabled="!pageInfo?.page_scheme && !startFormScheme?.page_scheme">新建</el-button>
         <el-button>导出</el-button>
       </div>
       <div>
@@ -85,7 +85,7 @@
         </template>
       </vxe-table>
     </div>
-    <MaskWindow v-model="addPanelVisible" teleport-to="#modeling-entity-panel">
+    <MaskWindow v-model="addPanelVisible" :teleport-to="`#modeling-panel-${props.mkey}`">
       <div style="width: 100%; height: 100%; background-color: var(--el-bg-color);">
         <div style="box-sizing: border-box; padding: 6px;  background-color: var(--toolbar-bg-color);">
           <el-button @click="addPanelVisible = false">取消</el-button>
@@ -93,28 +93,28 @@
         </div>
         <div style="width: 100%; height: calc(100% - 32px - 1px - 12px - 10px); margin-top: 10px">
           <el-scrollbar always>
-            <v-form-render :scheme="pageInfo.page_scheme" :form-data="formData" />
+            <v-form-render ref="addFormRenderRef" :scheme="props.module === 'ENTITY' ? pageInfo.page_scheme : startFormScheme.page_scheme" :form-data="formData" />
           </el-scrollbar>
         </div>
       </div>
     </MaskWindow>
-    <MaskWindow v-model="viewPanelVisible" teleport-to="#modeling-entity-panel">
+    <MaskWindow v-model="viewPanelVisible" :teleport-to="`#modeling-panel-${props.mkey}`">
       <div style="width: 100%; height: 100%; background-color: var(--el-bg-color);">
         <div style="width: 100%; padding: 6px;  background-color: var(--toolbar-bg-color); ">
-          <el-button v-if="viewerMode" @click="viewerMode = false">编辑</el-button>
+          <el-button v-if="viewerMode" @click="viewerMode = false" :disabled="!updatePageInfo?.page_scheme">编辑</el-button>
           <el-button v-if="!viewerMode" @click="viewerMode = true">取消</el-button>
           <el-button v-if="!viewerMode" @click="handleConfirmUpdate">确定</el-button>
         </div>
         <div style="width: 100%; height: calc(100% - 32px - 1px - 12px - 10px); margin-top: 10px">
           <el-scrollbar always>
             <v-form-render v-if="viewerMode" :scheme="viewPageInfo.page_scheme" :form-data="instanceInfo || {}" />
-            <v-form-render v-if="!viewerMode" :scheme="updatePageInfo.page_scheme" :form-data="instanceInfo || {}" />
+            <v-form-render v-if="!viewerMode" ref="updateFormRenderRef" :scheme="updatePageInfo.page_scheme" :form-data="instanceInfo || {}" />
           </el-scrollbar>
         </div>
       </div>
 
     </MaskWindow>
-    <MaskWindow v-model="viewConfigVisible" teleport-to="#modeling-entity-panel">
+    <MaskWindow v-model="viewConfigVisible" :teleport-to="`#modeling-panel-${props.mkey}`">
       <ModelingViewUpdatePanel :src="activeView" :fields="modelingFields" @close="viewConfigVisible = false" @success="initPage" />
     </MaskWindow>
   </div>
@@ -136,6 +136,7 @@ import VFormRender from "@/components/form/designer/VFormRender.vue";
 import {userMapKey} from "@/config/app.keys";
 import {useModelingFieldApi} from "@/service/modeling/field";
 import ModelingViewUpdatePanel from '@/views/modeling/view/ModelingViewUpdatePanel.vue'
+import { useWorkflowInstanceApi } from '@/service/workflow';
 
 interface Props {
   module: ModelingModule
@@ -147,6 +148,7 @@ const props = defineProps<Props>()
 const loading = ref(false)
 
 const { instanceInfo, getInstance, createInstance, updateInstance, deleteInstance } = useEntityInstanceApi(loading)
+const { startFormScheme, startInstanceResult, startInstance, getStartForm } = useWorkflowInstanceApi(loading)
 const { pageInfo, findPage } = useModelingPageApi(loading)
 const { pageInfo: viewPageInfo, findPage: getViewPage } = useModelingPageApi(loading)
 const { pageInfo: updatePageInfo, findPage: getUpdatePage } = useModelingPageApi(loading)
@@ -155,9 +157,15 @@ const { findView, viewSimpleInfoList } = useViewApi(loading)
 onMounted(initPage)
 
 async function initPage() {
-  await findPage({ ...props, name: 'ADD' })
-  await getViewPage({ ...props, name: 'VIEW' })
-  await getUpdatePage({ ...props, name: 'UPDATE' })
+  if (props.module === 'ENTITY') {
+    await findPage({ ...props, name: 'ADD' })
+    await getViewPage({ ...props, name: 'VIEW' })
+    await getUpdatePage({ ...props, name: 'UPDATE' })
+  } else {
+    await getStartForm(props.mkey)
+    console.log('start form', startFormScheme.value);
+    
+  }
 
   await findView({module: props.module, mkey: props.mkey})
   if (viewSimpleInfoList.value?.length) {
@@ -280,18 +288,31 @@ function handleCellDblClick(params) {
     .then(() => (viewPanelVisible.value = true, viewerMode.value = true))
 }
 
+const addFormRenderRef = ref<InstanceType<typeof VFormRender>>()
+
 function handleConfirmAdd() {
-  createInstance({ mkey: props.mkey, data: formData.value })
+  let promise = addFormRenderRef.value.validate()
+  if (props.module === 'ENTITY') {
+    promise.then(() => createInstance({ mkey: props.mkey, data: formData.value }))
+      .then(succ => succ && (addPanelVisible.value = false))
+      .then(reloadTableData)
+  } else {
+    promise.then(() => startInstance({ mkey: props.mkey, data: formData.value }))
     .then(succ => succ && (addPanelVisible.value = false))
     .then(reloadTableData)
+  }
 }
 
+const updateFormRenderRef = ref<InstanceType<typeof VFormRender>>()
+
 function handleConfirmUpdate() {
-  updateInstance({
-    mkey: props.mkey,
-    id: instanceInfo.value.id,
-    data: instanceInfo.value
-  }).then(succ => succ && (viewPanelVisible.value = false))
+  updateFormRenderRef.value.validate()
+    .then(() => updateInstance({
+      mkey: props.mkey,
+      id: instanceInfo.value.id,
+      data: instanceInfo.value
+    }))
+    .then(succ => succ && (viewPanelVisible.value = false))
     .then(reloadTableData)
 }
 
@@ -310,6 +331,12 @@ async function handleConfigView() {
 :deep(.vxe-header--column.col--group>.vxe-cell>.vxe-cell--title) {
   width: 100%;
 }
+
+:deep(.vxe-table--render-default .col--group.vxe-header--column:not(.col--ellipsis)) {
+  padding: 2px 0;
+}
+
+
 :deep(.vxe-header--column.col--group .vxe-cell) {
   padding-left: 2px;
   padding-right: 2px;

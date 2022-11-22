@@ -51,10 +51,10 @@
       </el-table>
     </div>
 
-    <MaskWindow v-model="addPanelVisible" teleport-to="#entity-view-config">
+    <MaskWindow v-model="addPanelVisible" teleport-to="#modeling-view-config">
       <ModelingViewAddPanel :fields="modelingFields" @close="addPanelVisible = false" @success="searchView(param)" v-bind="$props"/>
     </MaskWindow>
-    <MaskWindow v-model="updatePanelVisible" teleport-to="#entity-view-config">
+    <MaskWindow v-model="updatePanelVisible" teleport-to="#modeling-view-config">
       <ModelingViewUpdatePanel :src="srcRow" :fields="modelingFields" @close="updatePanelVisible = false" @success="searchView(param)" v-bind="$props"/>
     </MaskWindow>
 

@@ -67,3 +67,24 @@ export function pendingVer(data: WorkflowTypeVerPendingParam) {
     data,
   })
 }
+
+
+/** 流程实例操作API */
+
+/** 启动流程 */
+export function startInstance(data: WorkflowInstanceStartParam) {
+  return request<WorkflowInstanceCreateResult>({
+    url: `/workflow/engine/instance/start`,
+    method: 'POST',
+    data,
+  })
+}
+
+/** 获取启动表单 */
+export function getStartForm(mkey: string) {
+  return request<ModelingPageView>({
+    url: `/workflow/engine/instance/getStartForm`,
+    method: 'GET',
+    params: { mkey },
+  })
+}

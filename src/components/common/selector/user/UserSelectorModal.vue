@@ -9,24 +9,6 @@
     @cancel="visible = false"
   >
     <div class="user-selector-modal" style="height: 100%">
-      <div class="search-form">
-        <el-form inline :model="formData" ref="formRef">
-          <el-form-item label="用户名" prop="username">
-            <el-input v-model="formData.username"></el-input>
-          </el-form-item>
-          <el-form-item label="姓名" prop="nickname">
-            <el-input v-model="formData.nickname"></el-input>
-          </el-form-item>
-          <!-- dept selector -->
-          <el-form-item label="部门" prop="deptId">
-            <DeptSelectorInput v-model="formData.deptId" style="width: 100%" />
-          </el-form-item>
-
-          <el-form-item>
-            <el-button type="primary" @click="handleSearch" :loading="loading">搜索</el-button>
-          </el-form-item>
-        </el-form>
-      </div>
       <div :style="{ width: '100%' }">
         <el-table
           v-loading="loading"
@@ -73,14 +55,28 @@
               <el-radio class="user-selector" name="user-selector" :label="scope.row.id" v-model="selectedRowId"></el-radio>
             </template>
           </el-table-column>
-          <el-table-column width="120" label="工号" prop="username" align="left" header-align="left"/>
-          <el-table-column width="120" label="姓名" prop="nickname"/>
-          <el-table-column label="部门" prop="dept_id">
-            <template #default="scope">
-              {{ pageData.additional.dept[scope.row.dept_id].title }}
+          <el-table-column>
+            <template #header>
+              <el-input v-model="formData.username" @change="handleSearch"></el-input>
             </template>
+            <el-table-column width="120" label="工号" prop="username" align="left" header-align="left"/>
           </el-table-column>
-
+          <el-table-column>
+            <template #header>
+              <el-input v-model="formData.nickname" @change="handleSearch"></el-input>
+            </template>
+            <el-table-column width="120" label="姓名" prop="nickname"/>
+          </el-table-column>
+          <el-table-column>
+            <template #header>
+              <DeptSelectorInput v-model="formData.deptId" style="width: 100%" @change="handleSearch" />
+            </template>
+            <el-table-column label="部门" prop="dept_id">
+              <template #default="scope">
+                {{ pageData.additional.dept[scope.row.dept_id].title }}
+              </template>
+            </el-table-column>
+          </el-table-column>
         </el-table>
       </div>
       <div>
@@ -185,15 +181,13 @@ const selectedUserIds = computed<Set<string>>(() => new Set<string>((localSelect
 const isAllAdd = computed<boolean>(() => pageData.value.data?.filter(it => !selectedUserIds.value.has(it.id))?.length === 0)
 
 const tableRef = ref<InstanceType<typeof ElTable>>()
-const formRef = ref<InstanceType<typeof ElForm>>()
 const pagerRef = ref<InstanceType<typeof ElPagination>>()
 
 const tableHeight = computed<string>(() => {
-  const formHeight = formRef.value?.$el.clientHeight || 52
   const pagerHeight = pagerRef.value?.$el.clientHeight || 28
-  const selectedContainerHeight = 200 + 10 // marginTop
+  const selectedContainerHeight = 200 + 2 + 10 // marginTop
   const padding = 32
-  return `calc((calc(100vh - 44px - 54px)) - ${formHeight + selectedContainerHeight + pagerHeight + 32}px)`
+  return `calc((calc(100vh - 44px - 54px)) - ${selectedContainerHeight + pagerHeight + padding}px)`
 })
 onMounted(() => tableHeight.effect.scheduler())
 

@@ -37,7 +37,7 @@ const formRef = ref<InstanceType<typeof ElForm>>()
 
 defineExpose({
   validate() {
-    formRef.value.validate()
+    return formRef.value.validate()
   },
 })
 

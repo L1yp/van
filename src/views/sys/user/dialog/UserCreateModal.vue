@@ -121,7 +121,7 @@ const visible = computed<boolean>({
 })
 
 
-const formData = ref<UserAddParam | UserUpdateParam>({
+const formData = ref<UserAddParam & UserUpdateParam>({
   id: '',
   username: '',
   password: '',
@@ -144,6 +144,7 @@ function handleOpened() {
     Object.assign(formData.value, props.data)
   } else {
     formData.value = {
+      id: '',
       username: '',
       password: '',
       nickname: '',

@@ -1,6 +1,6 @@
 <template>
   <template v-if="cMode === 'design'">
-    <div>
+    <div v-loading="loading">
       <el-tree-select
         v-if="props.expand === false"
         v-model="val"
@@ -38,7 +38,7 @@
 
   </template>
   <template v-else-if="cMode === 'edit'">
-    <div>
+    <div v-loading="loading">
       <el-tree-select
         v-if="props.expand === false"
         v-model="val"
@@ -74,7 +74,7 @@
     </div>
   </template>
   <template v-else-if="cMode === 'read' ">
-    <span v-text="displayValue"></span>
+    <span v-loading="loading" v-text="displayValue"></span>
   </template>
   <template v-else-if="cMode === 'hidden' ">
     <span v-show="false" v-text="displayValue"></span>

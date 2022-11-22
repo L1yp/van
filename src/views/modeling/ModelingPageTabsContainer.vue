@@ -7,13 +7,9 @@
       :label="item.name"
       :name="item.name"
     >
-      <template v-if="item.type === 'ENTITY'">
-        <ModelingViewContainer module="ENTITY" :mkey="item.path" />
-        <div id="modeling-entity-panel"></div>
-      </template>
-      <template v-else-if="item.type === 'PROCESS'">
-        <ModelingViewContainer module="WORKFLOW" :mkey="item.path" />
-        <div id="modeling-entity-panel"></div>
+      <template v-if="item.type === 'ENTITY' || item.type === 'WORKFLOW'">
+        <ModelingViewContainer :module="item.type" :mkey="item.path" />
+        <div :id="`modeling-panel-${item.path}`"></div>
       </template>
       <template v-else-if="item.type === 'PAGE'">
         <component :is="routeToView(item.component)" />

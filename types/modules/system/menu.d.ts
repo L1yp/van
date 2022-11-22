@@ -2,7 +2,7 @@ declare interface MenuView extends Tree {
   id: string
   name: string
   pid: string
-  type: 'FOLDER' | 'PAGE' | 'ENTITY' | 'PROCESS' | 'BUTTON'
+  type: 'FOLDER' | 'PAGE' | 'ENTITY' | 'WORKFLOW' | 'BUTTON'
   path: string
   component: string
   icon: string

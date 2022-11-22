@@ -4,17 +4,18 @@
     :title="props.title"
     width="800px"
     append-to-body
+    :use-body-scrolling="false"
     @opened="handleOpened"
     @confirm="handleConfirm"
     @cancel="visible = false"
   >
-    <div class="user-selector-modal">
-      <div :style="{ width: '100%' }">
+    <div class="dept-selector-modal">
+      <div :style="{ width: '100%', height: tableHeight }">
         <el-table
           v-loading="loading"
           ref="tableRef"
           :data="treeData"
-          :height="tableHeight"
+          height="100%"
           row-key="id"
           stripe border default-expand-all
           :row-style="{cursor: 'pointer'}"
@@ -77,7 +78,7 @@
       </div>
 
       <div class="selected-container" v-if="props.multiple">
-        <el-scrollbar height="200px" always view-class="selected-tags">
+        <el-scrollbar always view-class="selected-tags">
           <el-tag
             v-for="item in selectedElems"
             :key="item.id"
@@ -86,7 +87,6 @@
             {{ item.title }}
           </el-tag>
         </el-scrollbar>
-
       </div>
     </div>
 
@@ -176,11 +176,13 @@ const selectedElems = computed<DeptView[]>(() => {
 
 const isAllAdd = computed<boolean>(() => flatDataIds.value.filter(it => !selectedIdMap.value.has(it)).length === 0)
 
+const bodyHeight = 'calc(70vh - 54px - 44px - 32px)'
+const selectedBoxHeight = 100
 
 const tableRef = ref<InstanceType<typeof ElTable>>()
 const tableHeight = computed<string>(() => {
-  const selectedContainerHeight = props.multiple ? (200 + 10) : 0 // marginTop
-  return `calc((calc(100vh - 15vh - 50px - 44px - 54px)) - 32px - ${selectedContainerHeight}px)`
+  const selectedContainerHeight = props.multiple ? (selectedBoxHeight + 10) : 0 // marginTop
+  return `calc(${bodyHeight} - ${selectedContainerHeight}px)`
 })
 
 const flatData = computed<DeptView[]>(() => flattenTree(props.data))
@@ -244,10 +246,16 @@ function handleRemoveAll() {
 </script>
 
 <style scoped>
+.dept-selector-modal {
+  width: 100%;
+  height: 100%;
+}
+
 .selected-container {
   box-sizing: border-box;
   border: 1px #e3e3e3 solid;
   width: 100%;
+  height: 100px;
   margin-top: 10px;
 }
 

@@ -17,7 +17,7 @@ declare interface MenuConfig extends TreeData{
   parent?: MenuConfig;
 }
 
-declare type MenuType = 'FOLDER' | 'PAGE' | 'BUTTON' | 'TAB' | 'PROCESS'
+declare type MenuType = 'FOLDER' | 'PAGE' | 'BUTTON' | 'TAB' | 'WORKFLOW'
 
 declare interface MenuAddParam {
   name: string

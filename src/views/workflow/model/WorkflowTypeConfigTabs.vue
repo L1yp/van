@@ -8,7 +8,8 @@
       <div id="field-container"></div>
     </el-tab-pane>
     <el-tab-pane label="视图配置">
-      <div>视图配置</div>
+      <ModelingViewConfig module="WORKFLOW" :mkey="workflowDef.key" />
+      <div id="modeling-view-config"></div>
     </el-tab-pane>
     <el-tab-pane label="数据源">
       <OptionPanel :mkey="workflowDef.key" scope="WORKFLOW_PRIVATE" />
@@ -24,6 +25,7 @@ import FieldPanel from "@/views/modeling/field/FieldPanel.vue";
 import OptionPanel from "@/views/modeling/option/OptionPanel.vue";
 import { inject } from "vue";
 import { workflowDefKey } from "./keys";
+import ModelingViewConfig from "@/views/modeling/view/ModelingViewConfig.vue";
 
 const workflowDef = inject(workflowDefKey)
 

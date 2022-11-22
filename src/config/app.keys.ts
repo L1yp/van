@@ -21,6 +21,7 @@ export const processInstanceDetailInfoKey = Symbol("processInstanceDetailInfoKey
 export const processNodePageListKey = Symbol("processNodePageListKey") as InjectionKey<ShallowRef<ProcessModelNodePageView[]>>
 export const pageFullScreenKey = Symbol("pageFullScreenKey") as InjectionKey<() => void>
 
+
 export const userMapKey = Symbol('userMapKey') as InjectionKey<Map<string, UserView>>
 
 export const maskContainerKey = Symbol('maskContainerKey') as InjectionKey<Ref<HTMLDivElement | undefined>>

@@ -84,3 +84,22 @@ declare interface WorkflowTypeVerActiveParam {
 declare interface WorkflowTypeVerPendingParam {
   id: string
 }
+
+
+declare interface WorkflowInstanceStartParam {
+  mkey: string
+  data: Record<string, any>
+}
+
+declare interface WorkflowInstanceCreateResult {
+  id: string
+  process_instance_id: string
+}
+
+declare interface WorkflowTaskCompleteParam {
+  mkey: string
+  task_id: string
+  data: Record<string, any>
+  outcome: string
+  comment?: string
+}

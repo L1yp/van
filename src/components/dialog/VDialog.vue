@@ -40,9 +40,13 @@
         </div>
       </slot>
     </template>
-    <el-scrollbar max-height="calc(100vh - 15vh - 15vh - 44px - 54px - 32px)" always>
-      <slot name="default"></slot>
-    </el-scrollbar>
+    <template v-if="props.useBodyScrolling">
+      <el-scrollbar :max-height="bodyHeight" always>
+        <slot name="default"></slot>
+      </el-scrollbar>
+    </template>
+    <slot v-if="!props.useBodyScrolling" name="default"></slot>
+
 
 
     <template #footer>
@@ -57,7 +61,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue"
+import { computed, provide } from "vue"
 import { ElDialog, ElButton, ElScrollbar } from "element-plus"
 
 
@@ -83,6 +87,7 @@ interface Props {
   confirmText?: string
   cancelText?: string
   disableFooter?: boolean
+  useBodyScrolling?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -101,7 +106,8 @@ const props = withDefaults(defineProps<Props>(), {
   showFullScreen: false,
   confirmText: '确定',
   cancelText: '取消',
-  disableFooter: false
+  disableFooter: false,
+  useBodyScrolling: true
 })
 
 interface Emits {
@@ -135,13 +141,15 @@ function requestFullScreen() {
   //   emits('update:fullScreen', fullScreen.value)
   // }
 }
-// onUpdated(() => {
-//   visible.value = props.modelValue as boolean
-//   if (props.fullScreen !== undefined) {
-//     fullScreen.value = props.fullScreen as boolean
-//   }
-// })
 
+
+const bodyHeight = computed(() => {
+  if (props.fullScreen) {
+    return `calc(100vh - 54px - 44px - 32px)`
+  } else {
+    return `calc(70vh - 54px - 44px - 32px)`
+  }
+})
 
 
 function handleConfirm() {

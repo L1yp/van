@@ -12,14 +12,13 @@
       :data="props.menuOptions"
       :tree-props="{ children: 'children' }"
       row-key="id"
-      max-height="calc(100vh - 15vh - 50px - 44px - 54px - 32px)"
       border stripe default-expand-all
       :row-style="{ cursor: 'pointer' }"
       @row-click="handleRowClick"
     >
-      <el-table-column type="selection" :selectable="row => ['TAB', 'PAGE', 'BUTTON', 'PROCESS', 'ENTITY'].includes(row.type)" />
+      <el-table-column type="selection" :selectable="row => ['TAB', 'PAGE', 'BUTTON', 'WORKFLOW', 'ENTITY'].includes(row.type)" />
       <el-table-column prop="name" label="名称" width="300"  />
-      <el-table-column prop="type" label="类型" width="100" />
+      <el-table-column prop="type" label="类型" width="150" />
       <el-table-column prop="component" label="组件" />
     </el-table>
   </VDialog>
@@ -29,7 +28,7 @@
 <script lang="ts" setup>
 import { ElTable, ElTableColumn } from 'element-plus'
 import VDialog from "@/components/dialog/VDialog.vue";
-import {computed, ref} from "vue";
+import {computed, inject, ref} from "vue";
 import {findTreeItemById, getTreeItemPath} from "@/utils/common";
 
 interface Props {
@@ -70,7 +69,7 @@ function handleOpened() {
 
 function handleRowClick(row: MenuView) {
   console.log(666)
-  if(!['TAB', 'PAGE', 'BUTTON', 'PROCESS', 'ENTITY'].includes(row.type)) {
+  if(!['TAB', 'PAGE', 'BUTTON', 'WORKFLOW', 'ENTITY'].includes(row.type)) {
     return
   }
   const rows: MenuView[] = tableRef.value.getSelectionRows()

@@ -1,6 +1,6 @@
 import { ref, Ref, toRaw } from "vue";
 import { ElMessage } from "element-plus";
-import { pageWorkflowDef, findById, updateWorkflowDef, addWorkflowDef } from "@/api/workflow";
+import * as WorkflowApi from "@/api/workflow";
 
 
 export function useWorkflowApi(loading?: Ref<boolean>) {
@@ -15,7 +15,7 @@ export function useWorkflowApi(loading?: Ref<boolean>) {
   async function loadPage(params: WorkflowTypeDefPageParam) {
     try {
       loading && (loading.value = true)
-      const data = await pageWorkflowDef(params)
+      const data = await WorkflowApi.pageWorkflowDef(params)
       data.data.forEach(row => {
         row.children.forEach(it => it.name = `${row.name} V${it.ver}`)
       })
@@ -32,7 +32,7 @@ export function useWorkflowApi(loading?: Ref<boolean>) {
   async function findDefById(id: string) {
     try {
       loading && (loading.value = true)
-      workflowDef.value = await findById(id)
+      workflowDef.value = await WorkflowApi.findById(id)
     } catch (e) {
       console.error(e)
       ElMessage.error((e as Error)?.message || '查询失败')
@@ -63,7 +63,7 @@ export function useWorkflowApi(loading?: Ref<boolean>) {
         } as FixedGenRule
       }
 
-      await updateWorkflowDef(data)
+      await WorkflowApi.updateWorkflowDef(data)
       ElMessage.success('更新成功')
     } catch (e) {
       console.error(e)
@@ -96,7 +96,7 @@ export function useWorkflowApi(loading?: Ref<boolean>) {
         } as FixedGenRule
       }
 
-      await addWorkflowDef(data)
+      await WorkflowApi.addWorkflowDef(data)
       ElMessage.success('创建成功')
       return true
     } catch (e) {
@@ -113,4 +113,45 @@ export function useWorkflowApi(loading?: Ref<boolean>) {
   return {
     pageData, loadPage, workflowDef, findDefById, updateDefById, addDef
   }
+}
+
+
+export function useWorkflowInstanceApi(loading?: Ref<boolean>) {
+
+  const startInstanceResult = ref<WorkflowInstanceCreateResult>()
+  const startFormScheme = ref<ModelingPageView>()
+
+  async function startInstance(data: WorkflowInstanceStartParam) {
+    try {
+      loading && (loading.value = true)
+      startInstanceResult.value = await WorkflowApi.startInstance(data)
+      ElMessage.success('启动流程成功')
+      return true
+    } catch (e) {
+      console.error(e);
+      ElMessage.error((e as Error)?.message || '启动失败')
+      return false
+    } finally {
+      loading && (loading.value = false)
+    }
+  }
+
+  async function getStartForm(mkey: string) {
+    try {
+      loading && (loading.value = true)
+      startFormScheme.value = await WorkflowApi.getStartForm(mkey)
+    } catch (e) {
+      console.error(e);
+      ElMessage.error((e as Error)?.message || '启动失败')
+    } finally {
+      loading && (loading.value = false)
+    }
+  }
+
+
+  return {
+    startInstanceResult, startInstance,
+    startFormScheme, getStartForm
+  }
+
 }
