@@ -1,6 +1,6 @@
 <template>
-  <div v-loading="loading" style="background-color: #FFFFFF; width: 100%; height: 100%; box-sizing: border-box;">
-    <div style="background-color: #F5F7FA; box-sizing: border-box; padding: 6px;">
+  <div v-loading="loading" style="background-color: var(--el-bg-color); width: 100%; height: 100%; box-sizing: border-box;">
+    <div style="background-color: var(--toolbar-bg-color); box-sizing: border-box; padding: 6px;">
       <div v-if="!refVisible">
         <el-button :icon="Plus" plain type="primary" @click="handleAddField">新增</el-button>
         <el-button :icon="Link" @click="handleRefField">引用</el-button>

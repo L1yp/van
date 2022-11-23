@@ -259,7 +259,7 @@ async function handleClickValidateForm() {
 .form-designer-toolbar {
   width: 100%;
   height: 40px;
-  background-color: #f6f8f9;
+  background-color: var(--el-fill-color-light);
   display: flex;
   justify-content: space-between;
   align-items: center;

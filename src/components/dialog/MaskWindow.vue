@@ -135,13 +135,13 @@ const visible = computed({
   width: 30px;
   height: 30px;
   border-bottom-right-radius: 100%;
-  background-color: #FFFFFF;
+  background-color: var(--el-bg-color-overlay);
   cursor: pointer;
   border: 1px solid var(--el-border-color);
 }
 
 .close-mask:hover, .close-mask:hover .close-icon {
-  background-color: #ecf5ff;
+  background-color: var(--el-bg-color-page);
 }
 
 .close-icon {

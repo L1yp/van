@@ -141,12 +141,13 @@ provide(maskContainerKey, maskContainerRef)
   width: 30px;
   height: 30px;
   border-bottom-left-radius: 100%;
-  background-color: var(--el-bg-color);
+  background-color: var(--el-bg-color-overlay);
   cursor: pointer;
+  border: 1px solid var(--el-border-color);
 }
 
 .close-page-full-screen:hover, .close-page-full-screen:hover .close-icon {
-  background-color: #ecf5ff;
+  background-color: var(--el-bg-color-page);
 }
 
 .fade-enter-active,

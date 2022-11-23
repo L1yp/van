@@ -223,7 +223,7 @@ div {
   box-sizing: border-box;
   width: 100%;
   padding: 4px;
-  background-color: white;
+  background-color: var(--toolbar-bg-color);
   border-bottom: 1px solid var(--el-border-color);
 }
 
@@ -236,6 +236,7 @@ div {
   right: initial;
   left: 20px;
   bottom: 40px;
+  background-color: var(--el-bg-color);
 }
 
 :deep(.bjs-powered-by) {
@@ -243,4 +244,30 @@ div {
   left: 20px;
   width: 200px;
 }
+
+:deep(g.djs-element.djs-shape g.djs-visual circle) {
+  fill: var(--el-bg-color) !important;
+}
+
+:deep(g.djs-element.djs-shape g.djs-visual rect) {
+  fill: var(--el-bg-color) !important;
+}
+
+:deep(g.djs-element.djs-shape g.djs-visual polygon) {
+  fill: var(--el-bg-color) !important;
+}
+
+:deep(.djs-context-pad .entry) {
+  background-color: var(--el-bg-color);
+}
+
+:deep(g.djs-element.djs-shape g.djs-visual text) {
+  fill: var(--el-text-color-regular) !important;
+}
+
+:deep(g.djs-element.djs-connection g.djs-visual path) {
+  stroke: var(--el-border-color) !important;
+}
+
+
 </style>

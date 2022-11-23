@@ -6,7 +6,7 @@
 }
 
 html.dark {
-    --toolbar-bg-color: #f5f7fa;
+    --toolbar-bg-color: var(--el-bg-color-overlay);
     --tag-item-bg-hover-color: #3a4957e0;
     --tag-item-bg-active-color: #2d4153;
 }
@@ -57,6 +57,11 @@ html.dark {
     background-color: var(--el-fill-color-light);
 }
 
+.vxe-table--render-default.border--default .vxe-body--column, .vxe-table--render-default.border--default .vxe-footer--column, .vxe-table--render-default.border--default .vxe-header--column, .vxe-table--render-default.border--inner .vxe-body--column, .vxe-table--render-default.border--inner .vxe-footer--column, .vxe-table--render-default.border--inner .vxe-header--column {
+    background-image: linear-gradient(var(--el-border-color),var(--el-border-color)),linear-gradient(var(--el-border-color),var(--el-border-color));
+    
+}
+
 .vxe-table--render-default .vxe-table--body-wrapper, .vxe-table--render-default .vxe-table--footer-wrapper {
     background-color: var(--el-fill-color-light);
 }
@@ -90,5 +95,10 @@ html.dark {
 .vxe-table .vxe-table--header-wrapper {
     color: var(--el-table-header-text-color);
 }
+
+.vxe-table--render-default .vxe-body--row.row--stripe {
+    background-color: var(--el-fill-color-lighter);
+}
+
 
 /* --el-table-header-text-color */

@@ -222,13 +222,13 @@ function toComponentConfig(field: ModelingFieldDefView): Partial<ComponentConfig
 
 .component-item {
   width: 119px;
-  background-color: #f6f8f9;
+  background-color: var(--el-bg-color);
   cursor: move;
   border-radius: 8px;
 }
 
 .component-item:hover {
-  outline: 1px solid #409eff;
+  outline: 1px solid var(--el-border-color);
 }
 
 :deep(.el-collapse-item__content) {

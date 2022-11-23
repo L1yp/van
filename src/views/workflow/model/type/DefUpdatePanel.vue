@@ -1,7 +1,7 @@
 <template>
 
-  <div v-loading="loading" style="background-color: #FFFFFF; height: 100%; box-sizing: border-box;">
-    <div style="background-color: #F5F7FA; box-sizing: border-box; padding: 6px;">
+  <div v-loading="loading" style="background-color: var(--el-bg-color); height: 100%; box-sizing: border-box;">
+    <div style="background-color: var(--toolbar-bg-color); box-sizing: border-box; padding: 6px;">
       <el-button v-if="mode === 'view'" @click="mode = 'edit'">编辑</el-button>
       <el-button v-if="mode === 'edit'" @click="handleCancel">取消</el-button>
       <el-button v-if="mode === 'edit'" @click="handleConfirm" type="primary" plain>确定</el-button>

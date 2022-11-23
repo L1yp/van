@@ -1,6 +1,6 @@
 <template>
   <div style="width: 100%; height: 100%;" v-loading="loading">
-    <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #E3E3E3; padding: 4px 0;">
+    <div style="display: flex; justify-content: space-between; padding: 4px 0;">
       <div>
         <el-button @click="handleAddInstance" :disabled="!startForm">新建</el-button>
         <el-button>导出</el-button>
