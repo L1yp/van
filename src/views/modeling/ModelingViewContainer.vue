@@ -2,7 +2,7 @@
   <div style="width: 100%; height: 100%;" v-loading="loading">
     <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #E3E3E3; padding: 4px 0;">
       <div>
-        <el-button @click="handleAddInstance" :disabled="!pageInfo?.page_scheme && !startFormScheme?.page_scheme">新建</el-button>
+        <el-button @click="handleAddInstance" :disabled="!startForm">新建</el-button>
         <el-button>导出</el-button>
       </div>
       <div>
@@ -85,7 +85,7 @@
         </template>
       </vxe-table>
     </div>
-    <MaskWindow v-model="addPanelVisible" :teleport-to="`#modeling-panel-${props.mkey}`">
+    <MaskWindow v-model="addPanelVisible" :teleport-to="teleportTo">
       <div style="width: 100%; height: 100%; background-color: var(--el-bg-color);">
         <div style="box-sizing: border-box; padding: 6px;  background-color: var(--toolbar-bg-color);">
           <el-button @click="addPanelVisible = false">取消</el-button>
@@ -93,12 +93,12 @@
         </div>
         <div style="width: 100%; height: calc(100% - 32px - 1px - 12px - 10px); margin-top: 10px">
           <el-scrollbar always>
-            <v-form-render ref="addFormRenderRef" :scheme="props.module === 'ENTITY' ? pageInfo.page_scheme : startFormScheme.page_scheme" :form-data="formData" />
+            <v-form-render ref="addFormRenderRef" :scheme="startForm" :form-data="formData" />
           </el-scrollbar>
         </div>
       </div>
     </MaskWindow>
-    <MaskWindow v-model="viewPanelVisible" :teleport-to="`#modeling-panel-${props.mkey}`">
+    <MaskWindow v-model="viewPanelVisible" :teleport-to="teleportTo">
       <div style="width: 100%; height: 100%; background-color: var(--el-bg-color);">
         <div style="width: 100%; padding: 6px;  background-color: var(--toolbar-bg-color); ">
           <el-button v-if="viewerMode" @click="viewerMode = false" :disabled="!updatePageInfo?.page_scheme">编辑</el-button>
@@ -114,7 +114,7 @@
       </div>
 
     </MaskWindow>
-    <MaskWindow v-model="viewConfigVisible" :teleport-to="`#modeling-panel-${props.mkey}`">
+    <MaskWindow v-model="viewConfigVisible" :teleport-to="teleportTo">
       <ModelingViewUpdatePanel :src="activeView" :fields="modelingFields" @close="viewConfigVisible = false" @success="initPage" />
     </MaskWindow>
   </div>
@@ -122,7 +122,7 @@
 
 <script lang="ts" setup>
 import { ElButton, ElSelect, ElOption, ElMessage, ElInput, ElTreeSelect, ElScrollbar } from 'element-plus'
-import {computed, inject, nextTick, onBeforeMount, onMounted, ref, toRaw} from 'vue';
+import {computed, inject, nextTick, onMounted, ref, toRaw} from 'vue';
 import { Setting } from "@element-plus/icons-vue";
 import UserSelectorInput from "@/components/common/selector/user/UserSelectorInput.vue";
 import DateRangePicker from "@/views/modeling/view/condition/DateRangePicker.vue";
@@ -137,6 +137,7 @@ import {userMapKey} from "@/config/app.keys";
 import {useModelingFieldApi} from "@/service/modeling/field";
 import ModelingViewUpdatePanel from '@/views/modeling/view/ModelingViewUpdatePanel.vue'
 import { useWorkflowInstanceApi } from '@/service/workflow';
+import { useRouter } from 'vue-router';
 
 interface Props {
   module: ModelingModule
@@ -144,6 +145,9 @@ interface Props {
 }
 
 const props = defineProps<Props>()
+
+const router = useRouter()
+const teleportTo = computed(() => `#modeling-panel-${props.mkey}`)
 
 const loading = ref(false)
 
@@ -154,6 +158,10 @@ const { pageInfo: viewPageInfo, findPage: getViewPage } = useModelingPageApi(loa
 const { pageInfo: updatePageInfo, findPage: getUpdatePage } = useModelingPageApi(loading)
 
 const { findView, viewSimpleInfoList } = useViewApi(loading)
+
+const startForm = computed(() => props.module === 'ENTITY' ? pageInfo.value?.page_scheme : startFormScheme.value?.page_scheme)
+
+
 onMounted(initPage)
 
 async function initPage() {
@@ -279,13 +287,18 @@ function handleAddInstance() {
 }
 
 function handleCellDblClick(params) {
-  if (!viewPageInfo.value?.page_scheme) {
-    ElMessage.error(`请先配置一个查询页面`)
-    return
+  if (props.module === 'ENTITY') {
+    if (!viewPageInfo.value?.page_scheme) {
+      ElMessage.error(`请先配置一个查询页面`)
+      return
+    }
+    const row = params.row
+    getInstance({ mkey: props.mkey, id: row.id })
+      .then(() => (viewPanelVisible.value = true, viewerMode.value = true))
+  } else if (props.module === 'WORKFLOW') {
+    router.push(`/workflow/instance/${params.row.process_instance_id}`)
   }
-  const row = params.row
-  getInstance({ mkey: props.mkey, id: row.id })
-    .then(() => (viewPanelVisible.value = true, viewerMode.value = true))
+
 }
 
 const addFormRenderRef = ref<InstanceType<typeof VFormRender>>()

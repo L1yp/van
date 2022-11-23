@@ -12,6 +12,17 @@ const Layout: Component = () => import("../layouts/TopLeft.vue");
  */
 const viewModules = import.meta.globEager("../views/**/*.vue")
 
+const moduleRoutes = import.meta.globEager("./modules/**/*.ts")
+console.log('moduleRoutes', moduleRoutes);
+
+const staticModuleRoutes = []
+const keys = Object.keys(moduleRoutes)
+for (const key of keys) {
+  if (moduleRoutes?.[key]?.default) {
+    Array.prototype.push.apply(staticModuleRoutes, moduleRoutes?.[key]?.default)
+  }
+}
+
 /**
  * 路由映射视图文件
  * @param route
@@ -28,7 +39,7 @@ const layoutRoute  = {
   path: '/home',
   name: 'main',
   component: Layout,
-  children: [],
+  children: staticModuleRoutes,
 };
 
 const redirectRoute = { path: "/", redirect: "/home" };
@@ -52,7 +63,7 @@ console.log("create router after");
 
 export {
   router
-};
+}
 
 export function isReady() {
   return router.isReady();
@@ -100,6 +111,8 @@ export function installLayoutContentRoute(menuOptions: MenuView[]) {
   removeRouteHandles.push(redirectHandle);
   const layoutHandle = router.addRoute(layoutRoute);
   removeRouteHandles.push(layoutHandle);
+  console.log('after install routes', router.getRoutes());
+  
 
 }
 

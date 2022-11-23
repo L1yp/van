@@ -102,7 +102,7 @@ const selectedElems = computed<UserView[]>({
 const options = ref<UserView[]>([])
 
 watch(() => [selectedElems.value, options.value], () => {
-  console.log('watch selectedElems and options', (selectedElems.value), (options.value));
+  //console.log('watch selectedElems and options', (selectedElems.value), (options.value));
 
   if (!options.value.length && props.varOptions?.length) {
     options.value = [...props.varOptions]
