@@ -8,7 +8,7 @@ export function createVitePlugins(viteEnv: Record<string, string>, isBuild: bool
   ];
   plugins.push(configSvgIconsPlugin(isBuild));
   const gzipPlugin = buildCompression({
-    threshold: 1048576
+    threshold: 102400
   })
   plugins.push(gzipPlugin)
   return plugins;

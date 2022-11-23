@@ -41,6 +41,9 @@
         </el-dropdown-menu>
       </template>
     </el-dropdown>
+    <div>
+      <el-switch v-model="dark" :active-icon="DarkIcon" :inactive-icon="LightIcon" inline-prompt />
+    </div>
     <el-dropdown :hide-on-click="false" @command="handleCommand">
       <span class="el-dropdown-link">
         <el-avatar
@@ -64,12 +67,19 @@
 
 <script lang="ts" setup>
 import {inject, Ref} from "vue"
-import {ElAvatar, ElButton, ElDropdown, ElDropdownItem, ElDropdownMenu} from "element-plus"
+import {ElAvatar, ElButton, ElDropdown, ElDropdownItem, ElDropdownMenu, ElSwitch } from "element-plus"
 import {useRouter} from "vue-router";
 import {uninstallLayoutContentRoute} from "@/router";
 import SVGIcon from "@/components/common/SVGIcon.vue";
 import {remove} from "@/utils/storage"
 import {asideCollapsedKey, userInfoKey} from "@/config/app.keys";
+import { useIcon } from "@/components/common/util";
+import { useDark } from "@vueuse/core";
+
+const dark = useDark()
+
+const DarkIcon = useIcon('Dark')
+const LightIcon = useIcon('Light')
 
 const router = useRouter();
 const asideCollapsed = inject<Ref<boolean>>(asideCollapsedKey)!
