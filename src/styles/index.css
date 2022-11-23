@@ -1,5 +1,14 @@
 :root {
     --toolbar-bg-color: #f5f7fa;
+    --tag-item-bg-hover-color: #dee1e6;
+    --tag-item-bg-active-color: #e8f4ff;
+
+}
+
+html.dark {
+    --toolbar-bg-color: #f5f7fa;
+    --tag-item-bg-hover-color: #3a4957e0;
+    --tag-item-bg-active-color: #2d4153;
 }
 
 .el-dialog__footer {
@@ -40,3 +49,46 @@
 .el-dialog .el-dialog__body {
     max-height: calc(100vh - 15vh - 15vh - 44px - 54px);
 }
+
+
+/** vxe dark **/ 
+.vxe-table--render-default.border--full .vxe-body--column, .vxe-table--render-default.border--full .vxe-footer--column, .vxe-table--render-default.border--full .vxe-header--column {
+    background-image: linear-gradient(var(--el-border-color),var(--el-border-color)),linear-gradient(var(--el-border-color),var(--el-border-color));
+    background-color: var(--el-fill-color-light);
+}
+
+.vxe-table--render-default .vxe-table--body-wrapper, .vxe-table--render-default .vxe-table--footer-wrapper {
+    background-color: var(--el-fill-color-light);
+}
+
+.vxe-table--render-default.border--default .vxe-table--header-wrapper, .vxe-table--render-default.border--full .vxe-table--header-wrapper, .vxe-table--render-default.border--outer .vxe-table--header-wrapper {
+    background-color: var(--el-fill-color-light);
+}
+
+.vxe-table .vxe-table--header-wrapper .vxe-table--header-border-line {
+    border-bottom: 1px solid var(--el-border-color);
+}
+
+.vxe-table--render-default .vxe-table--border-line {
+    border: 1px solid var(--el-border-color);
+}
+
+.vxe-loading {
+    background-color: var(--el-table-border-color);
+}
+
+.vxe-table--render-default .vxe-body--row.row--hover, .vxe-table--render-default .vxe-body--row.row--hover.row--stripe {
+    background-color: var(--el-table-row-hover-bg-color);
+}
+
+/* --el-table-row-hover-bg-color */
+
+.vxe-table--render-default {
+    color: var(--el-table-row-hover-bg-color);
+}
+
+.vxe-table .vxe-table--header-wrapper {
+    color: var(--el-table-header-text-color);
+}
+
+/* --el-table-header-text-color */

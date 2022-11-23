@@ -3,6 +3,7 @@ import App from './App.vue'
 import {isReady, setupRouter} from './router'
 import 'virtual:svg-icons-register'
 import 'element-plus/dist/index.css';
+import 'element-plus/theme-chalk/dark/css-vars.css'
 import { ElLoading, ElMessage } from 'element-plus';
 import {setupAxios} from "./config/axios.http"
 import * as UserApi from "@/api/sys/user"

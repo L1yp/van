@@ -48,7 +48,7 @@ div.aside-header {
   align-items: center;
   justify-content: center;
   height: v-bind(headerHeight);
-  border-bottom: 1px solid #E3E3E3;
+  border-bottom: 1px solid var(--el-border-color);
 }
 
 div.menu-wrapper {

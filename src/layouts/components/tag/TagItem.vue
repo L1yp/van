@@ -35,7 +35,7 @@ div.tag:not(:first-child) {
 }
 div.tag {
   box-sizing: border-box;
-  background-color: #ffffff;
+  background-color: var(--el-bg-color);
   border-top: none;
   margin-left: 0;
   height: 29px;
@@ -55,10 +55,10 @@ div.tag {
 }
 
 div.tag:hover {
-  color: #515A6E;
+  /* color: #515A6E; */
   -webkit-mask: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAANoAAAAkBAMAAAAdqzmBAAAAMFBMVEVHcEwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlTPQ5AAAAD3RSTlMAr3DvEM8wgCBA379gj5//tJBPAAAAnUlEQVRIx2NgAAM27fj/tAO/xBsYkIHyf9qCT8iWMf6nNQhAsk2f5rYheY7Dnua2/U+A28ZEe8v+F9Ax2v7/F4DbxkUH2wzgtvHTwbYPo7aN2jZq26hto7aN2jZq25Cy7Qvctnw62PYNbls9HWz7S8/G6//PsI6H4396gAUQy1je08W2jxDbpv6nD4gB2uWp+J9eYPsEhv/0BPS1DQBvoBLVZ3BppgAAAABJRU5ErkJggg==);
   -webkit-mask-size: 100% 100%;
-  background-color: #dee1e6;
+  background-color: var(--tag-item-bg-hover-color);
 }
 
 
@@ -66,7 +66,7 @@ div.tag.active {
   color: #1890ff;
   -webkit-mask: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAANoAAAAkBAMAAAAdqzmBAAAAMFBMVEVHcEwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlTPQ5AAAAD3RSTlMAr3DvEM8wgCBA379gj5//tJBPAAAAnUlEQVRIx2NgAAM27fj/tAO/xBsYkIHyf9qCT8iWMf6nNQhAsk2f5rYheY7Dnua2/U+A28ZEe8v+F9Ax2v7/F4DbxkUH2wzgtvHTwbYPo7aN2jZq26hto7aN2jZq25Cy7Qvctnw62PYNbls9HWz7S8/G6//PsI6H4396gAUQy1je08W2jxDbpv6nD4gB2uWp+J9eYPsEhv/0BPS1DQBvoBLVZ3BppgAAAABJRU5ErkJggg==);
   -webkit-mask-size: 100% 100%;
-  background-color: #e8f4ff;
+  background-color: var(--tag-item-bg-active-color);
 }
 
 div.tag div.close-tag svg {
@@ -74,14 +74,14 @@ div.tag div.close-tag svg {
   height: 18px;
   margin-left: 5px;
   border-radius: 50%;
-  background-color: #dee1e6;
+  /* background-color: #dee1e6; */
   vertical-align: middle;
   /* transition: all .3s ease-in-out; */
 }
 
 div.tag.active div.close-tag svg {
   width: 18px;
-  background-color: #e8f4ff;
+  /* background-color: #e8f4ff; */
 }
 
 div.tag:hover div.close-tag svg {
@@ -89,8 +89,8 @@ div.tag:hover div.close-tag svg {
 }
 
 div.tag div.close-tag:hover svg {
-  color: #FFFFFF;
-}
+  color: var(--el-text-color-primary);
+} 
 
 div.tag:hover div.close-tag svg:hover {
   background-color: #c0c4cc;

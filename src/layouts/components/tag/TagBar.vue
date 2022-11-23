@@ -172,11 +172,11 @@ function handleContextMenuCommand(command: string, element: TagInfo) {
 .tag-list {
   height: v-bind(tagBarHeight);
   max-height: v-bind(tagBarHeight);
-  background-color: #FFFFFF;
+  background-color: var(--el-bg-color);
   display: flex;
   justify-content: flex-start;
   align-items: flex-end;
-  border-bottom: 1px solid #e3e3e3;
+  border-bottom: 1px solid var(--el-border-color);
   box-sizing: border-box;
 }
 </style>

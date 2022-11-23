@@ -108,7 +108,7 @@ provide(maskContainerKey, maskContainerRef)
 }
 
 .el-main {
-  background-color: #F6F8F9;
+  background-color: var(--el-bg-color);
 }
 
 
@@ -117,7 +117,7 @@ provide(maskContainerKey, maskContainerRef)
   display: flex;
   justify-content: space-between;
   align-content: center;
-  border-bottom: 1px solid #E3E3E3;
+  border-bottom: 1px solid var(--el-border-color);
   box-shadow: rgb(0 21 41 / 8%) 0 1px 4px;
 }
 
@@ -141,7 +141,7 @@ provide(maskContainerKey, maskContainerRef)
   width: 30px;
   height: 30px;
   border-bottom-left-radius: 100%;
-  background-color: #FFFFFF;
+  background-color: var(--el-bg-color);
   cursor: pointer;
 }
 
