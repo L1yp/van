@@ -5,6 +5,7 @@
       :loading="loading"
       :data="props.data"
       border stripe
+      :row-config="{ isHover: true }"
       :menu-config="menuConfig"
       @menu-click="handleMenuClick"
     >

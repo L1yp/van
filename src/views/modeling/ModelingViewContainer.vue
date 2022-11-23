@@ -27,6 +27,7 @@
         stripe
         :data="pageData.data"
         :sort-config="sortConfig"
+        :row-config="{ isHover: true }"
         @sort-change="handleSortChange"
         @cell-dblclick="handleCellDblClick"
         style="width: 100%"

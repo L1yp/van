@@ -112,7 +112,7 @@ const saveIcon = useIcon('Save')
 interface Props {
   module: ModelingModule
   mkey: string
-  name?: string
+  name: string
 }
 
 const props = defineProps<Props>()

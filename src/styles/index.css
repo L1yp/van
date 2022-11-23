@@ -51,29 +51,59 @@ html.dark {
 }
 
 
+.vxe-table {
+    --el-table-border-color: var(--el-border-color-lighter);
+    --el-table-border: 1px solid var(--el-table-border-color);
+    --el-table-text-color: var(--el-text-color-regular);
+    --el-table-header-text-color: var(--el-text-color-secondary);
+    --el-table-row-hover-bg-color: var(--el-fill-color-light);
+    --el-table-current-row-bg-color: var(--el-color-primary-light-9);
+    --el-table-header-bg-color: var(--el-bg-color);
+    --el-table-fixed-box-shadow: var(--el-box-shadow-light);
+    --el-table-bg-color: var(--el-fill-color-blank);
+    --el-table-tr-bg-color: var(--el-fill-color-blank);
+    --el-table-expanded-cell-bg-color: var(--el-fill-color-blank);
+    --el-table-fixed-left-column: inset 10px 0 10px -10px rgba(0, 0, 0, 0.15);
+    --el-table-fixed-right-column: inset -10px 0 10px -10px rgba(0, 0, 0, 0.15);
+}
+
+
 /** vxe dark **/ 
-.vxe-table--render-default.border--full .vxe-body--column, .vxe-table--render-default.border--full .vxe-footer--column, .vxe-table--render-default.border--full .vxe-header--column {
+
+/* vxe bg */
+.vxe-table {
+    background-color: var(--el-table-bg-color);
+}
+
+/* vxe header body footer border */
+.vxe-table--render-default.border--full .vxe-body--column, 
+.vxe-table--render-default.border--full .vxe-footer--column, 
+.vxe-table--render-default.border--full .vxe-header--column {
     background-image: linear-gradient(var(--el-border-color),var(--el-border-color)),linear-gradient(var(--el-border-color),var(--el-border-color));
-    background-color: var(--el-fill-color-light);
 }
 
-.vxe-table--render-default.border--default .vxe-body--column, .vxe-table--render-default.border--default .vxe-footer--column, .vxe-table--render-default.border--default .vxe-header--column, .vxe-table--render-default.border--inner .vxe-body--column, .vxe-table--render-default.border--inner .vxe-footer--column, .vxe-table--render-default.border--inner .vxe-header--column {
+.vxe-table--render-default.border--default .vxe-body--column, 
+.vxe-table--render-default.border--default .vxe-footer--column, 
+.vxe-table--render-default.border--default .vxe-header--column, 
+.vxe-table--render-default.border--inner .vxe-body--column, 
+.vxe-table--render-default.border--inner .vxe-footer--column, 
+.vxe-table--render-default.border--inner .vxe-header--column {
     background-image: linear-gradient(var(--el-border-color),var(--el-border-color)),linear-gradient(var(--el-border-color),var(--el-border-color));
-    
 }
 
-.vxe-table--render-default .vxe-table--body-wrapper, .vxe-table--render-default .vxe-table--footer-wrapper {
+
+.vxe-table--render-default.border--default .vxe-table--header-wrapper, 
+.vxe-table--render-default.border--full .vxe-table--header-wrapper, 
+.vxe-table--render-default.border--outer .vxe-table--header-wrapper {
     background-color: var(--el-fill-color-light);
 }
 
-.vxe-table--render-default.border--default .vxe-table--header-wrapper, .vxe-table--render-default.border--full .vxe-table--header-wrapper, .vxe-table--render-default.border--outer .vxe-table--header-wrapper {
-    background-color: var(--el-fill-color-light);
-}
-
+/* 表格整体外边框 */
 .vxe-table .vxe-table--header-wrapper .vxe-table--header-border-line {
     border-bottom: 1px solid var(--el-border-color);
 }
 
+/* 表格整体外边框 */
 .vxe-table--render-default .vxe-table--border-line {
     border: 1px solid var(--el-border-color);
 }
@@ -82,21 +112,31 @@ html.dark {
     background-color: var(--el-table-border-color);
 }
 
-.vxe-table--render-default .vxe-body--row.row--hover, .vxe-table--render-default .vxe-body--row.row--hover.row--stripe {
+.vxe-table--render-default .vxe-body--row.row--hover, 
+.vxe-table--render-default .vxe-body--row.row--hover.row--stripe,
+.vxe-table--render-default .vxe-body--row.row--hover .vxe-body--column,
+.vxe-table--render-default .vxe-body--row.row--hover.row--stripe .vxe-body--column {
     background-color: var(--el-table-row-hover-bg-color);
 }
 
 /* --el-table-row-hover-bg-color */
 
+.vxe-table--render-default .vxe-table--body-wrapper, 
+.vxe-table--render-default .vxe-table--footer-wrapper,
 .vxe-table--render-default {
-    color: var(--el-table-row-hover-bg-color);
+    color: var(--el-table-text-color);
+    background-color: var(--el-table-bg-color);
 }
 
 .vxe-table .vxe-table--header-wrapper {
     color: var(--el-table-header-text-color);
 }
 
-.vxe-table--render-default .vxe-body--row.row--stripe {
+.vxe-table--render-default .vxe-body--row {
+    background-color: var(--el-table-tr-bg-color);
+}
+
+.vxe-table--render-default .vxe-body--row.row--stripe td {
     background-color: var(--el-fill-color-lighter);
 }
 
