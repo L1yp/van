@@ -247,14 +247,22 @@ div {
 
 :deep(g.djs-element.djs-shape g.djs-visual circle) {
   fill: var(--el-bg-color) !important;
+  stroke: var(--el-border-color)!important;
 }
 
 :deep(g.djs-element.djs-shape g.djs-visual rect) {
   fill: var(--el-bg-color) !important;
+  stroke: var(--el-border-color)!important;
 }
 
 :deep(g.djs-element.djs-shape g.djs-visual polygon) {
   fill: var(--el-bg-color) !important;
+  stroke: var(--el-border-color)!important;
+}
+
+:deep(g.djs-element.djs-shape g.djs-visual polygon ~ path) {
+  fill: var(--el-bg-color) !important;
+  stroke: var(--el-border-color)!important;
 }
 
 :deep(.djs-context-pad .entry) {
