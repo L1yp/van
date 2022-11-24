@@ -12,10 +12,7 @@
           </el-scrollbar>
         </div>
         <div style="height: calc(100% - 270px)">
-          <el-form-item prop="columns" label="视图列配置" style="height: 100%;">
-            <ModelingViewColumnConfig :fields="props.fields" :form-data="formData" />
-
-          </el-form-item>
+          <ModelingViewColumnConfig :fields="props.fields" :form-data="formData" />
         </div>
       </el-form>
     </div>

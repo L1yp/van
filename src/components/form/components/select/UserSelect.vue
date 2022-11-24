@@ -83,7 +83,7 @@ const cMode = computed<FormFieldMode>(() => {
 })
 
 const selectedElems = computed(() => {
-  const userIds = props.value?.split(', ') || []
+  const userIds = props.value?.split(',') || []
   console.log('user select', userIds)
   return userIds.map(it => userMap.get(it)).filter(it => !!it)
 })

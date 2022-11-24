@@ -6,7 +6,7 @@
     </el-button>
   </div>
 
-  <div style="display: flex; justify-content: flex-end; align-items: center;">
+  <div style="display: flex; justify-content: flex-end; align-items: center; gap: 10px;">
     <el-dropdown :hide-on-click="false" @command="handleCommand">
       <span class="el-dropdown-link">
         <el-avatar
@@ -120,7 +120,5 @@ function handleCommand(command: string) {
 </script>
 
 <style scoped>
-:deep(.el-dropdown + .el-dropdown) {
-  margin-left: 10px;
-}
+
 </style>

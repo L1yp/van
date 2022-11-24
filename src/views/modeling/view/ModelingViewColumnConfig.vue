@@ -53,17 +53,17 @@
             <el-input-number v-model="scope.row.min_width" :controls="false" style="width: 100%" />
           </template>
         </vxe-column>
-        <vxe-column field="filterable" title="筛选" width="120">
+        <vxe-column field="filterable" title="筛选" width="80">
           <template #default="scope">
             <el-checkbox v-model="scope.row.filterable" />
           </template>
         </vxe-column>
-        <vxe-column field="sortable" title="排序" width="120">
+        <vxe-column field="sortable" title="排序" width="80">
           <template #default="scope">
             <el-checkbox v-model="scope.row.sortable" />
           </template>
         </vxe-column>
-        <vxe-column field="resizable" title="拖动列宽" width="120">
+        <vxe-column field="resizable" title="拖动列宽" width="80">
           <template #default="scope">
             <el-checkbox v-model="scope.row.resizable" />
           </template>

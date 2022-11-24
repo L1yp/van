@@ -88,3 +88,12 @@ export function getStartForm(mkey: string) {
     params: { mkey },
   })
 }
+
+/** 获取流程详情 */
+export function getInstanceInfo(params: WorkflowInstanceQueryParam) {
+  return request<WorkflowInstanceDetailsResult>({
+    url: `/workflow/engine/instance/info`,
+    method: 'GET',
+    params,
+  })
+}

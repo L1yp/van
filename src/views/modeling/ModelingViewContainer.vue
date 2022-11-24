@@ -307,7 +307,7 @@ function handleCellDblClick(params) {
 const addFormRenderRef = ref<InstanceType<typeof VFormRender>>()
 
 function handleConfirmAdd() {
-  let promise = addFormRenderRef.value.validate()
+  let promise = addFormRenderRef.value.formRef.validate()
   if (props.module === 'ENTITY') {
     promise.then(() => createInstance({ mkey: props.mkey, data: formData.value }))
       .then(succ => succ && (addPanelVisible.value = false))

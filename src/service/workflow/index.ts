@@ -148,10 +148,24 @@ export function useWorkflowInstanceApi(loading?: Ref<boolean>) {
     }
   }
 
+  const instanceDetails = ref<WorkflowInstanceDetailsResult>()
+
+  async function getInstanceInfo(params: WorkflowInstanceQueryParam) {
+    try {
+      loading && (loading.value = true)
+      instanceDetails.value = await WorkflowApi.getInstanceInfo(params)
+    } catch (e) {
+      console.error(e);
+      ElMessage.error((e as Error)?.message || '启动失败')
+    } finally {
+      loading && (loading.value = false)
+    }
+  }
 
   return {
     startInstanceResult, startInstance,
-    startFormScheme, getStartForm
+    startFormScheme, getStartForm,
+    instanceDetails, getInstanceInfo,
   }
 
 }

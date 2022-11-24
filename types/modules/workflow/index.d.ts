@@ -103,3 +103,16 @@ declare interface WorkflowTaskCompleteParam {
   outcome: string
   comment?: string
 }
+
+declare interface WorkflowInstanceQueryParam {
+  mkey: string
+  instanceId: string
+}
+
+declare interface WorkflowInstanceDetailsResult {
+  page_info: ModelingPageView
+  outcomes: Record<string, ModelingPageView>
+  instance_info: Record<string, any>
+  xml: string
+  user_map: Record<string, UserView>
+}

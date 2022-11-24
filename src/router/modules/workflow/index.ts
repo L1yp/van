@@ -3,7 +3,7 @@ import { RouteRecordRaw } from "vue-router";
 
 const routes: RouteRecordRaw[] = [
   {
-    path: '/workflow/instance/:instanceId',
+    path: '/workflow/instance/:mkey/:instanceId',
     component: () => import('@/views/workflow/instance/WorkflowInstanceTabsPage.vue'),
     redirect: '',
     props: true,
