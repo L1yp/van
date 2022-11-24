@@ -6,7 +6,7 @@
 }
 
 html.dark {
-    --toolbar-bg-color: var(--el-bg-color-overlay);
+    --toolbar-bg-color: #282d37;
     --tag-item-bg-hover-color: #3a4957e0;
     --tag-item-bg-active-color: #2d4153;
 }

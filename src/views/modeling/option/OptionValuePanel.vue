@@ -1,5 +1,5 @@
 <template>
-  <div v-loading="loading" style="width: 100%; height: 100%; background-color: white; ">
+  <div v-loading="loading" style="width: 100%; height: 100%; background-color: var(--el-bg-color); ">
     <div style="padding: 6px; box-sizing: border-box; border-top: 1px solid var(--el-border-color); ">
       <el-button v-if="isView && !isConfig" @click="isView = false">编辑</el-button>
       <el-button v-if="!isView" @click="isView = true">取消</el-button>
@@ -10,7 +10,7 @@
       <el-button v-if="isConfig" @click="isConfig = false">取消</el-button>
 
     </div>
-    <div style="width: 100%; height: calc(100% - 32px - 12px - 1px); box-sizing: border-box; padding: 6px; border: 1px solid #E3E3E3;">
+    <div style="width: 100%; height: calc(100% - 32px - 12px - 1px); box-sizing: border-box; padding: 6px; border: 1px solid var(--el-border-color);">
       <el-form v-if="!isConfig" :model="formData" ref="formRef" label-width="80px" style="width: 100%; max-width: 800px;">
         <el-form-item prop="name" label="名称" required>
           <el-input v-model="formData.name" v-if="!isView" />
@@ -40,7 +40,7 @@
           </el-table>
         </div>
         <div style="width: 50%; height: 100%; display: flex;">
-          <div style="display: flex; align-items: center; box-sizing: border-box; padding: 0 10px; border: 1px solid #E3E3E3;">
+          <div style="display: flex; align-items: center; box-sizing: border-box; padding: 0 10px; border: 1px solid var(--el-border-color);">
             <div>
               <div>
                 <el-button @click="handleAdd">新增</el-button>
@@ -56,7 +56,7 @@
               </div>
             </div>
           </div>
-          <div style="flex: 1; border: 1px solid #E3E3E3;">
+          <div style="flex: 1; border: 1px solid var(--el-border-color);">
             <el-form ref="valueFormRef" :model="valueFormData" label-width="80px">
               <el-form-item prop="id" label="Id">
                 <div v-text="(valueFormData as ModelingOptionValueUpdateParam).id"></div>

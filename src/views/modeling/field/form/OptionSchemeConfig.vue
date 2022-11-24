@@ -70,6 +70,7 @@ const {
 
 
 onBeforeMount(() => findModelingOptionTypes({ scope: 'GLOBAL' }))
+onBeforeMount(() => props.formData.scheme.optionTypeId && findModelingOptionValues({ typeId: props.formData.scheme.optionTypeId }))
 
 // 切换单选多选时 需要重载 select / tree-select组件， 否则会异常
 const defValKey = ref(0)

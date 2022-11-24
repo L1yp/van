@@ -36,7 +36,7 @@ import OptionAddPanel from "./OptionAddPanel.vue";
 import OptionValuePanel from "./OptionValuePanel.vue";
 
 interface Props {
-  scope?: OptionScope
+  scope: OptionScope
   mkey?: string
   module?: ModelingModule
 }
