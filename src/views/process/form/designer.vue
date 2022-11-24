@@ -215,7 +215,7 @@ async function handleClickSave() {
 const formRenderRef = ref<InstanceType<typeof VFormRender>>()
 async function handleClickValidateForm() {
   try {
-    await formRenderRef.value.validate()
+    await formRenderRef.value.formRef.validate()
   } catch(e) {
     console.error(e);
   }

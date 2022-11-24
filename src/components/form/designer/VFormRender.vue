@@ -46,9 +46,7 @@ const labelPosition = computed(() => {
 
 
 defineExpose({
-  validate() {
-    return formRef.value.validate()
-  },
+  formRef: formRef,
 })
 
 </script>

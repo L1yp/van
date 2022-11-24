@@ -103,7 +103,7 @@
       <div style="width: 100%; height: 100%; background-color: var(--el-bg-color);">
         <div style="width: 100%; padding: 6px;  background-color: var(--toolbar-bg-color); ">
           <el-button v-if="viewerMode" @click="viewerMode = false" :disabled="!updatePageInfo?.page_scheme">编辑</el-button>
-          <el-button v-if="!viewerMode" @click="viewerMode = true">取消</el-button>
+          <el-button v-if="!viewerMode" @click="handleCancelUpdate">取消</el-button>
           <el-button v-if="!viewerMode" @click="handleConfirmUpdate">确定</el-button>
         </div>
         <div style="width: 100%; height: calc(100% - 32px - 1px - 12px - 10px); margin-top: 10px">
@@ -299,7 +299,7 @@ function handleCellDblClick(params) {
     getInstance({ mkey: props.mkey, id: row.id })
       .then(() => (viewPanelVisible.value = true, viewerMode.value = true))
   } else if (props.module === 'WORKFLOW') {
-    router.push(`/workflow/instance/${params.row.process_instance_id}`)
+    router.push(`/workflow/instance/${props.mkey}/${params.row.process_instance_id}`)
   }
 
 }
@@ -321,8 +321,13 @@ function handleConfirmAdd() {
 
 const updateFormRenderRef = ref<InstanceType<typeof VFormRender>>()
 
+function handleCancelUpdate() {
+  updateFormRenderRef.value.formRef.resetFields()
+  viewerMode.value = true
+}
+
 function handleConfirmUpdate() {
-  updateFormRenderRef.value.validate()
+  updateFormRenderRef.value.formRef.validate()
     .then(() => updateInstance({
       mkey: props.mkey,
       id: instanceInfo.value.id,
@@ -349,7 +354,7 @@ async function handleConfigView() {
 }
 
 :deep(.vxe-table--render-default .col--group.vxe-header--column:not(.col--ellipsis)) {
-  padding: 2px 0;
+  padding: 6px 0;
 }
 
 
