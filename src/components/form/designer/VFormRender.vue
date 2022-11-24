@@ -39,7 +39,7 @@ const formRef = ref<InstanceType<typeof ElForm>>()
 const deviceType = getDeviceType()
 const labelPosition = computed(() => {
   if (props.scheme.labelPosition === 'auto') {
-    return deviceType === 'h5' ? 'top' : 'right'
+    return deviceType.value === 'h5' ? 'top' : 'right'
   }
   return props.scheme.labelPosition
 })
