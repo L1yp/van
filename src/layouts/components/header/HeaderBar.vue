@@ -1,8 +1,8 @@
 <template>
   <div style="display: flex; justify-content: flex-start; align-items: center;">
     <el-button circle @click="collapse" style="width: 40px; height: 40px;">
-      <SVGIcon style="width: 16px; height: 16px;" name="AsideCollapse" v-if="!asideCollapsed"/>
-      <SVGIcon style="width: 16px; height: 16px;" name="AsideOpen" v-if="asideCollapsed"/>
+      <SVGIcon style="width: 16px; height: 16px;" name="AsideCollapse" v-if="asideOpened"/>
+      <SVGIcon style="width: 16px; height: 16px;" name="AsideOpen" v-if="!asideOpened"/>
     </el-button>
   </div>
 
@@ -66,15 +66,16 @@
 </template>
 
 <script lang="ts" setup>
-import {inject, Ref} from "vue"
-import {ElAvatar, ElButton, ElDropdown, ElDropdownItem, ElDropdownMenu, ElSwitch } from "element-plus"
-import {useRouter} from "vue-router";
-import {uninstallLayoutContentRoute} from "@/router";
+import { inject } from "vue"
+import { ElAvatar, ElButton, ElDropdown, ElDropdownItem, ElDropdownMenu, ElSwitch } from "element-plus"
+import { useRouter} from "vue-router";
+import { uninstallLayoutContentRoute } from "@/router";
 import SVGIcon from "@/components/common/SVGIcon.vue";
-import {remove} from "@/utils/storage"
-import {asideCollapsedKey, userInfoKey} from "@/config/app.keys";
+import { remove } from "@/utils/storage"
+import { asideOpenedKey, userInfoKey } from "@/config/app.keys";
 import { useIcon } from "@/components/common/util";
 import { useDark } from "@vueuse/core";
+import { getDeviceType } from "@/utils/common";
 
 const dark = useDark()
 
@@ -82,12 +83,14 @@ const DarkIcon = useIcon('Dark')
 const LightIcon = useIcon('Light')
 
 const router = useRouter();
-const asideCollapsed = inject<Ref<boolean>>(asideCollapsedKey)!
+const asideOpened = inject(asideOpenedKey)!
 const userInfo = inject(userInfoKey)
 console.log("userInfo", userInfo)
 
+const deviceType = getDeviceType()
+
 function collapse() {
-  asideCollapsed.value = !asideCollapsed.value;
+  asideOpened.value = !asideOpened.value
 }
 
 function handleCommand(command: string) {

@@ -7,7 +7,7 @@
       </div>
       <div>
         <el-button :icon="Setting" text plain circle :disabled="!activeView" @click="handleConfigView" />
-        <el-select v-model="activeViewId" @change="loadData">
+        <el-select v-model="activeViewId" @change="loadData" style="width: 150px">
           <el-option
             v-for="item in viewSimpleInfoList"
             :key="item.id"
@@ -52,7 +52,7 @@
                 <el-input v-model="param.condition_map[column.field.field]" style="width: calc(100% - 4px);" @change="reloadTableData" />
               </template>
               <template v-if="column.field.type === 'user'">
-                <user-selector-input v-model="param.condition_map[column.field.field]" :var-options="varUserOptions"  @change="reloadTableData" style="width: calc(100% - 4px);" />
+                <user-selector-input v-model="param.condition_map[column.field.field]" :var-options="varUserOptions"  @change="reloadTableData" style="width: calc(100% - 4px);" :style="{ minWidth: `${column.min_width - 4}px` }" />
               </template>
               <template v-if="column.field.type === 'date'">
                 <template v-if="column.field.scheme.dateType === 'date'">
@@ -81,7 +81,7 @@
                 </template>
               </template>
             </template>
-            <vxe-column :width="column.width || undefined" :field="column.field.field" :title="column.field.label" :resizable="column.resizable" :sortable="column.sortable" :formatter="formatColumnValue" />
+            <vxe-column :width="column.width < 0 ? undefined : column.width" :min-width="column.min_width" :field="column.field.field" :title="column.field.label" :resizable="column.resizable" :sortable="column.sortable" :formatter="formatColumnValue" />
           </vxe-colgroup>
         </template>
       </vxe-table>
@@ -199,6 +199,8 @@ async function loadData() {
   activeView.value.columns.forEach(it => {
     param.value.condition_map[it.field.field] = it.condition
   })
+  console.log('conditioon map', param.value.condition_map);
+  
   sortConfig.value.defaultSort = param.value.collation
   refreshTableKey.value++
   await nextTick()

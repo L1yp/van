@@ -32,6 +32,7 @@ declare interface ModelingViewColumnParam {
   field_id: string
   field: ModelingFieldDefView
   width: number
+  min_width: number
   align: TableAlign
   filterable: boolean
   sortable: boolean
@@ -79,6 +80,7 @@ declare interface ModelingViewColumnView {
   field: ModelingFieldDefView
   field_id: string
   width: number
+  min_width: number
   align: TableAlign
   filterable: boolean
   sortable: boolean

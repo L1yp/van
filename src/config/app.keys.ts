@@ -3,7 +3,7 @@ import {ComputedRef, InjectionKey, Ref, ShallowRef} from "vue";
 export const mainWidthKey = Symbol("mainWidthKey") as InjectionKey<ComputedRef<string>>
 export const mainHeightKey = Symbol("mainHeight") as InjectionKey<ComputedRef<string>>
 export const asideWidthKey = Symbol("asideWidth") as InjectionKey<ComputedRef<string>>
-export const asideCollapsedKey = Symbol("asideCollapsed") as InjectionKey<Ref<boolean>>
+export const asideOpenedKey = Symbol("asideOpened") as InjectionKey<Ref<boolean>>
 export const themeKey = Symbol("theme") as InjectionKey<Ref<ThemeConfig>>
 export const menuOptionsKey = Symbol("menuOptions") as InjectionKey<Ref<MenuView[]>>
 export const userInfoKey = Symbol("userInfo") as InjectionKey<Ref<UserInfo>>

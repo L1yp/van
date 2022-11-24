@@ -27,7 +27,7 @@ declare interface FormScheme {
 }
 
 declare interface VFormScheme {
-  labelPosition: 'left' | 'right' | 'top'
+  labelPosition: 'left' | 'right' | 'top' | 'auto'
   labelWidth: string
   size: Size
   style: string

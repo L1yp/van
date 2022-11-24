@@ -6,11 +6,12 @@
     style="padding: 5px;"
   >
     <el-form-item prop="labelPosition" label="标签位置" required>
-      <el-radio-group v-model="formScheme.labelPosition">
-        <el-radio-button label="left">左对齐</el-radio-button>
-        <el-radio-button label="right">右对齐</el-radio-button>
-        <el-radio-button label="top">上对齐</el-radio-button>
-      </el-radio-group>
+      <el-select v-model="formScheme.labelPosition">
+        <el-option label="左对齐" value="left" />
+        <el-option label="右对齐" value="right" />
+        <el-option label="上对齐" value="top" />
+        <el-option label="自适应" value="auto" />
+      </el-select>
     </el-form-item>
 
     <el-form-item prop="labelWidth" label="标签宽度" required>
@@ -41,7 +42,7 @@
 
 <script lang="ts" setup>
 import {
-  ElForm, ElFormItem, ElRadioGroup, ElRadioButton, ElInput,
+  ElForm, ElFormItem, ElRadioGroup, ElRadioButton, ElInput, ElSelect, ElOption, 
 } from 'element-plus'
 import { inject } from "vue";
 import { vFormSchemeKey } from '../../state.key';

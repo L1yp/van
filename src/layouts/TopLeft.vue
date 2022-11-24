@@ -1,8 +1,23 @@
 <template>
   <el-container>
-    <el-aside :width="asideWidth" :style="pageScreen ? { display: 'none' } : undefined">
-      <aside-bar></aside-bar>
-    </el-aside>
+    <template v-if="deviceType === 'h5'">
+      <el-drawer
+        custom-class="aside-menu-drawer"
+        :size="200"
+        :with-header="false"
+        v-model="asideOpened"
+        direction="ltr"
+      >
+        <aside-bar></aside-bar>
+      </el-drawer>
+    </template>
+    <template v-else>
+      <el-aside :width="asideWidth" :style="pageScreen ? { display: 'none' } : undefined">
+        <aside-bar></aside-bar>
+      </el-aside>
+    </template>
+
+
     <el-container>
       <el-header :style="pageScreen ? { display: 'none' } : undefined">
         <header-bar/>
@@ -34,7 +49,7 @@
 
 <script lang="ts" setup>
 import { computed, provide, Ref, ref } from "vue"
-import { ElContainer, ElHeader, ElAside, ElMain, ElFooter, ElScrollbar, ElIcon } from "element-plus"
+import { ElContainer, ElHeader, ElAside, ElMain, ElFooter, ElDrawer } from "element-plus"
 import Theme from "../config/theme"
 import {HeaderBar} from "./components/header"
 import {AsideBar} from "./components/aside"
@@ -43,18 +58,25 @@ import {RouterView} from "vue-router"
 import {
   mainHeightKey,
   asideWidthKey,
-  asideCollapsedKey,
+  asideOpenedKey, 
   themeKey, mainWidthKey, pageFullScreenKey, maskContainerKey,
 } from "@/config/app.keys"
 import SVGIcon from "@/components/common/SVGIcon.vue";
 import {incMaskZIndex} from "@/components/dialog/mask";
+import { getDeviceType } from "@/utils/common"
 
+const deviceType = getDeviceType()
+console.log('deviceType', deviceType);
 
-const asideCollapsed: Ref<boolean> = ref(false);
-provide(asideCollapsedKey, asideCollapsed);
+const asideOpened: Ref<boolean> = ref(deviceType !== 'h5')
+provide(asideOpenedKey, asideOpened);
+
 
 const asideWidth = computed<string>(() => {
-  return asideCollapsed.value ? "64px" : `${theme.value.asideWidth}px`;
+  if (deviceType === 'h5') {
+    return '0'
+  }
+  return asideOpened.value ? `${theme.value.asideWidth}px` : "64px";
 })
 provide(asideWidthKey, asideWidth);
 
@@ -158,6 +180,10 @@ provide(maskContainerKey, maskContainerRef)
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+
+:deep(.aside-menu-drawer .el-drawer__body) {
+  padding: 0;
 }
 
 </style>

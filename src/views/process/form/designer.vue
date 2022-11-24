@@ -34,7 +34,7 @@
           <el-form
             :size="formScheme.size"
             :label-width="formScheme.labelWidth"
-            :label-position="formScheme.labelPosition"
+            :label-position="labelPosition"
             :style="formScheme.style"
             style="padding: 10px; box-sizing: border-box; height: 100%;"
             @click.stop="vFormActiveElement = null"
@@ -106,6 +106,7 @@ import VFormRender from "@/components/form/designer/VFormRender.vue";
 import { formModeKey, vFormActiveElementKey, vFormSchemeKey } from "@/components/form/state.key";
 import { useModelingPageApi } from "@/service/modeling/page";
 import { Delete, View } from "@element-plus/icons-vue";
+import { getDeviceType } from "@/utils/common";
 
 const saveIcon = useIcon('Save')
 
@@ -140,7 +141,7 @@ const mode = computed<FormFieldMode>(() => 'design')
 provide(formModeKey, mode)
 
 const formScheme = ref<VFormScheme>({
-  labelPosition: 'right',
+  labelPosition: 'auto',
   labelWidth: '120px',
   size: 'default',
   mode: 'design',
@@ -148,6 +149,15 @@ const formScheme = ref<VFormScheme>({
   children: []
 })
 provide(vFormSchemeKey, formScheme)
+
+const deviceType = getDeviceType()
+const labelPosition = computed(() => {
+  if (formScheme.value.labelPosition === 'auto') {
+    return deviceType === 'h5' ? 'top' : 'right'
+  }
+  return formScheme.value.labelPosition
+})
+
 
 onBeforeMount(async () => {
   await findPage({ ...props })

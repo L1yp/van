@@ -48,6 +48,11 @@
             <el-input-number v-model="scope.row.width" :controls="false" style="width: 100%" />
           </template>
         </vxe-column>
+        <vxe-column field="min_width" title="最小列宽" width="120">
+          <template #default="scope">
+            <el-input-number v-model="scope.row.min_width" :controls="false" style="width: 100%" />
+          </template>
+        </vxe-column>
         <vxe-column field="filterable" title="筛选" width="120">
           <template #default="scope">
             <el-checkbox v-model="scope.row.filterable" />
@@ -126,6 +131,7 @@ function addColumn(row: ModelingFieldDefView) {
     field_id: row.id,
     field: row,
     width: 100,
+    min_width: 0,
     align: 'left',
     filterable: true,
     sortable: true,
@@ -142,6 +148,7 @@ function addColumn(row: ModelingFieldDefView) {
   }
   else if (row.type === 'user') {
     item.width = 200
+    item.min_width = 150
     item.sortable = false
   }
   else if (row.type === 'dept') {
