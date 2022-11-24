@@ -75,7 +75,6 @@ import { remove } from "@/utils/storage"
 import { asideOpenedKey, userInfoKey } from "@/config/app.keys";
 import { useIcon } from "@/components/common/util";
 import { useDark } from "@vueuse/core";
-import { getDeviceType } from "@/utils/common";
 
 const dark = useDark()
 
@@ -86,8 +85,6 @@ const router = useRouter();
 const asideOpened = inject(asideOpenedKey)!
 const userInfo = inject(userInfoKey)
 console.log("userInfo", userInfo)
-
-const deviceType = getDeviceType()
 
 function collapse() {
   asideOpened.value = !asideOpened.value

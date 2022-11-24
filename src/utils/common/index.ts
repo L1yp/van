@@ -1,18 +1,37 @@
+import { computed, ComputedRef } from 'vue';
+import { useWindowSize } from "@vueuse/core"
+
 type Device = 'pc' | 'h5' | 'pad'
 
-export function getDeviceType(): Device {
-  const ua = navigator.userAgent
-  if (ua.indexOf('Windows NT') > -1) {
-    return 'pc'
-  }
-  if (ua.indexOf('iPhone') > -1 || ua.indexOf('Android') > -1) {
-    return 'h5'
-  }
-  if (ua.indexOf('iPad') > -1) {
-    return 'pad'
-  }
-  return null
+const { width } = useWindowSize()
+
+export function getDeviceType(): ComputedRef<Device> {
+  return computed(() => {
+    console.log('width device', width.value);
+    
+    if (width.value < 425) {
+      return 'h5'
+    }
+    if (width.value < 768) {
+      return 'pad'
+    } else {
+      return 'pc'
+    }
+  })
+
+  // const ua = navigator.userAgent
+  // if (ua.indexOf('Windows NT') > -1) {
+  //   return 'pc'
+  // }
+  // if (ua.indexOf('iPhone') > -1 || ua.indexOf('Android') > -1) {
+  //   return 'h5'
+  // }
+  // if (ua.indexOf('iPad') > -1) {
+  //   return 'pad'
+  // }
+  // return null
 }
+
 
 
 export function toReadableDuration(second: number) {

@@ -2,31 +2,31 @@
   <VDialog
     v-model="visible"
     :title="props.mode === 'create' ? '创建用户' : '更新用户'"
-    width="800px"
+    :width="deviceType === 'h5' ? '360px' : '720px' "
     @open="handleOpened"
     @cancel="visible = false"
     @confirm="handleConfirm"
   >
     <el-form :model="formData" label-width="100px" scroll-to-error>
       <el-row>
-        <el-col :span="12">
+        <el-col :span="12" :xl="12" :xs="24">
           <el-form-item label="用户名" prop="username">
             <el-input :disabled="props.mode === 'update'" v-model="formData.username"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="12" v-show="props.mode === 'create'">
+        <el-col :span="12" :xl="12" :xs="24" v-show="props.mode === 'create'">
           <el-form-item label="密码" prop="password">
             <el-input v-model="formData.password"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="12">
+        <el-col :span="12" :xl="12" :xs="24">
           <el-form-item label="昵称" prop="nickname">
             <el-input v-model="formData.nickname"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="12" :xl="12" :xs="24">
           <el-form-item label="手机" prop="phone">
             <el-input v-model="formData.phone"></el-input>
           </el-form-item>
@@ -34,12 +34,12 @@
       </el-row>
 
       <el-row>
-        <el-col :span="12">
+        <el-col :span="12" :xl="12" :xs="24">
           <el-form-item label="邮箱" prop="email">
             <el-input v-model="formData.email"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="12" :xl="12" :xs="24">
           <el-form-item label="状态" prop="status">
             <el-radio-group v-model="formData.status">
               <el-radio-button :label="0">正常</el-radio-button>
@@ -97,6 +97,7 @@ import { computed, onBeforeMount, ref } from "vue";
 import { ElForm, ElFormItem, ElRow, ElCol, ElInput, ElRadioGroup, ElRadioButton, ElSelect, ElOption } from "element-plus";
 import DeptSelectorInput from "@/components/common/selector/dept/DeptSelectorInput.vue";
 import { useRole } from "@/service/system/role";
+import { getDeviceType } from "@/utils/common";
 
 
 interface Props {
@@ -114,6 +115,9 @@ interface Emits {
   (e: 'confirm', param: UserAddParam | UserUpdateParam): void
 }
 const emits = defineEmits<Emits>()
+
+const deviceType = getDeviceType()
+
 
 const visible = computed<boolean>({
   get: () =>  props.modelValue,

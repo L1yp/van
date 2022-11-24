@@ -153,7 +153,7 @@ provide(vFormSchemeKey, formScheme)
 const deviceType = getDeviceType()
 const labelPosition = computed(() => {
   if (formScheme.value.labelPosition === 'auto') {
-    return deviceType === 'h5' ? 'top' : 'right'
+    return deviceType.value === 'h5' ? 'top' : 'right'
   }
   return formScheme.value.labelPosition
 })

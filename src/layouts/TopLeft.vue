@@ -68,12 +68,12 @@ import { getDeviceType } from "@/utils/common"
 const deviceType = getDeviceType()
 console.log('deviceType', deviceType);
 
-const asideOpened: Ref<boolean> = ref(deviceType !== 'h5')
+const asideOpened: Ref<boolean> = ref(deviceType.value !== 'h5')
 provide(asideOpenedKey, asideOpened);
 
 
 const asideWidth = computed<string>(() => {
-  if (deviceType === 'h5') {
+  if (deviceType.value === 'h5') {
     return '0'
   }
   return asideOpened.value ? `${theme.value.asideWidth}px` : "64px";
