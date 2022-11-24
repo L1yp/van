@@ -1,5 +1,5 @@
 <template>
-  <div>666</div>
+  <div>{{ instanceId }}</div>
 </template>
 
 <script lang="ts" setup>

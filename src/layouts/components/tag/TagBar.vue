@@ -12,7 +12,7 @@
             @closeTag="closeTag(element)"
             :close="element.close"
             :class="[element.active ? 'active' : '']"
-            @clickTag="router.push(element.path)"
+            @clickTag="router.push(element.fullPath)"
           >
             <template #icon>
               <el-icon size="0.8em">
@@ -96,11 +96,11 @@ function closeTag(tag: TagInfo) {
     if (delIdx === length - 1) {
       tags[tags.length - 1].active = true;
       activeTag.value = tags[tags.length - 1];
-      router.push(tags[tags.length - 1].path);
+      router.push(tags[tags.length - 1].fullPath);
     } else {
       tags[delIdx].active = true;
       activeTag.value = tags[delIdx];
-      router.push(tags[delIdx].path);
+      router.push(tags[delIdx].fullPath);
     }
   } else {
     write("tags", tags);
@@ -114,6 +114,9 @@ watch(() => route.fullPath, (newPath, oldPath)=>{
     // 只把layout main路由的加入多标签
     return;
   }
+
+  const lastMatched = route.matched.at(-1)
+  const tagUniPath = lastMatched.path
   if (tags.length === 0) {
     const array = read<TagInfo[]>("tags");
     if(array) {
@@ -124,7 +127,7 @@ watch(() => route.fullPath, (newPath, oldPath)=>{
   }
   let isNewTab = true;
   for (let tag of tags) {
-    if (tag.path === newPath) {
+    if (tag.path === tagUniPath) {
       tag.active = true;
       activeTag.value = tag;
       isNewTab = false;
@@ -136,7 +139,8 @@ watch(() => route.fullPath, (newPath, oldPath)=>{
   if (isNewTab) {
     const meta = route.meta as unknown as RouteMetaRecord
     const tag: TagInfo = {
-      path: newPath,
+      path: tagUniPath,
+      fullPath: newPath,
       title: meta.name,
       active: true,
       close: meta.closeable,
@@ -161,7 +165,7 @@ function handleContextMenuCommand(command: string, element: TagInfo) {
     if (element.path === activeTag.value.path) {
       setPageScreen()
     } else {
-      router.push(element.path).then(setPageScreen)
+      router.push(element.fullPath).then(setPageScreen)
     }
   }
 }
