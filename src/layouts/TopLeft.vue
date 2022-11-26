@@ -40,7 +40,7 @@
         >
           <s-v-g-icon class="close-icon" name="close" style="width: 16px; height: 16px; position: absolute; left: 10px; top: 4px"></s-v-g-icon>
         </div>
-        <div ref="maskContainerRef" style="position: absolute; top: 0; left: 0; "></div>
+        <div ref="maskContainerRef" style="position: absolute; top: 0; left: 0; width: 100%;"></div>
       </el-main>
       <el-footer :style="pageScreen ? { display: 'none' } : undefined"></el-footer>
     </el-container>

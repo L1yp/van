@@ -41,7 +41,7 @@
             <el-tag :type="scope.row.status === 0 ? '' : 'danger'" v-text="scope.row.status === 0 ? '正常' : '禁用'"></el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="操作">
+        <el-table-column label="操作" fixed="right">
           <template #default="scope">
             <el-button plain style="vertical-align: middle;" text @click.stop="handleUpdateRole(scope.row)" :icon="Edit">编辑</el-button>
             <el-popconfirm

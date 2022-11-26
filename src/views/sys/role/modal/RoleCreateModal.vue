@@ -7,7 +7,7 @@
     @confirm="handleConfirm"
     @open="handleOpen"
   >
-    <el-form :model="formData" label-width="50px" scroll-to-error>
+    <el-form :model="formData" label-width="50px" :label-position="deviceType === 'pc' ? 'right' : 'top'" scroll-to-error>
       <el-form-item prop="name" label="名称" required>
         <el-input v-model="formData.name" />
       </el-form-item>
@@ -24,6 +24,9 @@
 import { ElForm, ElFormItem, ElInput, ElInputNumber } from 'element-plus'
 import {computed, ref} from "vue";
 import VDialog from "@/components/dialog/VDialog.vue";
+import { getDeviceType } from '@/utils/common';
+
+const deviceType = getDeviceType()
 
 type ModalMode = 'create' | 'update'
 interface Props {

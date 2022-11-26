@@ -1,20 +1,27 @@
 <template>
   <div>
     <div class="op-line">
-      <el-input style="width: 200px" size="default" placeholder="菜单名称" v-model="menuTitleKey"></el-input>
-      <el-button size="default" plain style="vertical-align: middle; margin-left: 12px" type="info" @click="expendMenu">
-        <SVGIcon style="width: 1em; height: 1em" name="Expand" /><span style="margin-left: 4px">展开</span>
-      </el-button>
-      <el-button size="default" plain style="vertical-align: middle" type="info" @click="shrinkMenu">
-        <SVGIcon style="width: 1em; height: 1em" name="Shrink" /><span style="margin-left: 4px" >收缩</span>
-      </el-button>
-      <el-button size="default" plain style="vertical-align: middle" type="primary" @click="addMenu" :icon="Plus">新增</el-button>
-      <el-popconfirm title="确定删除?" confirmButtonText="确定" cancelButtonText="取消" @confirm="batchDeleteMenu">
-        <template #reference>
-          <el-button size="default" plain style="vertical-align: middle" type="danger" :disabled="selectedMenus.length === 0" :icon="Delete">删除</el-button>
-        </template>
-      </el-popconfirm>
-      <el-button size="default" plain style="vertical-align: middle" type="warning" @click="exportMenu" :icon="Download">导出</el-button>
+      <el-scrollbar always :native="deviceType !== 'pc'">
+        <div style="display: flex; ">
+          <div>
+            <el-input style="width: 200px" size="default" placeholder="菜单名称" v-model="menuTitleKey"></el-input>
+          </div>
+          
+          <el-button size="default" plain style="vertical-align: middle; margin-left: 12px" type="info" @click="expendMenu">
+            <SVGIcon style="width: 1em; height: 1em" name="Expand" /><span style="margin-left: 4px">展开</span>
+          </el-button>
+          <el-button size="default" plain style="vertical-align: middle" type="info" @click="shrinkMenu">
+            <SVGIcon style="width: 1em; height: 1em" name="Shrink" /><span style="margin-left: 4px" >收缩</span>
+          </el-button>
+          <el-button size="default" plain style="vertical-align: middle" type="primary" @click="addMenu" :icon="Plus">新增</el-button>
+          <el-popconfirm title="确定删除?" confirmButtonText="确定" cancelButtonText="取消" @confirm="batchDeleteMenu">
+            <template #reference>
+              <el-button size="default" plain style="vertical-align: middle" type="danger" :disabled="selectedMenus.length === 0" :icon="Delete">删除</el-button>
+            </template>
+          </el-popconfirm>
+          <el-button size="default" plain style="vertical-align: middle" type="warning" @click="exportMenu" :icon="Download">导出</el-button>
+        </div>
+      </el-scrollbar>
     </div>
 
     <div class="data-table">
@@ -53,7 +60,7 @@
             <el-tag>{{ scope.row.state === 0 ? '正常' : '禁用' }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="操作">
+        <el-table-column label="操作" fixed="right" width="190">
           <template #default="scope">
             <el-button plain style="vertical-align: middle" text :icon="Edit" @click="editMenu(scope.row)">编辑</el-button>
             <el-popconfirm title="确定删除?" confirmButtonText="确定" cancelButtonText="取消" @confirm="delMenu(scope.row)">
@@ -89,14 +96,16 @@ import {
   ElPopconfirm,
   ElTable,
   ElTableColumn,
-  ElTag,
+  ElTag, ElScrollbar,
 } from "element-plus";
 import * as MenuApi from "@/api/sys/menu";
-import { filterDataWithTitle } from "@/utils/common";
+import { filterDataWithTitle, getDeviceType } from "@/utils/common";
 import { mainHeightKey, themeKey } from "@/config/app.keys";
 import { useMenuData } from "@/service/system/menu";
 import { Plus, Edit, Delete, Download, } from "@element-plus/icons-vue";
 import MenuCreateModal from "./modal/MenuCreateModal.vue";
+
+const deviceType = getDeviceType()
 
 const loading = ref(true);
 const tableRef = ref<InstanceType<typeof ElTable>>()

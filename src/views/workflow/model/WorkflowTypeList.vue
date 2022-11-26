@@ -14,7 +14,6 @@
         row-key="id"
         :tree-props="{ children: 'children' }"
         :row-style="{ cursor: 'pointer' }"
-        @row-click="row => row.children?.length && tableRef.toggleRowExpansion(row, undefined)"
         @row-dblclick="handleRowDbClick"
       >
         <el-table-column>

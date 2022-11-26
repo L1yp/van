@@ -2,7 +2,7 @@
   <v-dialog
     v-model="visible"
     :title="props.mode === 'create' ? '创建部门' : '更新部门'"
-    width="600px"
+    :width="deviceType === 'h5' ? '360px' : '720px'"
     draggable
     :disable-footer="loading"
     @cancel="visible = false"
@@ -20,6 +20,9 @@ import DeptCreateForm from "./form/DeptCreateForm.vue";
 import DeptUpdateForm from "./form/DeptUpdateForm.vue";
 import VDialog from '@/components/dialog/VDialog.vue'
 import { ElMessage } from "element-plus";
+import { getDeviceType } from "@/utils/common";
+
+const deviceType = getDeviceType()
 
 type DialogMode = 'create' | 'update'
 interface Props {

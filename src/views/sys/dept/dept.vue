@@ -1,25 +1,32 @@
 <template>
   <div>
     <div class="op-line">
-      <el-input style="width: 200px;" placeholder="部门名称" v-model="deptTitleKey"></el-input>
-      <el-button plain style="vertical-align: middle; margin-left: 12px;" type="info" @click="expand">
-        <SVGIcon style="width: 1em; height: 1em" name="Expand" /><span style="margin-left: 4px;">展开</span>
-      </el-button>
-      <el-button plain style="vertical-align: middle;" type="info" @click="shrink">
-        <SVGIcon style="width: 1em; height: 1em" name="Shrink" /><span style="margin-left: 4px;">收缩</span>
-      </el-button>
-      <el-button plain type="primary" @click="addItem" :icon="Plus">新增</el-button>
-      <el-popconfirm
-        title="确定删除?"
-        confirmButtonText="确定"
-        cancelButtonText="取消"
-        @confirm="batchDelete"
-      >
-        <template #reference>
-          <el-button plain type="danger" :icon="Delete">删除</el-button>
-        </template>
-      </el-popconfirm>
-      <el-button plain type="warning" @click="exportTable" :icon="Download">导出</el-button>
+      <el-scrollbar always :native="deviceType !== 'pc'">
+        <div style="display: flex; ">
+          <div>
+            <el-input style="width: 200px;" placeholder="部门名称" v-model="deptTitleKey"></el-input>
+          </div>
+          <el-button plain style="vertical-align: middle; margin-left: 12px;" type="info" @click="expand">
+            <SVGIcon style="width: 1em; height: 1em" name="Expand" /><span style="margin-left: 4px;">展开</span>
+          </el-button>
+          <el-button plain style="vertical-align: middle;" type="info" @click="shrink">
+            <SVGIcon style="width: 1em; height: 1em" name="Shrink" /><span style="margin-left: 4px;">收缩</span>
+          </el-button>
+          <el-button plain type="primary" @click="addItem" :icon="Plus">新增</el-button>
+          <el-popconfirm
+            title="确定删除?"
+            confirmButtonText="确定"
+            cancelButtonText="取消"
+            @confirm="batchDelete"
+          >
+            <template #reference>
+              <el-button plain type="danger" :icon="Delete">删除</el-button>
+            </template>
+          </el-popconfirm>
+          <el-button plain type="warning" @click="exportTable" :icon="Download">导出</el-button>
+        </div>
+      </el-scrollbar>
+      
     </div>
 
     <div class="data-table">
@@ -34,7 +41,7 @@
         :tree-props="{ children: 'children' }"
       >
         <el-table-column type="selection" align="center" header-align="center" />
-        <el-table-column prop="simple_name" align="left" header-align="left" label="简称" width="300" />
+        <el-table-column prop="simple_name" align="left" header-align="left" label="简称" min-width="200" />
         <el-table-column type="index" align="center" header-align="center" label="#" width="60" />
         <el-table-column prop="ident" align="center" header-align="center" label="编号" width="100" />
         <el-table-column prop="order_no" align="center" header-align="center" label="排序" width="60" />
@@ -53,7 +60,7 @@
             <el-tag>{{ scope.row.status === 0 ? '正常' : '禁用' }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="操作">
+        <el-table-column label="操作" fixed="right" width="190">
           <template #default="scope">
             <el-button plain text @click="editItem(scope.row)" :icon="Edit">编辑</el-button>
             <el-popconfirm
@@ -86,15 +93,17 @@ import {
   ElInput, ElTag, 
   ElButton, 
   ElPopconfirm,
-ElMessage, 
+  ElMessage, ElScrollbar,
 } from "element-plus";
-import {filterDataWithTitle} from "@/utils/common"
+import {filterDataWithTitle, getDeviceType} from "@/utils/common"
 import {mainHeightKey, themeKey} from "@/config/app.keys";
 import { Plus, Delete, Download, Edit } from "@element-plus/icons-vue";
 import DeptModal from "./modal/DeptModal.vue";
 import { useDeptInfo } from "@/service/system/dept";
 import UserViewer from '@/components/common/viewer/user/UserViewer.vue'
 import { userMapKey } from '@/config/app.keys'
+
+const deviceType = getDeviceType()
 
 const tableRef = ref<InstanceType<typeof ElTable>>();
 

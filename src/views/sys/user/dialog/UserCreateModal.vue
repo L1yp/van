@@ -7,7 +7,7 @@
     @cancel="visible = false"
     @confirm="handleConfirm"
   >
-    <el-form :model="formData" label-width="100px" scroll-to-error>
+    <el-form :model="formData" label-width="100px" :label-position="deviceType === 'pc' ? 'right' : 'top'" scroll-to-error>
       <el-row>
         <el-col :span="12" :xl="12" :xs="24">
           <el-form-item label="用户名" prop="username">

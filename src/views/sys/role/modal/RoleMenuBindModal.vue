@@ -2,6 +2,7 @@
   <VDialog
     v-model="visible"
     title="绑定菜单及权限"
+    :width="deviceType === 'h5' ? '360px' : '720px'"
     @opened="handleOpened"
     @cancel="visible = false"
     @confirm="emits('confirm', tableRef.getSelectionRows())"
@@ -19,7 +20,7 @@
       <el-table-column type="selection" :selectable="row => ['TAB', 'PAGE', 'BUTTON', 'WORKFLOW', 'ENTITY'].includes(row.type)" />
       <el-table-column prop="name" label="名称" width="300"  />
       <el-table-column prop="type" label="类型" width="150" />
-      <el-table-column prop="component" label="组件" />
+      <el-table-column prop="component" label="组件" min-width="200" />
     </el-table>
   </VDialog>
 
@@ -29,7 +30,9 @@
 import { ElTable, ElTableColumn } from 'element-plus'
 import VDialog from "@/components/dialog/VDialog.vue";
 import {computed, inject, ref} from "vue";
-import {findTreeItemById, getTreeItemPath} from "@/utils/common";
+import {findTreeItemById, getDeviceType, getTreeItemPath} from "@/utils/common";
+
+const deviceType = getDeviceType()
 
 interface Props {
   modelValue: boolean

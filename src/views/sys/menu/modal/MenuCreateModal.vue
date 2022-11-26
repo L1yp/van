@@ -2,24 +2,33 @@
   <VDialog
     v-model="visible"
     :title="props.mode === 'create' ? '创建菜单' : '更新菜单'"
-    width="800px"
+    :width="deviceType === 'h5' ? '360px' : '720px' "
     @cancel="visible = false"
     @confirm="handleConfirm"
     @open="handleOpen"
   >
 
-  <el-form :model="formData" label-width="100px" scroll-to-error>
+  <el-form :model="formData" label-width="100px" :label-position="deviceType === 'pc' ? 'right' : 'top'" scroll-to-error>
     <ElRow>
-      <ElFormItem label="类型" prop="type">
-        <ElRadioGroup v-model="formData.type" :disabled="props.mode === 'update'">
-          <ElRadioButton label="FOLDER">文件夹</ElRadioButton>
-          <ElRadioButton label="TAB">页面容器</ElRadioButton>
-          <ElRadioButton label="PAGE">页面</ElRadioButton>
-          <ElRadioButton label="WORKFLOW">流程</ElRadioButton>
-          <ElRadioButton label="ENTITY">实体</ElRadioButton>
-          <ElRadioButton label="BUTTON">按钮</ElRadioButton>
-        </ElRadioGroup>
-      </ElFormItem>
+      <ElCol :span="24">
+        <ElFormItem label="类型" prop="type" v-if="deviceType === 'pc'">
+          <ElRadioGroup v-model="formData.type" :disabled="props.mode === 'update'">
+            <ElRadioButton 
+              v-for="option in menuTypeOptions" 
+              :key="option.value" 
+              :value="option.value" 
+              :label="option.value"
+            >
+              {{option.label}}
+            </ElRadioButton>
+          </ElRadioGroup>
+        </ElFormItem>
+        <ElFormItem label="类型" prop="type" v-else>
+          <el-select v-model="formData.type" :disabled="props.mode === 'update'" style="width: 100%;">
+            <el-option v-for="option in menuTypeOptions" :key="option.value" :value="option.value" :label="option.label" />
+          </el-select>
+        </ElFormItem>
+      </ElCol>
     </ElRow>
     <component :is="configComponents[formData.type]" :form-data="formData" :menu-tree="props.menuTree" />
   </el-form>
@@ -33,13 +42,25 @@
 import VDialog from '@/components/dialog/VDialog.vue';
 import { computed, markRaw, ref } from 'vue';
 import {
-  ElForm, ElFormItem, ElRadioGroup, ElRadioButton, ElRow, ElCol,
+  ElForm, ElFormItem, ElRadioGroup, ElRadioButton, ElRow, ElCol, ElSelect, ElOption, 
 } from "element-plus";
 import FolderForm from './form/FolderForm.vue'
 import TabsForm from './form/TabsForm.vue'
 import PageForm from './form/PageForm.vue'
 import ProcessForm from './form/ProcessForm.vue'
 import ButtonForm from './form/ButtonForm.vue'
+import { getDeviceType } from '@/utils/common';
+
+const deviceType = getDeviceType()
+
+const menuTypeOptions = [
+  { label: '文件夹', value: 'FOLDER' },
+  { label: '页面容器', value: 'TAB' },
+  { label: '页面', value: 'PAGE' },
+  { label: '流程', value: 'WORKFLOW' },
+  { label: '实体', value: 'ENTITY' },
+  { label: '按钮', value: 'BUTTON' },
+]
 
 interface Props {
   modelValue: boolean

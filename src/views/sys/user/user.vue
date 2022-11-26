@@ -44,7 +44,7 @@
           <template #header>
             <el-input v-model="formData.nickname" @change="reloadPage"></el-input>
           </template>
-          <el-table-column prop="nickname" label="昵称" width="100"/>
+          <el-table-column prop="nickname" label="昵称" />
         </el-table-column>
         <el-table-column>
           <template #header>
@@ -78,7 +78,7 @@
           </el-table-column>
         </el-table-column>
 
-        <el-table-column label="操作">
+        <el-table-column label="操作" fixed="right" width="190">
           <template #default="scope">
             <el-button plain style="vertical-align: middle" text @click.stop="editUser(scope.row)" :icon="Edit">编辑</el-button>
             <el-popconfirm

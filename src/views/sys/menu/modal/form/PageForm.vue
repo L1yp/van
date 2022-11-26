@@ -1,18 +1,16 @@
 <template>
   <el-row>
-    <el-col :span="12">
+    <el-col :span="12" :xs="24">
       <el-form-item label="名称" prop="name">
         <el-input v-model="formData.name" />
       </el-form-item>
     </el-col>
-    <ElCol :span="12">
+    <ElCol :span="12" :xs="24">
       <ElFormItem label="序号" prop="order_no">
         <ElInputNumber v-model="formData.order_no" style="width: 100%"></ElInputNumber>
       </ElFormItem>
     </ElCol>
-  </el-row>
-  <el-row>
-    <el-col :span="12">
+    <el-col :span="12" :xs="24">
       <el-form-item label="父菜单" prop="pid">
         <el-tree-select
           v-model="props.formData.pid"
@@ -23,36 +21,33 @@
         />
       </el-form-item>
     </el-col>
-    <el-col :span="12">
+    <el-col :span="12" :xs="24">
       <el-form-item label="图标" prop="icon">
         <el-input v-model="props.formData.icon" />
       </el-form-item>
     </el-col>
-  </el-row>
-  <el-row>
-    <el-col :span="12">
+    <el-col :span="12" :xs="24">
       <el-form-item label="路由" prop="path">
         <el-input v-model="props.formData.path"></el-input>
       </el-form-item>
     </el-col>
-    <el-col :span="12">
+    <el-col :span="12" :xs="24">
       <el-form-item label="组件" prop="component">
         <el-input v-model="props.formData.component"></el-input>
       </el-form-item>
     </el-col>
-  </el-row>
-  <el-row>
-    <el-col :span="12">
+    <el-col :span="12" :xs="24">
       <el-form-item label="状态" prop="state">
         <DictInput v-model="props.formData.state" :ident="STATUS" />
       </el-form-item>
     </el-col>
-    <el-col :span="12">
+    <el-col :span="12" :xs="24">
       <el-form-item label="备注" prop="remark">
         <el-input v-model="formData.remark" />
       </el-form-item>
     </el-col>
   </el-row>
+
 </template>
 
 <script lang="ts" setup>
