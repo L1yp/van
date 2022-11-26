@@ -20,7 +20,7 @@
       <el-table-column type="selection" :selectable="row => ['TAB', 'PAGE', 'BUTTON', 'WORKFLOW', 'ENTITY'].includes(row.type)" />
       <el-table-column prop="name" label="名称" width="300"  />
       <el-table-column prop="type" label="类型" width="150" />
-      <el-table-column prop="component" label="组件" min-width="200" />
+      <el-table-column prop="component" label="组件" min-width="300" />
     </el-table>
   </VDialog>
 

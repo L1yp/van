@@ -25,7 +25,7 @@
           <template #header>
             <el-input v-model="param.remark" @change="searchEntity(param)" />
           </template>
-          <el-table-column prop="remark" label="备注" :resizable="false" />
+          <el-table-column prop="remark" label="备注" :resizable="false" min-width="200" show-overflow-tooltip />
         </el-table-column>
         <el-table-column>
           <template #header>
