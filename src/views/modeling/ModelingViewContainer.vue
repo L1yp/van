@@ -22,7 +22,6 @@
       <vxe-table
         ref="xTable"
         height="100%"
-        :loading="loading"
         :key="refreshTableKey"
         stripe
         :data="pageData.data"

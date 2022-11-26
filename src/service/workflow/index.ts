@@ -169,3 +169,25 @@ export function useWorkflowInstanceApi(loading?: Ref<boolean>) {
   }
 
 }
+
+export function useWorkflowTaskApi(loading?: Ref<boolean>) {
+
+  
+
+  async function completeTask(data: WorkflowTaskCompleteParam) {
+    try {
+      loading && (loading.value = true)
+      await WorkflowApi.completeTask(data)
+      ElMessage.success('提交成功')
+    } catch(e) {
+      ElMessage.error((e as Error)?.message || '提交失败')
+    } finally {
+      loading && (loading.value = false)
+    }
+  }
+
+  return {
+    completeTask
+  }
+
+}

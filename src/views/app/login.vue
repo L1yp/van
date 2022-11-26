@@ -70,7 +70,7 @@ async function login() {
       const redirect = route.query?.redirect as string
       await router.replace(redirect);
     } else {
-      await router.replace({name: "todoTask"});
+      await router.replace('/');
     }
 
   } catch (e) {

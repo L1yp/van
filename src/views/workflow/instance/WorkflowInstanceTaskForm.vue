@@ -1,11 +1,12 @@
 <template>
-  <div>
+  <el-scrollbar always>
     <VFormRender v-if="props.formData && props.scheme" v-bind="props" />
-  </div>
+  </el-scrollbar>
   
 </template>
 <script lang="ts" setup>
 import VFormRender from '@/components/form/designer/VFormRender.vue';
+import { ElScrollbar } from "element-plus";
 
 interface Props {
   scheme: VFormScheme | null

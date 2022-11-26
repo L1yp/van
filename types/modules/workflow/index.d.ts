@@ -109,10 +109,54 @@ declare interface WorkflowInstanceQueryParam {
   instanceId: string
 }
 
+declare interface TaskCommentMessage {
+  type: 'complete' | 'comment'
+  outcome: string
+  comment: string
+}
+
+declare interface TaskComment {
+  id: string
+  type: string
+  time: string
+  user_id: string
+  task_id: string
+  process_instance_id: string
+  action: string
+  message: TaskCommentMessage
+}
+
+declare interface WorkflowOutcomeInfo {
+  name: string
+  page_info: ModelingPageView
+}
+
 declare interface WorkflowInstanceDetailsResult {
   page_info: ModelingPageView
-  outcomes: Record<string, ModelingPageView>
+  outcomes: WorkflowOutcomeInfo[]
+  activity_list: WorkflowActivityInfo[]
   instance_info: Record<string, any>
   xml: string
   user_map: Record<string, UserView>
+  comment_list: TaskComment[]
+  task_id: string
+}
+
+
+declare interface WorkflowActivityInfo {
+  id: string
+  activity_id: string
+  activity_name: string
+  activity_type: string
+  execution_id: string
+  process_instance_id: string
+  process_definition_id: string
+  duration_in_millis: number
+  start_time: string
+  end_time: string
+  assignee: string
+  task_id: string
+  delete_reason: string
+  called_process_instance_id: string
+  outcome: string
 }

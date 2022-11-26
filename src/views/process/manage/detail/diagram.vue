@@ -66,12 +66,14 @@ import { ElTable, ElTableColumn, ElPopover, ElScrollbar, ElDescriptions, ElDescr
 import BpmnViewer from 'bpmn-js/lib/NavigatedViewer'
 import ImportModule from 'bpmn-js/lib/import/index'
 import DrawModule from 'bpmn-js/lib/draw/index'
-import {asideWidthKey, mainHeightKey, processInstanceDetailInfoKey, themeKey} from "@/config/app.keys";
+import MiniMapModule from 'diagram-js-minimap/dist/index'
 import 'bpmn-js/dist/assets/diagram-js.css';
 import 'bpmn-js/dist/assets/bpmn-font/css/bpmn.css';
 import 'bpmn-js/dist/assets/bpmn-font/css/bpmn-codes.css';
 import 'bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css';
 import 'diagram-js-minimap/assets/diagram-js-minimap.css'
+
+import {asideWidthKey, mainHeightKey, processInstanceDetailInfoKey, themeKey} from "@/config/app.keys";
 import * as ProcessModelApi from "@/api/sys/process";
 import {toReadableDuration} from "@/utils/common";
 import { ElementRegistry } from "bpmn-js"
@@ -79,7 +81,7 @@ import UserViewer from "@/components/common/viewer/user/UserViewer.vue";
 import {useIcon} from "@/components/common/util";
 import {InternalEvent} from "diagram-js/lib/core/EventBus";
 import SVGIcon from "@/components/common/SVGIcon.vue";
-import MiniMapModule from 'diagram-js-minimap/dist/index'
+
 
 const canvasRef = shallowRef<HTMLDivElement>()
 const viewer = shallowRef<BpmnViewer>()

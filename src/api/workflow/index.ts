@@ -80,6 +80,15 @@ export function startInstance(data: WorkflowInstanceStartParam) {
   })
 }
 
+/** 完成任务 */
+export function completeTask(data: WorkflowTaskCompleteParam) {
+  return request<WorkflowInstanceCreateResult>({
+    url: `/workflow/engine/task/complete`,
+    method: 'POST',
+    data,
+  })
+}
+
 /** 获取启动表单 */
 export function getStartForm(mkey: string) {
   return request<ModelingPageView>({

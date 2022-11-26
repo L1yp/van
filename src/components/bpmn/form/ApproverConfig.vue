@@ -65,13 +65,19 @@ const openMultiInstance = computed({
       multiInstanceLoopCharacteristics.isSequential = true
       multiInstanceLoopCharacteristics.elementVariable = 'assigneeItem'
       const fields = assigneeValue.value?.join(',') || ''
-      multiInstanceLoopCharacteristics.collection = '${psr.read(execution, "' + bpmnUtil.getProcessKey() + '", "' + fields + '")}'
+      multiInstanceLoopCharacteristics.collection = '${psr.readList(execution, "' + bpmnUtil.getProcessKey() + '", "' + fields + '")}'
+
+      multiInstanceLoopCharacteristics.completionCondition = bpmnFactory.create('bpmn:FormalExpression')
+      multiInstanceLoopCharacteristics.completionCondition.body = '${completionStrategy.isCompletion(execution)}'
+
+
       bpmnUtil.updateProperty(bpmnSelectedElem.value, {
         loopCharacteristics: multiInstanceLoopCharacteristics
       })
       bpmnUtil.updateProperty(bpmnSelectedElem, {
         assignee: '${assigneeItem}'
       })
+      // <bpmn2:completionCondition xsi:type="bpmn2:tFormalExpression">1111</bpmn2:completionCondition>
       assigneeType.value = 'user'
       const outgoing = bpmnSelectedElem.value.outgoing
       for (let connection of outgoing) {
@@ -145,14 +151,14 @@ const assigneeValue = computed<string[]>({
     })
     if (bpmnUtil.isMultiInstanceUserTask(bpmnSelectedElem)) {
       bpmnUtil.updateModelingProperty(bpmnSelectedElem, bpmnSelectedElem.value?.businessObject?.loopCharacteristics, {
-        collection: '${psr.read(execution, "' + bpmnUtil.getProcessKey() + '", "' + v.join(',') + '")}'
+        collection: '${psr.readList(execution, "' + bpmnUtil.getProcessKey() + '", "' + v.join(',') + '")}'
       })
       bpmnUtil.updateProperty(bpmnSelectedElem, {
         assignee: '${assigneeItem}'
       })
     } else {
       bpmnUtil.updateProperty(bpmnSelectedElem, {
-        assignee: '${psr.read(execution, "' + bpmnUtil.getProcessKey() + '", "' + v.join(',') + '")}'
+        assignee: '${psr.readList(execution, "' + bpmnUtil.getProcessKey() + '", "' + v.join(',') + '")}'
       })
     }
   }

@@ -170,7 +170,9 @@ function handleRowDbClick(row: UserView) {
   if (!props.multiple) {
     handleConfirm()
   } else {
-    handleAddUser(row)
+    if (!localSelectedUser.value.includes(row)) {
+      handleAddUser(row)
+    }
   }
 }
 
