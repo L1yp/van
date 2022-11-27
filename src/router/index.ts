@@ -153,7 +153,7 @@ function transMenuToRoute(options: MenuView[]) {
 
 
     } else {
-      transMenuToRoute(menuOption.children)
+      transMenuToRoute(menuOption.children || [])
     }
   }
 }

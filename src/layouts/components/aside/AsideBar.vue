@@ -1,6 +1,6 @@
 <template>
   <div class="aside-header">
-    <SVGIcon name="logo" width="30px" height="30px" color="red" bg-color="#FFFFFFFF"></SVGIcon>
+    <img src="/favicon.ico" alt="logo" style="width: 30px; height: 30px;" />
     <span style="font-size: 20px" v-if="asideOpened">Admin</span>
   </div>
   <div class="menu-wrapper">

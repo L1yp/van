@@ -131,6 +131,7 @@ async function importXML(xml: string) {
     const canvas = bpmnModeler.value.get('canvas')
     canvas.zoom("fit-viewport", true);
     canvas.zoom(Math.ceil(scale.value / 100));
+    
 
     const registry = bpmnModeler.value.get("elementRegistry")
     bpmnSelectedElem.value = registry.find(it => it.type === 'bpmn:Process')
@@ -181,7 +182,14 @@ const errEl = shallowRef<HTMLElement>()
 const errText = ref('')
 
 function validateBpmn(): boolean {
+  const canvas = bpmnModeler.value.get('canvas')
+  const root = canvas.getRootElement()
+  if (root.id !== workflowVer.value.key) {
+    ElMessage.error('流程id与流程模型标识不一致')
+    return false
+  }
   const registry: ElementRegistry = bpmnModeler.value.get("elementRegistry")
+
 
   const err = validate(registry)
   if (err) {
