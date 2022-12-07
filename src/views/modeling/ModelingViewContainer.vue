@@ -163,13 +163,13 @@ const teleportTo = computed(() => {
 
 const loading = ref(false)
 
-const { instanceInfo, getInstance, createInstance, updateInstance, deleteInstance } = useEntityInstanceApi(loading)
-const { startFormScheme, startInstanceResult, startInstance, getStartForm } = useWorkflowInstanceApi(loading)
-const { pageInfo, findPage } = useModelingPageApi(loading)
-const { pageInfo: viewPageInfo, findPage: getViewPage } = useModelingPageApi(loading)
-const { pageInfo: updatePageInfo, findPage: getUpdatePage } = useModelingPageApi(loading)
+const { instanceInfo, getInstance, createInstance, updateInstance, deleteInstance } = useEntityInstanceApi()
+const { startFormScheme, startInstanceResult, startInstance, getStartForm } = useWorkflowInstanceApi()
+const { pageInfo, findPage } = useModelingPageApi()
+const { pageInfo: viewPageInfo, findPage: getViewPage } = useModelingPageApi()
+const { pageInfo: updatePageInfo, findPage: getUpdatePage } = useModelingPageApi()
 
-const { findView, viewSimpleInfoList } = useViewApi(loading)
+const { findView, viewSimpleInfoList } = useViewApi()
 
 const startForm = computed(() => props.module === 'ENTITY' ? pageInfo.value?.page_scheme : startFormScheme.value?.page_scheme)
 
@@ -177,30 +177,36 @@ const startForm = computed(() => props.module === 'ENTITY' ? pageInfo.value?.pag
 onMounted(initPage)
 
 async function initPage() {
-  if (props.module === 'ENTITY') {
-    await findPage({ ...props, name: 'ADD' })
-    await getViewPage({ ...props, name: 'VIEW' })
-    await getUpdatePage({ ...props, name: 'UPDATE' })
-  } else {
-    await getStartForm(props.mkey)
-    console.log('start form', startFormScheme.value);
-  }
-
-  await findView({module: props.module, mkey: props.mkey})
-  if (viewSimpleInfoList.value?.length) {
-    activeViewId.value = viewSimpleInfoList.value[0].id
-    for (const it of activeView.value.columns) {
-      if (it.field?.type === 'option' && it.filterable) {
-        const { modelingOptionValues, findModelingOptionValues } = useModelingOptionApi(loading)
-        await findModelingOptionValues({ typeId: it.field.scheme.optionTypeId })
-        it.field.scheme.options = modelingOptionValues.value
-      }
+  try {
+    loading.value = true
+    if (props.module === 'ENTITY') {
+      await findPage({ ...props, name: 'ADD' })
+      await getViewPage({ ...props, name: 'VIEW' })
+      await getUpdatePage({ ...props, name: 'UPDATE' })
+    } else {
+      await getStartForm(props.mkey)
+      console.log('start form', startFormScheme.value);
     }
 
-    await loadData()
-  } else {
-    ElMessage.error('该实体未配置显示视图')
+    await findView({module: props.module, mkey: props.mkey})
+    if (viewSimpleInfoList.value?.length) {
+      activeViewId.value = viewSimpleInfoList.value[0].id
+      for (const it of activeView.value.columns) {
+        if (it.field?.type === 'option' && it.filterable) {
+          const { modelingOptionValues, findModelingOptionValues } = useModelingOptionApi(loading)
+          await findModelingOptionValues({ typeId: it.field.scheme.optionTypeId })
+          it.field.scheme.options = modelingOptionValues.value
+        }
+      }
+
+      await loadData()
+    } else {
+      ElMessage.error('该实体未配置显示视图')
+    }
+  } finally {
+    loading.value = false
   }
+
 }
 
 async function loadData() {
@@ -308,8 +314,10 @@ function handleCellDblClick(params) {
       return
     }
     const row = params.row
+    loading.value = true
     getInstance({ mkey: props.mkey, id: row.id })
       .then(() => (viewPanelVisible.value = true, viewerMode.value = true))
+      .finally(() => loading.value = false)
   } else if (props.module === 'WORKFLOW') {
     instanceId.value = params.row.process_instance_id
     instanceVisible.value = true
@@ -322,14 +330,17 @@ const addFormRenderRef = ref<InstanceType<typeof VFormRender>>()
 
 function handleConfirmAdd() {
   let promise = addFormRenderRef.value.formRef.validate()
+  loading.value = true
   if (props.module === 'ENTITY') {
     promise.then(() => createInstance({ mkey: props.mkey, data: formData.value }))
       .then(succ => succ && (addPanelVisible.value = false))
       .then(reloadTableData)
+      .finally(() => loading.value = false)
   } else {
     promise.then(() => startInstance({ mkey: props.mkey, data: formData.value }))
     .then(succ => succ && (addPanelVisible.value = false))
     .then(reloadTableData)
+    .finally(() => loading.value = false)
   }
 }
 
@@ -341,6 +352,7 @@ function handleCancelUpdate() {
 }
 
 function handleConfirmUpdate() {
+  loading.value =true
   updateFormRenderRef.value.formRef.validate()
     .then(() => updateInstance({
       mkey: props.mkey,
@@ -349,6 +361,7 @@ function handleConfirmUpdate() {
     }))
     .then(succ => succ && (viewPanelVisible.value = false))
     .then(reloadTableData)
+    .finally(() => loading.value = false)
 }
 
 const { modelingFields, findModelingFields } = useModelingFieldApi(loading)

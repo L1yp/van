@@ -3,7 +3,7 @@
     <div style="width: 100%; height: calc(100% - 28px);">
       <el-table
         border stripe
-        :data="todoTaskPage.data"
+        :data="doneTaskPage.data"
         @row-dblclick="handleDblClick"
       >
         <el-table-column type="index" label="#" width="50" align="center" header-align="center" :resizable="false" />
@@ -16,13 +16,13 @@
           <template #header>
             <el-input v-model="param.name" clearable @change="listTodoTask(param)" />
           </template>
-          <el-table-column prop="process_instance_name" label="标题" min-width="150" show-tooltip-when-overflow>
+          <el-table-column prop="process_instance_name" label="标题" min-width="150">
             <template #default="scope">
               <router-link :to="`/workflow/instance/${scope.row.mkey}/${scope.row.process_instance_id}`" v-text="scope.row.process_instance_name"></router-link>
             </template>
           </el-table-column>
         </el-table-column>
-        <el-table-column prop="create_time" label="到达时间" width="160" />
+        <el-table-column prop="assignee" label="责任人" width="120" align="center" header-align="center" :formatter="formatUser" />
         <el-table-column prop="start_user_id" label="创建人" width="120" align="center" header-align="center" :formatter="formatUser" />
         <el-table-column prop="start_time" label="创建时间" width="160" />
       </el-table>
@@ -32,7 +32,7 @@
         small
         layout="prev, pager, next, total"
         :page-sizes="[10, 20, 50, 100]"
-        :total="todoTaskPage.total"
+        :total="doneTaskPage.total"
         v-model:current-page="param.pageIdx"
         v-model:page-size="param.pageSize"
       />
@@ -54,12 +54,12 @@ const param = ref<WorkflowTaskFindParam>({
   name: '',
 })
 
-const { todoTaskPage, listTodoTask } = useWorkflowTaskApi(loading)
+const { doneTaskPage, listDoneTask } = useWorkflowTaskApi(loading)
 
-onBeforeMount(() => listTodoTask(param.value))
+onBeforeMount(() => listDoneTask(param.value))
 
 function formatUser(row: WorkflowTaskView, column: any, cellValue: string, index: number) {
-  return todoTaskPage.value.additional?.user?.find(it => it.id === cellValue)?.nickname || ''
+  return doneTaskPage.value.additional?.user?.find(it => it.id === cellValue)?.nickname || ''
 }
 
 function handleDblClick(row: WorkflowTaskView) {

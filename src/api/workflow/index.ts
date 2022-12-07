@@ -107,10 +107,19 @@ export function getInstanceInfo(params: WorkflowInstanceQueryParam) {
   })
 }
 
-/**  */
-export function listTodoTask(params: PageParam) {
-  return request<PageData<WorkflowTodoTaskView, { user: UserView[] }>>({
+/** 我的待办 */
+export function listTodoTask(params: WorkflowTaskFindParam) {
+  return request<PageData<WorkflowTaskView, { user: UserView[] }>>({
     url: `/workflow/engine/task/todo/page`,
+    method: 'GET',
+    params,
+  })
+}
+
+/** 我的已办 */
+export function listDoneTask(params: WorkflowTaskFindParam) {
+  return request<PageData<WorkflowTaskView, { user: UserView[] }>>({
+    url: `/workflow/engine/task/done/page`,
     method: 'GET',
     params,
   })

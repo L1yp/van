@@ -6,7 +6,7 @@
           <div>
             <el-input style="width: 200px" size="default" placeholder="菜单名称" v-model="menuTitleKey"></el-input>
           </div>
-          
+
           <el-button size="default" plain style="vertical-align: middle; margin-left: 12px" type="info" @click="expendMenu">
             <SVGIcon style="width: 1em; height: 1em" name="Expand" /><span style="margin-left: 4px">展开</span>
           </el-button>
@@ -47,8 +47,8 @@
           </template>
         </el-table-column>
         <el-table-column prop="type" align="left" header-align="left" label="类型" width="100"/>
-        <el-table-column prop="path" align="left" header-align="left" label="路由" width="300"/>
-        <el-table-column prop="component" align="left" header-align="left" label="组件" width="300"/>
+        <el-table-column prop="path" align="left" header-align="left" label="路由" min-width="300"/>
+        <el-table-column prop="component" align="left" header-align="left" label="组件" min-width="300"/>
         <el-table-column prop="order_no" align="center" header-align="center" label="排序" width="60"/>
         <el-table-column prop="closeable" align="center" header-align="center" label="允许关闭" width="120">
           <template #default="scope">

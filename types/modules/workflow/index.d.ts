@@ -161,11 +161,11 @@ declare interface WorkflowActivityInfo {
   outcome: string
 }
 
-declare interface WorkflowTodoTaskFindParam extends PageParam {
+declare interface WorkflowTaskFindParam extends PageParam {
   name?: string
 }
 
-declare interface WorkflowTodoTaskView {
+declare interface WorkflowTaskView {
   task_id: string
   mkey: string
   workflow_type: string
