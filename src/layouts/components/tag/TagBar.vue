@@ -14,7 +14,7 @@
             :class="[element.active ? 'active' : '']"
             @clickTag="router.push(element.fullPath)"
           >
-            <template #icon>
+            <template v-if="!!element.icon" #icon>
               <el-icon size="0.8em">
                 <template v-if="Icons[element.icon]">
                   <component :is="Icons[element.icon]" />

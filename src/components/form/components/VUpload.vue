@@ -82,7 +82,7 @@ function isImageFile(file: UploadFile) {
   }
   const imageTypes = ['png', 'jpg', 'jpeg', 'webp', 'gif', 'bmp']
   return imageTypes.includes(ext)
-  
+
 
 }
 

@@ -12,7 +12,7 @@
       <div style="width: 100%; height: 100%;" ref="diagramRef"></div>
       <div style="position: absolute; top: 0; right: 0; height: 100%">
         <Collapsed v-model="propertiesPanelVisible" position="right" style="height: 100%">
-          <div style="box-sizing: border-box; width: 600px; height: 100%; border-left: 1px solid var(--el-border-color);">
+          <div style="box-sizing: border-box; width: 600px; height: 100%; background-color: var(--el-bg-color); border-left: 1px solid var(--el-border-color);">
             <PropertyPanel/>
           </div>
         </Collapsed>
@@ -131,7 +131,7 @@ async function importXML(xml: string) {
     const canvas = bpmnModeler.value.get('canvas')
     canvas.zoom("fit-viewport", true);
     canvas.zoom(Math.ceil(scale.value / 100));
-    
+
 
     const registry = bpmnModeler.value.get("elementRegistry")
     bpmnSelectedElem.value = registry.find(it => it.type === 'bpmn:Process')

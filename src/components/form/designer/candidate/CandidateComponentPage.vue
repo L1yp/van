@@ -80,10 +80,11 @@ const openedItems = ref<string[]>(['input', 'output', 'layout'])
   background-color: var(--el-bg-color);
   cursor: move;
   border-radius: 8px;
+  outline: 1px dashed orange;
 }
 
 .component-item:hover {
-  outline: 1px solid var(--el-border-color);
+  outline: 2px solid orange;
 }
 
 :deep(.el-collapse-item__content) {

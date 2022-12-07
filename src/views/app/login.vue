@@ -70,7 +70,7 @@ async function login() {
       const redirect = route.query?.redirect as string
       await router.replace(redirect);
     } else {
-      await router.replace('/');
+      await router.replace('/workflow/todo/task/page');
     }
 
   } catch (e) {

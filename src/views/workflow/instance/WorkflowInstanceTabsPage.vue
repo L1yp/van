@@ -3,7 +3,8 @@
     <el-tab-pane name="basic" label="基本信息">
       <div style="width: 100%; height: 100%; position: relative;">
         <div style="box-sizing: border-box; width: 100%; height: 40px; padding: 4px;">
-          <el-button @click="$router.back()" >返回</el-button>
+          <el-button v-if="route.name === 'workflow-instance'" @click="$router.back()" >返回</el-button>
+          <el-button v-if="route.name !== 'workflow-instance'" @click="handleCopyUrl">复制链接</el-button>
           <el-button v-for="outcome in (detailInfo?.outcomes || [])" :key="outcome.name" @click="handleClickOutcome(outcome)" >{{ outcome.name }}</el-button>
         </div>
         <div style="box-sizing: border-box; width: 100%; height: calc(100% - 32px);">
@@ -14,10 +15,10 @@
           <el-scrollbar always>
             <VFormRender ref="postFormRef" :scheme="postPageScheme" :form-data="postFormData" style="margin-top: 10px" />
           </el-scrollbar>
-          
+
         </MaskWindow>
       </div>
-      
+
     </el-tab-pane>
     <el-tab-pane name="operation" label="操作记录">
       <WorkflowCommentPage :comment-list="detailInfo?.comment_list || []" />
@@ -32,9 +33,9 @@
 </template>
 
 <script lang="ts" setup>
-import { ElTabs, ElTabPane, ElButton, ElScrollbar } from "element-plus";
+import {ElTabs, ElTabPane, ElButton, ElScrollbar, ElMessage} from "element-plus";
 import { useWorkflowInstanceApi, useWorkflowTaskApi } from "@/service/workflow";
-import { inject, nextTick, onBeforeMount, ref } from "vue";
+import {computed, inject, nextTick, onBeforeMount, ref} from "vue";
 import WorkflowInstanceTaskForm from "./WorkflowInstanceTaskForm.vue";
 import WorkflowActivityPage from "./WorkflowActivityPage.vue";
 import WorkflowCommentPage from "./WorkflowCommentPage.vue";
@@ -42,6 +43,13 @@ import WorkflowProgressDiagram from "./WorkflowProgressDiagram.vue";
 import { userMapKey } from "@/config/app.keys";
 import MaskWindow from "@/components/dialog/MaskWindow.vue";
 import VFormRender from "@/components/form/designer/VFormRender.vue";
+import { useRoute } from "vue-router";
+import Clipboard from 'clipboard'
+
+
+
+const route = useRoute()
+console.log('route', route)
 
 
 interface Props {
@@ -50,14 +58,19 @@ interface Props {
 }
 
 const props = defineProps<Props>()
-console.log('instance page, instanceId', props.instanceId);
+const instanceUrl = computed(() => `${location.origin}/workflow/instance/${props.mkey}/${props.instanceId}`)
+function handleCopyUrl() {
+  const result = Clipboard.copy(`${location.origin}/workflow/instance/${props.mkey}/${props.instanceId}`);
+  ElMessage.success('复制成功🤭')
+}
+
 
 const diagramKey = ref(1)
 const diagramRef = ref<InstanceType<typeof WorkflowProgressDiagram>>()
 const activeTab = ref('basic')
 function changeTab(name: string) {
   console.log('tab changed', name);
-  
+
   if (name === 'diagram') {
     diagramRef.value.init()
   }

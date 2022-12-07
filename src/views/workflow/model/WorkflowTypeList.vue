@@ -54,10 +54,10 @@
       </el-table>
     </div>
     <div>
-      <el-pagination 
-        :total="pageData.total" 
-        v-model:current-page="param.pageIdx" 
-        v-model:page-size="param.pageSize" 
+      <el-pagination
+        :total="pageData.total"
+        v-model:current-page="param.pageIdx"
+        v-model:page-size="param.pageSize"
         :page-sizes="[50]"
         layout="prev, pager, next"
         @current-change="loadPage(param)"
@@ -90,12 +90,17 @@ import DefAddPanel from "./type/DefAddPanel.vue";
 import { workflowDefKey } from "./keys";
 import MaskWindow from "@/components/dialog/MaskWindow.vue";
 
+interface Props {
+  name: string
+}
+
+const props = defineProps<Props>()
 
 const loading = ref<boolean>(false)
 const param = ref<WorkflowTypeDefPageParam>({
   pageIdx: 1,
   pageSize: 20,
-  name: '',
+  name: props.name,
   remark: '',
 })
 

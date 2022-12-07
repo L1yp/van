@@ -73,7 +73,7 @@ export function useWorkflowApi(loading?: Ref<boolean>) {
     }
   }
 
-  
+
   async function addDef(param: WorkflowTypeDefAddParam) {
     try {
       loading && (loading.value = true)
@@ -172,8 +172,6 @@ export function useWorkflowInstanceApi(loading?: Ref<boolean>) {
 
 export function useWorkflowTaskApi(loading?: Ref<boolean>) {
 
-  
-
   async function completeTask(data: WorkflowTaskCompleteParam) {
     try {
       loading && (loading.value = true)
@@ -186,8 +184,30 @@ export function useWorkflowTaskApi(loading?: Ref<boolean>) {
     }
   }
 
+  const todoTaskPage = ref<PageData<WorkflowTodoTaskView, { user: UserView[] }>>({
+    page_idx: 1,
+    page_size: 20,
+    total: 0,
+    data: [],
+    additional: { user: [] },
+  })
+
+  async function listTodoTask(param: WorkflowTodoTaskFindParam) {
+    try {
+      loading && (loading.value = true)
+      todoTaskPage.value = await WorkflowApi.listTodoTask(param)
+    } catch (e) {
+      console.error(e)
+      ElMessage.error((e as Error)?.message || '查询待办失败')
+    } finally {
+      loading && (loading.value = false)
+    }
+  }
+
+
   return {
-    completeTask
+    completeTask,
+    todoTaskPage, listTodoTask
   }
 
 }

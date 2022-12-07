@@ -13,7 +13,7 @@
       <vxe-column field="field" title="字段" width="150" resizable align="center" header-align="center" />
       <vxe-column field="label" title="名称" width="200" resizable align="center" header-align="center" />
       <vxe-column field="type" title="类型" width="100" resizable align="center" header-align="center" />
-      <vxe-column field="remark" title="说明"/>
+      <vxe-column field="remark" title="说明" min-width="200"/>
 
     </vxe-table>
 

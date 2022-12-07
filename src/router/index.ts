@@ -10,7 +10,7 @@ const Layout: Component = () => import("../layouts/TopLeft.vue");
  * globEager: import * as glob_xxx from 'xxx'
  *    vue文件导出的是default, 因此要传给vue-router：glob_xxx.default
  */
-const viewModules = import.meta.globEager("../views/**/*.vue")
+const viewModules = import.meta.glob("../views/**/*.vue")
 
 const moduleRoutes = import.meta.globEager("./modules/**/*.ts")
 console.log('moduleRoutes', moduleRoutes);
@@ -18,10 +18,12 @@ console.log('moduleRoutes', moduleRoutes);
 const staticModuleRoutes = []
 const keys = Object.keys(moduleRoutes)
 for (const key of keys) {
-  if (moduleRoutes?.[key]?.default) {
-    Array.prototype.push.apply(staticModuleRoutes, moduleRoutes?.[key]?.default)
+  if (moduleRoutes?.[key].default) {
+    Array.prototype.push.apply(staticModuleRoutes, moduleRoutes?.[key].default)
   }
 }
+
+console.log('staticModuleRoutes', staticModuleRoutes)
 
 /**
  * 路由映射视图文件
@@ -31,8 +33,8 @@ export function routeToView(route: string) {
   if (!viewModules[`../views${route}.vue`]) {
     console.log('err', route)
   }
-  return viewModules[`../views${route}.vue`].default // if globEager
-  // return viewModules[`../views${route}.vue`] // if glob
+  // return viewModules[`../views${route}.vue`].default // if globEager
+  return viewModules[`../views${route}.vue`] // if glob
 }
 
 const layoutRoute  = {
@@ -112,7 +114,7 @@ export function installLayoutContentRoute(menuOptions: MenuView[]) {
   const layoutHandle = router.addRoute(layoutRoute);
   removeRouteHandles.push(layoutHandle);
   console.log('after install routes', router.getRoutes());
-  
+
 
 }
 
@@ -144,6 +146,7 @@ function transMenuToRoute(options: MenuView[]) {
         name: menuOption.name,
         component: routeToView(menuOption.component),
         redirect: "",
+        props: route => ({ ...route.query }),
         meta: {
           ...toRaw(menuOption),
           icon,

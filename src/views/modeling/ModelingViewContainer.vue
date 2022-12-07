@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 100%; height: 100%;" v-loading="loading">
+  <div style="width: 100%; height: 100%; position: relative" v-loading="loading">
     <div style="display: flex; justify-content: space-between; padding: 4px 0;">
       <div>
         <el-button @click="handleAddInstance" :disabled="!startForm">新建</el-button>
@@ -117,6 +117,10 @@
     <MaskWindow v-model="viewConfigVisible" :teleport-to="teleportTo">
       <ModelingViewUpdatePanel :src="activeView" :fields="modelingFields" @close="viewConfigVisible = false" @success="initPage" />
     </MaskWindow>
+    <MaskWindow v-model="instanceVisible" :teleport-to="teleportTo">
+      <WorkflowInstanceTabsPage :mkey="props.mkey" :instance-id="instanceId" />
+    </MaskWindow>
+
   </div>
 </template>
 
@@ -137,7 +141,8 @@ import {userMapKey} from "@/config/app.keys";
 import {useModelingFieldApi} from "@/service/modeling/field";
 import ModelingViewUpdatePanel from '@/views/modeling/view/ModelingViewUpdatePanel.vue'
 import { useWorkflowInstanceApi } from '@/service/workflow';
-import { useRouter } from 'vue-router';
+import {useRoute, useRouter} from 'vue-router';
+import WorkflowInstanceTabsPage from "@/views/workflow/instance/WorkflowInstanceTabsPage.vue";
 
 interface Props {
   module: ModelingModule
@@ -146,8 +151,15 @@ interface Props {
 
 const props = defineProps<Props>()
 
+const route = useRoute()
 const router = useRouter()
-const teleportTo = computed(() => `#modeling-panel-${props.mkey}`)
+const teleportTo = computed(() => {
+  if (route.name === 'workflow-instance-list') {
+    return undefined
+  } else {
+    return `#modeling-panel-${props.mkey}`
+  }
+})
 
 const loading = ref(false)
 
@@ -172,7 +184,6 @@ async function initPage() {
   } else {
     await getStartForm(props.mkey)
     console.log('start form', startFormScheme.value);
-    
   }
 
   await findView({module: props.module, mkey: props.mkey})
@@ -198,8 +209,8 @@ async function loadData() {
   activeView.value.columns.forEach(it => {
     param.value.condition_map[it.field.field] = it.condition
   })
-  console.log('conditioon map', param.value.condition_map);
-  
+  console.log('condition map', param.value.condition_map);
+
   sortConfig.value.defaultSort = param.value.collation
   refreshTableKey.value++
   await nextTick()
@@ -288,6 +299,8 @@ function handleAddInstance() {
   addPanelVisible.value = true
 }
 
+const instanceVisible = ref(false)
+const instanceId = ref('')
 function handleCellDblClick(params) {
   if (props.module === 'ENTITY') {
     if (!viewPageInfo.value?.page_scheme) {
@@ -298,7 +311,9 @@ function handleCellDblClick(params) {
     getInstance({ mkey: props.mkey, id: row.id })
       .then(() => (viewPanelVisible.value = true, viewerMode.value = true))
   } else if (props.module === 'WORKFLOW') {
-    router.push(`/workflow/instance/${props.mkey}/${params.row.process_instance_id}`)
+    instanceId.value = params.row.process_instance_id
+    instanceVisible.value = true
+    // router.push(`/workflow/instance/${props.mkey}/${params.row.process_instance_id}`)
   }
 
 }

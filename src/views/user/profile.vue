@@ -1,6 +1,6 @@
 <template>
   <div style="width: 100%; height: 100%; display: flex; flex-direction: column">
-    <VUpload v-model:value="fileList" disabled />
+    <VUpload ref="uploadRef" v-model:value="fileList" disabled />
   </div>
 
 </template>

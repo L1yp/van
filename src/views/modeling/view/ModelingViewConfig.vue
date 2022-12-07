@@ -24,7 +24,7 @@
           <template #header>
             <el-input v-model="param.name" @change="searchView(param)" />
           </template>
-          <el-table-column prop="name" label="名称" />
+          <el-table-column prop="name" label="名称" min-width="200" />
         </el-table-column>
         <el-table-column>
           <el-table-column prop="sn" label="序号" width="60" :resizable="false" align="center" header-align="center" />

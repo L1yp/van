@@ -14,6 +14,7 @@
           :size="40"
           fit="cover"
           src="/images/github-icon.png"
+          alt="Github"
         >
         </el-avatar>
       </span>
@@ -31,6 +32,7 @@
           :size="40"
           fit="cover"
           src="https://gitee.com/assets/favicon.ico"
+          alt="Gitee"
         >
         </el-avatar>
       </span>
@@ -51,6 +53,7 @@
           :size="40"
           fit="cover"
           :src="userInfo.avatar"
+          alt="avatar"
         >
         </el-avatar>
       </span>

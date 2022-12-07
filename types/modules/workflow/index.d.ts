@@ -160,3 +160,23 @@ declare interface WorkflowActivityInfo {
   called_process_instance_id: string
   outcome: string
 }
+
+declare interface WorkflowTodoTaskFindParam extends PageParam {
+  name?: string
+}
+
+declare interface WorkflowTodoTaskView {
+  task_id: string
+  mkey: string
+  workflow_type: string
+  process_instance_id: string
+  process_definition_id: string
+  task_def_key: string
+  claim_time: string
+  assignee: string
+  create_time: string
+  process_instance_name: string
+
+  start_time: string
+  start_user_id: string
+}
