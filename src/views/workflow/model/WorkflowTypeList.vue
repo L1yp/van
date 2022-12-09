@@ -91,7 +91,7 @@ import { workflowDefKey } from "./keys";
 import MaskWindow from "@/components/dialog/MaskWindow.vue";
 
 interface Props {
-  name: string
+  name?: string
 }
 
 const props = defineProps<Props>()

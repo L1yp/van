@@ -1,6 +1,6 @@
 <template>
-  <div style="width: 100%; height: 100%; display: flex; flex-direction: column">
-    <VUpload ref="uploadRef" v-model:value="fileList" disabled />
+  <div style="width: 100%; height: 100%; display: flex; flex-direction: column; background-color: #E3E3E3; padding: 50px">
+    <ChromeTabs :items="['Tab1', 'Tab2', 'Tab3', 'Tab4', 'Tab5', 'Tab6']"/>
   </div>
 
 </template>
@@ -10,6 +10,8 @@ import { ref, } from "vue"
 import Collapsed from "@/components/common/Collapsed.vue";
 import VUpload from "@/components/form/components/VUpload.vue";
 import type { UploadUserFile } from "element-plus";
+import ChromeTab from "@/layouts/components/tag/ChromeTab.vue";
+import ChromeTabs from "@/layouts/components/tag/ChromeTabs.vue";
 
 const fileList = ref<UploadUserFile[]>([
   {

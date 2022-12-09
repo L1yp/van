@@ -1,5 +1,5 @@
 <template>
-  <template v-if="Object.hasOwn(Icon, name)">
+  <template v-if="Object.prototype.hasOwnProperty.call(Icon, name)">
     <component :is="Icon[name]" />
   </template>
   <template v-else>
@@ -11,6 +11,8 @@
 <script lang="ts">
 import {computed, defineComponent, PropType} from 'vue'
 import * as Icon from '@element-plus/icons-vue'
+
+
 
 export default defineComponent({
   props: {

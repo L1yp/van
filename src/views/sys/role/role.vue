@@ -75,7 +75,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onBeforeMount } from "vue"
+import {ref, onBeforeMount, inject} from "vue"
 import {
   ElTable, ElTableColumn, ElTag, ElButton, ElPopconfirm,
 } from "element-plus"
@@ -86,6 +86,10 @@ import { useMenuData } from "@/service/system/menu";
 import RoleMenuBindModal from "@/views/sys/role/modal/RoleMenuBindModal.vue";
 import MaskWindow from "@/components/dialog/MaskWindow.vue";
 import PermissionEntity from "@/views/sys/role/permission/PermissionEntity.vue";
+import {menuOptionsKey} from "@/config/app.keys";
+import * as UserApi from "@/api/sys/user";
+import {installLayoutContentRoute, uninstallLayoutContentRoute} from "@/router";
+import {toTree} from "@/utils/common";
 
 
 const loading = ref<boolean>(true);
@@ -137,12 +141,21 @@ function relateMenu(role: RoleView) {
     .then(_ => bindModalVisible.value = true)
 }
 
+const menus = inject(menuOptionsKey)
 function handleConfirmBind(rows: MenuView[]) {
   const menuIds = rows.map(it => it.id)
   bindMenu({
     role_id: selectRole.value.id,
     menu_ids: menuIds
-  }).then(_ => bindModalVisible.value = false)
+  })
+    .then(() => UserApi.menu())
+    .then(data => {
+      uninstallLayoutContentRoute()
+      data.menus = toTree(data.menus, 'id', 'pid', 'order_no')
+      installLayoutContentRoute(data.menus)
+      menus.value = data.menus
+    })
+    .then(_ => bindModalVisible.value = false)
 }
 
 const tableRef = ref<InstanceType<typeof ElTable>>()

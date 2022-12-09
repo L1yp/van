@@ -1,5 +1,4 @@
 <template>
-
   <div v-loading="loading" style="background-color: #FFFFFF; padding: 10px; height: 100%; box-sizing: border-box;">
     <div style="background-color: #F5F7FA; box-sizing: border-box; padding: 6px;">
       <el-button @click="handleCancel">取消</el-button>
@@ -9,7 +8,7 @@
       <el-scrollbar always>
         <el-divider content-position="left">基本信息</el-divider>
         <el-form :model="formData" label-width="80px" ref="formRef" :rules="rules" status-icon>
-          
+
           <el-form-item label="标识" prop="key">
             <el-input v-model="formData.key" />
           </el-form-item>
@@ -25,7 +24,7 @@
               <el-radio-button :label="1">禁用</el-radio-button>
             </el-radio-group>
           </el-form-item>
-          
+
         </el-form>
         <el-divider content-position="left">编码规则</el-divider>
         <el-form :model="formData.code_gen_rule" label-width="80px" ref="formRuleRef" :rules="codeRules" status-icon>

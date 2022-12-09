@@ -99,11 +99,13 @@ import {
   ElTag, ElScrollbar,
 } from "element-plus";
 import * as MenuApi from "@/api/sys/menu";
-import { filterDataWithTitle, getDeviceType } from "@/utils/common";
-import { mainHeightKey, themeKey } from "@/config/app.keys";
+import {filterDataWithTitle, getDeviceType, toTree} from "@/utils/common";
+import {mainHeightKey, menuOptionsKey, themeKey} from "@/config/app.keys";
 import { useMenuData } from "@/service/system/menu";
 import { Plus, Edit, Delete, Download, } from "@element-plus/icons-vue";
 import MenuCreateModal from "./modal/MenuCreateModal.vue";
+import {installLayoutContentRoute, uninstallLayoutContentRoute} from "@/router";
+import * as UserApi from "@/api/sys/user";
 
 const deviceType = getDeviceType()
 
@@ -161,6 +163,7 @@ function editMenu(menu: MenuView) {
 
 }
 
+const menus = inject(menuOptionsKey)
 async function handleConfirm(param: MenuAddParam | MenuUpdateParam) {
   try {
     loading.value = true
@@ -168,6 +171,12 @@ async function handleConfirm(param: MenuAddParam | MenuUpdateParam) {
       await MenuApi.addMenu(param)
     } else {
       await MenuApi.updateMenu(param as MenuUpdateParam)
+
+      const data = await UserApi.menu()
+      uninstallLayoutContentRoute()
+      data.menus = toTree(data.menus, 'id', 'pid', 'order_no')
+      installLayoutContentRoute(data.menus)
+      menus.value = data.menus
     }
 
     await loadMenuTree()
