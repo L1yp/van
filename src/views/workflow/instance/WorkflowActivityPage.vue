@@ -5,7 +5,7 @@
       :data="tableData"
     >
       <el-table-column type="index" width="50" label="#" align="center" header-align="center" />
-      <el-table-column prop="activity_name" label="节点" width="150" show-overflow-tooltip />
+      <el-table-column prop="activity_name" label="节点" min-width="150" show-overflow-tooltip />
       <el-table-column prop="outcome" label="操作" width="100" show-overflow-tooltip />
       <el-table-column prop="assignee" label="操作人" width="150" align="center" header-align="center" show-overflow-tooltip :formatter="formatUser" />
       <el-table-column prop="end_time" label="操作时间" width="160" align="center" header-align="center" />

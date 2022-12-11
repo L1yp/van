@@ -5,7 +5,6 @@
 </template>
 
 <script lang="ts" setup>
-import SVGIcon from "@/components/common/SVGIcon.vue"
 import {genId} from "@/components/form/designer/util/common";
 import ChromeTab from "@/layouts/components/tag/ChromeTab.vue";
 

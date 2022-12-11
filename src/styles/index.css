@@ -1,13 +1,25 @@
-:root {
+:root, ::before, ::after {
     --toolbar-bg-color: #f5f7fa;
+    --tag-item-bg-color: var(--el-bg-color);
     --tag-item-bg-hover-color: #dee1e6;
     --tag-item-bg-active-color: #e8f4ff;
+    --tag-item-text-color: var(--el-text-color-regular);
+    --tag-item-active-text-color: var(--el-color-primary);
+
+    --tag-item-gap-color: rgb(0 0 0 / 25%);
 
 }
-html.dark {
+
+
+html.dark,
+html.dark ::before,
+html.dark ::after {
     --toolbar-bg-color: #282d37;
+
     --tag-item-bg-hover-color: #3a4957e0;
     --tag-item-bg-active-color: #2d4153;
+    --tag-item-gap-color: rgb(255 255 255 / 25%);
+
 }
 
 .el-dialog__footer {

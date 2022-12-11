@@ -24,6 +24,16 @@ for (const key of keys) {
 }
 
 console.log('staticModuleRoutes', staticModuleRoutes)
+staticModuleRoutes.push({
+  path: '/redirect',
+  redirect: to => {
+    console.log('redirect route', to.query.url)
+    const targetUrl = decodeURIComponent(to.query.url)
+    const search = new URLSearchParams(targetUrl)
+    console.log('redirect search', search)
+    return to.query.url
+  }
+})
 
 /**
  * 路由映射视图文件

@@ -1,61 +1,103 @@
 <template>
-  <div class="tag-item" @click.stop.prevent="handleClick">
-    <div v-text="props.title"></div>
+  <div class="tag-item" @click="emits('clickTag')">
+    <div>
+      <slot name="icon"></slot>
+      <slot name="text"></slot>
+    </div>
+    <div class="close-icon" v-if="props.closeable" @click.stop="emits('closeTag')">
+      <Close/>
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import {genId} from "@/components/form/designer/util/common";
+import { ElIcon } from 'element-plus'
+import { Close } from "@element-plus/icons-vue";
+import {computed, inject, Ref} from "vue";
+import {themeKey} from "@/config/app.keys";
+
+
 
 interface Props {
-  title: string
+  closeable?: boolean
 }
 
-const props = defineProps<Props>()
-
-const id = genId()
-
-function handleClick(e: PointerEvent) {
-  console.log('click e', e)
-  const div = e.target as HTMLDivElement
-  div.classList.toggle('active')
+interface Emits {
+  (e: 'closeTag'): void
+  (e: 'clickTag'): void
 }
+
+const props = withDefaults(defineProps<Props>(), {
+  closeable: false
+})
+
+const emits = defineEmits<Emits>()
+const theme = inject<Ref<ThemeConfig>>(themeKey)
+const tagItemHeight = computed(() => `${theme.value.tagBarHeight - 1}px`)
+
 
 </script>
 
 <style scoped>
+* {
+  box-sizing: border-box;
+}
+
+.close-icon {
+  box-sizing: border-box;
+  display: flex;
+  margin-left: 3px;
+  border-radius: 50%;
+  width: 0;
+  height: 18px;
+  padding: 2px;
+}
+
+.tag-item.active .close-icon,
+.tag-item:hover .close-icon
+{
+  width: 18px;
+}
+
+.tag-item:hover .close-icon:hover {
+  background-color: var(--tag-item-text-color);
+  color: var(--tag-item-bg-color);
+}
+
+.tag-item.active .close-icon:hover {
+  background-color: var(--tag-item-active-text-color);
+  color: var(--tag-item-bg-color);
+}
+
+.tag-item:focus-visible {
+  outline: none;
+}
+
 .tag-item {
   position: relative;
   display: flex;
   align-items: center;
-  padding: 6px 20px;
-  background-color: #e7eaec;
-  color: #585c5f;
+  padding: 6px 14px;
+  height: v-bind(tagItemHeight);
+  max-height: v-bind(tagItemHeight);
+  font-size: 12px;
+  background-color: var(--tag-item-bg-color);
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
   cursor: pointer;
+  user-select: none;
   z-index: 2;
 }
 
 
 .tag-item:hover{
-  background-color: #f0f3f5;
+  background-color: var(--tag-item-bg-hover-color);
   z-index: 3;
 }
 
 .tag-item.active {
-  background-color: #ffffff;
-  z-index: 4;
-}
-
-
-.tag-item:hover {
-  background-color: #f0f3f5;
-  z-index: 3;
-}
-
-.tag-item.active {
-  background-color: #ffffff;
+  color: var(--tag-item-active-text-color);
+  background-color: var(--tag-item-bg-active-color);
   z-index: 4;
 }
 
@@ -78,21 +120,21 @@ function handleClick(e: PointerEvent) {
 .tag-item.active::before,
 .tag-item.active:hover::before
 {
-  box-shadow: 14px 0.25em 0 -4px #ffffff;
+  box-shadow: 14px 0.25em 0 -4px var(--tag-item-bg-active-color);
 }
 
 .tag-item.active::after,
 .tag-item.active:hover::after
 {
-  box-shadow: -14px 0.25em 0 -4px #ffffff;
+  box-shadow: -14px 0.25em 0 -4px var(--tag-item-bg-active-color);
 }
 
 .tag-item:hover::before {
-  box-shadow: 14px 0.25em 0 -4px #f0f3f5;
+  box-shadow: 14px 0.25em 0 -4px var(--tag-item-bg-hover-color);
 }
 
 .tag-item:hover::after {
-  box-shadow: -14px 0.25em 0 -4px #f0f3f5;
+  box-shadow: -14px 0.25em 0 -4px var(--tag-item-bg-hover-color);
 }
 
 
@@ -109,8 +151,8 @@ function handleClick(e: PointerEvent) {
   z-index: -1;
 }
 
-.tag-item:not(:hover, .active, :first-child) {
-  box-shadow: -8px 0 0 -7px rgb(0 0 0 / 25%);
+.tag-item:not(:hover, .active) {
+  box-shadow: -8px 0 0 -7px var(--tag-item-gap-color);
 }
 
 </style>
