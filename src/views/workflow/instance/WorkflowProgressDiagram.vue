@@ -70,7 +70,7 @@ async function initViewer() {
     return
   }
   console.log('initViewer');
-  
+
   try {
     loading.value = true
     viewer.value = new BpmnViewer({
@@ -80,7 +80,12 @@ async function initViewer() {
       ],
       minimap: {
         open: false
-      }
+      },
+      textRender: {
+        defaultStyle: {
+          color: 'red'
+        }
+      },
     })
 
     viewer.value.on('canvas.viewbox.changed', function (ev: InternalEvent, data: any) {
@@ -189,7 +194,7 @@ function coloring() {
   if (currentTaskDefKey) {
     canvas.addMarker(currentTaskDefKey, 'highlight-current')
   }
-  
+
 
   const registry = viewer.value.get('elementRegistry') as ElementRegistry
 

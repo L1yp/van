@@ -58,7 +58,7 @@ import {read, write} from "@/utils/storage"
 import SVGIcon from "@/components/common/SVGIcon.vue";
 import {useIcon} from "@/components/common/util";
 import {RouteMetaRecord} from "@/router";
-import {pageFullScreenKey, themeKey} from "@/config/app.keys";
+import {maskContainerKey, pageFullScreenKey, themeKey} from "@/config/app.keys";
 import {useTitle} from "@vueuse/core";
 import * as Icons from "@element-plus/icons-vue";
 import { incMaskZIndex } from "@/components/dialog/mask";
@@ -72,6 +72,7 @@ const router = useRouter()
 const tags = reactive<TagInfo[]>([])
 const activeTag = ref<TagInfo>()
 
+const maskContainer = inject(maskContainerKey)
 const tagBarRef = ref<HTMLDivElement>()
 function handleScrollLeft() {
   // console.log('scrollLeft', tagBarRef.value.scrollLeft)
@@ -137,6 +138,8 @@ function closeTag(tag: TagInfo) {
   }
 }
 
+const tagBarHeight = computed(() => `${theme.value.tagBarHeight - 1}px`)
+
 const dropdownRefList = ref<InstanceType<typeof ElDropdown>[]>([])
 watch(() => route.fullPath, (newPath, oldPath)=>{
   console.log("path", newPath, oldPath, route, dropdownRefList.value)
@@ -194,10 +197,14 @@ watch(() => route.fullPath, (newPath, oldPath)=>{
   title.value = meta.name
 
   write("tags", tags);
+  if (maskContainer?.value?.hasChildNodes()) {
+    while (maskContainer?.value?.hasChildNodes()) {
+      maskContainer?.value?.removeChild(maskContainer?.value?.firstChild)
+    }
+  }
 
 }, { immediate: true, flush: 'post' });
 
-const tagBarHeight = computed(() => `${theme.value.tagBarHeight - 1}px`)
 
 const setPageScreen = inject(pageFullScreenKey)
 function handleContextMenuCommand(command: string, element: TagInfo) {

@@ -120,21 +120,21 @@ const tagItemHeight = computed(() => `${theme.value.tagBarHeight - 1}px`)
 .tag-item.active::before,
 .tag-item.active:hover::before
 {
-  box-shadow: 14px 0.25em 0 -4px var(--tag-item-bg-active-color);
+  box-shadow: 14px 0.25em 0 -3px var(--tag-item-bg-active-color);
 }
 
 .tag-item.active::after,
 .tag-item.active:hover::after
 {
-  box-shadow: -14px 0.25em 0 -4px var(--tag-item-bg-active-color);
+  box-shadow: -14px 0.25em 0 -3px var(--tag-item-bg-active-color);
 }
 
 .tag-item:hover::before {
-  box-shadow: 14px 0.25em 0 -4px var(--tag-item-bg-hover-color);
+  box-shadow: 14px 0.25em 0 -3px var(--tag-item-bg-hover-color);
 }
 
 .tag-item:hover::after {
-  box-shadow: -14px 0.25em 0 -4px var(--tag-item-bg-hover-color);
+  box-shadow: -14px 0.25em 0 -3px var(--tag-item-bg-hover-color);
 }
 
 

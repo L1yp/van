@@ -23,14 +23,17 @@
         <header-bar/>
       </el-header>
       <tag-bar :style="pageScreen ? { display: 'none' } : undefined"/>
+
       <el-main style="position: relative" :style="{ width: mainWidth, height: mainHeight }">
-        <router-view>
-          <template #default="{ Component, route }">
-            <transition name="fade" mode="out-in" appear>
+        <router-view v-slot="{ Component, route }">
+          <transition name="fade" mode="out-in" appear>
+            <keep-alive>
               <component :is="Component" :key="route.fullPath" />
-            </transition>
-          </template>
+            </keep-alive>
+          </transition>
         </router-view>
+
+
         <div
           v-show="pageScreen"
           class="close-page-full-screen"
@@ -58,7 +61,7 @@ import {RouterView} from "vue-router"
 import {
   mainHeightKey,
   asideWidthKey,
-  asideOpenedKey, 
+  asideOpenedKey,
   themeKey, mainWidthKey, pageFullScreenKey, maskContainerKey,
 } from "@/config/app.keys"
 import SVGIcon from "@/components/common/SVGIcon.vue";

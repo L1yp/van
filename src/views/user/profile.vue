@@ -1,6 +1,6 @@
 <template>
-  <div style="width: 100%; height: 100%; display: flex; flex-direction: column; background-color: #E3E3E3; padding: 50px">
-    <ChromeTabs :items="['Tab1', 'Tab2', 'Tab3', 'Tab4', 'Tab5', 'Tab6']"/>
+  <div style="width: 100%; height: 100%; display: flex; flex-direction: column; padding: 50px">
+
   </div>
 
 </template>
