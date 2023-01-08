@@ -8,7 +8,7 @@ const { width } = useWindowSize()
 export function getDeviceType(): ComputedRef<Device> {
   return computed(() => {
     console.log('width device', width.value);
-    
+
     if (width.value < 425) {
       return 'h5'
     }
@@ -56,8 +56,8 @@ export function toReadableDuration(second: number) {
   return str
 }
 
-
-export function primitiveArrayEquals(a, b): boolean {
+type PrimitiveType = string | number | boolean | BigInt
+function primitiveArrayEquals<T extends PrimitiveType>(a: T[], b: T[]): boolean {
   return Array.isArray(a) &&
   Array.isArray(b) &&
   a.length === b.length &&
@@ -67,9 +67,13 @@ export function primitiveArrayEquals(a, b): boolean {
 
 export function toTree<T extends Tree>(src: T[], keyField: keyof T, parentField: keyof T, orderField?: keyof T): T[] {
   const map = new Map<unknown, T>(src.map(it => [it[keyField], it]))
+  let compareFn: ((a: T, b: T) => number) | undefined = undefined
+  if (orderField) {
+    compareFn = (a: T, b: T) => Number(a[orderField]) - Number(b[orderField])
+  }
   src.forEach(it => {
     if (map.has(it[parentField])) {
-      const parent = map.get(it[parentField])
+      const parent = map.get(it[parentField])!
       if (!parent.children) {
         parent.children = []
       }
@@ -77,10 +81,10 @@ export function toTree<T extends Tree>(src: T[], keyField: keyof T, parentField:
     }
   })
   if (orderField) {
-    src.filter(it => it.children?.length).forEach(it => it.children.sort((a, b) => Number(a[orderField]) - Number(b[orderField])))
+    src.filter(it => it.children?.length).forEach(it => it.children?.sort(compareFn))
   }
 
-  return src.filter(it => !it[parentField])
+  return src.filter(it => !it[parentField]).sort(compareFn)
 }
 
 /**
@@ -94,7 +98,6 @@ export function toTree<T extends Tree>(src: T[], keyField: keyof T, parentField:
  */
 export function filterDataWithTitle<T extends Tree>(result: T[], list: T[], key: string, prop: keyof T, parent?: T): boolean {
   if (!key) {
-    result = list
     return true
   }
   let hasKey = false; // 是否包含关键字
@@ -157,7 +160,7 @@ export function findTreeItemById<T extends Tree>(src: T[], keyField: keyof T, ke
 
 export function getTreeItemPath<T extends Tree>(src: T[], keyField: keyof T, key: T[keyof T]): T[] {
   // 深度遍历
-  const result = []
+  const result: T[] = []
   DFSTree(src, keyField, key, result)
   return result.reverse()
 }
