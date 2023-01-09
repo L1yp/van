@@ -35,11 +35,8 @@
 <script lang="ts">
 import {ElRow, ElCol, ElInput, ElSelect, ElForm, ElFormItem, ElInputNumber } from "element-plus"
 import {defineComponent, onBeforeUpdate, PropType, ref} from "vue"
-import DictTag from "@/components/dict/DictTag.vue";
-import DictInput from "@/components/dict/DictInput.vue";
 import UserSelectorInput from "@/components/common/selector/user/UserSelectorInput.vue"
 import UserViewer from "@/components/common/viewer/user/UserViewer.vue";
-import { FormScheme } from "@/components/form/types";
 
 interface ElFormProps extends Record<string, any> {
 
@@ -53,7 +50,7 @@ export default defineComponent({
   },
   emits: ['update:modelValue'],
   components: {
-    ElRow, ElCol, DictTag, DictInput, ElInput, ElInputNumber, ElSelect, UserSelectorInput,
+    ElRow, ElCol, ElInput, ElInputNumber, ElSelect, UserSelectorInput,
     ElForm, ElFormItem, UserViewer,
   },
   setup(props, { emit: emits }){

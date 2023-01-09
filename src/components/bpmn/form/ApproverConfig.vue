@@ -89,9 +89,10 @@ const openMultiInstance = computed({
       if (assigneeValue.value?.length > 1) {
         assigneeValue.value = [assigneeValue.value[0]]
       }
-      multipleLimit.effect.scheduler()
-      bpmnUtil.updateProperty(bpmnSelectedElem.value, {
-        loopCharacteristics: undefined
+      multipleLimit?.effect?.scheduler?.()
+      bpmnUtil.updateProperty(bpmnSelectedElem!.value, {
+        loopCharacteristics: undefined,
+        assignee: '${psr.read(execution, "' + bpmnUtil.getProcessKey() + '", "' + assigneeValue.value.join(',') + '")}'
       })
     }
   }
@@ -99,14 +100,14 @@ const openMultiInstance = computed({
 
 const isSequential = computed({
   get() {
-    const elem = toRaw(bpmnSelectedElem.value)
+    const elem = toRaw(bpmnSelectedElem!.value)
     if (!elem || !elem.businessObject) {
       return false
     }
     return !!elem.businessObject?.loopCharacteristics?.isSequential || false
   },
   set(v) {
-    const elem = toRaw(bpmnSelectedElem.value)
+    const elem = toRaw(bpmnSelectedElem!.value)
     bpmnUtil.updateModelingProperty(bpmnSelectedElem, elem.businessObject.loopCharacteristics, {
       isSequential: v
     })
@@ -116,7 +117,7 @@ const isSequential = computed({
 
 const assigneeType = computed<AssigneeType>({
   get() {
-    const elem = toRaw(bpmnSelectedElem.value)
+    const elem = toRaw(bpmnSelectedElem!.value)
     // FIXME: unsupported other type
     if (true || !elem || !elem.businessObject || bpmnUtil.isMultiInstanceUserTask(bpmnSelectedElem)) {
       return 'user'
@@ -126,7 +127,7 @@ const assigneeType = computed<AssigneeType>({
     return bo.assigneeType
   },
   set(v) {
-    bpmnUtil.updateProperty(bpmnSelectedElem.value, {
+    bpmnUtil.updateProperty(bpmnSelectedElem!.value, {
       assigneeType: v
     })
   }
@@ -134,7 +135,7 @@ const assigneeType = computed<AssigneeType>({
 
 const assigneeValue = computed<string[]>({
   get() {
-    const elem = toRaw(bpmnSelectedElem.value)
+    const elem = toRaw(bpmnSelectedElem!.value)
     if (!elem || !elem.businessObject) {
       return []
     }
@@ -150,7 +151,7 @@ const assigneeValue = computed<string[]>({
       assigneeFields: v.join(',')
     })
     if (bpmnUtil.isMultiInstanceUserTask(bpmnSelectedElem)) {
-      bpmnUtil.updateModelingProperty(bpmnSelectedElem, bpmnSelectedElem.value?.businessObject?.loopCharacteristics, {
+      bpmnUtil.updateModelingProperty(bpmnSelectedElem, bpmnSelectedElem!.value?.businessObject?.loopCharacteristics, {
         collection: '${psr.readList(execution, "' + bpmnUtil.getProcessKey() + '", "' + v.join(',') + '")}'
       })
       bpmnUtil.updateProperty(bpmnSelectedElem, {
@@ -158,7 +159,7 @@ const assigneeValue = computed<string[]>({
       })
     } else {
       bpmnUtil.updateProperty(bpmnSelectedElem, {
-        assignee: '${psr.readList(execution, "' + bpmnUtil.getProcessKey() + '", "' + v.join(',') + '")}'
+        assignee: '${psr.read(execution, "' + bpmnUtil.getProcessKey() + '", "' + v.join(',') + '")}'
       })
     }
   }
