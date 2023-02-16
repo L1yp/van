@@ -104,7 +104,7 @@ declare interface ModelingFieldDefView {
 
 
 declare interface ModelingFieldAddParam {
-  mkey: string
+  mkey?: string
   field: string
   label: string
   remark: string

@@ -83,6 +83,7 @@ import EntityAddPanel from "./config/EntityAddPanel.vue";
 import MaskWindow from "@/components/dialog/MaskWindow.vue";
 import { modelingEntityKey } from "../keys";
 import ModelingConfigTabs from "./config/ModelingConfigTabs.vue";
+import {useFieldStore} from "@/store/field-config";
 
 const loading = ref<boolean>(false)
 const param = ref<Partial<ModelingEntityFindParam>>({
@@ -102,7 +103,13 @@ const updatePanelVisible = ref(false)
 const srcRow = ref<ModelingEntityView>()
 provide(modelingEntityKey, srcRow)
 
+const store = useFieldStore()
+
 function handleRowDbClick(row: ModelingEntityView) {
+  store.scope = 'ENTITY_PRIVATE'
+  store.module = 'ENTITY'
+  store.mkey = row.mkey
+
   srcRow.value = row
   updatePanelVisible.value = true
 }

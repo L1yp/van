@@ -46,12 +46,12 @@
       style="width: 100%;"
     />
   </el-form-item>
-  
 </template>
 <script lang="ts" setup>
 import { useModelingOptionApi } from "@/service/modeling/option";
 import { ElFormItem, ElRadioGroup, ElRadioButton, ElSelect, ElOption, ElTreeSelect } from "element-plus";
 import { onBeforeMount, ref } from "vue";
+import {useFieldStore} from "@/store/field-config";
 
 interface Props {
   disabled?: boolean
@@ -68,8 +68,9 @@ const {
   modelingOptionValues, findModelingOptionValues
 } = useModelingOptionApi(loading)
 
+const store = useFieldStore()
 
-onBeforeMount(() => findModelingOptionTypes({ scope: 'GLOBAL' }))
+onBeforeMount(() => findModelingOptionTypes({ scope: store.scope as OptionScope, mkey: store.mkey }))
 onBeforeMount(() => props.formData.scheme.optionTypeId && findModelingOptionValues({ typeId: props.formData.scheme.optionTypeId }))
 
 // 切换单选多选时 需要重载 select / tree-select组件， 否则会异常

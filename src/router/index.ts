@@ -1,4 +1,4 @@
-import {createRouter, createWebHistory, } from 'vue-router'
+import {createRouter, createWebHistory, RouteLocation, RouteRecordRaw,} from 'vue-router'
 import {read} from "@/utils/storage"
 import {Component, App, toRaw} from "vue";
 import {findTreeItemById} from "@/utils/common";
@@ -15,7 +15,7 @@ const viewModules = import.meta.glob("../views/**/*.vue")
 const moduleRoutes = import.meta.globEager("./modules/**/*.ts")
 console.log('moduleRoutes', moduleRoutes);
 
-const staticModuleRoutes = []
+const staticModuleRoutes: RouteRecordRaw[] = []
 const keys = Object.keys(moduleRoutes)
 for (const key of keys) {
   if (moduleRoutes?.[key].default) {
@@ -26,12 +26,12 @@ for (const key of keys) {
 console.log('staticModuleRoutes', staticModuleRoutes)
 staticModuleRoutes.push({
   path: '/redirect',
-  redirect: to => {
+  redirect: (to: RouteLocation) => {
     console.log('redirect route', to.query.url)
-    const targetUrl = decodeURIComponent(to.query.url)
+    const targetUrl = decodeURIComponent(to.query.url as string)
     const search = new URLSearchParams(targetUrl)
     console.log('redirect search', search)
-    return to.query.url
+    return to.query.url as string
   }
 })
 
@@ -47,22 +47,22 @@ export function routeToView(route: string) {
   return viewModules[`../views${route}.vue`] // if glob
 }
 
-const layoutRoute  = {
+const layoutRoute: RouteRecordRaw = {
   path: '/home',
   name: 'main',
   component: Layout,
   children: staticModuleRoutes,
 };
 
-const redirectRoute = { path: "/", redirect: "/home" };
+const redirectRoute: RouteRecordRaw = { path: "/", redirect: "/home" };
 
-const loginRouteRecord = {
+const loginRouteRecord: RouteRecordRaw = {
   path: "/app/login",
   name: "login",
   component: routeToView("/app/login"),
 };
 
-const staticRoutes: any[] = [loginRouteRecord];
+const staticRoutes: RouteRecordRaw[] = [loginRouteRecord];
 
 console.log("create router before");
 
@@ -151,7 +151,7 @@ function transMenuToRoute(options: MenuView[]) {
 
       let icon = parentNode?.icon || null
 
-      const child = {
+      const child: RouteRecordRaw = {
         path: menuOption.path,
         name: menuOption.name,
         component: routeToView(menuOption.component),

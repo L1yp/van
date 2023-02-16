@@ -4,7 +4,7 @@
       <el-button type="primary" plain :icon="Plus" @click="handleAdd">新增</el-button>
       <span style="color: red; font-weight: bold; margin-left: 10px;">右键编辑字段</span>
     </div>
-    <el-tabs v-model="scope" type="border-card" style="width: 100%; height: calc(100% - 32px - 12px);">
+    <el-tabs v-model="store.scope" type="border-card" style="width: 100%; height: calc(100% - 32px - 12px);">
       <el-tab-pane name="ENTITY_DEFAULT" label="实体默认字段">
         <FieldTable @edit="row => handleEditField('ENTITY_DEFAULT', row)" @delete="row => handleDeleteField('ENTITY_DEFAULT', row)" :loading="loading" :data="defaultEntityFields" />
       </el-tab-pane>
@@ -18,7 +18,7 @@
     </el-tabs>
 
     <MaskWindow v-model="visible">
-      <FieldAddPanel :scope="scope" @close="visible = false" @success="loadFields" />
+      <FieldAddPanel @close="visible = false" @success="loadFields" />
     </MaskWindow>
     <mask-window v-model="updatePanelVisible" teleport-to="#field-container">
       <field-update-panel scope="GLOBAL" :field="sourceField" @close="updatePanelVisible = false" @success="loadFields" />
@@ -34,8 +34,9 @@ import MaskWindow from "@/components/dialog/MaskWindow.vue";
 import FieldAddPanel from "./FieldAddPanel.vue";
 import FieldUpdatePanel from "./FieldUpdatePanel.vue";
 import { useModelingFieldApi } from "@/service/modeling/field";
+import {useFieldStore} from "@/store/field-config";
 
-const scope = ref<FieldScope>('ENTITY_DEFAULT')
+const store = useFieldStore()
 
 const loading = ref(false)
 const {

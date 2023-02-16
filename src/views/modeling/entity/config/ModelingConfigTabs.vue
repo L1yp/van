@@ -4,7 +4,7 @@
       <EntityUpdatePanel @close="emits('close')" />
     </el-tab-pane>
     <el-tab-pane label="字段">
-      <FieldPanel scope="ENTITY_PRIVATE" module="ENTITY" :mkey="entityRow.mkey" />
+      <FieldPanel/>
       <div id="field-container"></div>
     </el-tab-pane>
     <el-tab-pane label="列表视图">
@@ -30,6 +30,7 @@ import { inject } from "vue";
 import { modelingEntityKey } from "../../keys";
 import ModelingViewConfig from "@/views/modeling/view/ModelingViewConfig.vue";
 import EntityPageConfig from "@/views/modeling/entity/config/EntityPageConfig.vue";
+import {useFieldStore} from "@/store/field-config";
 
 interface Emits {
   (e: 'close'): void
@@ -39,6 +40,8 @@ const emits = defineEmits<Emits>()
 
 
 const entityRow = inject(modelingEntityKey)
+
+const store = useFieldStore()
 
 </script>
 

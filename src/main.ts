@@ -15,11 +15,15 @@ import 'vxe-table/lib/style.css'
 import {toTree} from "@/utils/common";
 import { varOptions } from '@/components/permission/components/condition'
 import './styles/index.css'
+import { createPinia } from "pinia";
 
 
 async function startup() {
   try {
     const app = createApp(App)
+
+    const pinia = createPinia()
+    app.use(pinia)
 
     setupAxios()
     app.use(ElLoading)

@@ -45,7 +45,7 @@
       <field-add-panel v-bind="$props" @close="visible = false" @success="loadFields" />
     </mask-window>
     <mask-window v-model="updatePanelVisible" teleport-to="#field-container">
-      <field-update-panel v-bind="$props" :field="sourceField" @close="updatePanelVisible = false" @success="loadFields" />
+      <field-update-panel :field="sourceField" @close="updatePanelVisible = false" @success="loadFields" />
     </mask-window>
   </div>
 </template>
@@ -59,18 +59,13 @@ import FieldAddPanel from '@/views/modeling/field/FieldAddPanel.vue';
 import { useModelingFieldApi } from '@/service/modeling/field';
 import FieldTable from '@/views/modeling/field/FieldTable.vue';
 import FieldUpdatePanel from '@/views/modeling/field/FieldUpdatePanel.vue';
+import {useFieldStore} from "@/store/field-config";
 
-
-interface Props {
-  scope: FieldScope
-  module: ModelingModule
-  mkey: string
-}
-
-const props = defineProps<Props>()
 
 const loading = ref<boolean>(false)
 const visible = ref(false)
+
+const store = useFieldStore()
 
 const {
   modelingFields, findModelingFields,
@@ -81,14 +76,14 @@ const {
 } = useModelingFieldApi(loading)
 
 const defaultFields = computed(() => {
-  if (props.module === 'WORKFLOW') {
+  if (store.module === 'WORKFLOW') {
     return modelingFields.value.filter(it => it.scope === 'WORKFLOW_DEFAULT')
   } else {
     return modelingFields.value.filter(it => it.scope === 'ENTITY_DEFAULT')
   }
 })
 const privateFields = computed(() => {
-  if (props.module === 'WORKFLOW') {
+  if (store.module === 'WORKFLOW') {
     return modelingFields.value.filter(it => it.scope === 'WORKFLOW_PRIVATE')
   } else {
     return modelingFields.value.filter(it => it.scope === 'ENTITY_PRIVATE')
@@ -99,7 +94,7 @@ const selectedGlobalFields = computed(() => modelingFields.value.filter(it => it
 
 onBeforeMount(loadFields)
 function loadFields() {
-  findModelingFields(props.module, props.mkey)
+  findModelingFields(store.module, store.mkey)
 }
 
 
@@ -114,15 +109,15 @@ async function handleRefField() {
 }
 
 const formData = ref<ModelingFieldRefParam>({
-  module: props.module,
-  mkey: props.mkey,
+  module: store.module,
+  mkey: store.mkey,
   field_id: '',
 })
 
 const formRef = ref<InstanceType<typeof ElForm>>()
 async function handleConfirmRef() {
   try {
-    await formRef.value.validate()
+    await formRef.value?.validate()
   } catch (e) {
     return
   }
@@ -141,6 +136,7 @@ const updatePanelVisible = ref(false)
 const sourceField = ref<ModelingFieldDefView>()
 function handleEditField(row: ModelingFieldDefView) {
   sourceField.value = row
+  console.log('update field', row)
   updatePanelVisible.value = true
 }
 
@@ -149,7 +145,7 @@ async function handleDeleteField(row: ModelingFieldDefView) {
 }
 
 async function handleUnrefField(row: ModelingFieldDefView) {
-  (await unrefField({module: props.module, mkey: props.mkey, field_id: row.id})) && loadFields()
+  (await unrefField({module: store.module, mkey: store.mkey, field_id: row.id})) && loadFields()
 }
 
 function handleEditGlobalField() {

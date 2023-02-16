@@ -4,7 +4,7 @@
       <DefUpdatePanel/>
     </el-tab-pane>
     <el-tab-pane label="字段">
-      <FieldPanel scope="WORKFLOW_PRIVATE" module="WORKFLOW" :mkey="workflowDef.key" />
+      <FieldPanel />
       <div id="field-container"></div>
     </el-tab-pane>
     <el-tab-pane label="视图配置">

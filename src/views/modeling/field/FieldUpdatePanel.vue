@@ -19,7 +19,7 @@
           <el-form-item prop="width" label="宽度" required>
             <el-input-number v-model="formData.width" :min="1" :controls="false" style="width: 100%" />
           </el-form-item>
-          <el-form-item prop="type" label="类型" required>
+          <el-form-item prop="type" label="类型">
             <el-select v-model="props.field.type" disabled>
               <el-option label="数字" value="number" />
               <el-option label="文本" value="text" />
@@ -56,14 +56,9 @@ const schemeConfigComponentMap = {
 
 interface Props {
   field: ModelingFieldDefView
-  scope?: FieldScope
-  module?: ModelingModule
-  mkey?: string
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  scope: 'GLOBAL',
-})
+const props = defineProps<Props>()
 
 interface Emits {
   (e: 'close'): void
@@ -88,7 +83,7 @@ const { updateField } = useModelingFieldApi(loading)
 const formRef = ref<InstanceType<typeof ElForm>>()
 async function handleConfirm() {
   try {
-    await formRef.value.validate()
+    await formRef.value?.validate()
   } catch (e) {
     console.error(e);
     return

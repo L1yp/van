@@ -89,6 +89,7 @@ import UserSelectorInput from '@/components/common/selector/user/UserSelectorInp
 import DefAddPanel from "./type/DefAddPanel.vue";
 import { workflowDefKey } from "./keys";
 import MaskWindow from "@/components/dialog/MaskWindow.vue";
+import {useFieldStore} from "@/store/field-config";
 
 interface Props {
   name?: string
@@ -124,11 +125,19 @@ const typeMaskVisible = ref(false)
 const verMaskVisible = ref(false)
 const srcRow = ref<WorkflowTypeDefView | WorkflowTypeVerView>()
 provide(workflowDefKey, srcRow)
+
+const store = useFieldStore()
+
 function handleRowDbClick(row: WorkflowTypeDefView | WorkflowTypeVerView) {
   /** @ts-ignore */
   if (row.children?.length) {
     const item = row as WorkflowTypeDefView
     srcRow.value = row
+
+    store.scope = 'WORKFLOW_PRIVATE'
+    store.module = 'WORKFLOW'
+    store.mkey = row.key
+
     typeMaskVisible.value = true
 
   } else {

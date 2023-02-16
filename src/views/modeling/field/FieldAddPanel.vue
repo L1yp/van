@@ -53,16 +53,7 @@ import DeptSchemeConfig from "./form/DeptSchemeConfig.vue";
 import DateSchemeConfig from "./form/DateSchemeConfig.vue";
 import DateRangeSchemeConfig from "./form/DateRangeSchemeConfig.vue";
 import { useModelingFieldApi } from "@/service/modeling/field";
-
-interface Props {
-  scope?: FieldScope
-  module?: ModelingModule
-  mkey?: string
-}
-
-const props = withDefaults(defineProps<Props>(), {
-  scope: 'GLOBAL',
-})
+import {useFieldStore} from "@/store/field-config";
 
 interface Emits {
   (e: 'close'): void
@@ -71,15 +62,17 @@ interface Emits {
 
 const emits = defineEmits<Emits>()
 
+const store = useFieldStore()
+
 // @ts-ignore
 const formData = ref<ModelingFieldAddParam>({
-  mkey: props.mkey,
+  mkey: store.mkey,
   field: '',
   label: '',
   remark: '',
   width: 16,
   type: 'number',
-  scope: props.scope,
+  scope: store.scope,
   scheme: {
     type: 'number'
   }
@@ -106,13 +99,13 @@ const { addField } = useModelingFieldApi(loading)
 const formRef = ref<InstanceType<typeof ElForm>>()
 async function handleConfirm() {
   try {
-    await formRef.value.validate()
+    await formRef.value?.validate()
   } catch (e) {
     console.error(e);
     return
   }
 
-  formData.value.scope = props.scope
+  formData.value.scope = store.scope
   const result = await addField(formData.value)
   if (result) {
     emits('close')

@@ -46,7 +46,7 @@
             </el-icon>
           </template>
         </el-table-column>
-        <el-table-column prop="type" align="left" header-align="left" label="类型" width="100"/>
+        <el-table-column prop="type" align="left" header-align="left" label="类型" width="120"/>
         <el-table-column prop="path" align="left" header-align="left" label="路由" min-width="300"/>
         <el-table-column prop="component" align="left" header-align="left" label="组件" min-width="300"/>
         <el-table-column prop="order_no" align="center" header-align="center" label="排序" width="60"/>
