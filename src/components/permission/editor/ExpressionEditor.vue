@@ -100,7 +100,7 @@ const { tableData, loadDept } = useDeptInfo(loading)
 const { modelingFields, findModelingFields } = useModelingFieldApi(loading)
 const { permissionContent, getPermissionContent } = useModelingPermissionApi(loading)
 const userInfo = inject(userInfoKey)
-const userMap = inject(userMapKey)
+const userMap = inject(userMapKey)!
 
 
 
@@ -161,28 +161,31 @@ onMounted(async () => {
   }
   await getPermissionContent({ ...props })
 
-  const candidateUserIds = []
-  for (const item of permissionContent.value.content) {
-    if (item.type === 'BLOCK') {
-      const fieldDef = fieldMap.get(item.content.field)
-      if (fieldDef?.type === 'user') {
-        const userIds = item.content.value.user_id_list
-        userIds.filter(it => !['SELF', 'SELF_DPT', 'CHILD_DPT'].includes(it))
-          .filter(it => !userMap.has(it))
-          .forEach(it => candidateUserIds.push(it))
+  const candidateUserIds: string[] = []
+  if (permissionContent.value?.content) {
+    for (const item of permissionContent.value?.content) {
+      if (item.type === 'BLOCK') {
+        const fieldDef = fieldMap.get(item.content.field)
+        if (fieldDef?.type === 'user') {
+          const userIds = item.content.value.user_id_list
+          userIds?.filter(it => !['SELF', 'SELF_DPT', 'CHILD_DPT'].includes(it))
+            .filter(it => !userMap?.has(it))
+            .forEach(it => candidateUserIds.push(it))
 
+        }
       }
     }
+    if (candidateUserIds?.length) {
+      const userViews = await listByIdList(candidateUserIds)
+      userViews.forEach(it => userMap.set(it.id, it))
+    }
   }
-  if (candidateUserIds?.length) {
-    const userViews = await listByIdList(candidateUserIds)
-    userViews.forEach(it => userMap.set(it.id, it))
-  }
+
 
 
   editor.value = new Viewer(ExpressionRoot, expressionRootLoader, options)
   editor.value.mount(editorRef.value!).then(_ => {
-    initEditorState(permissionContent.value)
+    initEditorState(permissionContent.value!)
   })
 })
 
@@ -403,7 +406,7 @@ function buildText(field: ModelingFieldDefView, operator: ConditionOperator, val
       const startTime = parseInt(times[0])
       const endTime = parseInt(times[1])
 
-      str = dayjs(startTime).format('YYYY-MM-DD') + "~" + dayjs(endTime).format('YYYY-MM-DD')
+      str = dayjs(startTime).format('YYYY-MM-DD') + " ~ " + dayjs(endTime).format('YYYY-MM-DD')
     }
 
     text = `<span class="field">${field.label}</span> <span class="operator">${formatOperator(operator)}</span> <span class="content">${str}</span>`

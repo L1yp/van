@@ -31,7 +31,7 @@
 
 <script lang="ts" setup>
 import { mainHeightKey, mainWidthKey, maskContainerKey } from "@/config/app.keys";
-import { computed, inject, RendererElement } from "vue";
+import {computed, inject, onActivated, onDeactivated, RendererElement} from "vue";
 import { incMaskZIndex } from "./mask";
 import SVGIcon from "@/components/common/SVGIcon.vue";
 import { ElButton } from 'element-plus'
@@ -97,6 +97,11 @@ const visible = computed({
   set: v => {
     emits('update:modelValue', v)
   }
+})
+
+onDeactivated(() => {
+  // 切换时 关闭浮层
+  visible.value = false
 })
 </script>
 

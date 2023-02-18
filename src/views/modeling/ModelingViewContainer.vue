@@ -53,6 +53,9 @@
               <template v-if="column.field.type === 'user'">
                 <user-selector-input v-model="param.condition_map[column.field.field]" :var-options="varUserOptions"  @change="reloadTableData" style="width: calc(100% - 4px);" :style="{ minWidth: `${column.min_width - 4}px` }" />
               </template>
+              <template v-if="column.field.type === 'dept'">
+                <dept-selector-input  v-model="param.condition_map[column.field.field]" :var-options="varDeptOptions" @change="reloadTableData" style="width: calc(100% - 4px);" :style="{ minWidth: `${column.min_width - 4}px` }" />
+              </template>
               <template v-if="column.field.type === 'date'">
                 <template v-if="column.field.scheme.dateType === 'date'">
                   <date-range-picker
@@ -143,6 +146,7 @@ import ModelingViewUpdatePanel from '@/views/modeling/view/ModelingViewUpdatePan
 import { useWorkflowInstanceApi } from '@/service/workflow';
 import {useRoute, useRouter} from 'vue-router';
 import WorkflowInstanceTabsPage from "@/views/workflow/instance/WorkflowInstanceTabsPage.vue";
+import DeptSelectorInput from "@/components/common/selector/dept/DeptSelectorInput.vue";
 
 interface Props {
   module: ModelingModule
@@ -234,6 +238,39 @@ const varUserOptions: UserView[] = [
     username: '本人',
     nickname: '本人',
     dept_id: 1,
+  },
+  {
+    id: 'SELF_DPT',
+    username: '本人部门',
+    nickname: '本人部门',
+    dept_id: 1,
+  },
+  {
+    id: 'CHILD_DPT',
+    username: '下级部门',
+    nickname: '下级部门',
+    dept_id: 1,
+  },
+  {
+    id: 'SELF_CHILD_DPT',
+    username: '本人部门及下级部门',
+    nickname: '本人部门及下级部门',
+    dept_id: 1,
+  },
+]
+
+const varDeptOptions: DeptView[] = [
+  {
+    id: 'SELF_DPT',
+    title: '本人部门',
+  },
+  {
+    id: 'CHILD_DPT',
+    title: '本人部门的下级部门',
+  },
+  {
+    id: 'SELF_CHILD_DPT',
+    title: '本人部门及下级部门',
   },
 ]
 

@@ -74,6 +74,11 @@
         <div v-show="'date' === selectedField?.type">
           <DateConditionPanel v-model="dateConditionModel" />
         </div>
+
+        <div v-show="'number' === selectedField?.type">
+          <el-input-number v-model="numberConditionModel.number" :controls="false"></el-input-number>
+        </div>
+
       </template>
 
     </div>
@@ -83,13 +88,14 @@
 <script lang="ts" setup>
 import {
   ElScrollbar, ElSelect, ElOption, ElRadioGroup, ElRadio, ElButton, ElInput,
-  ElMessage,
+  ElMessage, ElInputNumber,
 } from 'element-plus'
 import { computed, nextTick, ref, toRaw } from "vue";
 import UserConditionPanel from './condition/UserConditionPanel.vue';
 import DeptConditionPanel from './condition/DeptConditionPanel.vue';
 import OptionConditionPanel from './condition/OptionConditionPanel.vue';
 import DateConditionPanel from './condition/DateConditionPanel.vue';
+import {NumberConditionModel} from "@/components/permission/components/condition";
 
 interface Props {
   fields: ModelingFieldDefView[]
@@ -130,7 +136,18 @@ const operators = computed<Operator[]>(() => {
       { label: 'like', value: 'LIKE' },
       { label: 'not like', value: 'NOT_LIKE' },
     ]
-  } else {
+  }
+  else if (['number'].includes(field?.type)) {
+    options = [
+      { label: '=', value: 'EQ' },
+      { label: '>=', value: 'GTE' },
+      { label: '<=', value: 'LTE' },
+      { label: '<', value: 'LT' },
+      { label: '>', value: 'GT' },
+    ]
+  }
+
+  else {
     options = [ { label: '=', value: 'EQ' } ]
   }
   if (!options.map(it => it.value).includes(operator.value)) {
@@ -179,6 +196,11 @@ const dateConditionModel = ref<DateFieldConditionModel>({
   range: ''
 })
 
+const numberConditionModel = ref<NumberFieldConditionModel>({
+  type: 'number',
+  number: 0
+})
+
 /**
  * 设置数据状态
  */
@@ -199,6 +221,8 @@ function setState() {
   } else if (['dept'].includes(type)) {
     deptConditionModel.value = data as DeptFieldConditionModel
   } else if (['date'].includes(type)) {
+    dateConditionModel.value = data as DateFieldConditionModel
+  } else if (['number'].includes(type)) {
     dateConditionModel.value = data as DateFieldConditionModel
   }
 }

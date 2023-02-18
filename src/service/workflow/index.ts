@@ -1,5 +1,5 @@
-import { ref, Ref, toRaw } from "vue";
-import { ElMessage } from "element-plus";
+import {ref, Ref, toRaw} from "vue";
+import {ElMessage} from "element-plus";
 import * as WorkflowApi from "@/api/workflow";
 
 
@@ -20,6 +20,18 @@ export function useWorkflowApi(loading?: Ref<boolean>) {
         row.children.forEach(it => it.name = `${row.name} V${it.ver}`)
       })
       pageData.value = data
+    } catch (e) {
+      console.error(e)
+      ElMessage.error((e as Error)?.message || '加载失败')
+    } finally {
+      loading && (loading.value = false)
+    }
+  }
+
+  async function loadPageWithoutVer(params: WorkflowTypeDefPageParam) {
+    try {
+      loading && (loading.value = true)
+      pageData.value = await WorkflowApi.pageWorkflowDefWithoutVer(params)
     } catch (e) {
       console.error(e)
       ElMessage.error((e as Error)?.message || '加载失败')
@@ -111,7 +123,7 @@ export function useWorkflowApi(loading?: Ref<boolean>) {
 
 
   return {
-    pageData, loadPage, workflowDef, findDefById, updateDefById, addDef
+    pageData, loadPage, loadPageWithoutVer, workflowDef, findDefById, updateDefById, addDef
   }
 }
 

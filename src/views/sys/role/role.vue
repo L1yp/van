@@ -55,8 +55,8 @@
               </template>
             </el-popconfirm>
             <el-button plain style="vertical-align: middle;" text @click.stop="relateMenu(scope.row)" :icon="Link">关联菜单</el-button>
-            <el-button plain text @click.stop="openPermissionPanel('ENTITY', scope.row)" :icon="Link">实体权限</el-button>
-            <el-button plain text @click.stop="openPermissionPanel('WORKFLOW', scope.row)" :icon="Link">流程权限</el-button>
+            <el-button plain text @click.stop="openEntityPermissionPanel(scope.row)" :icon="Link">实体权限</el-button>
+            <el-button plain text @click.stop="openWorkflowPermissionPanel(scope.row)" :icon="Link">流程权限</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -68,6 +68,9 @@
 
     <MaskWindow v-model="permissionVisible">
       <PermissionEntity :role-id="selectRole.id" />
+    </MaskWindow>
+    <MaskWindow v-model="permissionWorkflowVisible">
+      <PermissionWorkflow :role-id="selectRole.id" />
     </MaskWindow>
 
   </div>
@@ -90,6 +93,7 @@ import {menuOptionsKey} from "@/config/app.keys";
 import * as UserApi from "@/api/sys/user";
 import {installLayoutContentRoute, uninstallLayoutContentRoute} from "@/router";
 import {toTree} from "@/utils/common";
+import PermissionWorkflow from "@/views/sys/role/permission/PermissionWorkflow.vue";
 
 
 const loading = ref<boolean>(true);
@@ -169,12 +173,18 @@ function handleRowClick(row) {
 }
 
 const permissionVisible = ref(false)
-const permModule = ref<ModelingModule>()
-function openPermissionPanel(module: ModelingModule, role: RoleView) {
+function openEntityPermissionPanel(role: RoleView) {
   selectRole.value = role
-  permModule.value = module
   permissionVisible.value = true
 }
+
+const permissionWorkflowVisible = ref(false)
+function openWorkflowPermissionPanel(role: RoleView) {
+  selectRole.value = role
+
+  permissionWorkflowVisible.value = true
+}
+
 </script>
 
 <style scoped>

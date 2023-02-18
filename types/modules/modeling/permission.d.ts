@@ -13,7 +13,7 @@ declare interface ModelingPermissionBindParam {
 }
 
 declare type ExpressionType = 'BLOCK' | 'AND' | 'OR' | 'START' | 'END'
-declare type ConditionOperator = 'EQ' | 'LIKE' | 'NOT_LIKE'
+declare type ConditionOperator = 'EQ' | 'LIKE' | 'NOT_LIKE' | 'GT' | 'GTE' | 'LT' | 'LTE'
 declare type DateConditionType = 'DAY' | 'WEEK' | 'MONTH' | 'QUARTER' | 'YEAR' | 'FIXED'
 
 
@@ -32,7 +32,7 @@ declare interface FieldConditionModel {
   type: FieldType
 }
 
-declare type FieldConditionUnionModel = Partial<TextFieldConditionModel & DateFieldConditionModel & OptionFieldConditionModel & UserFieldConditionModel & DeptFieldConditionModel>
+declare type FieldConditionUnionModel = Partial<TextFieldConditionModel & DateFieldConditionModel & OptionFieldConditionModel & UserFieldConditionModel & DeptFieldConditionModel & NumberFieldConditionModel>
 
 declare interface TextFieldConditionModel extends FieldConditionModel{
   text: string
@@ -61,6 +61,10 @@ declare interface UserFieldConditionModel extends FieldConditionModel {
 declare interface DeptFieldConditionModel extends FieldConditionModel {
   dept_id?: string
   cascader: boolean
+}
+
+declare interface NumberFieldConditionModel extends FieldConditionModel {
+  number: number
 }
 
 declare interface ModelingPermissionView {

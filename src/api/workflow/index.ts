@@ -8,6 +8,14 @@ export function pageWorkflowDef(params: WorkflowTypeDefPageParam) {
   })
 }
 
+export function pageWorkflowDefWithoutVer(params: WorkflowTypeDefPageParam) {
+  return request<PageData<WorkflowTypeDefView>>({
+    url: '/workflow/type/def/page/without_ver',
+    method: 'GET',
+    params
+  })
+}
+
 export function findById(id: string) {
   return request<WorkflowTypeDefView>({
     url: `/workflow/type/def/${id}`,
