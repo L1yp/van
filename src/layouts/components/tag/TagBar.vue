@@ -149,7 +149,7 @@ watch(() => route.fullPath, (newPath, oldPath)=>{
   }
 
 
-  const lastMatched = route.matched.at(-1)
+  const lastMatched = route.matched[route.matched.length - 1]
   const tagUniPath = lastMatched.path
 
   setTimeout(() => {
