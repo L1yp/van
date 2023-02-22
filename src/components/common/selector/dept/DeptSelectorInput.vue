@@ -54,7 +54,7 @@ import { findTreeItemById } from "@/utils/common";
 interface Props {
   multiple?: boolean
   placeholder?: string
-  modelValue: string | string[] | null
+  modelValue?: string | string[] | null
   varOptions?: DeptView[]
   disabled?: boolean
   preview?: boolean
@@ -62,7 +62,7 @@ interface Props {
 
 interface Emits {
   (e: 'update:modelValue', val: string | string[]): void
-  (e: 'change', v: string | string[])
+  (e: 'change', v: string | string[] | null | undefined): void
 }
 
 const selectRef = ref<InstanceType<typeof ElSelect>>()
