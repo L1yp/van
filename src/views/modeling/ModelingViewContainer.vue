@@ -21,6 +21,7 @@
     <div style="width: 100%; height: calc(100% - 41px);" v-if="activeView">
       <vxe-table
         ref="xTable"
+        size="mini"
         height="100%"
         :key="refreshTableKey"
         stripe
