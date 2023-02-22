@@ -4,8 +4,6 @@
 
 [Van](https://admin.l1yp.com/) 使用了目前最新的技术体系，内置了动态路由，菜单管理，用户管理，组织机构等基础功能，状态管理采用 Vue3 的 [Provide / Inject](https://staging-cn.vuejs.org/guide/components/provide-inject.html#provide)，组件通信基于 MITT。
 
-实现了各种非常好用的基础组件：[用户选择器](https://admin.l1yp.com/user/profile)，部门选择器，字典输入/输出组件。
-
 [工作流设计器](https://admin.l1yp.com/process/app/design/2?processKey=holiday) 基于 [bpmn-js 9.0.3](https://github.com/bpmn-io/bpmn-js) 实现。
 
 [在线表单](https://admin.l1yp.com/process/model/form) 基于 [Vuedraggable.next](https://github.com/SortableJS/vue.draggable.next) 实现，支持拖拉拽生成JSON并在线预览。
@@ -13,8 +11,6 @@
 代码预览采用 [CodeMirror6](https://codemirror.net/) 实现。
 
 - [👀在线预览](https://admin.l1yp.com/)
-- ✈使用教程：正在筹备
--
 
 # Features
 - [x] 拖拽控件生成表单，流程页面绑定在线表单
@@ -25,7 +21,7 @@
 - [x] 流程支持附件/备注
 
 
-## 起步
+## 参与开发
 
 ```sh
 npm install # 安装依赖
