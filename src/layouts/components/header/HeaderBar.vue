@@ -44,7 +44,7 @@
       </template>
     </el-dropdown>
     <div>
-      <el-switch v-model="dark" :active-icon="DarkIcon" :inactive-icon="LightIcon" inline-prompt />
+      <el-switch v-model="store.dark" :active-icon="DarkIcon" :inactive-icon="LightIcon" inline-prompt />
     </div>
     <el-dropdown :hide-on-click="false" @command="handleCommand">
       <span class="el-dropdown-link">
@@ -77,12 +77,14 @@ import SVGIcon from "@/components/common/SVGIcon.vue";
 import { remove } from "@/utils/storage"
 import { asideOpenedKey, userInfoKey } from "@/config/app.keys";
 import { useIcon } from "@/components/common/util";
-import { useDark } from "@vueuse/core";
+import {useSystemStore} from "@/store/sys-config";
 
-const dark = useDark()
+const store = useSystemStore()
 
 const DarkIcon = useIcon('Dark')
 const LightIcon = useIcon('Light')
+
+
 
 const router = useRouter();
 const asideOpened = inject(asideOpenedKey)!

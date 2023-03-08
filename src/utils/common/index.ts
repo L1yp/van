@@ -64,7 +64,13 @@ function primitiveArrayEquals<T extends PrimitiveType>(a: T[], b: T[]): boolean 
   a.every((val, index) => val === b[index])
 }
 
-
+/**
+ * 一维数组转树形结构
+ * @param src 一维数组
+ * @param keyField 唯一键名
+ * @param parentField 父键名
+ * @param orderField 排序键名
+ */
 export function toTree<T extends Tree>(src: T[], keyField: keyof T, parentField: keyof T, orderField?: keyof T): T[] {
   const map = new Map<unknown, T>(src.map(it => [it[keyField], it]))
   let compareFn: ((a: T, b: T) => number) | undefined = undefined
@@ -187,7 +193,7 @@ function DFSTree<T extends Tree>(src: T[], keyField: keyof T, key: T[keyof T], r
  * @param src 数据源
  * @param keyField 键名
  * @param key 键值
- * @returns 条目
+ * @returns 父节点数组
  */
  export function findTreeItemParentById<T extends Tree>(src: T[], keyField: keyof T, key: T[keyof T]): T[] {
 

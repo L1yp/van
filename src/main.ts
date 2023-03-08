@@ -4,7 +4,7 @@ import {isReady, setupRouter} from './router'
 import 'virtual:svg-icons-register'
 import 'element-plus/dist/index.css';
 import 'element-plus/theme-chalk/dark/css-vars.css'
-import { ElLoading, ElMessage } from 'element-plus';
+import { ElLoading } from 'element-plus';
 import {setupAxios} from "./config/axios.http"
 import * as UserApi from "@/api/sys/user"
 import {remove} from "./utils/storage"
@@ -16,17 +16,31 @@ import {toTree} from "@/utils/common";
 import { varOptions } from '@/components/permission/components/condition'
 import './styles/index.css'
 import { createPinia } from "pinia";
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-alpine.css';
 
+import TextFilter from '@/components/ag-grid/filter/components/TextFilter.vue'
+import OptionFilter from '@/components/ag-grid/filter/components/OptionFilter.vue'
+import UserFilter from '@/components/ag-grid/filter/components/UserFilter.vue'
+import DeptFilter from '@/components/ag-grid/filter/components/DeptFilter.vue'
+import DateFilter from '@/components/ag-grid/filter/components/DateFilter.vue'
 
 async function startup() {
   try {
     const app = createApp(App)
+
+    app.component('TextFilter', TextFilter)
+    app.component('OptionFilter', OptionFilter)
+    app.component('UserFilter', UserFilter)
+    app.component('DeptFilter', DeptFilter)
+    app.component('DateFilter', DateFilter)
 
     const pinia = createPinia()
     app.use(pinia)
 
     setupAxios()
     app.use(ElLoading)
+
     app.use(VXETable)
 
     const map = new Map<string, UserView>()

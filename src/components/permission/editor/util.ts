@@ -14,7 +14,7 @@ export function transformToVElementLang(html: string): VElement[] {
   const result: VElement[] = []
 
   for (const child of Array.from(root.body.children)) {
-    const children = []
+    const children: VElement[] = []
     const attrs = NamedNodeMapToObject(child.attributes);
     transformToVElement(child, children);
     const elem = VElement.createElement(child.tagName, attrs, children)
@@ -39,7 +39,7 @@ function transformToVElement(elem: Element | Node, children: Array<VElement | st
       // Element
       // FIXME: check child type
       const attrs = NamedNodeMapToObject((child as HTMLElement).attributes)
-      const nodes = [];
+      const nodes: VElement[] = [];
       transformToVElement(child, nodes);
       const velem = VElement.createElement(child.nodeName, attrs, nodes);
       children.push(velem);
@@ -54,7 +54,7 @@ function transformToVElement(elem: Element | Node, children: Array<VElement | st
  * @returns {Object} a
  */
 function NamedNodeMapToObject(attributes: NamedNodeMap): object {
-  const obj = {};
+  const obj: Record<string, any> = {};
   for (let i = 0; i < attributes.length; i++) {
     const element = attributes[i];
     obj[element.name] = element.value;

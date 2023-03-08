@@ -9,7 +9,7 @@ declare type Size = 'large' | 'default' | 'small'
 declare type InputFormatter = (value: string | number) => string
 /**
  * 解析函数
- * @param source 
+ * @param source
  * @return modelValue
  */
 declare type InputParser = (source: string) => string
@@ -39,7 +39,7 @@ declare interface VFormScheme {
 declare interface CandidateComponentConfig extends Tree {
   id: string
   component: string
-  category: 'form-item' | 'layout'
+  category: 'form-item' | 'layout' | 'display'
   icon?: string
   title?: string
   formItemAttrs?: Record<string, any>
@@ -54,7 +54,7 @@ declare interface ComponentConfig extends Tree {
   /**
    * layout 不需要配置form-item信息
    */
-  category: 'form-item' | 'layout'
+  category: 'form-item' | 'layout' | 'display'
   icon?: string
   formItemAttrs?: Record<string, any>
   attrs?: Record<string, any>,

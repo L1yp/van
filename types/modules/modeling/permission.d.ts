@@ -25,7 +25,7 @@ declare interface ExpressionModel {
 declare interface BlockExpressionModel {
   field: string
   operator: ConditionOperator
-  value: FieldConditionUnionModel
+  value?: FieldConditionUnionModel
 }
 
 declare interface FieldConditionModel {

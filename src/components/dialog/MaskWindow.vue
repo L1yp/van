@@ -4,7 +4,7 @@
       class="mask-root-window"
       :style="rootStyle"
     >
-      <transition name="fade" mode="out-in" appear>
+<!--      <transition name="fade" mode="out-in" appear>-->
         <div class="mask-window-wrapper">
           <slot v-if="showToolbar" name="toolbar">
             <div style="box-sizing: border-box; padding: 6px;  background-color: var(--toolbar-bg-color);">
@@ -14,7 +14,7 @@
           </slot>
           <slot></slot>
         </div>
-      </transition>
+<!--      </transition>-->
 
 
       <div

@@ -58,7 +58,66 @@
           </div>
         </template>
 
-        <template v-else>
+        <template v-else-if="'table' === element.component">
+          <table
+            v-bind="element.attrs"
+            style="min-height: 100px; padding: 6px; width: 100%"
+            class="widget-table"
+            :class="vFormActiveElement === element ? 'active' : ''"
+          >
+            <tr
+              v-for="tr in element.children"
+              v-bind="tr.attrs"
+              :key="tr.id"
+              @click.stop="handleClickElement(tr)"
+              style="min-height: 100px; width: 100%"
+              class="widget-table-tr"
+              :class="vFormActiveElement === tr ? 'active' : ''"
+            >
+              <td
+                v-for="td in tr.children"
+                :key="td.id"
+                @click.stop="handleClickElement(td)"
+                v-bind="td.attrs"
+                style="min-height: 88px; padding: 6px; min-width: 100px; box-sizing: border-box"
+                class="widget-table-td"
+                :class="vFormActiveElement === td ? 'active' : ''"
+              >
+                <nested-drag-item style="width: 100%; height: 100%; min-height: 76px; background-color: #fff; " :children="td.children"></nested-drag-item>
+                <div v-if="vFormActiveElement === td" class="field-id">
+                  <span v-text="td.id"></span>
+                </div>
+                <div v-if="vFormActiveElement === td" class="widget-action">
+                  <div title="复制" @click.stop="handleCopyElem">
+                    <CopyDocument class="widget-action-icon"/>
+                  </div>
+                  <div title="删除" @click.stop="handleDeleteElem">
+                    <Delete class="widget-action-icon" />
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </table>
+          <div v-if="vFormActiveElement === element" class="drag-handle">
+            <s-v-g-icon class="drag-icon" name="Drag"/>
+          </div>
+          <div v-if="vFormActiveElement === element" class="field-id">
+            <span v-text="element.id"></span>
+          </div>
+          <div v-if="vFormActiveElement === element" class="widget-action">
+            <div title="添加栅格列" @click.stop="handleAddCol">
+              <Plus class="widget-action-icon" />
+            </div>
+            <div title="复制" @click.stop="handleCopyElem">
+              <CopyDocument class="widget-action-icon"/>
+            </div>
+            <div title="删除" @click.stop="handleDeleteElem">
+              <Delete class="widget-action-icon" />
+            </div>
+          </div>
+        </template>
+
+        <template v-else-if="'form-item' === element.category">
           <el-form-item
             :prop="element.id"
             v-bind="element.formItemAttrs"
@@ -92,6 +151,31 @@
           </div>
 
         </template>
+
+        <template v-else-if="'display' === element.category">
+          <component
+            :is="element.component"
+            v-bind="element.attrs"
+          >
+          </component>
+
+          <div v-if="vFormActiveElement === element" class="drag-handle">
+            <s-v-g-icon class="drag-icon" name="Drag"/>
+          </div>
+          <div v-if="vFormActiveElement === element" class="field-id">
+            <span v-text="element.id"></span>
+          </div>
+          <div v-if="vFormActiveElement === element" class="widget-action">
+            <div title="复制" @click.stop="handleCopyElem">
+              <CopyDocument class="widget-action-icon"/>
+            </div>
+            <div @click.stop="handleDeleteElem" title="删除">
+              <Delete class="widget-action-icon" />
+            </div>
+
+          </div>
+        </template>
+
       </div>
 
     </template>
@@ -115,6 +199,7 @@ import SingleSelect from "../components/select/SingleSelect.vue"
 import MultiSelect from "../components/select/MultiSelect.vue"
 import UserSelect from "../components/select/UserSelect.vue"
 import DeptSelect from "../components/select/DeptSelect.vue"
+import LabelField from "../components/display/LabelField.vue"
 import { vFormActiveElementKey } from "@/components/form/state.key";
 import { genId } from "@/components/form/designer/util/common";
 import { Plus, Delete, CopyDocument } from "@element-plus/icons-vue";
@@ -125,7 +210,7 @@ export default defineComponent({
   components: {
     Draggable, ElForm, ElFormItem, ElInput, ElSelect, ElOption, ElRow, ElCol, SVGIcon, ElCheckboxGroup, ElCheckbox,
     UserSelectorInput, DeptSelectorInput, NumberInput, TextInput, SingleSelect, MultiSelect, UserSelect, DeptSelect,
-    Plus, Delete, CopyDocument, DatePicker, DateRangePicker
+    Plus, Delete, CopyDocument, DatePicker, DateRangePicker, LabelField,
   },
   props: {
     children: Array as PropType<ComponentConfig[]>
@@ -265,16 +350,27 @@ div {
   position: relative;
 }
 
+.widget-table-td {
+  border: 1px solid var(--el-border-color);
+}
+
 
 .widget-item.active,
 .widget-col-item.active,
-.widget-row-item.active {
+.widget-row-item.active,
+.widget-table.active,
+.widget-table-tr.active,
+.widget-table-td.active
+{
   outline: 2px solid #409EFF;
   border: 1px solid #409EFF;
 }
 
 .widget-item:hover,
-.widget-col-item:hover {
+.widget-col-item:hover,
+.widget-table:hover,
+.widget-table-tr:hover,
+.widget-table-td:hover {
   border: 1px solid #409EFF;
 }
 

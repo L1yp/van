@@ -3,12 +3,12 @@ export function genId(): string {
 }
 
 export function transCloneComponent(original: CandidateComponentConfig) {
-  let children = []
+  let children: ComponentConfig[] = []
   if (original.children?.length) {
     children = original.children.map(it => transCloneComponent(it))
   }
   const newItem: ComponentConfig = {
-    id: 'field_' + Number(genId()).toString(36),
+    id: original.component + '_' + Number(genId()).toString(36),
     component: original.component,
     category: original.category,
     formItemAttrs: original.formItemAttrs ? JSON.parse(JSON.stringify(original.formItemAttrs)) : undefined,

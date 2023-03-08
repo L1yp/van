@@ -31,6 +31,25 @@
         </el-col>
       </el-row>
     </template>
+    <template v-else-if="item.component === 'table'">
+      <table v-bind="item.attrs">
+        <tr
+          v-for="tr in item.children"
+          :key="tr.id"
+          v-bind="tr.attrs"
+        >
+          <td
+            v-for="td in tr.children"
+            :key="td.id"
+            v-bind="td.attrs"
+          >
+            <template v-for="it in td.children" :key="it.id">
+              <VFormNestedItem :form-data="formData" :item="it"/>
+            </template>
+          </td>
+        </tr>
+      </table>
+    </template>
   </template>
 
 </template>
@@ -68,10 +87,10 @@ export default defineComponent({
   setup(props, ctx) {
     function getRules(element: ComponentConfig) {
       const rules = []
-      const requiredMessage = element.formItemAttrs.requiredMessage
-      const label = element.formItemAttrs.label
+      const requiredMessage = element?.formItemAttrs?.requiredMessage
+      const label = element?.formItemAttrs?.label
       const field = element.id
-      if (element.formItemAttrs.required) {
+      if (element?.formItemAttrs?.required) {
         const rule: FormItemRule = {
           required: true,
           message: requiredMessage || `${label}(${field})必填`

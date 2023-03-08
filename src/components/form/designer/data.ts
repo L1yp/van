@@ -1,5 +1,17 @@
 import {genId} from "@/components/form/designer/util/common";
 
+export const DisplayComponents: CandidateComponentConfig[] = [
+  {
+    id: genId(),
+    icon: 'TextField',
+    component: 'label-field',
+    category: 'display',
+    title: "标签",
+    attrs: {
+      value: '111111111'
+    },
+  },
+]
 
 export const InputComponents: CandidateComponentConfig[] = [
   {
@@ -244,5 +256,98 @@ export const LayoutComponents: CandidateComponentConfig[] = [
       },
 
     ],
-  }
+  },
+  {
+    id: genId(),
+    component: 'table',
+    category: 'layout',
+    icon: 'Table',
+    title: "表格",
+    attrs: {  },
+    children: [
+      {
+        id: genId(),
+        component: 'tr',
+        category: 'layout',
+        title: "行",
+        attrs: {
+          colspan: 1,
+        },
+        children: [
+          {
+            id: genId(),
+            component: 'td',
+            category: 'layout',
+            title: "列",
+            attrs: {
+              rowspan: 1,
+            },
+            children: [],
+          },
+          {
+            id: genId(),
+            component: 'td',
+            category: 'layout',
+            title: "列",
+            attrs: {
+              rowspan: 1,
+            },
+            children: [],
+          },
+          {
+            id: genId(),
+            component: 'td',
+            category: 'layout',
+            title: "列",
+            attrs: {
+              rowspan: 1,
+            },
+            children: [],
+          },
+        ],
+      },
+      {
+        id: genId(),
+        component: 'tr',
+        category: 'layout',
+        title: "行",
+        attrs: {
+          colspan: 1,
+        },
+        children: [
+          {
+            id: genId(),
+            component: 'td',
+            category: 'layout',
+            title: "列",
+            attrs: {
+              rowspan: 1,
+            },
+            children: [],
+          },
+          {
+            id: genId(),
+            component: 'td',
+            category: 'layout',
+            title: "列",
+            attrs: {
+              rowspan: 1,
+            },
+            children: [],
+          },
+          {
+            id: genId(),
+            component: 'td',
+            category: 'layout',
+            title: "列",
+            attrs: {
+              rowspan: 1,
+            },
+            children: [],
+          },
+        ],
+      },
+
+    ],
+  },
 ]

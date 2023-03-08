@@ -35,7 +35,7 @@ export const editBlockRef = shallowRef<ExtractComponentInstanceType<typeof Expre
 export const editState = ref<BlockExpressionModel>({
   field: '',
   operator: 'EQ',
-  value: null
+  value: undefined
 })
 
 export const ExpressionBlock = defineComponent({

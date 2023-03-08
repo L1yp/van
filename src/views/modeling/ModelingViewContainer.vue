@@ -19,75 +19,25 @@
       </div>
     </div>
     <div style="width: 100%; height: calc(100% - 41px);" v-if="activeView">
-      <vxe-table
-        ref="xTable"
-        size="mini"
-        height="100%"
-        :key="refreshTableKey"
-        stripe
-        :data="pageData.data"
-        :sort-config="sortConfig"
-        :row-config="{ isHover: true }"
-        @sort-change="handleSortChange"
-        @cell-dblclick="handleCellDblClick"
-        style="width: 100%"
-      >
-        <vxe-colgroup>
-          <vxe-column type="seq" title="#" width="50" />
-        </vxe-colgroup>
-        <template v-for="column in (activeView?.columns || [])">
-          <vxe-colgroup>
-            <template v-if="column.filterable" #header>
-              <template v-if="column.field.type === 'option'">
-                <el-tree-select
-                  v-model="param.condition_map[column.field.field]"
-                  :props="{ label: 'name', children: 'children'}"
-                  node-key="id"
-                  filterable clearable fit-input-width check-strictly default-expand-all
-                  :data="column.field.scheme.options || []"
-                  @change="reloadTableData"
-                />
-              </template>
-              <template v-if="column.field.type === 'text'">
-                <el-input v-model="param.condition_map[column.field.field]" style="width: calc(100% - 4px);" @change="reloadTableData" />
-              </template>
-              <template v-if="column.field.type === 'user'">
-                <user-selector-input v-model="param.condition_map[column.field.field]" :var-options="varUserOptions"  @change="reloadTableData" style="width: calc(100% - 4px);" :style="{ minWidth: `${column.min_width - 4}px` }" />
-              </template>
-              <template v-if="column.field.type === 'dept'">
-                <dept-selector-input  v-model="param.condition_map[column.field.field]" :var-options="varDeptOptions" @change="reloadTableData" style="width: calc(100% - 4px);" :style="{ minWidth: `${column.min_width - 4}px` }" />
-              </template>
-              <template v-if="column.field.type === 'date'">
-                <template v-if="column.field.scheme.dateType === 'date'">
-                  <date-range-picker
-                    type="daterange"
-                    v-model="param.condition_map[column.field.field]"
-                    @change="reloadTableData"
-                    style="width: calc(100% - 24px)"
-                  />
-                </template>
-                <template v-if="column.field.scheme.dateType === 'datetime'">
-                  <date-range-picker
-                    type="datetimerange"
-                    v-model="param.condition_map[column.field.field]"
-                    @change="reloadTableData"
-                    style="width: calc(100% - 24px)"
-                  />
-                </template>
-                <template v-if="column.field.scheme.dateType === 'month'">
-                  <date-range-picker
-                    type="monthrange"
-                    v-model="param.condition_map[column.field.field]"
-                    @change="reloadTableData"
-                    style="width: calc(100% - 24px)"
-                  />
-                </template>
-              </template>
-            </template>
-            <vxe-column :width="column.width < 0 ? undefined : column.width" :min-width="column.min_width" :field="column.field.field" :title="column.field.label" :resizable="column.resizable" :sortable="column.sortable" :formatter="formatColumnValue" />
-          </vxe-colgroup>
-        </template>
-      </vxe-table>
+      <div style="width: 100%; height: calc(100% - 24px);">
+        <ag-grid-vue
+          :id="mkey + '-view-grid'"
+          :grid-options="gridOptions"
+          style="width: 100%; height: 100%"
+          :class="store.dark ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'"
+        />
+      </div>
+      <el-pagination
+        small
+        layout="prev,pager,next,total,sizes"
+        :page-sizes="[20,50,100,200]"
+        :total="pageData.total"
+        v-model:current-page="param.page_idx"
+        v-model:page-size="param.page_size"
+        @size-change="reloadTableData"
+        @current-change="reloadTableData"
+        style="padding: 0"
+      />
     </div>
     <MaskWindow v-model="addPanelVisible" :teleport-to="teleportTo">
       <div style="width: 100%; height: 100%; background-color: var(--el-bg-color);">
@@ -129,14 +79,9 @@
 </template>
 
 <script lang="ts" setup>
-import { ElButton, ElSelect, ElOption, ElMessage, ElInput, ElTreeSelect, ElScrollbar } from 'element-plus'
-import {computed, inject, nextTick, onMounted, ref, toRaw} from 'vue';
+import { ElButton, ElSelect, ElOption, ElMessage, ElScrollbar, ElPagination } from 'element-plus'
+import {computed, inject, nextTick, onMounted, ref, shallowRef, toRaw, } from 'vue';
 import { Setting } from "@element-plus/icons-vue";
-import UserSelectorInput from "@/components/common/selector/user/UserSelectorInput.vue";
-import DateRangePicker from "@/views/modeling/view/condition/DateRangePicker.vue";
-import { VxeTablePropTypes, VxeTableDefines } from "vxe-table";
-import { useModelingOptionApi } from '@/service/modeling/option';
-import { useModelingPageApi } from '@/service/modeling/page';
 import { useViewApi } from '@/service/modeling/view';
 import { useEntityInstanceApi } from '@/service/modeling/entity';
 import MaskWindow from "@/components/dialog/MaskWindow.vue";
@@ -147,7 +92,28 @@ import ModelingViewUpdatePanel from '@/views/modeling/view/ModelingViewUpdatePan
 import { useWorkflowInstanceApi } from '@/service/workflow';
 import {useRoute, useRouter} from 'vue-router';
 import WorkflowInstanceTabsPage from "@/views/workflow/instance/WorkflowInstanceTabsPage.vue";
-import DeptSelectorInput from "@/components/common/selector/dept/DeptSelectorInput.vue";
+import { AgGridVue } from 'ag-grid-vue3';
+import {
+  ColumnApi,
+  GridApi,
+  GridOptions,
+  GridReadyEvent,
+  SortChangedEvent,
+  ColDef,
+  ColGroupDef,
+  ValueFormatterParams,
+  IDatasource,
+  IGetRowsParams,
+  CellClickedEvent,
+  CellDoubleClickedEvent
+} from "ag-grid-community";
+import * as PageApi from '@/api/modeling/page'
+import * as WorkflowApi from "@/api/workflow";
+import * as ViewApi from "@/api/modeling/view";
+import * as OptionApi from "@/api/modeling/option";
+
+import {toTree} from "@/utils/common";
+import {useSystemStore} from "@/store/sys-config";
 
 interface Props {
   module: ModelingModule
@@ -155,6 +121,8 @@ interface Props {
 }
 
 const props = defineProps<Props>()
+
+const store = useSystemStore()
 
 const route = useRoute()
 const router = useRouter()
@@ -169,14 +137,18 @@ const teleportTo = computed(() => {
 const loading = ref(false)
 
 const { instanceInfo, getInstance, createInstance, updateInstance, deleteInstance } = useEntityInstanceApi()
-const { startFormScheme, startInstanceResult, startInstance, getStartForm } = useWorkflowInstanceApi()
-const { pageInfo, findPage } = useModelingPageApi()
-const { pageInfo: viewPageInfo, findPage: getViewPage } = useModelingPageApi()
-const { pageInfo: updatePageInfo, findPage: getUpdatePage } = useModelingPageApi()
+const { startInstanceResult, startInstance } = useWorkflowInstanceApi()
 
-const { findView, viewSimpleInfoList } = useViewApi()
+const pageInfo = ref<ModelingPageView>()
+const viewPageInfo = ref<ModelingPageView>()
+const updatePageInfo = ref<ModelingPageView>()
+const startFormScheme = ref<ModelingPageView>()
+
+const viewSimpleInfoList = ref<ModelingViewSimpleInfo[]>([])
 
 const startForm = computed(() => props.module === 'ENTITY' ? pageInfo.value?.page_scheme : startFormScheme.value?.page_scheme)
+
+const autoSizeColumnKeys = ref<string[]>([])
 
 
 onMounted(initPage)
@@ -185,24 +157,180 @@ async function initPage() {
   try {
     loading.value = true
     if (props.module === 'ENTITY') {
-      await findPage({ ...props, name: 'ADD' })
-      await getViewPage({ ...props, name: 'VIEW' })
-      await getUpdatePage({ ...props, name: 'UPDATE' })
+      pageInfo.value = await PageApi.findPage({ ...props, name: 'ADD' })
+      viewPageInfo.value = await PageApi.findPage({ ...props, name: 'VIEW' })
+      updatePageInfo.value = await PageApi.findPage({ ...props, name: 'UPDATE' })
     } else {
-      await getStartForm(props.mkey)
+      startFormScheme.value = await WorkflowApi.getStartForm(props.mkey)
       console.log('start form', startFormScheme.value);
     }
 
-    await findView({module: props.module, mkey: props.mkey})
+    viewSimpleInfoList.value = await ViewApi.findModelingView({module: props.module, mkey: props.mkey})
     if (viewSimpleInfoList.value?.length) {
       activeViewId.value = viewSimpleInfoList.value[0].id
+
+      param.value.condition_map = {}
+      activeView.value.columns.forEach(it => {
+        param.value.condition_map[it.field.field] = it.condition
+      })
+
+      const columnDef: ColGroupDef[] = []
       for (const it of activeView.value.columns) {
         if (it.field?.type === 'option' && it.filterable) {
-          const { modelingOptionValues, findModelingOptionValues } = useModelingOptionApi(loading)
-          await findModelingOptionValues({ typeId: it.field.scheme.optionTypeId })
-          it.field.scheme.options = modelingOptionValues.value
+          const optionValues = await OptionApi.getOptionValues({ typeId: it.field.scheme.optionTypeId })
+          it.field.scheme.options = toTree(optionValues, 'id', 'pid')
+        }
+        const column: ColGroupDef = {
+          children: [
+            {
+              field: it.field.field,
+              headerName: it.field.label,
+              width: it.width || undefined,
+              minWidth: it.min_width || undefined,
+              sortable: it.sortable,
+              resizable: it.resizable,
+            }
+          ]
+        }
+
+        if (it.width === 0) {
+          (column.children[0] as ColDef).flex = 1
+        }
+
+        if (it.filterable) {
+          (column.children[0] as ColDef).suppressMovable = true
+          if (it.field.type === 'text') {
+            column.headerGroupComponent = 'TextFilter'
+            const field = it.field.field
+            column.headerGroupComponentParams = {
+              initValue: param.value.condition_map[field] as string,
+              onChange: (v: string) => {
+                param.value.condition_map[field] = v
+                reloadTableData()
+              },
+            }
+          }
+          else if (it.field.type === 'option') {
+            column.headerGroupComponent = 'OptionFilter'
+            const field = it.field.field
+            console.log('header components options', it.field.scheme.options)
+            column.headerGroupComponentParams = {
+              initValue: param.value.condition_map[field] as string,
+              onChange: (v: string) => {
+                param.value.condition_map[field] = v
+                reloadTableData()
+              },
+              componentProps: {
+                props: {
+                  label: 'name',
+                  children: 'children'
+                },
+                nodeKey: 'id',
+                filterable: true,
+                clearable: true,
+                fitInputWidth: true,
+                checkStrictly: true,
+                defaultExpandAll: true,
+                data: it.field.scheme.options || [],
+                style: {
+                  width: '100%'
+                }
+              }
+            }
+
+          }
+          else if (it.field.type === 'user') {
+            column.headerGroupComponent = 'UserFilter'
+            const field = it.field.field
+            column.headerGroupComponentParams = {
+              initValue: param.value.condition_map[field] as string,
+              onChange: (v: string) => {
+                param.value.condition_map[field] = v
+                reloadTableData()
+              },
+              componentProps: {
+                varOptions: varUserOptions,
+                style: {
+                  width: '100%'
+                }
+              }
+            }
+          }
+          else if (it.field.type === 'dept') {
+            column.headerGroupComponent = 'DeptFilter'
+            const field = it.field.field
+            column.headerGroupComponentParams = {
+              initValue: param.value.condition_map[field] as string,
+              onChange: (v: string) => {
+                param.value.condition_map[field] = v
+                reloadTableData()
+              },
+              componentProps: {
+                varOptions: varDeptOptions,
+                style: {
+                  width: '100%'
+                }
+              }
+            }
+          }
+          else if (it.field.type === 'date') {
+            column.headerGroupComponent = 'DateFilter'
+            const field = it.field.field
+            column.headerGroupComponentParams = {
+              dateType: it.field.scheme.dateType,
+              initValue: param.value.condition_map[field] as string,
+              onChange: (v: [Date, Date]) => {
+                if (v?.length === 2) {
+                  param.value.condition_map[field] = v[0].getTime() + ',' + v[1].getTime()
+                } else {
+                  param.value.condition_map[field] = undefined
+                }
+                reloadTableData()
+              },
+            }
+          }
+      }
+
+        // 格式化
+        if (it.field?.type === 'option') {
+          (column.children[0] as ColDef).valueFormatter = (params: ValueFormatterParams<any, string>) => {
+            return params.value?.split(',').map(it => pageData.value.additional?.optionMap[it]?.name).join(', ')
+          }
+        }
+        else if (it.field?.type === 'user') {
+          (column.children[0] as ColDef).valueFormatter = (params: ValueFormatterParams<any, string>) => {
+            return params.value?.split(',').map(it => pageData.value.additional?.userMap[it]?.nickname).join(', ')
+          }
+        }
+        else if (it.field?.type === 'dept') {
+          (column.children[0] as ColDef).valueFormatter = (params: ValueFormatterParams<any, string>) => {
+            return params.value?.split(',').map(it => pageData.value.additional?.deptMap[it]?.title).join(', ')
+          }
+        }
+
+        if (it.width === -1) {
+          autoSizeColumnKeys.value.push(it.field.field)
+        }
+
+        columnDef.push(column)
+      }
+
+      const orderFields = activeView.value.collation
+      for (let i = 0; i < orderFields.length; i++) {
+        const it = orderFields[i]
+        for (let column of columnDef) {
+          const columnItem = column.children[0] as ColDef
+          if (columnItem.field === it.field) {
+            columnItem.sort = it.order
+            columnItem.sortIndex = i
+          }
         }
       }
+
+      console.log('column definition', columnDef)
+
+      gridApi.value?.setColumnDefs(columnDef)
+
 
       await loadData()
     } else {
@@ -211,7 +339,6 @@ async function initPage() {
   } finally {
     loading.value = false
   }
-
 }
 
 async function loadData() {
@@ -222,15 +349,13 @@ async function loadData() {
   })
   console.log('condition map', param.value.condition_map);
 
-  sortConfig.value.defaultSort = param.value.collation
-  refreshTableKey.value++
   await nextTick()
   reloadTableData()
 }
 
 const activeViewId = ref<string>('')
 const activeView = computed(() => {
-  return viewSimpleInfoList.value.find(it => it.id === activeViewId.value)
+  return viewSimpleInfoList.value.find(it => it.id === activeViewId.value)!
 })
 
 const varUserOptions: UserView[] = [
@@ -275,16 +400,48 @@ const varDeptOptions: DeptView[] = [
   },
 ]
 
-const refreshTableKey = ref(1)
+const gridApi = shallowRef<GridApi>()
+const columnApi = shallowRef<ColumnApi>()
 
-const userMap = inject(userMapKey)
+
+const gridOptions: GridOptions = {
+  onGridReady(event: GridReadyEvent<any>) {
+    gridApi.value = event.api
+    columnApi.value = event.columnApi
+  },
+  onCellDoubleClicked(event: CellDoubleClickedEvent<any>) {
+    if (!event.data) return;
+    if (props.module === 'ENTITY') {
+      if (!viewPageInfo.value?.page_scheme) {
+        ElMessage.error(`请先配置一个查询页面`)
+        return
+      }
+      const row = event.data
+      loading.value = true
+      getInstance({ mkey: props.mkey, id: row.id })
+        .then(() => (viewPanelVisible.value = true, viewerMode.value = true))
+        .finally(() => loading.value = false)
+    } else if (props.module === 'WORKFLOW') {
+      instanceId.value = event.data.process_instance_id
+      instanceVisible.value = true
+      // router.push(`/workflow/instance/${props.mkey}/${params.row.process_instance_id}`)
+    }
+  },
+  columnDefs: [],
+  rowData: [],
+  animateRows: true,
+  headerHeight: 36,
+  rowHeight: 32,
+}
+
+const userMap = inject(userMapKey)!
 
 
 const param = ref<ModelingInstancePageFindParam>({
   module: props.module,
   mkey: props.mkey,
   page_idx: 1,
-  page_size: 10,
+  page_size: 20,
   condition_map: {},
 })
 const { pageData, pageModeling } =  useViewApi(loading)
@@ -292,48 +449,13 @@ function reloadTableData() {
   pageModeling(param.value)
     .then(_ =>
       pageData.value?.additional?.userMap &&
-      Object.keys(pageData.value.additional.userMap).forEach(it => userMap.set(it, pageData.value.additional.userMap[it]))
-    )
+      Object.keys(pageData.value.additional.userMap).forEach(it => userMap.set(it, pageData.value.additional!.userMap[it]))
+    ).then(_ => {
+      gridApi.value?.setRowData(pageData.value.data)
+      columnApi.value?.autoSizeColumns(autoSizeColumnKeys.value)
+  })
 }
 
-const sortConfig = ref<VxeTablePropTypes.SortConfig>({
-  remote: true,
-  defaultSort: param.value.collation,
-  multiple: true,
-  trigger: 'cell',
-})
-
-function handleSortChange(params: VxeTableDefines.SortChangeEventParams) {
-  param.value.collation = params.sortList.map(it => { return { field: it.field, order: it.order } })
-  reloadTableData()
-}
-
-type FormatterParam = {
-  cellValue: any
-  row: object
-  column: VxeTableDefines.ColumnInfo
-}
-
-function formatColumnValue(params: FormatterParam): string {
-  const fieldName = params.column.field
-  const columns = activeView.value.columns
-  const fieldMap = new Map(columns.map(it => [it.field.field, it.field]))
-  const field = fieldMap.get(fieldName)
-  if (!params.cellValue) {
-    return params.cellValue
-  }
-  if (field.scheme.type === 'option') {
-    return (params.cellValue as string).split(',').map(it => pageData.value.additional?.optionMap?.[it]?.name).join(',') || ''
-  }
-  else if(field.scheme.type === 'user') {
-    return (params.cellValue as string).split(',').map(it => pageData.value.additional?.userMap?.[it].nickname).join(',') || ''
-  }
-  else if(field.scheme.type === 'dept') {
-    return (params.cellValue as string).split(',').map(it => pageData.value.additional?.deptMap?.[it].title).join(',') || ''
-  }
-
-  return params.cellValue
-}
 
 const formData = ref({})
 const addPanelVisible = ref(false)
@@ -345,24 +467,6 @@ function handleAddInstance() {
 
 const instanceVisible = ref(false)
 const instanceId = ref('')
-function handleCellDblClick(params) {
-  if (props.module === 'ENTITY') {
-    if (!viewPageInfo.value?.page_scheme) {
-      ElMessage.error(`请先配置一个查询页面`)
-      return
-    }
-    const row = params.row
-    loading.value = true
-    getInstance({ mkey: props.mkey, id: row.id })
-      .then(() => (viewPanelVisible.value = true, viewerMode.value = true))
-      .finally(() => loading.value = false)
-  } else if (props.module === 'WORKFLOW') {
-    instanceId.value = params.row.process_instance_id
-    instanceVisible.value = true
-    // router.push(`/workflow/instance/${props.mkey}/${params.row.process_instance_id}`)
-  }
-
-}
 
 const addFormRenderRef = ref<InstanceType<typeof VFormRender>>()
 
@@ -371,12 +475,12 @@ function handleConfirmAdd() {
   loading.value = true
   if (props.module === 'ENTITY') {
     promise.then(() => createInstance({ mkey: props.mkey, data: formData.value }))
-      .then(succ => succ && (addPanelVisible.value = false))
+      .then((succ: boolean) => succ && (addPanelVisible.value = false))
       .then(reloadTableData)
       .finally(() => loading.value = false)
   } else {
     promise.then(() => startInstance({ mkey: props.mkey, data: formData.value }))
-    .then(succ => succ && (addPanelVisible.value = false))
+    .then((succ: boolean) => succ && (addPanelVisible.value = false))
     .then(reloadTableData)
     .finally(() => loading.value = false)
   }
@@ -397,7 +501,7 @@ function handleConfirmUpdate() {
       id: instanceInfo.value.id,
       data: instanceInfo.value
     }))
-    .then(succ => succ && (viewPanelVisible.value = false))
+    .then((succ: boolean) => succ && (viewPanelVisible.value = false))
     .then(reloadTableData)
     .finally(() => loading.value = false)
 }

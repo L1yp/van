@@ -28,6 +28,7 @@ export const ExpressionRoot = defineComponent({
     }
     return {
       render(isOutputMode, slotRender) {
+        // @ts-ignore
         return slotRender(slots.get(0), () => {
           return VElement.createElement("span", null);
         });

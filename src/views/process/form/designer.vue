@@ -4,6 +4,7 @@
       <el-tabs type="border-card" v-model="candidateActiveTab" style="width: 100%; height: 100%;">
         <el-tab-pane label="组件" name="component" style="width: 100%; height: 100%;">
           <candidate-component-page
+            :display-components="DisplayComponents"
             :input-components="InputComponents"
             :layout-components="LayoutComponents"
           >
@@ -100,7 +101,7 @@ import CandidateComponentPage from "@/components/form/designer/candidate/Candida
 import ModelingFieldPage from "@/components/form/designer/candidate/ModelingFieldPage.vue";
 import { useIcon } from "@/components/common/util";
 import JsonEditor from "@/components/common/JsonEditor.vue";
-import { InputComponents, LayoutComponents } from "@/components/form/designer/data"
+import { InputComponents, LayoutComponents, DisplayComponents } from "@/components/form/designer/data"
 import VDialog from "@/components/dialog/VDialog.vue";
 import VFormRender from "@/components/form/designer/VFormRender.vue";
 import { formModeKey, vFormActiveElementKey, vFormSchemeKey } from "@/components/form/state.key";
