@@ -29,6 +29,7 @@ declare interface Collation {
 
 
 declare interface ModelingViewColumnParam {
+  id?: string
   field_id: string
   field: ModelingFieldDefView
   width: number

@@ -19,7 +19,7 @@
       </div>
     </div>
     <div style="width: 100%; height: calc(100% - 41px);" v-if="activeView">
-      <div style="width: 100%; height: calc(100% - 24px);">
+      <div style="width: 100%; height: calc(100% - 28px);">
         <ag-grid-vue
           :id="mkey + '-view-grid'"
           :grid-options="gridOptions"
@@ -36,7 +36,7 @@
         v-model:page-size="param.page_size"
         @size-change="reloadTableData"
         @current-change="reloadTableData"
-        style="padding: 0"
+        style="padding: 2px 0"
       />
     </div>
     <MaskWindow v-model="addPanelVisible" :teleport-to="teleportTo">
@@ -75,11 +75,26 @@
       <WorkflowInstanceTabsPage :mkey="props.mkey" :instance-id="instanceId" />
     </MaskWindow>
 
+    <el-popover
+      :virtual-ref="triggerRef"
+      virtual-triggering
+      :visible="menuVisible"
+      :width="menuWidth"
+      popper-class="menu-popover"
+    >
+      <div style="width: 100%; height: 100%;" v-click-outside="handleClickMenuOutside">
+        <div class="menu-item">1</div>
+        <div class="menu-item">2</div>
+        <div class="menu-item">3</div>
+      </div>
+    </el-popover>
+
+
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ElButton, ElSelect, ElOption, ElMessage, ElScrollbar, ElPagination } from 'element-plus'
+import { ElButton, ElSelect, ElOption, ElMessage, ElScrollbar, ElPagination, ElPopover } from 'element-plus'
 import {computed, inject, nextTick, onMounted, ref, shallowRef, toRaw, } from 'vue';
 import { Setting } from "@element-plus/icons-vue";
 import { useViewApi } from '@/service/modeling/view';
@@ -98,14 +113,10 @@ import {
   GridApi,
   GridOptions,
   GridReadyEvent,
-  SortChangedEvent,
   ColDef,
   ColGroupDef,
   ValueFormatterParams,
-  IDatasource,
-  IGetRowsParams,
-  CellClickedEvent,
-  CellDoubleClickedEvent
+  CellDoubleClickedEvent, CellContextMenuEvent, CellClickedEvent, SortChangedEvent
 } from "ag-grid-community";
 import * as PageApi from '@/api/modeling/page'
 import * as WorkflowApi from "@/api/workflow";
@@ -114,6 +125,7 @@ import * as OptionApi from "@/api/modeling/option";
 
 import {toTree} from "@/utils/common";
 import {useSystemStore} from "@/store/sys-config";
+import { varUserOptions, varDeptOptions } from "@/views/modeling/filter";
 
 interface Props {
   module: ModelingModule
@@ -153,6 +165,8 @@ const autoSizeColumnKeys = ref<string[]>([])
 
 onMounted(initPage)
 
+const optionFieldValueMap = new Map<string, ModelingOptionValueView[]>()
+
 async function initPage() {
   try {
     loading.value = true
@@ -177,8 +191,14 @@ async function initPage() {
       const columnDef: ColGroupDef[] = []
       for (const it of activeView.value.columns) {
         if (it.field?.type === 'option' && it.filterable) {
-          const optionValues = await OptionApi.getOptionValues({ typeId: it.field.scheme.optionTypeId })
-          it.field.scheme.options = toTree(optionValues, 'id', 'pid')
+          if (optionFieldValueMap.has(it.field.scheme.optionTypeId)) {
+            it.field.scheme.options = optionFieldValueMap.get(it.field.scheme.optionTypeId)
+          } else {
+            const optionValues = await OptionApi.getOptionValues({ typeId: it.field.scheme.optionTypeId })
+            it.field.scheme.options = toTree(optionValues, 'id', 'pid')
+            optionFieldValueMap.set(it.field.scheme.optionTypeId,  it.field.scheme.options)
+          }
+
         }
         const column: ColGroupDef = {
           children: [
@@ -358,47 +378,6 @@ const activeView = computed(() => {
   return viewSimpleInfoList.value.find(it => it.id === activeViewId.value)!
 })
 
-const varUserOptions: UserView[] = [
-  {
-    id: 'SELF',
-    username: '本人',
-    nickname: '本人',
-    dept_id: 1,
-  },
-  {
-    id: 'SELF_DPT',
-    username: '本人部门',
-    nickname: '本人部门',
-    dept_id: 1,
-  },
-  {
-    id: 'CHILD_DPT',
-    username: '下级部门',
-    nickname: '下级部门',
-    dept_id: 1,
-  },
-  {
-    id: 'SELF_CHILD_DPT',
-    username: '本人部门及下级部门',
-    nickname: '本人部门及下级部门',
-    dept_id: 1,
-  },
-]
-
-const varDeptOptions: DeptView[] = [
-  {
-    id: 'SELF_DPT',
-    title: '本人部门',
-  },
-  {
-    id: 'CHILD_DPT',
-    title: '本人部门的下级部门',
-  },
-  {
-    id: 'SELF_CHILD_DPT',
-    title: '本人部门及下级部门',
-  },
-]
 
 const gridApi = shallowRef<GridApi>()
 const columnApi = shallowRef<ColumnApi>()
@@ -408,6 +387,17 @@ const gridOptions: GridOptions = {
   onGridReady(event: GridReadyEvent<any>) {
     gridApi.value = event.api
     columnApi.value = event.columnApi
+  },
+  onCellContextMenu(event: CellContextMenuEvent<any>) {
+    // open menu
+    console.log('context menu', event)
+    const cellDiv = event.eventPath?.[0] as HTMLDivElement
+    if (cellDiv && event.data) {
+      triggerRef.value = cellDiv
+      menuWidth.value = cellDiv.clientWidth
+      menuVisible.value = true
+    }
+
   },
   onCellDoubleClicked(event: CellDoubleClickedEvent<any>) {
     if (!event.data) return;
@@ -427,12 +417,32 @@ const gridOptions: GridOptions = {
       // router.push(`/workflow/instance/${props.mkey}/${params.row.process_instance_id}`)
     }
   },
+  onSortChanged(event: SortChangedEvent<any>) {
+    const states = event.columnApi.getColumnState();
+    const orderStates = states.filter(it => !!it.sort).sort((a, b) => a.sortIndex! - b.sortIndex!)
+    console.log('orderStates', orderStates)
+    param.value.collation = orderStates.map(it => ({ field: it.colId, order: it.sort } as Collation))
+    reloadTableData()
+  },
   columnDefs: [],
   rowData: [],
   animateRows: true,
   headerHeight: 36,
   rowHeight: 32,
+  preventDefaultOnContextMenu: true,
 }
+
+function handleClickMenuOutside(mouseupEvent: PointerEvent, mousedownEvent: PointerEvent) {
+  // console.log('handleClickMenuOutside', mouseupEvent, mousedownEvent)
+  triggerRef.value = undefined
+  // menuWidth.value = 0
+  menuVisible.value = false
+}
+
+
+const menuVisible = ref(false)
+const menuWidth = ref(0)
+const triggerRef = ref<HTMLElement>()
 
 const userMap = inject(userMapKey)!
 
@@ -511,24 +521,35 @@ const viewConfigVisible = ref(false)
 async function handleConfigView() {
   if (!modelingFields.value?.length) {
     await findModelingFields(props.module, props.mkey)
+    const optionFields = modelingFields.value.filter(it => it.scheme.type === 'option')
+    for (const it of optionFields) {
+      if (optionFieldValueMap.has(it.scheme.optionTypeId)) {
+        it.scheme.options = optionFieldValueMap.get(it.scheme.optionTypeId)
+      } else {
+        const optionValues = await OptionApi.getOptionValues({ typeId: it.scheme.optionTypeId })
+        it.scheme.options = toTree(optionValues, 'id', 'pid')
+        optionFieldValueMap.set(it.scheme.optionTypeId, it.scheme.options)
+      }
+    }
   }
   viewConfigVisible.value = true
 }
 
 </script>
-
 <style scoped>
-:deep(.vxe-header--column.col--group>.vxe-cell>.vxe-cell--title) {
-  width: 100%;
+.menu-item {
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--el-border-color);
+  cursor: pointer;
 }
 
-:deep(.vxe-table--render-default .col--group.vxe-header--column:not(.col--ellipsis)) {
-  padding: 6px 0;
+.menu-item:hover {
+  background-color: var(--el-menu-hover-bg-color);
 }
 
-
-:deep(.vxe-header--column.col--group .vxe-cell) {
-  padding-left: 2px;
-  padding-right: 2px;
+</style>
+<style>
+.menu-popover.el-popover.el-popper {
+  padding: 0;
 }
 </style>

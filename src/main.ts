@@ -4,7 +4,7 @@ import {isReady, setupRouter} from './router'
 import 'virtual:svg-icons-register'
 import 'element-plus/dist/index.css';
 import 'element-plus/theme-chalk/dark/css-vars.css'
-import { ElLoading } from 'element-plus';
+import { ElLoading, ClickOutside } from 'element-plus';
 import {setupAxios} from "./config/axios.http"
 import * as UserApi from "@/api/sys/user"
 import {remove} from "./utils/storage"
@@ -24,6 +24,9 @@ import OptionFilter from '@/components/ag-grid/filter/components/OptionFilter.vu
 import UserFilter from '@/components/ag-grid/filter/components/UserFilter.vue'
 import DeptFilter from '@/components/ag-grid/filter/components/DeptFilter.vue'
 import DateFilter from '@/components/ag-grid/filter/components/DateFilter.vue'
+import FieldConditionInput from "@/components/ag-grid/cell/components/FieldConditionInput.vue";
+import FieldCheckboxInput from "@/components/ag-grid/cell/components/FieldCheckboxInput.vue";
+import FieldNumberInput from "@/components/ag-grid/cell/components/FieldNumberInput.vue";
 
 async function startup() {
   try {
@@ -34,6 +37,9 @@ async function startup() {
     app.component('UserFilter', UserFilter)
     app.component('DeptFilter', DeptFilter)
     app.component('DateFilter', DateFilter)
+    app.component('FieldConditionInput', FieldConditionInput)
+    app.component('FieldCheckboxInput', FieldCheckboxInput)
+    app.component('FieldNumberInput', FieldNumberInput)
 
     const pinia = createPinia()
     app.use(pinia)
@@ -42,6 +48,7 @@ async function startup() {
     app.use(ElLoading)
 
     app.use(VXETable)
+    app.directive('click-outside', ClickOutside)
 
     const map = new Map<string, UserView>()
     varOptions.forEach(it => map.set(it.id, it))

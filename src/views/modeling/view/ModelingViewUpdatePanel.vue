@@ -28,6 +28,7 @@ import {useModelingFieldApi} from "@/service/modeling/field";
 import { ElForm, FormRules, ElButton, ElScrollbar, ElFormItem } from "element-plus";
 import {useViewApi} from "@/service/modeling/view";
 import ModelingViewColumnConfig from "@/views/modeling/view/ModelingViewColumnConfig.vue";
+import ModelingViewColumnConfigAgGrid from "@/views/modeling/view/ModelingViewColumnConfigAgGrid.vue";
 
 interface Props {
   src: ModelingViewSimpleInfo
