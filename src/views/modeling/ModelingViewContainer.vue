@@ -18,7 +18,7 @@
 
       </div>
     </div>
-    <div style="width: 100%; height: calc(100% - 41px);" v-if="activeView">
+    <div style="width: 100%; height: calc(100% - 41px);">
       <div style="width: 100%; height: calc(100% - 28px);">
         <ag-grid-vue
           :id="mkey + '-view-grid'"
@@ -95,7 +95,7 @@
 
 <script lang="ts" setup>
 import { ElButton, ElSelect, ElOption, ElMessage, ElScrollbar, ElPagination, ElPopover } from 'element-plus'
-import {computed, inject, nextTick, onMounted, ref, shallowRef, toRaw, } from 'vue';
+import {computed, inject, nextTick, ref, shallowRef, toRaw, } from 'vue';
 import { Setting } from "@element-plus/icons-vue";
 import { useViewApi } from '@/service/modeling/view';
 import { useEntityInstanceApi } from '@/service/modeling/entity';
@@ -161,9 +161,6 @@ const viewSimpleInfoList = ref<ModelingViewSimpleInfo[]>([])
 const startForm = computed(() => props.module === 'ENTITY' ? pageInfo.value?.page_scheme : startFormScheme.value?.page_scheme)
 
 const autoSizeColumnKeys = ref<string[]>([])
-
-
-onMounted(initPage)
 
 const optionFieldValueMap = new Map<string, ModelingOptionValueView[]>()
 
@@ -387,6 +384,7 @@ const gridOptions: GridOptions = {
   onGridReady(event: GridReadyEvent<any>) {
     gridApi.value = event.api
     columnApi.value = event.columnApi
+    initPage()
   },
   onCellContextMenu(event: CellContextMenuEvent<any>) {
     // open menu

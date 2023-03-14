@@ -24,8 +24,8 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 import ModelingViewBasic from "@/views/modeling/view/ModelingViewBasic.vue";
-import {ElForm, FormRules, ElButton, ElScrollbar, ElMessage} from "element-plus";
-import {useViewApi} from "@/service/modeling/view";
+import { ElForm, FormRules, ElButton, ElScrollbar } from "element-plus";
+import { useViewApi } from "@/service/modeling/view";
 import ModelingViewColumnConfig from "@/views/modeling/view/ModelingViewColumnConfig.vue";
 
 interface Props {

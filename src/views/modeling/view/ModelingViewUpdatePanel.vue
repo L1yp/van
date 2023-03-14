@@ -22,13 +22,11 @@
 </template>
 
 <script lang="ts" setup>
-import {computed, onBeforeMount, ref, watch} from "vue";
+import { computed, ref } from "vue";
 import ModelingViewBasic from "@/views/modeling/view/ModelingViewBasic.vue";
-import {useModelingFieldApi} from "@/service/modeling/field";
 import { ElForm, FormRules, ElButton, ElScrollbar, ElFormItem } from "element-plus";
-import {useViewApi} from "@/service/modeling/view";
+import { useViewApi } from "@/service/modeling/view";
 import ModelingViewColumnConfig from "@/views/modeling/view/ModelingViewColumnConfig.vue";
-import ModelingViewColumnConfigAgGrid from "@/views/modeling/view/ModelingViewColumnConfigAgGrid.vue";
 
 interface Props {
   src: ModelingViewSimpleInfo
@@ -57,7 +55,7 @@ const paramColumns = computed(() => {
   for (let srcColumn of srcColumns) {
     columns.push({
       ...srcColumn,
-      field: map.get(srcColumn.field_id),
+      field: map.get(srcColumn.field_id)!,
     })
   }
   return columns

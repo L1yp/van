@@ -44,10 +44,7 @@ const candidateColumnDefs: ColDef<ModelingFieldDefView>[] = [
     maxWidth: 50,
     suppressMenu: true,
     rowDragText: (params, dragItemCount) => {
-      if (dragItemCount > 1) {
-        return dragItemCount + ' athletes';
-      }
-      return params.rowNode?.data.athlete;
+      return params.rowNode?.data.label;
     },
   },
   {
@@ -121,9 +118,6 @@ const targetColumnDefs: ColDef<ModelingViewColumnParam>[] = [
     maxWidth: 50,
     suppressMenu: true,
     rowDragText: (params, dragItemCount) => {
-      if (dragItemCount > 1) {
-        return dragItemCount + ' rows';
-      }
       const row: ModelingViewColumnParam = params.rowNode?.data
       return row.field.label;
     },
