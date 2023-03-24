@@ -75,19 +75,29 @@
       <WorkflowInstanceTabsPage :mkey="props.mkey" :instance-id="instanceId" />
     </MaskWindow>
 
-    <el-popover
-      :virtual-ref="triggerRef"
-      virtual-triggering
-      :visible="menuVisible"
-      :width="menuWidth"
-      popper-class="menu-popover"
-    >
+
+    <div v-show="menuVisible" ref="menuRef" class="menu-popover" style="width: 200px; position: fixed; background-color: var(--el-bg-color); border: 1px solid var(--el-border-color)">
       <div style="width: 100%; height: 100%;" v-click-outside="handleClickMenuOutside">
         <div class="menu-item">1</div>
         <div class="menu-item">2</div>
         <div class="menu-item">3</div>
       </div>
-    </el-popover>
+    </div>
+
+
+<!--    <el-popover-->
+<!--      :virtual-ref="triggerRef"-->
+<!--      virtual-triggering-->
+<!--      :visible="menuVisible"-->
+<!--      :width="menuWidth"-->
+<!--      popper-class="menu-popover"-->
+<!--    >-->
+<!--      <div style="width: 100%; height: 100%;" v-click-outside="handleClickMenuOutside">-->
+<!--        <div class="menu-item">1</div>-->
+<!--        <div class="menu-item">2</div>-->
+<!--        <div class="menu-item">3</div>-->
+<!--      </div>-->
+<!--    </el-popover>-->
 
 
   </div>
@@ -95,17 +105,17 @@
 
 <script lang="ts" setup>
 import { ElButton, ElSelect, ElOption, ElMessage, ElScrollbar, ElPagination, ElPopover } from 'element-plus'
-import {computed, inject, nextTick, ref, shallowRef, toRaw, } from 'vue';
+import { computed, inject, nextTick, ref, shallowRef, toRaw, } from 'vue';
 import { Setting } from "@element-plus/icons-vue";
 import { useViewApi } from '@/service/modeling/view';
 import { useEntityInstanceApi } from '@/service/modeling/entity';
 import MaskWindow from "@/components/dialog/MaskWindow.vue";
 import VFormRender from "@/components/form/designer/VFormRender.vue";
-import {userMapKey} from "@/config/app.keys";
-import {useModelingFieldApi} from "@/service/modeling/field";
+import { userMapKey } from "@/config/app.keys";
+import { useModelingFieldApi } from "@/service/modeling/field";
 import ModelingViewUpdatePanel from '@/views/modeling/view/ModelingViewUpdatePanel.vue'
 import { useWorkflowInstanceApi } from '@/service/workflow';
-import {useRoute, useRouter} from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import WorkflowInstanceTabsPage from "@/views/workflow/instance/WorkflowInstanceTabsPage.vue";
 import { AgGridVue } from 'ag-grid-vue3';
 import {
@@ -123,9 +133,11 @@ import * as WorkflowApi from "@/api/workflow";
 import * as ViewApi from "@/api/modeling/view";
 import * as OptionApi from "@/api/modeling/option";
 
-import {toTree} from "@/utils/common";
-import {useSystemStore} from "@/store/sys-config";
+import { toTree } from "@/utils/common";
+import { useSystemStore } from "@/store/sys-config";
 import { varUserOptions, varDeptOptions } from "@/views/modeling/filter";
+import { useFloating, computePosition, shift, flip, offset } from '@floating-ui/vue';
+import { VirtualElement } from "@floating-ui/dom";
 
 interface Props {
   module: ModelingModule
@@ -161,6 +173,9 @@ const viewSimpleInfoList = ref<ModelingViewSimpleInfo[]>([])
 const startForm = computed(() => props.module === 'ENTITY' ? pageInfo.value?.page_scheme : startFormScheme.value?.page_scheme)
 
 const autoSizeColumnKeys = ref<string[]>([])
+
+
+onMounted(initPage)
 
 const optionFieldValueMap = new Map<string, ModelingOptionValueView[]>()
 
@@ -391,7 +406,30 @@ const gridOptions: GridOptions = {
     console.log('context menu', event)
     const cellDiv = event.eventPath?.[0] as HTMLDivElement
     if (cellDiv && event.data) {
-      triggerRef.value = cellDiv
+      const pointerEvent: PointerEvent = event.event as PointerEvent
+      triggerRef.value = {
+        getBoundingClientRect() {
+          return {
+            width: 0,
+            height: 0,
+            x: pointerEvent.clientX,
+            y: pointerEvent.clientY,
+            left: pointerEvent.clientX,
+            right: pointerEvent.clientX,
+            top: pointerEvent.clientY,
+            bottom: pointerEvent.clientY
+          }
+        },
+      }
+      computePosition(triggerRef.value, menuRef.value!, {
+        placement: "right-start",
+        middleware: [offset(5), flip(), shift()]
+      }).then(({ x, y }) => {
+        Object.assign(menuRef.value!.style, {
+          top: `${y}px`,
+          left: `${x}px`
+        });
+      });
       menuWidth.value = cellDiv.clientWidth
       menuVisible.value = true
     }
@@ -430,17 +468,23 @@ const gridOptions: GridOptions = {
   preventDefaultOnContextMenu: true,
 }
 
+
+const menuVisible = ref(false)
+const menuWidth = ref(0)
+const triggerRef = ref<VirtualElement | null>()
+const menuRef = shallowRef<HTMLDivElement>()
+const {x, y, strategy} = useFloating(triggerRef, menuRef);
+
+
 function handleClickMenuOutside(mouseupEvent: PointerEvent, mousedownEvent: PointerEvent) {
   // console.log('handleClickMenuOutside', mouseupEvent, mousedownEvent)
-  triggerRef.value = undefined
+  triggerRef.value = null
   // menuWidth.value = 0
   menuVisible.value = false
 }
 
 
-const menuVisible = ref(false)
-const menuWidth = ref(0)
-const triggerRef = ref<HTMLElement>()
+
 
 const userMap = inject(userMapKey)!
 

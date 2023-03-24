@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "vite --mode dev",
+    "front": "vite --mode front",
     "build": "vite build --mode prod && ssh root@43.139.123.133 rm -f /usr/share/nginx/html/admin/assets/* && scp -r ./dist/assets/* root@43.139.123.133:/usr/share/nginx/html/admin/assets/ && scp ./dist/index.html root@43.139.123.133:/usr/share/nginx/html/admin/index.html",
     "preview": "vite preview --port 5050"
   },
@@ -12,6 +13,7 @@
     "@codemirror/state": "^6.0.1",
     "@codemirror/view": "^6.0.1",
     "@element-plus/icons-vue": "^2.0.10",
+    "@floating-ui/vue": "^0.2.1",
     "@textbus/browser": "^2.0.0",
     "@textbus/core": "^2.0.0",
     "@textbus/editor": "^2.0.0",
