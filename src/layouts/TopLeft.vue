@@ -26,11 +26,18 @@
 
       <el-main style="position: relative" :style="{ width: mainWidth, height: mainHeight }">
         <router-view v-slot="{ Component, route }">
-          <transition name="fade" mode="out-in" appear>
+          <template v-if="mode === 'dev'">
             <keep-alive>
               <component :is="Component" :key="route.fullPath" />
             </keep-alive>
-          </transition>
+          </template>
+          <template v-else>
+            <transition name="fade" mode="out-in" appear>
+              <keep-alive>
+                <component :is="Component" :key="route.fullPath" />
+              </keep-alive>
+            </transition>
+          </template>
         </router-view>
 
 
@@ -67,6 +74,9 @@ import {
 import SVGIcon from "@/components/common/SVGIcon.vue";
 import {incMaskZIndex} from "@/components/dialog/mask";
 import { getDeviceType } from "@/utils/common"
+
+const mode = import.meta.env.MODE
+
 
 const deviceType = getDeviceType()
 console.log('deviceType', deviceType);
