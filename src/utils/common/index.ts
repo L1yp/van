@@ -69,13 +69,14 @@ function primitiveArrayEquals<T extends PrimitiveType>(a: T[], b: T[]): boolean 
  * @param src 一维数组
  * @param keyField 唯一键名
  * @param parentField 父键名
- * @param orderField 排序键名
+ * @param orderField 排序键名(仅支持数值类型)
+ * @param sortDirection 升序/降序
  */
-export function toTree<T extends Tree>(src: T[], keyField: keyof T, parentField: keyof T, orderField?: keyof T): T[] {
-  const map = new Map<unknown, T>(src.map(it => [it[keyField], it]))
+export function toTree<T extends Tree>(src: T[], keyField: keyof T, parentField: keyof T, orderField?: keyof T, sortDirection?: 'asc' | 'desc'): T[] {
+  const map = new Map<T[keyof T], T>(src.map(it => [it[keyField], it]))
   let compareFn: ((a: T, b: T) => number) | undefined = undefined
   if (orderField) {
-    compareFn = (a: T, b: T) => Number(a[orderField]) - Number(b[orderField])
+    compareFn = (a: T, b: T) => sortDirection === 'desc' ? (Number(b[orderField]) - Number(a[orderField])) : (Number(a[orderField]) - Number(b[orderField]))
   }
   src.forEach(it => {
     if (map.has(it[parentField])) {
