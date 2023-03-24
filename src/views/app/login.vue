@@ -55,7 +55,7 @@ async function login() {
   try {
     const data: LoginResult = await UserApi.login(username.value, md5pass);
 
-    data.menus = toTree(data.menus, 'id', 'pid')
+    data.menus = toTree(data.menus, 'id', 'pid', 'order_no')
     menuOptions!.value = data.menus
     userInfo!.value = data.user_info
 
