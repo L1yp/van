@@ -88,7 +88,7 @@ const LightIcon = useIcon('Light')
 
 const router = useRouter();
 const asideOpened = inject(asideOpenedKey)!
-const userInfo = inject(userInfoKey)
+const userInfo = inject(userInfoKey)!
 console.log("userInfo", userInfo)
 
 function collapse() {

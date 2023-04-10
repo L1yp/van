@@ -67,10 +67,10 @@
     <RoleMenuBindModal v-model="bindModalVisible" :menu-options="menuTree" :select-ids="selectIds" @confirm="handleConfirmBind" />
 
     <MaskWindow v-model="permissionVisible">
-      <PermissionEntity :role-id="selectRole.id" />
+      <PermissionEntity :role-id="selectRole!.id" />
     </MaskWindow>
     <MaskWindow v-model="permissionWorkflowVisible">
-      <PermissionWorkflow :role-id="selectRole.id" />
+      <PermissionWorkflow :role-id="selectRole!.id" />
     </MaskWindow>
 
   </div>
@@ -78,7 +78,7 @@
 </template>
 
 <script lang="ts" setup>
-import {ref, onBeforeMount, inject} from "vue"
+import { ref, onBeforeMount, inject } from "vue"
 import {
   ElTable, ElTableColumn, ElTag, ElButton, ElPopconfirm,
 } from "element-plus"
@@ -89,10 +89,10 @@ import { useMenuData } from "@/service/system/menu";
 import RoleMenuBindModal from "@/views/sys/role/modal/RoleMenuBindModal.vue";
 import MaskWindow from "@/components/dialog/MaskWindow.vue";
 import PermissionEntity from "@/views/sys/role/permission/PermissionEntity.vue";
-import {menuOptionsKey} from "@/config/app.keys";
+import { menuOptionsKey } from "@/config/app.keys";
 import * as UserApi from "@/api/sys/user";
-import {installLayoutContentRoute, uninstallLayoutContentRoute} from "@/router";
-import {toTree} from "@/utils/common";
+import { installLayoutContentRoute, uninstallLayoutContentRoute } from "@/router";
+import { toTree } from "@/utils/common";
 import PermissionWorkflow from "@/views/sys/role/permission/PermissionWorkflow.vue";
 
 
@@ -105,7 +105,7 @@ const roleCreateModalMode = ref<'create' | 'update'>('create')
 const updateRoleItem = ref<RoleView>()
 function handleCreateRole() {
   roleCreateModalMode.value = 'create'
-  updateRoleItem.value = null
+  updateRoleItem.value = undefined
   roleCreateModalVisible.value = true
 }
 
@@ -145,11 +145,11 @@ function relateMenu(role: RoleView) {
     .then(_ => bindModalVisible.value = true)
 }
 
-const menus = inject(menuOptionsKey)
+const menus = inject(menuOptionsKey)!
 function handleConfirmBind(rows: MenuView[]) {
   const menuIds = rows.map(it => it.id)
   bindMenu({
-    role_id: selectRole.value.id,
+    role_id: selectRole.value!.id,
     menu_ids: menuIds
   })
     .then(() => UserApi.menu())
@@ -168,8 +168,9 @@ function batchDeleteRole() {
   deleteRoleByIds(selectedRoles.value.map(it => it.id))
 }
 
-function handleRowClick(row) {
-  tableRef.value.toggleRowSelection(row, undefined)
+function handleRowClick(row: RoleView) {
+  // @ts-ignore
+  tableRef.value?.toggleRowSelection(row, undefined)
 }
 
 const permissionVisible = ref(false)

@@ -56,7 +56,7 @@
         </el-form-item>
       </el-col>
       <el-col :span="24" :xs="24">
-        <el-form-item label="上级部门" prop="pid">
+        <el-form-item label="上级部门" prop="pid" style="margin-bottom: 0">
           <DeptSelectorInput v-model="props.formData.pid" style="width: 100%" />
         </el-form-item>
       </el-col>

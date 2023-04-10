@@ -6,6 +6,7 @@
     @cancel="visible = false"
     @confirm="handleConfirm"
     @open="handleOpen"
+    append-to-body draggable
   >
 
   <el-form :model="formData" label-width="100px" :label-position="deviceType === 'pc' ? 'right' : 'top'" scroll-to-error>
@@ -13,10 +14,10 @@
       <ElCol :span="24">
         <ElFormItem label="类型" prop="type" v-if="deviceType === 'pc'">
           <ElRadioGroup v-model="formData.type" :disabled="props.mode === 'update'">
-            <ElRadioButton 
-              v-for="option in menuTypeOptions" 
-              :key="option.value" 
-              :value="option.value" 
+            <ElRadioButton
+              v-for="option in menuTypeOptions"
+              :key="option.value"
+              :value="option.value"
               :label="option.value"
             >
               {{option.label}}
@@ -42,7 +43,7 @@
 import VDialog from '@/components/dialog/VDialog.vue';
 import { computed, markRaw, ref } from 'vue';
 import {
-  ElForm, ElFormItem, ElRadioGroup, ElRadioButton, ElRow, ElCol, ElSelect, ElOption, 
+  ElForm, ElFormItem, ElRadioGroup, ElRadioButton, ElRow, ElCol, ElSelect, ElOption,
 } from "element-plus";
 import FolderForm from './form/FolderForm.vue'
 import TabsForm from './form/TabsForm.vue'

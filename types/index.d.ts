@@ -6,9 +6,9 @@ declare interface PageParam {
 declare interface UserInfo {
   id: string
   username: string;
-  nickname?: string;
-  phone?: string;
-  avatar?: string;
+  nickname: string;
+  phone: string;
+  avatar: string;
 }
 
 declare interface TableData<T> {

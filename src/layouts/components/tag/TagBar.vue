@@ -32,7 +32,7 @@
         </ChromeTab>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item command="refresh" :icon="Icons.Refresh">刷新</el-dropdown-item>
+            <el-dropdown-item command="refresh" :icon="Icons['Refresh']">刷新</el-dropdown-item>
             <el-dropdown-item command="fullscreen" :icon="useIcon('FullScreenMaximize', { style: { width: '1em', height: '1em' } })">全屏</el-dropdown-item>
             <el-dropdown-item command="closeThis" :icon="Icons['Close']">关闭当前</el-dropdown-item>
             <el-dropdown-item command="closeLeft" :icon="Icons['Close']">关闭左侧</el-dropdown-item>
@@ -216,6 +216,7 @@ function handleContextMenuCommand(command: string, element: TagInfo) {
     }
   }
   else if (command === 'refresh') {
+    router.push({  })
     router.push(`/redirect?url=${encodeURIComponent(element.fullPath)}`)
   }
   else if (command === 'closeThis') {

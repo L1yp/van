@@ -15,6 +15,7 @@
         <el-tree-select
           v-model="props.formData.pid"
           style="width: 100%"
+          clearable
           node-key="id"
           :props="{ children: 'children', label: 'name', value: 'id' }"
           :data="parentOptions"

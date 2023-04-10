@@ -2,7 +2,7 @@
   <VDialog
     v-model="visible"
     :title="props.mode === 'create' ? '创建角色' : '更新角色'"
-    width="300px"
+    width="600px"
     @cancel="visible = false"
     @confirm="handleConfirm"
     @open="handleOpen"

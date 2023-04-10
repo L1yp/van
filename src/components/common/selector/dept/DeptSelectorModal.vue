@@ -5,12 +5,13 @@
     width="800px"
     append-to-body
     :use-body-scrolling="false"
+    fixed-body-height
     @opened="handleOpened"
     @confirm="handleConfirm"
     @cancel="visible = false"
   >
     <div class="dept-selector-modal">
-      <div :style="{ width: '100%', height: tableHeight }">
+      <div :style="{ width: '100%', height: props.multiple ? 'calc(100% - 110px)' : '100%' }">
         <el-table
           v-loading="loading"
           ref="tableRef"

@@ -75,37 +75,21 @@
       <WorkflowInstanceTabsPage :mkey="props.mkey" :instance-id="instanceId" />
     </MaskWindow>
 
-
-    <div v-show="menuVisible" ref="menuRef" class="menu-popover" style="width: 200px; position: fixed; background-color: var(--el-bg-color); border: 1px solid var(--el-border-color)">
-      <div style="width: 100%; height: 100%;" v-click-outside="handleClickMenuOutside">
-        <div class="menu-item">1</div>
-        <div class="menu-item">2</div>
-        <div class="menu-item">3</div>
-      </div>
-    </div>
-
-
-<!--    <el-popover-->
-<!--      :virtual-ref="triggerRef"-->
-<!--      virtual-triggering-->
-<!--      :visible="menuVisible"-->
-<!--      :width="menuWidth"-->
-<!--      popper-class="menu-popover"-->
-<!--    >-->
-<!--      <div style="width: 100%; height: 100%;" v-click-outside="handleClickMenuOutside">-->
-<!--        <div class="menu-item">1</div>-->
-<!--        <div class="menu-item">2</div>-->
-<!--        <div class="menu-item">3</div>-->
-<!--      </div>-->
-<!--    </el-popover>-->
-
+    <VMenu
+      v-click-outside="handleClickMenuOutside"
+      ref="menuRef"
+      :position="position"
+      :items="items"
+      :user-data="menuUserData"
+      @menu-click="handleMenuClick"
+    />
 
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ElButton, ElSelect, ElOption, ElMessage, ElScrollbar, ElPagination, ElPopover } from 'element-plus'
-import { computed, inject, nextTick, ref, shallowRef, toRaw, } from 'vue';
+import { computed, inject, nextTick, ref, shallowRef, toRaw, onMounted } from 'vue';
 import { Setting } from "@element-plus/icons-vue";
 import { useViewApi } from '@/service/modeling/view';
 import { useEntityInstanceApi } from '@/service/modeling/entity';
@@ -136,8 +120,8 @@ import * as OptionApi from "@/api/modeling/option";
 import { toTree } from "@/utils/common";
 import { useSystemStore } from "@/store/sys-config";
 import { varUserOptions, varDeptOptions } from "@/views/modeling/filter";
-import { useFloating, computePosition, shift, flip, offset } from '@floating-ui/vue';
-import { VirtualElement } from "@floating-ui/dom";
+import VMenu from "@/components/menu/VMenu.vue";
+import { MenuType, Point } from "@/components/menu";
 
 interface Props {
   module: ModelingModule
@@ -406,32 +390,12 @@ const gridOptions: GridOptions = {
     console.log('context menu', event)
     const cellDiv = event.eventPath?.[0] as HTMLDivElement
     if (cellDiv && event.data) {
-      const pointerEvent: PointerEvent = event.event as PointerEvent
-      triggerRef.value = {
-        getBoundingClientRect() {
-          return {
-            width: 0,
-            height: 0,
-            x: pointerEvent.clientX,
-            y: pointerEvent.clientY,
-            left: pointerEvent.clientX,
-            right: pointerEvent.clientX,
-            top: pointerEvent.clientY,
-            bottom: pointerEvent.clientY
-          }
-        },
-      }
-      computePosition(triggerRef.value, menuRef.value!, {
-        placement: "right-start",
-        middleware: [offset(5), flip(), shift()]
-      }).then(({ x, y }) => {
-        Object.assign(menuRef.value!.style, {
-          top: `${y}px`,
-          left: `${x}px`
-        });
-      });
-      menuWidth.value = cellDiv.clientWidth
-      menuVisible.value = true
+      const pointEvent = event.event as PointerEvent
+      menuUserData.value = event.value
+      position.value.x = pointEvent.clientX
+      position.value.y = pointEvent.clientY
+
+      menuRef.value?.showMenu()
     }
 
   },
@@ -469,20 +433,23 @@ const gridOptions: GridOptions = {
 }
 
 
-const menuVisible = ref(false)
-const menuWidth = ref(0)
-const triggerRef = ref<VirtualElement | null>()
-const menuRef = shallowRef<HTMLDivElement>()
-const {x, y, strategy} = useFloating(triggerRef, menuRef);
+const menuRef = ref<InstanceType<typeof VMenu>>()
+const position = ref<Point>({
+  x: 0, y: 0
+})
+const items = ref<MenuType[]>([
+  { id: '1', text: '复制', keyboard: "", icon: 'CopyDocument', hidden: false },
+  { id: '2', text: '设置', keyboard: "", icon: 'Setting', hidden: false },
+])
+const menuUserData = ref()
 
-
-function handleClickMenuOutside(mouseupEvent: PointerEvent, mousedownEvent: PointerEvent) {
-  // console.log('handleClickMenuOutside', mouseupEvent, mousedownEvent)
-  triggerRef.value = null
-  // menuWidth.value = 0
-  menuVisible.value = false
+function handleMenuClick(menuItem: MenuType, ev: PointerEvent, userData: any) {
+  console.log('menu item clicked', menuItem, userData);
 }
 
+function handleClickMenuOutside() {
+  menuRef.value?.hideMenu()
+}
 
 
 

@@ -1,7 +1,7 @@
 <template>
 
-  <div>
-    <div>
+  <div style="width: 100%; height: 100%;">
+    <div style="width: 100%; height: 100%;">
       <div class="op-line" ref="formRef">
         <el-button style="vertical-align: middle; " type="primary" @click="addUser" :icon="Plus">新增</el-button>
         <el-popconfirm
@@ -11,92 +11,100 @@
           @confirm="batchDeleteUser"
         >
           <template #reference>
-            <el-button plain style="vertical-align: middle" type="danger" :icon="Delete" :disabled="selectedUsers.length === 0">删除</el-button>
+            <el-button plain style="vertical-align: middle" type="danger" :icon="Delete"
+                       :disabled="selectedUsers.length === 0">删除
+            </el-button>
           </template>
         </el-popconfirm>
         <el-button plain style="vertical-align: middle" type="warning" @click="exportUser" :icon="Download">导出</el-button>
       </div>
-      <el-table
-        v-loading="loading"
-        ref="tableRef"
-        :height="dataTableHeight"
-        :data="pageData.data"
-        style="width: 100%; margin-top: 10px"
-        row-key="id"
-        stripe
-        @selection-change="handleSelectionChange"
-        :row-style="{cursor: 'pointer'}"
-        @row-click="handleRowClick"
-      >
-        <el-table-column>
-          <el-table-column type="selection" align="center" header-align="center"/>
-        </el-table-column>
-        <el-table-column>
-          <el-table-column prop="id" label="#" align="center" header-align="center" width="50"/>
-        </el-table-column>
-        <el-table-column>
-          <template #header>
-            <el-input v-model="formData.username" @change="reloadPage"></el-input>
-          </template>
-          <el-table-column prop="username" label="用户名(工号)" align="left" header-align="left" width="120"></el-table-column>
-        </el-table-column>
-        <el-table-column>
-          <template #header>
-            <el-input v-model="formData.nickname" @change="reloadPage"></el-input>
-          </template>
-          <el-table-column prop="nickname" label="昵称" />
-        </el-table-column>
-        <el-table-column>
-          <template #header>
-            <el-input v-model="formData.phone" @change="reloadPage"></el-input>
-          </template>
-          <el-table-column prop="phone" label="手机" width="120"/>
-        </el-table-column>
-        <el-table-column>
-          <template #header>
-            <el-input v-model="formData.email" @change="reloadPage"></el-input>
-          </template>
-          <el-table-column prop="email" label="邮箱" width="150"/>
-        </el-table-column>
-        <el-table-column>
-          <template #header>
-            <dept-selector-input v-model="formData.deptId" @change="reloadPage" />
-          </template>
-          <el-table-column prop="dept_id" label="部门" width="250" :formatter="formatDepartment" />
-        </el-table-column>
-        <el-table-column>
-          <template #header>
-            <el-select v-model="formData.status" @change="reloadPage">
-              <el-option :value="0" label="正常" />
-              <el-option :value="1" label="禁用" />
-            </el-select>
-          </template>
-          <el-table-column prop="status" label="状态" align="center" header-align="center" width="100">
+      <div style="margin-top: 10px; width: 100%; height: calc(100% - 32px - 32px - 10px)">
+        <el-table
+          v-loading="loading"
+          ref="tableRef"
+          height="100%"
+          :data="pageData.data"
+          style="width: 100%"
+          row-key="id"
+          :border="false"
+          @selection-change="handleSelectionChange"
+          :header-row-class-name="headerRowClass"
+          :row-style="{ cursor: 'pointer' }"
+          :cell-style="{ padding: 0 }"
+          @row-click="handleRowClick"
+        >
+          <el-table-column>
+            <el-table-column type="selection" align="center" header-align="center"/>
+          </el-table-column>
+          <el-table-column>
+            <el-table-column prop="id" label="#" align="center" header-align="center" width="50"/>
+          </el-table-column>
+          <el-table-column class-name="floating-filter">
+            <template #header>
+              <el-input v-model="formData.username" @change="reloadPage"></el-input>
+            </template>
+            <el-table-column prop="username" label="用户名(工号)" align="left" header-align="left"
+                             width="120"></el-table-column>
+          </el-table-column>
+          <el-table-column class-name="floating-filter">
+            <template #header>
+              <el-input v-model="formData.nickname" @change="reloadPage"></el-input>
+            </template>
+            <el-table-column prop="nickname" label="昵称"/>
+          </el-table-column>
+          <el-table-column class-name="floating-filter">
+            <template #header>
+              <el-input v-model="formData.phone" @change="reloadPage"></el-input>
+            </template>
+            <el-table-column prop="phone" label="手机" width="120"/>
+          </el-table-column>
+          <el-table-column class-name="floating-filter">
+            <template #header>
+              <el-input v-model="formData.email" @change="reloadPage"></el-input>
+            </template>
+            <el-table-column prop="email" label="邮箱" width="150"/>
+          </el-table-column>
+          <el-table-column class-name="floating-filter">
+            <template #header>
+              <dept-selector-input v-model="formData.deptId" @change="reloadPage"/>
+            </template>
+            <el-table-column prop="dept_id" label="部门" width="250" :formatter="formatDepartment"/>
+          </el-table-column>
+          <el-table-column class-name="floating-filter">
+            <template #header>
+              <el-select v-model="formData.status" @change="reloadPage">
+                <el-option :value="0" label="正常"/>
+                <el-option :value="1" label="禁用"/>
+              </el-select>
+            </template>
+            <el-table-column prop="status" label="状态" align="center" header-align="center" width="100">
+              <template #default="scope">
+                <el-tag :type="scope.row.status === 0 ? '' : 'danger'"
+                        v-text="scope.row.status === 0 ? '正常' : '禁用'"></el-tag>
+              </template>
+            </el-table-column>
+          </el-table-column>
+
+          <el-table-column label="操作" fixed="right" width="190">
             <template #default="scope">
-              <el-tag :type="scope.row.status === 0 ? '' : 'danger'" v-text="scope.row.status === 0 ? '正常' : '禁用'"></el-tag>
+              <el-button plain style="vertical-align: middle" text @click.stop="editUser(scope.row)" :icon="Edit">编辑
+              </el-button>
+              <el-popconfirm
+                title="确定删除?"
+                confirmButtonText="确定"
+                cancelButtonText="取消"
+                @confirm.stop="delUser(scope.row)"
+              >
+                <template #reference>
+                  <el-button plain style="vertical-align: middle" text @click.stop :icon="Delete">删除</el-button>
+                </template>
+              </el-popconfirm>
+
             </template>
           </el-table-column>
-        </el-table-column>
-
-        <el-table-column label="操作" fixed="right" width="190">
-          <template #default="scope">
-            <el-button plain style="vertical-align: middle" text @click.stop="editUser(scope.row)" :icon="Edit">编辑</el-button>
-            <el-popconfirm
-              title="确定删除?"
-              confirmButtonText="确定"
-              cancelButtonText="取消"
-              @confirm.stop="delUser(scope.row)"
-            >
-              <template #reference>
-                <el-button plain style="vertical-align: middle" text @click.stop :icon="Delete">删除</el-button>
-              </template>
-            </el-popconfirm>
-
-          </template>
-        </el-table-column>
-      </el-table>
+        </el-table>
+      </div>
       <el-pagination
-        ref="pagerRef"
         :background="false"
         style="padding-left: 0"
         layout="prev, pager, next, total"
@@ -107,23 +115,30 @@
       />
     </div>
 
-    <UserCreateModal v-model="createModalVisible" :mode="createModalMode" :data="editUserInfo" @confirm="submitCreateUpdateUser" />
+    <UserCreateModal v-model="createModalVisible" :mode="createModalMode" :data="editUserInfo" @confirm="submitCreateUpdateUser"/>
   </div>
 
 </template>
 
 <script lang="ts" setup>
-import {computed, ComputedRef, inject, onBeforeMount, Ref, ref, toRaw} from "vue";
+import { onBeforeMount, ref, toRaw } from "vue";
 import {
   ElSelect, ElOption, ElButton, ElInput, ElPopconfirm,
   ElTable, ElTableColumn, ElTag, ElPagination, ElMessage
 } from "element-plus"
-import {mainHeightKey, mainWidthKey, themeKey} from "@/config/app.keys";
-import {useUserData} from "@/service/system/user";
-import {Delete, Plus, Download, Edit, User} from "@element-plus/icons-vue";
+import { useUserData } from "@/service/system/user";
+import { Delete, Plus, Download, Edit } from "@element-plus/icons-vue";
 import UserCreateModal from "@/views/sys/user/dialog/UserCreateModal.vue";
 import * as UserApi from '@/api/sys/user'
 import DeptSelectorInput from "@/components/common/selector/dept/DeptSelectorInput.vue";
+
+function headerRowClass(params: { rowIndex: number }) {
+  // floating filter header row
+  if (params.rowIndex === 0) {
+    return 'floating-filter-header-row'
+  }
+  return ''
+}
 
 const loading = ref<boolean>(true)
 
@@ -156,28 +171,14 @@ function handleCurrentPageChange(v: number) {
 }
 
 const formRef = ref<HTMLDivElement>()
-const tableRef = ref<InstanceType<typeof ElTable>>(null)
-const pagerRef = ref<InstanceType<typeof ElPagination>>(null)
-
-const theme = inject<Ref<ThemeConfig>>(themeKey)
-const mainWidth = inject<ComputedRef<string>>(mainWidthKey)
-const mainHeight = inject<ComputedRef<string>>(mainHeightKey)
-
-const dataTableWidth = computed<string>(() => `calc(${mainWidth.value} - ${theme.value.mainPadding * 2 + 10}px)`)
-/**
- * 10: marginTop
- */
-const dataTableHeight = computed<string>(() => {
-  const pagerHeight = pagerRef.value?.$el?.clientHeight || 36
-  const formHeight = formRef.value?.clientHeight || 32
-  return `calc(${mainHeight.value} - ${theme.value.mainPadding * 2 + formHeight + 10 + pagerHeight}px)`
-})
+const tableRef = ref<InstanceType<typeof ElTable>>()
 
 const createModalVisible = ref<boolean>(false)
 const createModalMode = ref<'create' | 'update'>('create')
 const editUserInfo = ref<UserView>()
-function addUser(user: UserView) {
-  editUserInfo.value = null
+
+function addUser() {
+  editUserInfo.value = undefined
   createModalMode.value = 'create'
   createModalVisible.value = true
 }
@@ -220,11 +221,14 @@ function submitCreateUpdateUser(v: UserAddParam | UserUpdateParam) {
 }
 
 
-function delUser(user: UserView) {}
+function delUser(user: UserView) {
+}
 
-function exportUser() {}
+function exportUser() {
+}
 
-function batchDeleteUser() {}
+function batchDeleteUser() {
+}
 
 const selectedUsers = ref<UserView[]>([])
 
@@ -232,8 +236,9 @@ function handleSelectionChange(users: UserView[]) {
   selectedUsers.value = users;
 }
 
-function handleRowClick(row, column, event) {
-  tableRef.value.toggleRowSelection(row, undefined);
+function handleRowClick(row: UserInfo) {
+  // @ts-ignore
+  tableRef.value?.toggleRowSelection(row, undefined)
 }
 
 </script>
@@ -251,7 +256,29 @@ function handleRowClick(row, column, event) {
   width: v-bind(dataTableWidth)
 }
 
+:deep(thead.is-group .floating-filter.el-table__cell) {
+  padding: 0;
+}
 
+:deep(thead.is-group .floating-filter.el-table__cell div.cell) {
+  padding: 2px;
+}
 
+:deep(thead.is-group .floating-filter-header-row .el-table__cell) {
+  padding: 0;
+}
+
+:deep(.el-table thead.is-group th.el-table__cell) {
+  background: transparent;
+  border-right: none;
+}
+
+:deep(table.el-table__header thead.is-group tr) {
+  background: linear-gradient(to right, #ACB6E5, #74ebd5);
+}
+
+:deep(.el-table thead) {
+  color: #FFFFFF;
+}
 
 </style>

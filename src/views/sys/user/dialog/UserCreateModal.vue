@@ -65,9 +65,9 @@
       <el-row>
         <el-col :span="24">
           <el-form-item label="角色" prop="role_ids">
-            <el-select 
-              v-model="formData.role_ids" 
-              multiple 
+            <el-select
+              v-model="formData.role_ids"
+              multiple
               filterable
               clearable
               collapse-tags
@@ -82,7 +82,7 @@
       </el-row>
       <el-row>
         <el-col :span="24">
-          <el-form-item label="头像" prop="avatar">
+          <el-form-item label="头像" prop="avatar" style="margin-bottom: 0">
             <el-input v-model="formData.avatar"></el-input>
           </el-form-item>
         </el-col>
