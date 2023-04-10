@@ -22,46 +22,6 @@ html.dark ::after {
 
 }
 
-.el-dialog__footer {
-    padding: 10px;
-    border-top: 1px solid var(--el-border-color);
-    border-bottom: 1px solid var(--el-border-color);
-    box-sizing: border-box;
-}
-
-.el-dialog {
-    box-sizing: border-box;
-    margin: 15vh auto;
-}
-
-.el-dialog.is-fullscreen {
-    box-sizing: border-box;
-    margin: auto;
-}
-
-.el-dialog .el-dialog__header {
-    padding: 10px 24px;
-    border-bottom: 1px solid var(--el-border-color);
-    margin-right: 0;
-    box-sizing: border-box;
-    background-color: var(--toolbar-bg-color);
-}
-
-.el-dialog__body {
-    padding: 16px 20px;
-    box-sizing: border-box;
-}
-
-.el-dialog.is-fullscreen .el-dialog__body {
-    height: calc(100vh - 44px - 54px);
-    max-height: calc(100vh - 44px - 54px);
-}
-
-.el-dialog .el-dialog__body {
-    max-height: calc(100vh - 15vh - 15vh - 44px - 54px);
-}
-
-
 .vxe-table {
     --el-table-border-color: var(--el-border-color-lighter);
     --el-table-border: 1px solid var(--el-table-border-color);
