@@ -28,7 +28,7 @@
     "codemirror": "^6.0.0",
     "dayjs": "^1.11.6",
     "diagram-js-minimap": "^2.1.1",
-    "element-plus": "^2.2.18",
+    "element-plus": "^2.3.2",
     "fast-glob": "^3.2.11",
     "highlight.js": "^11.5.1",
     "mitt": "^3.0.0",
