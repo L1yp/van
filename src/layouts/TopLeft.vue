@@ -5,36 +5,36 @@
         custom-class="aside-menu-drawer"
         :size="200"
         :with-header="false"
-        v-model="asideOpened"
+        v-model="layoutStore.asideOpened"
         direction="ltr"
       >
         <aside-bar></aside-bar>
       </el-drawer>
     </template>
     <template v-else>
-      <el-aside :width="asideWidth" :style="pageScreen ? { display: 'none' } : undefined">
+      <el-aside :width="layoutStore.asideWidth" :style="layoutStore.pageScreen ? { display: 'none' } : undefined">
         <aside-bar></aside-bar>
       </el-aside>
     </template>
 
 
     <el-container>
-      <el-header :style="pageScreen ? { display: 'none' } : undefined">
+      <el-header :style="layoutStore.pageScreen ? { display: 'none' } : undefined">
         <header-bar/>
       </el-header>
-      <tag-bar :style="pageScreen ? { display: 'none' } : undefined"/>
+      <tag-bar :style="layoutStore.pageScreen ? { display: 'none' } : undefined"/>
 
-      <el-main style="position: relative" :style="{ width: mainWidth, height: mainHeight }">
+      <el-main style="position: relative" :style="{ width: layoutStore.mainWidth, height: layoutStore.mainHeight }">
         <router-view v-slot="{ Component, route }">
           <template v-if="mode === 'dev'">
-            <keep-alive>
-              <component :is="Component" :key="route.fullPath" />
+            <keep-alive :include="keepAliveStore.keepAliveNames">
+              <component :is="Component" :key="route.fullPath" v-if="keepAliveStore.refreshComponent" />
             </keep-alive>
           </template>
           <template v-else>
             <transition name="fade" mode="out-in" appear>
               <keep-alive>
-                <component :is="Component" :key="route.fullPath" />
+                <component :is="Component" :key="route.fullPath" v-if="keepAliveStore.refreshComponent" />
               </keep-alive>
             </transition>
           </template>
@@ -42,17 +42,17 @@
 
 
         <div
-          v-show="pageScreen"
+          v-show="layoutStore.pageScreen"
           class="close-page-full-screen"
           title="关闭全屏"
-          @click.stop="pageScreen = false"
-          :style="{ 'z-index': pageScreenZIndex }"
+          @click.stop="layoutStore.pageScreen = false"
+          :style="{ 'z-index': layoutStore.incrementZIndex() }"
         >
           <s-v-g-icon class="close-icon" name="close" style="width: 16px; height: 16px; position: absolute; left: 10px; top: 4px"></s-v-g-icon>
         </div>
-        <div ref="maskContainerRef" style="position: absolute; top: 0; left: 0; width: 100%;"></div>
+        <div :ref="layoutStore.maskContainerRef" style="position: absolute; top: 0; left: 0; width: 100%;"></div>
       </el-main>
-      <el-footer :style="pageScreen ? { display: 'none' } : undefined"></el-footer>
+      <el-footer :style="layoutStore.pageScreen ? { display: 'none' } : undefined"></el-footer>
     </el-container>
   </el-container>
 </template>
@@ -60,76 +60,25 @@
 <script lang="ts" setup>
 import { computed, provide, Ref, ref } from "vue"
 import { ElContainer, ElHeader, ElAside, ElMain, ElFooter, ElDrawer } from "element-plus"
-import Theme from "../config/theme"
 import {HeaderBar} from "./components/header"
 import {AsideBar} from "./components/aside"
 import {TagBar} from "./components/tag"
 import {RouterView} from "vue-router"
-import {
-  mainHeightKey,
-  asideWidthKey,
-  asideOpenedKey,
-  themeKey, mainWidthKey, pageFullScreenKey, maskContainerKey,
-} from "@/config/app.keys"
 import SVGIcon from "@/components/common/SVGIcon.vue";
 import {incMaskZIndex} from "@/components/dialog/mask";
 import { getDeviceType } from "@/utils/common"
+import { useKeepAliveStore } from "@/store/keep-alive";
+import { useLayoutStore } from "@/store/layout";
+import { useThemeStore } from "@/store/theme";
 
 const mode = import.meta.env.MODE
 
+const layoutStore = useLayoutStore()
+const themeStore = useThemeStore()
+const keepAliveStore = useKeepAliveStore()
 
 const deviceType = getDeviceType()
 console.log('deviceType', deviceType);
-
-const asideOpened: Ref<boolean> = ref(deviceType.value !== 'h5')
-provide(asideOpenedKey, asideOpened);
-
-
-const asideWidth = computed<string>(() => {
-  if (deviceType.value === 'h5') {
-    return '0'
-  }
-  return asideOpened.value ? `${theme.value.asideWidth}px` : "64px";
-})
-provide(asideWidthKey, asideWidth);
-
-const theme = ref<ThemeConfig>(Theme)
-provide(themeKey, theme)
-
-const mainWidth = computed<string>(() => {
-  if (pageScreen.value) {
-    return'100vw'
-  }
-  return `calc(100vw - ${asideWidth.value})`;
-})
-provide(mainWidthKey, mainWidth);
-
-const mainHeight = computed<string>(() => {
-  if (pageScreen.value) {
-    return '100vh'
-  }
-  return `calc(100vh - ${theme.value.headerHeight + theme.value.tagBarHeight+ theme.value.footerHeight}px)`;
-})
-provide(mainHeightKey, mainHeight);
-
-
-const headerHeight = computed(() => `${theme.value.headerHeight}px`)
-const footerHeight = computed(() => `${theme.value.footerHeight}px`)
-const mainPadding = computed(() => `${theme.value.mainPadding}px`)
-const footerPadding = computed(() => `${theme.value.footerPadding}px`)
-
-const pageScreenZIndex = ref<number>(1000)
-const pageScreen = ref<boolean>(false)
-
-function setFullScreen() {
-  pageScreenZIndex.value = incMaskZIndex()
-  pageScreen.value = true
-}
-provide(pageFullScreenKey, setFullScreen)
-
-const maskContainerRef = ref()
-provide(maskContainerKey, maskContainerRef)
-
 
 </script>
 
@@ -139,7 +88,7 @@ provide(maskContainerKey, maskContainerRef)
 }
 
 .el-aside {
-  width: v-bind(asideWidth);
+  width: v-bind(layoutStore.asideWidth);
 }
 
 .el-main {
@@ -148,7 +97,7 @@ provide(maskContainerKey, maskContainerRef)
 
 
 .el-header {
-  height: v-bind(headerHeight);
+  height: v-bind(themeStore.headerHeight + 'px');
   display: flex;
   justify-content: space-between;
   align-content: center;
@@ -158,15 +107,15 @@ provide(maskContainerKey, maskContainerRef)
 
 
 .el-main {
-  --el-main-padding: v-bind(mainPadding);
-  width: v-bind(mainWidth);
-  height: v-bind(mainHeight);
+  --el-main-padding: v-bind(themeStore.mainPadding + 'px');
+  width: v-bind('layoutStore.mainWidth');
+  height: v-bind('layoutStore.mainHeight');
 
 }
 
 .el-footer {
-  --el-footer-padding: v-bind(footerPadding);
-  height: v-bind(footerHeight);
+  --el-footer-padding: v-bind(themeStore.footerPadding + 'px') ;
+  height: v-bind('themeStore.footerHeight') + 'px';
 }
 
 .close-page-full-screen {
@@ -199,16 +148,4 @@ provide(maskContainerKey, maskContainerRef)
   padding: 0;
 }
 
-</style>
-
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  height: 100%;
-  box-sizing: border-box;
-  background: transparent;
-}
 </style>

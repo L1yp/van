@@ -1,6 +1,6 @@
 <template>
   <div style="width: 100%; height: 100%;">
-    <div>
+    <div style="height: 32px">
       <el-button :icon="Plus" type="primary" @click="handleAdd">新增</el-button>
       <span style="color: red; font-weight: bold; margin-left: 10px;">双击进入配置(双击流程版本设计流程图)</span>
     </div>
@@ -61,7 +61,7 @@
         :page-sizes="[50]"
         layout="prev, pager, next"
         @current-change="loadPage(param)"
-        style="padding-left: 0"
+        style="padding-left: 0; height: 36px"
       />
     </div>
 
@@ -82,7 +82,6 @@ import { useWorkflowApi } from "@/service/workflow";
 import {computed, inject, onBeforeMount, provide, ref} from "vue";
 import { ElTable, ElTableColumn, ElInput, ElButton, ElPagination } from "element-plus";
 import { Plus } from "@element-plus/icons-vue";
-import {mainHeightKey, maskContainerKey, themeKey} from "@/config/app.keys";
 import WorkflowTypeConfigTabs from "@/views/workflow/model/WorkflowTypeConfigTabs.vue";
 import WorkflowVerDesigner from "@/views/workflow/bpmn/designer.vue";
 import UserSelectorInput from '@/components/common/selector/user/UserSelectorInput.vue'
@@ -108,17 +107,9 @@ const param = ref<WorkflowTypeDefPageParam>({
 const { pageData, loadPage } = useWorkflowApi(loading)
 onBeforeMount(() => loadPage(param.value))
 
-function formatUser(row, column, cellValue, index) {
+function formatUser(row: WorkflowTypeDefView, column: any, cellValue: string | number, index: number) {
   return pageData.value.additional?.[cellValue]?.nickname || ''
 }
-
-const theme = inject(themeKey)
-const mainHeight = inject(mainHeightKey)
-const tableHeight = computed(() => {
-  // 32 toolbar
-  // 10 marginTop
-  return `${mainHeight.value} - ${theme.value.mainPadding * 2 + 32 + 10}px`
-})
 
 const addPanelVisible = ref(false)
 const typeMaskVisible = ref(false)

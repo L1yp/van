@@ -93,7 +93,6 @@
 
 <script lang="ts" setup>
 import { computed, inject, ref, provide, onBeforeMount } from "vue";
-import { mainHeightKey, themeKey } from "@/config/app.keys";
 import { ElForm, ElScrollbar, ElTabs, ElTabPane, ElButton, ElRadioGroup, ElRadioButton, ElInput } from "element-plus"
 import NestedDragItem from "@/components/form/designer/NestedDragItem.vue";
 import FormPropertyPanel from "@/components/form/designer/FormPropertyPanel.vue"
@@ -108,6 +107,8 @@ import { formModeKey, vFormActiveElementKey, vFormSchemeKey } from "@/components
 import { useModelingPageApi } from "@/service/modeling/page";
 import { Delete, View } from "@element-plus/icons-vue";
 import { getDeviceType } from "@/utils/common";
+import { useLayoutStore } from "@/store/layout";
+import { useThemeStore } from "@/store/theme";
 
 const saveIcon = useIcon('Save')
 
@@ -127,15 +128,15 @@ const pageName = ref(props.name || '')
 
 const candidateActiveTab = ref<string>('component')
 
-const mainHeight = inject(mainHeightKey)
-const theme = inject(themeKey)
+const layoutStore = useLayoutStore()
+const themeStore = useThemeStore()
 
 // 30=padding 40=toolbar
-const containerHeight = computed<string>(() => `calc(${mainHeight.value} - ${theme.value.mainPadding * 2}px)`)
+const containerHeight = computed<string>(() => `calc(${layoutStore.mainHeight} - ${themeStore.mainPadding * 2}px)`)
 
 const designerContainerHeight = computed<string>(() => `calc(${containerHeight.value} - 40px)`)
 
-const vFormActiveElement = ref<ComponentConfig>(null)
+const vFormActiveElement = ref<ComponentConfig>()
 provide(vFormActiveElementKey, vFormActiveElement)
 
 const mode = computed<FormFieldMode>(() => 'design')

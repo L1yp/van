@@ -58,13 +58,11 @@ import {computed, inject, onBeforeMount, onMounted, provide, ref, ShallowRef, sh
 import flowable_descriptor from "@/assets/flowable/descriptor.json"
 import {ElMessage, ElScrollbar, ElButtonGroup, ElButton} from "element-plus";
 import {
-  asideWidthKey,
   bpmnModelerKey,
   bpmnSelectedElemKey,
-  mainHeightKey,
   updatePropertyKey,
   modelingFieldKey,
-  processNodePageListKey, mainWidthKey
+  processNodePageListKey,
 } from "@/config/app.keys";
 import 'bpmn-js/dist/assets/diagram-js.css';
 import 'bpmn-js/dist/assets/bpmn-font/css/bpmn.css';
@@ -79,17 +77,16 @@ import initXml from "@/assets/bpmn/init.bpmn20.xml?raw"
 import {Connection, ElementRegistry, FormalExpression} from "bpmn-js";
 import {SaveXMLResult} from "bpmn-js/lib/BaseViewer";
 import miniMapModule from 'diagram-js-minimap'
+import { useLayoutStore } from "@/store/layout";
 
 const route = useRoute()
 const bpmnId = Number(route.query.bpmnId)
 const processKey = route.query.processKey as string
-const mainHeight = inject(mainHeightKey)
-const asideWidth = inject(asideWidthKey)
-const mainWidth = inject(mainWidthKey)
 const loading = ref(false)
+const layoutStore = useLayoutStore()
 
 const containerHeight = computed(() => {
-  return `calc(${mainHeight.value} - 40px)`
+  return `calc(${layoutStore.mainHeight} - 40px)`
 })
 
 const panelHeight = computed(() => {
@@ -97,7 +94,7 @@ const panelHeight = computed(() => {
 })
 
 const containerWidth = computed(() => {
-  return `calc(${mainWidth.value} - 40px)`
+  return `calc(${layoutStore.mainWidth} - 40px)`
 })
 
 const panelWidth = computed(() => collapsed.value ? "40px" : "400px")

@@ -45,10 +45,12 @@ async function startup() {
     app.use(pinia)
 
     setupAxios()
+
     app.use(ElLoading)
 
     app.use(VXETable)
     app.directive('click-outside', ClickOutside)
+    app.directive("permission", permission)
 
     const map = new Map<string, UserView>()
     varOptions.forEach(it => map.set(it.id, it))
@@ -74,13 +76,12 @@ async function startup() {
 
     console.log("startup setup router before");
     // @ts-ignore
-    setupRouter(app, menuOptions.value);
-    console.log("startup setup router after");
+    setupRouter(app, menuOptions.value)
+    console.log("startup setup router after")
 
     await isReady();
     console.log("router is ready now");
 
-    app.directive("permission", permission)
 
     app.mount('#app')
   } catch (e) {

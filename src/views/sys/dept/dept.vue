@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="width: 100%; height: 100%;">
     <div class="op-line">
       <el-scrollbar always :native="deviceType !== 'pc'">
         <div style="display: flex; ">
@@ -26,14 +26,13 @@
           <el-button plain type="warning" @click="exportTable" :icon="Download">导出</el-button>
         </div>
       </el-scrollbar>
-      
     </div>
 
     <div class="data-table">
       <el-table
         v-loading="loading"
         ref="tableRef"
-        :height="tableHeight"
+        height="100%"
         :data="filterDataList"
         style="width: 100%"
         row-key="id"
@@ -90,13 +89,12 @@ import SVGIcon from "@/components/common/SVGIcon.vue";
 import {
   ElTable,
   ElTableColumn,
-  ElInput, ElTag, 
-  ElButton, 
+  ElInput, ElTag,
+  ElButton,
   ElPopconfirm,
   ElMessage, ElScrollbar,
 } from "element-plus";
 import {filterDataWithTitle, getDeviceType} from "@/utils/common"
-import {mainHeightKey, themeKey} from "@/config/app.keys";
 import { Plus, Delete, Download, Edit } from "@element-plus/icons-vue";
 import DeptModal from "./modal/DeptModal.vue";
 import { useDeptInfo } from "@/service/system/dept";
@@ -107,14 +105,10 @@ const deviceType = getDeviceType()
 
 const tableRef = ref<InstanceType<typeof ElTable>>();
 
-const theme = inject<Ref<ThemeConfig>>(themeKey)
-const mainHeight = inject<ComputedRef<string>>(mainHeightKey)
-
 
 
 
 const loading = ref<boolean>(false)
-const tableHeight = computed<string>(() => `calc(${mainHeight.value} - ${theme.value.mainPadding + theme.value.mainPadding + 32 + 10}px)`)
 const { userMap, tableData, loadDept, deleteDept } = useDeptInfo(loading)
 onBeforeMount(loadDept)
 provide(userMapKey, userMap)
@@ -195,6 +189,7 @@ function batchDelete() {
 .data-table {
   box-sizing: border-box;
   margin-top: 10px;
+  height: calc(100% - 32px - 10px);
 }
 
 :deep(div.el-table__header-wrapper .el-table_1_column_1 div.cell) {

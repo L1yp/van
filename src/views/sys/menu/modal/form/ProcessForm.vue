@@ -1,17 +1,17 @@
 <template>
   <el-row>
     <el-col :span="12" :xs="24">
-      <el-form-item label="名称" prop="name">
+      <el-form-item label="名称" prop="name" required>
         <el-input v-model="formData.name" />
       </el-form-item>
     </el-col>
     <ElCol :span="12" :xs="24">
-      <ElFormItem label="序号" prop="order_no">
+      <ElFormItem label="序号" prop="order_no" required>
         <ElInputNumber v-model="formData.order_no" style="width: 100%"></ElInputNumber>
       </ElFormItem>
     </ElCol>
     <el-col :span="24" :xs="24">
-      <el-form-item label="父菜单" prop="pid">
+      <el-form-item label="父菜单" prop="pid" required>
         <el-tree-select
           v-model="props.formData.pid"
           style="width: 100%"
@@ -23,7 +23,7 @@
       </el-form-item>
     </el-col>
     <el-col :span="12" :xs="24">
-      <el-form-item label="流程标识" prop="path">
+      <el-form-item label="流程标识" prop="path" required>
         <el-input v-model="props.formData.path"></el-input>
       </el-form-item>
     </el-col>
@@ -33,7 +33,7 @@
       </el-form-item>
     </el-col>
     <el-col :span="12" :xs="24">
-      <el-form-item label="状态" prop="state">
+      <el-form-item label="状态" prop="state" required>
         <DictInput v-model="props.formData.state" :ident="STATUS" />
       </el-form-item>
     </el-col>

@@ -28,7 +28,7 @@ import ModelingViewContainer from "@/views/modeling/ModelingViewContainer.vue";
 
 
 const route = useRoute()
-const menuOptions = route.meta.children as MenuView[]
+const menuOptions = route.meta.menuOption?.children as MenuView[]
 console.log('children', menuOptions);
 
 const activeName = ref<string>(menuOptions?.[0].name || '')

@@ -1,6 +1,5 @@
 import { RouteRecordRaw } from "vue-router";
 
-
 const routes: RouteRecordRaw[] = [
   {
     name: 'workflow-instance',
@@ -9,12 +8,11 @@ const routes: RouteRecordRaw[] = [
     redirect: '',
     props: true,
     meta: {
+      keepAlive: true,
       closeable: true,
       icon: 'Apple',
-      order_no: 1,
-      type: 'PAGE',
-      name: '流程实例详情',
-      id: '100'
+      title: '流程实例详情',
+      componentName: 'WorkflowInstanceTabsPage',
     }
   },
   {
@@ -24,11 +22,10 @@ const routes: RouteRecordRaw[] = [
     redirect: '',
     props: route => ({ module: 'WORKFLOW', mkey: route.params.mkey }),
     meta: {
+      keepAlive: true,
       closeable: true,
-      order_no: 1,
-      type: 'PAGE',
-      name: '流程实例列表',
-      id: '101'
+      title: '流程实例列表',
+      componentName: 'ModelingViewContainer',
     }
   }
 ]

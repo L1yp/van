@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="width: 100%; height: 100%;">
     <div class="op-line">
       <el-scrollbar always :native="deviceType !== 'pc'">
         <div style="display: flex; ">
@@ -28,7 +28,7 @@
       <el-table
         v-loading="loading"
         ref="tableRef"
-        :height="dataTableHeight"
+        height="100%"
         :data="filterMenuList"
         style="width: 100%"
         row-key="id"
@@ -100,7 +100,7 @@ import {
 } from "element-plus";
 import * as MenuApi from "@/api/sys/menu";
 import {filterDataWithTitle, getDeviceType, toTree} from "@/utils/common";
-import {mainHeightKey, menuOptionsKey, themeKey} from "@/config/app.keys";
+import { menuOptionsKey } from "@/config/app.keys";
 import { useMenuData } from "@/service/system/menu";
 import { Plus, Edit, Delete, Download, } from "@element-plus/icons-vue";
 import MenuCreateModal from "./modal/MenuCreateModal.vue";
@@ -111,21 +111,6 @@ const deviceType = getDeviceType()
 
 const loading = ref(true);
 const tableRef = ref<InstanceType<typeof ElTable>>()
-
-const mainHeight = inject(mainHeightKey)
-const theme = inject(themeKey);
-
-const dataTableHeight = computed<string>(() => {
-  /**
-   * 32px op height
-   * 10px marginTop
-   */
-  const height = `calc(${mainHeight.value} - ${
-    theme.value.mainPadding + theme.value.mainPadding + 32 + 10
-  }px)`;
-  console.log("height", height);
-  return height;
-});
 
 const { menuTree, loadMenuTree } = useMenuData(loading)
 onBeforeMount(loadMenuTree)
@@ -160,15 +145,14 @@ function editMenu(menu: MenuView) {
   createModalInitData.value = toRaw(menu)
   createModalMode.value = 'update'
   createModalVisible.value = true
-
 }
 
-const menus = inject(menuOptionsKey)
+const menus = inject(menuOptionsKey)!
 async function handleConfirm(param: MenuAddParam | MenuUpdateParam) {
   try {
     loading.value = true
     if (createModalMode.value === 'create') {
-      await MenuApi.addMenu(param)
+      await MenuApi.addMenu(param as MenuAddParam)
     } else {
       await MenuApi.updateMenu(param as MenuUpdateParam)
 
@@ -190,7 +174,7 @@ async function handleConfirm(param: MenuAddParam | MenuUpdateParam) {
   }
 }
 
-async function delMenu(row?: MenuView) {
+async function delMenu(row: MenuView) {
   try {
     await MenuApi.delMenu(row.id)
     await loadMenuTree()
@@ -228,7 +212,7 @@ function handleSelectionChange(menus: MenuView[]) {
 }
 
 async function batchDeleteMenu() {
-  const selectionRows: MenuView[] = tableRef.value.getSelectionRows();
+  const selectionRows: MenuView[] = tableRef.value?.getSelectionRows();
   const ids: string[] = selectionRows.map((it) => it.id);
   console.log("selected ids", ids);
 }
@@ -243,6 +227,7 @@ async function batchDeleteMenu() {
 .data-table {
   box-sizing: border-box;
   margin-top: 10px;
+  height: calc(100% - 32px - 10px);
 }
 
 :deep(div.el-table__header-wrapper .el-table-column--selection div.cell) {

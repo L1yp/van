@@ -44,8 +44,8 @@
 </template>
 
 <script lang="ts" setup>
-import {computed, inject, onMounted, reactive, Ref, ref, unref,} from "vue"
-import {asideWidthKey, mainHeightKey, themeKey, userInfoKey} from "@/config/app.keys";
+import { computed, inject, onMounted, Ref, ref,  } from "vue"
+import { userInfoKey } from "@/config/app.keys";
 import {
   ElTable, ElTableColumn, ElButton, ElPopconfirm, ElTooltip, ElDialog, ElForm, ElFormItem,
   ElRadioGroup, ElRadio, ElMessage, ElInputNumber, ElInput, ElRow, ElCol, ElSelect, ElOption,
@@ -53,23 +53,23 @@ import {
 } from "element-plus"
 import * as ProcessApi from "@/api/sys/process"
 import SVGIcon from "@/components/common/SVGIcon.vue"
-import {useRouter} from "vue-router";
+import { useRouter } from "vue-router";
 import UserViewer from "@/components/common/viewer/user/UserViewer.vue";
+import { useLayoutStore } from "@/store/layout";
+import { useThemeStore } from "@/store/theme";
 
 const router = useRouter()
-const mainHeight = inject(mainHeightKey);
-const theme = inject(themeKey);
-const asideWidth = inject(asideWidthKey)
+
+const layoutStore = useLayoutStore()
+const themeStore = useThemeStore()
+
 const dictInfoTableRef = ref<InstanceType<typeof ElTable>>()
 const dictInfoTableLoading = ref(true)
 const dictInfoTableData = ref<ProcessTODOTaskView[]>([])
 
 const dictTableHeight = computed(() => {
-  return `calc(${mainHeight.value} - ${theme.value.mainPadding * 2 + 20}px)`
+  return `calc(${layoutStore.mainHeight} - ${themeStore.mainPadding * 2 + 20}px)`
 })
-
-
-const userInfo = inject<Ref<UserInfo>>(userInfoKey)
 
 function viewProcessList(row: ProcessTODOTaskView) {
   router.push({

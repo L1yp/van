@@ -11,7 +11,7 @@
       <el-form-item prop="name" label="名称" required>
         <el-input v-model="formData.name" />
       </el-form-item>
-      <el-form-item prop="order_no" label="序号" required>
+      <el-form-item prop="order_no" label="序号" required style="margin-bottom: 0">
         <el-input-number v-model="formData.order_no" :controls="false" style="width: 100%" />
       </el-form-item>
     </el-form>

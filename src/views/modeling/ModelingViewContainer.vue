@@ -75,13 +75,13 @@
       <WorkflowInstanceTabsPage :mkey="props.mkey" :instance-id="instanceId" />
     </MaskWindow>
 
-    <VMenu
-      v-click-outside="handleClickMenuOutside"
+    <dropdown-menu
       ref="menuRef"
-      :position="position"
-      :items="items"
-      :user-data="menuUserData"
-      @menu-click="handleMenuClick"
+      v-click-outside="handleClickMenuOutside"
+      @item-click="handleMenuClick"
+      :x="position.x"
+      :y="position.y"
+      :options="items"
     />
 
   </div>
@@ -89,8 +89,8 @@
 
 <script lang="ts" setup>
 import { ElButton, ElSelect, ElOption, ElMessage, ElScrollbar, ElPagination, ElPopover } from 'element-plus'
-import { computed, inject, nextTick, ref, shallowRef, toRaw, onMounted } from 'vue';
-import { Setting } from "@element-plus/icons-vue";
+import { computed, inject, nextTick, ref, shallowRef, toRaw, onMounted, markRaw } from 'vue';
+import { CopyDocument, Setting, View, Edit, Delete, User } from '@element-plus/icons-vue'
 import { useViewApi } from '@/service/modeling/view';
 import { useEntityInstanceApi } from '@/service/modeling/entity';
 import MaskWindow from "@/components/dialog/MaskWindow.vue";
@@ -118,10 +118,11 @@ import * as ViewApi from "@/api/modeling/view";
 import * as OptionApi from "@/api/modeling/option";
 
 import { toTree } from "@/utils/common";
-import { useSystemStore } from "@/store/sys-config";
+import { useThemeStore } from "@/store/theme";
 import { varUserOptions, varDeptOptions } from "@/views/modeling/filter";
-import VMenu from "@/components/menu/VMenu.vue";
-import { MenuType, Point } from "@/components/menu";
+import { MenuOption, MenuType, Point } from "@/components/menu";
+import DropdownMenu from "@/components/menu/DropdownMenu.vue";
+
 
 interface Props {
   module: ModelingModule
@@ -130,7 +131,7 @@ interface Props {
 
 const props = defineProps<Props>()
 
-const store = useSystemStore()
+const store = useThemeStore()
 
 const route = useRoute()
 const router = useRouter()
@@ -391,11 +392,13 @@ const gridOptions: GridOptions = {
     const cellDiv = event.eventPath?.[0] as HTMLDivElement
     if (cellDiv && event.data) {
       const pointEvent = event.event as PointerEvent
-      menuUserData.value = event.value
+
+      contextmenuContext.value = event
+
       position.value.x = pointEvent.clientX
       position.value.y = pointEvent.clientY
 
-      menuRef.value?.showMenu()
+      menuRef.value?.show()
     }
 
   },
@@ -433,22 +436,26 @@ const gridOptions: GridOptions = {
 }
 
 
-const menuRef = ref<InstanceType<typeof VMenu>>()
+const menuRef = ref<InstanceType<typeof DropdownMenu>>()
+const contextmenuContext = shallowRef<CellContextMenuEvent<any>>()
 const position = ref<Point>({
   x: 0, y: 0
 })
-const items = ref<MenuType[]>([
-  { id: '1', text: '复制', keyboard: "", icon: 'CopyDocument', hidden: false },
-  { id: '2', text: '设置', keyboard: "", icon: 'Setting', hidden: false },
+const items = ref<MenuOption[]>([
+  { icon: markRaw(View), text: '查看详情', command: 'view' },
+  { icon: markRaw(CopyDocument), text: '复制', command: 'copy' },
+  { icon: markRaw(Edit), text: '编辑', command: 'edit' },
+  { icon: markRaw(User), text: '转办', command: 'forward' },
+  { icon: markRaw(Delete), text: '删除', command: 'delete' },
+  { icon: markRaw(Setting), text: '设置', command: 'setting' },
 ])
-const menuUserData = ref()
 
-function handleMenuClick(menuItem: MenuType, ev: PointerEvent, userData: any) {
-  console.log('menu item clicked', menuItem, userData);
+function handleMenuClick(option: MenuOption, ev: PointerEvent) {
+  console.log('menu item clicked', option, ev, contextmenuContext.value);
 }
 
 function handleClickMenuOutside() {
-  menuRef.value?.hideMenu()
+  menuRef.value?.hide()
 }
 
 

@@ -16,7 +16,6 @@
         </div>
       </transition>
 
-
       <div
         title="关闭蒙版"
         class="close-mask"
@@ -30,11 +29,11 @@
 </template>
 
 <script lang="ts" setup>
-import { mainHeightKey, mainWidthKey, maskContainerKey } from "@/config/app.keys";
-import {computed, inject, onActivated, onDeactivated, RendererElement} from "vue";
-import { incMaskZIndex } from "./mask";
+import {computed, onDeactivated, RendererElement} from "vue";
 import SVGIcon from "@/components/common/SVGIcon.vue";
 import { ElButton } from 'element-plus'
+import { useLayoutStore } from "@/store/layout";
+import { useThemeStore } from "@/store/theme";
 
 interface Props {
   modelValue: boolean
@@ -56,19 +55,17 @@ const props = withDefaults(defineProps<Props>(), {
   showToolbar: false,
   confirmText: '确定',
   cancelText: '取消',
-  confirmButtonProps: null,
-  cancelButtonProps: null,
 })
 const emits = defineEmits<Emits>()
 
-const maskContainer = inject(maskContainerKey)
-const mainWidth = inject(mainWidthKey)
-const mainHeight = inject(mainHeightKey)
-const zIndex = incMaskZIndex()
+
+const layoutStore = useLayoutStore()
+const themeStore = useThemeStore()
+const zIndex = layoutStore.incrementZIndex()
 
 const rootStyle = computed(() => {
-  const width = mainWidth.value
-  const height = mainHeight.value
+  const width = layoutStore.mainWidth
+  const height = layoutStore.mainHeight
   if (!props.teleportTo) {
     return {
       width,
@@ -84,7 +81,7 @@ const rootStyle = computed(() => {
 })
 
 const toElem = computed(() => {
-  const defaultContainer = maskContainer.value
+  const defaultContainer = layoutStore.maskContainerRef!
   const inputContainer = props.teleportTo
   if (!props.teleportTo) {
     return defaultContainer

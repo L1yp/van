@@ -11,10 +11,9 @@
 </template>
 
 <script lang="ts" setup>
-import { ElIcon } from 'element-plus'
 import { Close } from "@element-plus/icons-vue";
-import {computed, inject, Ref} from "vue";
-import {themeKey} from "@/config/app.keys";
+import { computed, inject, Ref } from "vue";
+import { useThemeStore } from "@/store/theme";
 
 
 
@@ -32,8 +31,8 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const emits = defineEmits<Emits>()
-const theme = inject<Ref<ThemeConfig>>(themeKey)
-const tagItemHeight = computed(() => `${theme.value.tagBarHeight - 1}px`)
+const themeStore = useThemeStore()
+const tagItemHeight = computed(() => `${themeStore.tagBarHeight - 1}px`)
 
 
 </script>

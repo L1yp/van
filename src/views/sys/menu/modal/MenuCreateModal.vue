@@ -6,7 +6,8 @@
     @cancel="visible = false"
     @confirm="handleConfirm"
     @open="handleOpen"
-    append-to-body draggable
+    append-to-body
+    draggable
   >
 
   <el-form :model="formData" label-width="100px" :label-position="deviceType === 'pc' ? 'right' : 'top'" scroll-to-error>
@@ -33,8 +34,6 @@
     </ElRow>
     <component :is="configComponents[formData.type]" :form-data="formData" :menu-tree="props.menuTree" />
   </el-form>
-
-
   </VDialog>
 
 </template>
@@ -82,7 +81,8 @@ const visible = computed<boolean>({
   set: v => emits('update:modelValue', v)
 })
 
-const formData = ref<MenuAddParam | MenuUpdateParam>({
+const formData = ref<any>({
+
   name: '',
   pid: '',
   type: 'PAGE',

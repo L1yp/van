@@ -61,7 +61,7 @@
 </template>
 
 <script lang="ts" setup>
-import {ref, computed, shallowRef, onMounted, inject, onUpdated, toRaw, watch,} from "vue"
+import { ref, computed, shallowRef, onMounted, inject } from "vue"
 import { ElTable, ElTableColumn, ElPopover, ElScrollbar, ElDescriptions, ElDescriptionsItem, ElTag, ElButtonGroup, ElButton } from "element-plus"
 import BpmnViewer from 'bpmn-js/lib/NavigatedViewer'
 import ImportModule from 'bpmn-js/lib/import/index'
@@ -73,14 +73,15 @@ import 'bpmn-js/dist/assets/bpmn-font/css/bpmn-codes.css';
 import 'bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css';
 import 'diagram-js-minimap/assets/diagram-js-minimap.css'
 
-import {asideWidthKey, mainHeightKey, processInstanceDetailInfoKey, themeKey} from "@/config/app.keys";
+import { processInstanceDetailInfoKey } from "@/config/app.keys";
 import * as ProcessModelApi from "@/api/sys/process";
-import {toReadableDuration} from "@/utils/common";
+import { toReadableDuration } from "@/utils/common";
 import { ElementRegistry } from "bpmn-js"
 import UserViewer from "@/components/common/viewer/user/UserViewer.vue";
-import {useIcon} from "@/components/common/util";
-import {InternalEvent} from "diagram-js/lib/core/EventBus";
+import { InternalEvent } from "diagram-js/lib/core/EventBus";
 import SVGIcon from "@/components/common/SVGIcon.vue";
+import { useLayoutStore } from "@/store/layout";
+import { useThemeStore } from "@/store/theme";
 
 
 const canvasRef = shallowRef<HTMLDivElement>()
@@ -362,11 +363,11 @@ defineExpose({
   initViewer
 })
 
-const mainHeight = inject(mainHeightKey);
-const asideWidth = inject(asideWidthKey);
-const theme = inject(themeKey);
+const layoutStore = useLayoutStore()
+const themeStore = useThemeStore()
+
 const contentHeight = computed(() => {
-  return `calc(${mainHeight.value} - ${theme.value.mainPadding * 2 + 42 + 30}px)`
+  return `calc(${layoutStore.mainHeight} - ${themeStore.mainPadding * 2 + 42 + 30}px)`
 })
 
 const tableHeight = 300

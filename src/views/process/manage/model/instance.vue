@@ -60,8 +60,7 @@
 
 <script lang="ts" setup>
 import { useRoute, useRouter } from "vue-router"
-import {computed, inject, onBeforeMount, onBeforeUnmount, onMounted, Ref, ref, toRaw,} from "vue"
-import { asideWidthKey, mainHeightKey, themeKey, } from "@/config/app.keys";
+import {computed, onBeforeMount, Ref, ref, toRaw,} from "vue"
 import {
   ElTable, ElTableColumn, ElButton, ElMessage,
 } from "element-plus"
@@ -71,15 +70,16 @@ import VDialog from "@/components/dialog/VDialog.vue";
 import {getDeviceType} from "@/utils/common";
 import VFormPro from "@/components/form/VFormPro.vue";
 import UserViewer from "@/components/common/viewer/user/UserViewer.vue";
+import { useLayoutStore } from "@/store/layout";
+import { useThemeStore } from "@/store/theme";
 
 
 const route = useRoute()
 const router = useRouter()
 const key = route.query.key as string
 
-const mainHeight = inject(mainHeightKey);
-const theme = inject(themeKey);
-const asideWidth = inject(asideWidthKey)
+
+
 const dictInfoTableRef = ref<InstanceType<typeof ElTable>>()
 const dictInfoTableLoading = ref(true)
 const dictInfoTableData = ref<ProcessInstanceView[]>([])
@@ -90,11 +90,16 @@ const dictInfoTableData = ref<ProcessInstanceView[]>([])
 //   const tableWidth = 850;
 //   return (padding + tableWidth) + "px";
 // })
+
+const layoutStore = useLayoutStore()
+const themeStore = useThemeStore()
+
+
 const dictTableHeight = computed(() => {
-  return `calc(${mainHeight.value} - ${theme.value.mainPadding * 2 + 42 + 20}px)`
+  return `calc(${layoutStore.mainHeight} - ${themeStore.mainPadding * 2 + 42 + 20}px)`
 })
 
-const startPageInfo = ref<ProcessPageInfo>(null)
+const startPageInfo = ref<ProcessPageInfo>()
 async function loadTableData() {
   let param = key as string
   dictInfoTableLoading.value = true
@@ -102,7 +107,7 @@ async function loadTableData() {
     dictInfoTableData.value = await ProcessApi.processInstanceByProcessKey(param)
   } catch (e) {
     console.log(e)
-    ElMessage.error(e?.message || '加载数据失败')
+    ElMessage.error((e as Error)?.message || '加载数据失败')
   } finally {
     dictInfoTableLoading.value = false
   }
@@ -114,7 +119,7 @@ async function loadStartForm() {
     startPageInfo.value = await ProcessApi.getStartFormPage(key)
   } catch (e) {
     console.log(e)
-    ElMessage.error(e?.message || '加载数据失败')
+    ElMessage.error((e as Error)?.message || '加载数据失败')
   } finally {
     dictInfoTableLoading.value = false
   }
@@ -186,7 +191,7 @@ async function handleConfirmCreateProcess() {
     ElMessage.success("创建成功")
   } catch (e) {
     console.error(e)
-    ElMessage.error(e?.message || '创建失败')
+    ElMessage.error((e as Error)?.message || '创建失败')
   } finally {
     visible.value = false
   }

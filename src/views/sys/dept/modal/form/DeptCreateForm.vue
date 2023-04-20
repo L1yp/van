@@ -1,5 +1,5 @@
 <template>
-  <el-form ref="formRef" :model="props.formData" size="default" :label-position="deviceType === 'pc' ? 'right' : 'top'" :label-width="80" v-loading="props.loading">
+  <el-form ref="formRef" :model="props.formData" :label-position="deviceType === 'pc' ? 'right' : 'top'" :label-width="80" v-loading="props.loading">
     <el-row>
       <el-col :span="12" :xs="24">
         <el-form-item label="名称" prop="title" required>
@@ -85,7 +85,7 @@ const userMap = inject(userMapKey)
 
 const formRef = ref<InstanceType<typeof ElForm>>()
 function validateForm() {
-  return formRef.value.validate()
+  return formRef.value?.validate()
 }
 
 defineExpose({

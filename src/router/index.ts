@@ -2,6 +2,8 @@ import {createRouter, createWebHistory, RouteLocation, RouteRecordRaw,} from 'vu
 import {read} from "@/utils/storage"
 import {Component, App, toRaw} from "vue";
 import {findTreeItemById} from "@/utils/common";
+import { getFileNameFromPath } from "@/utils/common/file";
+import { useKeepAliveStore } from "@/store/keep-alive";
 
 const Layout: Component = () => import("../layouts/TopLeft.vue");
 
@@ -24,16 +26,7 @@ for (const key of keys) {
 }
 
 console.log('staticModuleRoutes', staticModuleRoutes)
-staticModuleRoutes.push({
-  path: '/redirect',
-  redirect: (to: RouteLocation) => {
-    console.log('redirect route', to.query.url)
-    const targetUrl = decodeURIComponent(to.query.url as string)
-    const search = new URLSearchParams(targetUrl)
-    console.log('redirect search', search)
-    return to.query.url as string
-  }
-})
+
 
 /**
  * 路由映射视图文件
@@ -123,9 +116,12 @@ export function installLayoutContentRoute(menuOptions: MenuView[]) {
   removeRouteHandles.push(redirectHandle);
   const layoutHandle = router.addRoute(layoutRoute);
   removeRouteHandles.push(layoutHandle);
-  console.log('after install routes', router.getRoutes());
+  const routes = router.getRoutes();
+  const keepAliveNames = routes.filter(it => !!it.meta.keepAlive).map(it => it.meta.componentName)
+  const store = useKeepAliveStore()
+  store.init(keepAliveNames)
 
-
+  console.log('after install routes', routes);
 }
 
 let removeRouteHandles: Array<Function> = [];
@@ -149,19 +145,24 @@ function transMenuToRoute(options: MenuView[]) {
         parentNode = findTreeItemById(options, 'id', parentNode.pid)
       }
 
-      let icon = parentNode?.icon || null
+      let icon = parentNode?.icon || undefined
 
       const child: RouteRecordRaw = {
         path: menuOption.path,
         name: menuOption.name,
         component: routeToView(menuOption.component),
         redirect: "",
-        props: route => ({ ...route.query }),
+        // props: route => ({ ...route.query }),
         meta: {
-          ...toRaw(menuOption),
           icon,
+          title: menuOption.name,
+          componentName: getFileNameFromPath(menuOption.component)!,
+          keepAlive: true,
+          closeable: menuOption.closeable,
+          menuOption: menuOption,
         }
       }
+      child.props = route => ({ ...route.query })
       layoutRoute.children?.push(child)
 
 

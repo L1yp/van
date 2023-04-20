@@ -1,13 +1,13 @@
 <template>
   <div class="aside-header">
     <img src="/favicon.ico" alt="logo" style="width: 30px; height: 30px;" />
-    <span style="font-size: 20px" v-if="asideOpened">Admin</span>
+    <span style="font-size: 20px" v-if="layoutStore.asideOpened">Admin</span>
   </div>
   <div class="menu-wrapper">
     <el-scrollbar height="100%">
       <el-menu
           :default-active="route.path"
-          :collapse="!asideOpened"
+          :collapse="!layoutStore.asideOpened"
           :collapse-transition="false"
           :router="true"
       >
@@ -21,23 +21,20 @@
 
 <script lang="ts" setup>
 import { inject, computed } from "vue"
-import SVGIcon from "@/components/common/SVGIcon.vue"
 import { ElMenu, ElScrollbar } from "element-plus";
 import NestedMenu from "./NestedMenu.vue";
 import { useRoute } from "vue-router";
-import { asideOpenedKey, menuOptionsKey, themeKey } from "@/config/app.keys";
+import { menuOptionsKey } from "@/config/app.keys";
+import { useThemeStore } from "@/store/theme";
+import { useLayoutStore } from "@/store/layout";
 
 const route = useRoute();
 const menuOptions = inject(menuOptionsKey)
 
-const theme = inject(themeKey)
+const layoutStore = useLayoutStore()
+const themeStore = useThemeStore()
 
-/**
- * 是否展开菜单侧边栏
- */
-const asideOpened = inject(asideOpenedKey)
-
-const headerHeight = computed(() => `${theme.value.headerHeight}px`)
+const headerHeight = computed(() => `${themeStore.headerHeight}px`)
 
 </script>
 

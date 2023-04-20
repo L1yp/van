@@ -1,5 +1,6 @@
 import TagBar from "./TagBar.vue"
 import Tag from "./TagItem.vue"
+import { Component } from "vue";
 
 export interface TagInfo {
   path: string
@@ -7,7 +8,7 @@ export interface TagInfo {
   title: string
   active: boolean
   close: boolean
-  icon: string
+  icon?: string | Component
 }
 
 export {Tag, TagBar}

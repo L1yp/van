@@ -1,12 +1,12 @@
 <template>
   <el-row>
     <el-col :span="12" :xs="24">
-      <el-form-item label="名称" prop="name">
+      <el-form-item label="名称" prop="name" required>
         <el-input v-model="formData.name" />
       </el-form-item>
     </el-col>
     <ElCol :span="12" :xs="24">
-      <ElFormItem label="序号" prop="order_no">
+      <ElFormItem label="序号" prop="order_no" required>
         <ElInputNumber v-model="formData.order_no" style="width: 100%"></ElInputNumber>
       </ElFormItem>
     </ElCol>
@@ -28,22 +28,22 @@
       </el-form-item>
     </el-col>
     <el-col :span="12" :xs="24">
-      <el-form-item label="路由" prop="path">
+      <el-form-item label="路由" prop="path" required>
         <el-input v-model="props.formData.path"></el-input>
       </el-form-item>
     </el-col>
     <el-col :span="12" :xs="24">
-      <el-form-item label="组件" prop="component">
+      <el-form-item label="组件" prop="component" required>
         <el-input v-model="props.formData.component"></el-input>
       </el-form-item>
     </el-col>
     <el-col :span="12" :xs="24">
-      <el-form-item label="可关闭" prop="closeable">
+      <el-form-item label="可关闭" prop="closeable" required>
         <DictInput v-model="props.formData.closeable" :ident="YESNO" />
       </el-form-item>
     </el-col>
     <el-col :span="12" :xs="24">
-      <el-form-item label="状态" prop="state">
+      <el-form-item label="状态" prop="state" required>
         <DictInput v-model="props.formData.state" :ident="STATUS" />
       </el-form-item>
     </el-col>
