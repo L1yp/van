@@ -50,7 +50,7 @@
         >
           <s-v-g-icon class="close-icon" name="close" style="width: 16px; height: 16px; position: absolute; left: 10px; top: 4px"></s-v-g-icon>
         </div>
-        <div :ref="layoutStore.maskContainerRef" style="position: absolute; top: 0; left: 0; width: 100%;"></div>
+        <div ref="maskContainerRef" style="position: absolute; top: 0; left: 0; width: 100%;"></div>
       </el-main>
       <el-footer :style="layoutStore.pageScreen ? { display: 'none' } : undefined"></el-footer>
     </el-container>
@@ -58,7 +58,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, provide, Ref, ref } from "vue"
+import { computed, onMounted, provide, Ref, ref } from "vue"
 import { ElContainer, ElHeader, ElAside, ElMain, ElFooter, ElDrawer } from "element-plus"
 import {HeaderBar} from "./components/header"
 import {AsideBar} from "./components/aside"
@@ -79,6 +79,11 @@ const keepAliveStore = useKeepAliveStore()
 
 const deviceType = getDeviceType()
 console.log('deviceType', deviceType);
+
+const maskContainerRef = ref<HTMLDivElement>()
+onMounted(() => {
+  layoutStore.maskContainerRef = maskContainerRef.value!
+})
 
 </script>
 
