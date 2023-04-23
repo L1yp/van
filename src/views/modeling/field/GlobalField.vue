@@ -4,15 +4,15 @@
       <el-button type="primary" plain :icon="Plus" @click="handleAdd">新增</el-button>
       <span style="color: red; font-weight: bold; margin-left: 10px;">右键编辑字段</span>
     </div>
-    <el-tabs v-model="store.scope" type="border-card" style="width: 100%; height: calc(100% - 32px - 12px);">
+    <el-tabs model-value="ENTITY_DEFAULT" type="border-card" style="width: 100%; height: calc(100% - 32px - 12px);">
       <el-tab-pane name="ENTITY_DEFAULT" label="实体默认字段">
-        <FieldTable @edit="row => handleEditField('ENTITY_DEFAULT', row)" @delete="row => handleDeleteField('ENTITY_DEFAULT', row)" :loading="loading" :data="defaultEntityFields" />
+        <FieldTableAgGrid @edit="row => handleEditField('ENTITY_DEFAULT', row)" @delete="row => handleDeleteField('ENTITY_DEFAULT', row)" :loading="loading" :data="defaultEntityFields" />
       </el-tab-pane>
       <el-tab-pane name="WORKFLOW_DEFAULT" label="流程默认字段">
-        <FieldTable @edit="row => handleEditField('WORKFLOW_DEFAULT', row)" @delete="row => handleDeleteField('WORKFLOW_DEFAULT', row)" :loading="loading" :data="defaultWorkflowFields" />
+        <FieldTableAgGrid @edit="row => handleEditField('WORKFLOW_DEFAULT', row)" @delete="row => handleDeleteField('WORKFLOW_DEFAULT', row)" :loading="loading" :data="defaultWorkflowFields" />
       </el-tab-pane>
       <el-tab-pane name="GLOBAL" label="全局字段">
-        <FieldTable @edit="row => handleEditField('GLOBAL', row)" @delete="row => handleDeleteField('GLOBAL', row)" :loading="loading" :data="globalFields" />
+        <FieldTableAgGrid @edit="row => handleEditField('GLOBAL', row)" @delete="row => handleDeleteField('GLOBAL', row)" :loading="loading" :data="globalFields" />
         <div id="field-container"></div>
       </el-tab-pane>
     </el-tabs>
@@ -35,6 +35,7 @@ import FieldAddPanel from "./FieldAddPanel.vue";
 import FieldUpdatePanel from "./FieldUpdatePanel.vue";
 import { useModelingFieldApi } from "@/service/modeling/field";
 import {useFieldStore} from "@/store/field-config";
+import FieldTableAgGrid from "@/views/modeling/field/FieldTableAgGrid.vue";
 
 const store = useFieldStore()
 

@@ -2,7 +2,10 @@
   <VDialog
     v-model="visible"
     :title="props.mode === 'create' ? '创建角色' : '更新角色'"
-    width="600px"
+    :width="deviceType === 'h5' ? '360px' : '720px'"
+    :full-screen="deviceType === 'h5'"
+    :fixed-body-height="deviceType === 'h5'"
+    :use-body-scrolling="deviceType !== 'h5'"
     @cancel="visible = false"
     @confirm="handleConfirm"
     @open="handleOpen"

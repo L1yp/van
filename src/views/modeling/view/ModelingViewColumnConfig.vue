@@ -221,7 +221,6 @@ const targetGridOptions: GridOptions<ModelingViewColumnParam> = {
         console.error('find row index fail', event)
         return
       }
-      const srcRows: ModelingFieldDefView[] = event.nodes.map(it => it.data!)
       event.api.applyTransaction({
         addIndex: rowIdx,
         remove: [ srcRow ],
@@ -230,10 +229,10 @@ const targetGridOptions: GridOptions<ModelingViewColumnParam> = {
 
       // @ts-ignore
       console.log('target grid data', event.api.getModel().rootNode.childrenAfterGroup.map(it => it.data))
-      // @ts-ignore
-      props.formData.columns = event.api.getModel().rootNode.childrenAfterGroup.map(it => it.data)
-    }
 
+    }
+    // @ts-ignore
+    props.formData.columns = event.api.getModel().rootNode.childrenAfterGroup.map(it => it.data)
 
   }
 }

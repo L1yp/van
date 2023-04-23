@@ -2,8 +2,10 @@
   <v-dialog
     v-model="visible"
     :title="props.mode === 'create' ? '创建部门' : '更新部门'"
-    :width="deviceType === 'h5' ? '360px' : '720px'"
-    draggable
+    width="720px"
+    :full-screen="deviceType === 'h5'"
+    :fixed-body-height="deviceType === 'h5'"
+    use-body-scrolling
     :disable-footer="loading"
     @cancel="visible = false"
     @confirm="handleConfirm"
@@ -87,17 +89,17 @@ function handleConfirm() {
   promise
   .then(_ => emits('confirm'))
   .then(_ => visible.value = false)
-  
+
   .catch(e => ElMessage.error((e as Error)?.message || '请检查表单项'))
-  
+
 }
 
 function handleOpen() {
   if (props.mode === 'update') {
     Object.assign(updateFormData.value, props.initData)
-    
+
     console.log('update form', toRaw(updateFormData.value));
-    
+
   } else {
     createFormData.value = {
       title: '',

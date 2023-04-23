@@ -7,7 +7,7 @@
   </div>
 
   <div style="display: flex; justify-content: flex-end; align-items: center; gap: 10px;">
-    <el-dropdown :hide-on-click="false" @command="handleCommand">
+    <el-dropdown class="header-github__icon" :hide-on-click="false" @command="handleCommand">
       <span class="el-dropdown-link">
         <el-avatar
           shape="circle"
@@ -46,7 +46,7 @@
         </el-dropdown-menu>
       </template>
     </el-dropdown>
-    <div style="margin-left: 5px;" v-text="userInfo.nickname"></div>
+    <div class="header-profile__nick" style="" v-text="userInfo.nickname"></div>
   </div>
 </template>
 
@@ -100,5 +100,20 @@ function handleCommand(command: string) {
 </script>
 
 <style scoped>
+
+.header-profile__nick {
+  margin-left: 5px;
+}
+
+@media screen and (max-width: 450px) {
+  .header-profile__nick {
+    margin-left: 0;
+    display: none;
+  }
+
+  .header-github__icon {
+    display: none;
+  }
+}
 
 </style>

@@ -250,35 +250,29 @@ function handleRowClick(row: UserInfo) {
   height: 32px;
 }
 
-.data-table {
-  box-sizing: border-box;
-  margin-top: 10px;
-  width: v-bind(dataTableWidth)
-}
+/*:deep(thead.is-group .floating-filter.el-table__cell) {*/
+/*  padding: 0;*/
+/*}*/
 
-:deep(thead.is-group .floating-filter.el-table__cell) {
-  padding: 0;
-}
+/*:deep(thead.is-group .floating-filter.el-table__cell div.cell) {*/
+/*  padding: 2px;*/
+/*}*/
 
-:deep(thead.is-group .floating-filter.el-table__cell div.cell) {
-  padding: 2px;
-}
+/*:deep(thead.is-group .floating-filter-header-row .el-table__cell) {*/
+/*  padding: 0;*/
+/*}*/
 
-:deep(thead.is-group .floating-filter-header-row .el-table__cell) {
-  padding: 0;
-}
+/*:deep(.el-table thead.is-group th.el-table__cell) {*/
+/*  background: transparent;*/
+/*  border-right: none;*/
+/*}*/
 
-:deep(.el-table thead.is-group th.el-table__cell) {
-  background: transparent;
-  border-right: none;
-}
+/*:deep(table.el-table__header thead.is-group tr) {*/
+/*  background: linear-gradient(to right, #ACB6E5, #74ebd5);*/
+/*}*/
 
-:deep(table.el-table__header thead.is-group tr) {
-  background: linear-gradient(to right, #ACB6E5, #74ebd5);
-}
-
-:deep(.el-table thead) {
-  color: #FFFFFF;
-}
+/*:deep(.el-table thead) {*/
+/*  color: #FFFFFF;*/
+/*}*/
 
 </style>

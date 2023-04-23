@@ -25,7 +25,7 @@
           <el-button :icon="Minus" @click="handleClickRemove(item)" circle style="margin-left: 0"/>
           <el-select v-model="item.field" style="width: calc(100% - 96px);">
             <el-option
-              v-for="item in props.fields"
+              v-for="item in props.formData.columns?.map(it => it.field)"
               :key="item.id"
               :label="item.label"
               :value="item.field"

@@ -10,6 +10,7 @@
         row-key="id"
         :row-style="{ cursor: 'pointer' }"
         @row-click="handleRowClick"
+        size="small"
       >
         <el-table-column>
           <el-table-column type="index" label="#" width="50" align="center" header-align="center" />
@@ -64,8 +65,11 @@
       @confirm="handleConfirm"
       @cancel="permissionPanelVisible = false"
       destroy-on-close
+      :full-screen="deviceType === 'h5'"
+      :fixed-body-height="deviceType === 'h5'"
+      :use-body-scrolling="deviceType !== 'h5'"
     >
-      <expression-editor ref="editorRef" :role-id="props.roleId" module="ENTITY" :mkey="srcRow?.mkey" />
+      <expression-editor ref="editorRef" :role-id="props.roleId" module="ENTITY" :mkey="srcRow!.mkey" />
     </v-dialog>
   </div>
 </template>
@@ -78,6 +82,7 @@ import UserSelectorInput from '@/components/common/selector/user/UserSelectorInp
 import VDialog from "@/components/dialog/VDialog.vue";
 import ExpressionEditor from "@/components/permission/editor/ExpressionEditor.vue";
 import {useModelingPermissionApi} from "@/service/modeling/permission";
+import { getDeviceType } from "@/utils/common";
 
 interface Props {
   roleId: string
@@ -85,6 +90,7 @@ interface Props {
 
 const props = defineProps<Props>()
 
+const deviceType = getDeviceType()
 const loading = ref<boolean>(false)
 const param = ref<Partial<ModelingEntityFindParam>>({
   pageIdx: 1,

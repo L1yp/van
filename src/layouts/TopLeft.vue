@@ -2,7 +2,7 @@
   <el-container>
     <template v-if="deviceType === 'h5'">
       <el-drawer
-        custom-class="aside-menu-drawer"
+        class="aside-menu-drawer"
         :size="200"
         :with-header="false"
         v-model="layoutStore.asideOpened"
@@ -58,18 +58,18 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, provide, Ref, ref } from "vue"
+import { onMounted, ref, watch, watchEffect } from "vue"
 import { ElContainer, ElHeader, ElAside, ElMain, ElFooter, ElDrawer } from "element-plus"
 import {HeaderBar} from "./components/header"
 import {AsideBar} from "./components/aside"
 import {TagBar} from "./components/tag"
 import {RouterView} from "vue-router"
 import SVGIcon from "@/components/common/SVGIcon.vue";
-import {incMaskZIndex} from "@/components/dialog/mask";
 import { getDeviceType } from "@/utils/common"
 import { useKeepAliveStore } from "@/store/keep-alive";
-import { useLayoutStore } from "@/store/layout";
+import { useLayoutStore, width } from "@/store/layout";
 import { useThemeStore } from "@/store/theme";
+
 
 const mode = import.meta.env.MODE
 
@@ -79,6 +79,12 @@ const keepAliveStore = useKeepAliveStore()
 
 const deviceType = getDeviceType()
 console.log('deviceType', deviceType);
+watch(deviceType, (newVal, oldVal) => {
+  console.log('watch deviceType===================================', newVal, oldVal)
+  if (newVal === 'h5') {
+    layoutStore.asideOpened = false
+  }
+}, { immediate: true })
 
 const maskContainerRef = ref<HTMLDivElement>()
 onMounted(() => {

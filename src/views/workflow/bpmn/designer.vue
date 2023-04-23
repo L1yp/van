@@ -62,8 +62,8 @@ import {useModelingFieldApi} from "@/service/modeling/field";
 import emitter from "@/event/mitt";
 import XmlEditor from "@/components/common/XmlEditor.vue";
 import {useModelingPageApi} from "@/service/modeling/page";
-import {ElementRegistry, ModdleElement} from "bpmn-js";
-import { validate, BpmnLintError } from './bpmnlint'
+import { ElementRegistry } from 'diagram-js/lib/core/ElementRegistry'
+import { validate } from './bpmnlint'
 
 const SaveIcon = useIcon('Save')
 
@@ -235,10 +235,6 @@ div {
   border-bottom: 1px solid var(--el-border-color);
 }
 
-:deep(.layer-selectionOutline) {
-  display: none;
-}
-
 :deep(.djs-minimap) {
   top: initial;
   right: initial;
@@ -253,37 +249,43 @@ div {
   width: 200px;
 }
 
-:deep(g.djs-element.djs-shape g.djs-visual circle) {
-  fill: var(--el-bg-color) !important;
-  stroke: var(--el-border-color)!important;
-}
+/*:deep(.layer-selectionOutline) {*/
+/*  display: none;*/
+/*}*/
 
-:deep(g.djs-element.djs-shape g.djs-visual rect) {
-  fill: var(--el-bg-color) !important;
-  stroke: var(--el-border-color)!important;
-}
 
-:deep(g.djs-element.djs-shape g.djs-visual polygon) {
-  fill: var(--el-bg-color) !important;
-  stroke: var(--el-border-color)!important;
-}
 
-:deep(g.djs-element.djs-shape g.djs-visual polygon ~ path) {
-  fill: var(--el-bg-color) !important;
-  stroke: var(--el-border-color)!important;
-}
+/*:deep(g.djs-element.djs-shape g.djs-visual circle) {*/
+/*  fill: var(--el-bg-color) !important;*/
+/*  stroke: var(--el-border-color)!important;*/
+/*}*/
 
-:deep(.djs-context-pad .entry) {
-  background-color: var(--el-bg-color);
-}
+/*:deep(g.djs-element.djs-shape g.djs-visual rect) {*/
+/*  fill: var(--el-bg-color) !important;*/
+/*  stroke: var(--el-border-color)!important;*/
+/*}*/
 
-:deep(g.djs-element.djs-shape g.djs-visual text) {
-  fill: var(--el-text-color-regular) !important;
-}
+/*:deep(g.djs-element.djs-shape g.djs-visual polygon) {*/
+/*  fill: var(--el-bg-color) !important;*/
+/*  stroke: var(--el-border-color)!important;*/
+/*}*/
 
-:deep(g.djs-element.djs-connection g.djs-visual path) {
-  stroke: var(--el-border-color) !important;
-}
+/*:deep(g.djs-element.djs-shape g.djs-visual polygon ~ path) {*/
+/*  fill: var(--el-bg-color) !important;*/
+/*  stroke: var(--el-border-color)!important;*/
+/*}*/
+
+/*:deep(.djs-context-pad .entry) {*/
+/*  background-color: var(--el-bg-color);*/
+/*}*/
+
+/*:deep(g.djs-element.djs-shape g.djs-visual text) {*/
+/*  fill: var(--el-text-color-regular) !important;*/
+/*}*/
+
+/*:deep(g.djs-element.djs-connection g.djs-visual path) {*/
+/*  stroke: var(--el-border-color) !important;*/
+/*}*/
 
 
 </style>

@@ -1,8 +1,8 @@
 <template>
   <div style="width: 100%; height: 100%;">
-    <div style="height: 32px">
+    <div style="height: 32px; display: flex">
       <el-button :icon="Plus" type="primary" @click="handleAdd">新增</el-button>
-      <span style="color: red; font-weight: bold; margin-left: 10px;">双击进入配置(双击流程版本设计流程图)</span>
+      <div style="white-space: nowrap; color: red; font-weight: bold; margin-left: 10px; overflow-x: scroll; display: inline-flex; align-items: center">双击进入配置(双击流程版本设计流程图)</div>
     </div>
     <div style="width: 100%; height: calc(100% - 32px - 10px - 36px); margin-top: 10px;">
       <el-table
@@ -15,6 +15,7 @@
         :tree-props="{ children: 'children' }"
         :row-style="{ cursor: 'pointer' }"
         @row-dblclick="handleRowDbClick"
+        size="small"
       >
         <el-table-column>
           <el-table-column type="index" label="#" width="50" align="center" header-align="center" />

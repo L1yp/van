@@ -24,18 +24,18 @@ interface MenuParamBase {
   remark?: string
 }
 
-interface FolderParam extends MenuParamBase {
+interface FolderMenuParam extends MenuParamBase {
   icon?: string
 }
 
-interface PageParam extends MenuParamBase {
+interface PageMenuParam extends MenuParamBase {
   icon?: string
   path: string
   component: string
   closeable: boolean
 }
 
-interface WorkflowParam extends MenuParamBase {
+interface WorkflowMenuParam extends MenuParamBase {
   /**
    * 流程标识
    */
@@ -43,7 +43,7 @@ interface WorkflowParam extends MenuParamBase {
   pid: string
 }
 
-interface ButtonParam extends MenuParamBase {
+interface ButtonMenuParam extends MenuParamBase {
   /**
    * 权限标识
    */
@@ -52,10 +52,10 @@ interface ButtonParam extends MenuParamBase {
 }
 
 
-declare type MenuParam<T extends MenuType> = T extends 'FOLDER' ? FolderParam :
-  T extends ('TAB' | 'PAGE') ? PageParam :
-  T extends 'WORKFLOW' ? WorkflowParam :
-  T extends 'BUTTON' ? ButtonParam :
+declare type MenuParam<T extends MenuType> = T extends 'FOLDER' ? FolderMenuParam :
+  T extends ('TAB' | 'PAGE') ? PageMenuParam :
+  T extends 'WORKFLOW' ? WorkflowMenuParam :
+  T extends 'BUTTON' ? ButtonMenuParam :
     MenuParamBase
 
 

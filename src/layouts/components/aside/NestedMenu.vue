@@ -61,4 +61,8 @@ const props = defineProps<Props>()
   z-index: 9999;
 }
 
+.el-sub-menu {
+  position: relative;
+}
+
 </style>

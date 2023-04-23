@@ -61,8 +61,8 @@
         </div>
         <div style="width: 100%; height: calc(100% - 32px - 1px - 12px - 10px); margin-top: 10px">
           <el-scrollbar always>
-            <v-form-render v-if="viewerMode" :scheme="viewPageInfo.page_scheme" :form-data="instanceInfo || {}" />
-            <v-form-render v-if="!viewerMode" ref="updateFormRenderRef" :scheme="updatePageInfo.page_scheme" :form-data="instanceInfo || {}" />
+            <v-form-render v-if="viewerMode" :scheme="viewPageInfo!.page_scheme" :form-data="instanceInfo || {}" />
+            <v-form-render v-if="!viewerMode" ref="updateFormRenderRef" :scheme="updatePageInfo!.page_scheme" :form-data="instanceInfo || {}" />
           </el-scrollbar>
         </div>
       </div>
@@ -120,8 +120,9 @@ import * as OptionApi from "@/api/modeling/option";
 import { toTree } from "@/utils/common";
 import { useThemeStore } from "@/store/theme";
 import { varUserOptions, varDeptOptions } from "@/views/modeling/filter";
-import { MenuOption, MenuType, Point } from "@/components/menu";
+import { MenuOption, Point } from "@/components/menu";
 import DropdownMenu from "@/components/menu/DropdownMenu.vue";
+import Clipboard from "clipboard";
 
 
 interface Props {
@@ -404,21 +405,7 @@ const gridOptions: GridOptions = {
   },
   onCellDoubleClicked(event: CellDoubleClickedEvent<any>) {
     if (!event.data) return;
-    if (props.module === 'ENTITY') {
-      if (!viewPageInfo.value?.page_scheme) {
-        ElMessage.error(`请先配置一个查询页面`)
-        return
-      }
-      const row = event.data
-      loading.value = true
-      getInstance({ mkey: props.mkey, id: row.id })
-        .then(() => (viewPanelVisible.value = true, viewerMode.value = true))
-        .finally(() => loading.value = false)
-    } else if (props.module === 'WORKFLOW') {
-      instanceId.value = event.data.process_instance_id
-      instanceVisible.value = true
-      // router.push(`/workflow/instance/${props.mkey}/${params.row.process_instance_id}`)
-    }
+    gotoSummaryPage(event.data)
   },
   onSortChanged(event: SortChangedEvent<any>) {
     const states = event.columnApi.getColumnState();
@@ -435,6 +422,22 @@ const gridOptions: GridOptions = {
   preventDefaultOnContextMenu: true,
 }
 
+function gotoSummaryPage(row: any) {
+  if (props.module === 'ENTITY') {
+    if (!viewPageInfo.value?.page_scheme) {
+      ElMessage.error(`请先配置一个查询页面`)
+      return
+    }
+    loading.value = true
+    getInstance({ mkey: props.mkey, id: row.id })
+      .then(() => (viewPanelVisible.value = true, viewerMode.value = true))
+      .finally(() => loading.value = false)
+  } else if (props.module === 'WORKFLOW') {
+    instanceId.value = row.process_instance_id as string
+    instanceVisible.value = true
+    // router.push(`/workflow/instance/${props.mkey}/${params.row.process_instance_id}`)
+  }
+}
 
 const menuRef = ref<InstanceType<typeof DropdownMenu>>()
 const contextmenuContext = shallowRef<CellContextMenuEvent<any>>()
@@ -452,6 +455,27 @@ const items = ref<MenuOption[]>([
 
 function handleMenuClick(option: MenuOption, ev: PointerEvent) {
   console.log('menu item clicked', option, ev, contextmenuContext.value);
+  if (option.command === 'view') {
+    gotoSummaryPage(contextmenuContext.value?.data!)
+  }
+  else if (option.command === 'copy') {
+    let value: string | undefined = undefined
+    if (contextmenuContext.value?.column.getColDef().valueFormatter) {
+      // @ts-ignore
+      value = contextmenuContext.value?.column.getColDef().valueFormatter({ value: contextmenuContext.value?.value })
+      console.log('formattedValue=====================', value)
+    } else {
+      value = contextmenuContext.value?.value
+    }
+    !! value && Clipboard.copy(value)
+
+    !!value && ElMessage.success(`复制成功: ${value}`)
+
+  }
+  else if (option.command === 'edit') {
+    viewerMode.value = false
+    viewPanelVisible.value = true
+  }
 }
 
 function handleClickMenuOutside() {
@@ -563,9 +587,4 @@ async function handleConfigView() {
   background-color: var(--el-menu-hover-bg-color);
 }
 
-</style>
-<style>
-.menu-popover.el-popover.el-popper {
-  padding: 0;
-}
 </style>

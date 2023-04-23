@@ -3,17 +3,22 @@
     v-model="visible"
     title="绑定菜单及权限"
     :width="deviceType === 'h5' ? '360px' : '720px'"
+    :full-screen="deviceType === 'h5'"
+    fixed-body-height
+    :use-body-scrolling="false"
     @opened="handleOpened"
     @cancel="visible = false"
     @confirm="emits('confirm', tableRef.getSelectionRows())"
   >
     <el-table
       ref="tableRef"
+      height="100%"
       v-loading="loading"
       :data="props.menuOptions"
       :tree-props="{ children: 'children' }"
       row-key="id"
       border stripe default-expand-all
+      scrollbar-always-on
       :row-style="{ cursor: 'pointer' }"
       @row-click="handleRowClick"
     >
@@ -57,13 +62,13 @@ const tableRef = ref<InstanceType<typeof ElTable>>()
 const loading = ref<boolean>(false)
 
 function handleOpened() {
-  tableRef.value.clearSelection()
+  tableRef.value?.clearSelection()
   if (props.selectIds?.length) {
     loading.value = true
 
     for (let selectId of props.selectIds) {
       const row = findTreeItemById(props.menuOptions, 'id', selectId)
-      row && tableRef.value.toggleRowSelection(row, true)
+      row && tableRef.value?.toggleRowSelection(row, true)
     }
 
     loading.value = false
@@ -75,12 +80,13 @@ function handleRowClick(row: MenuView) {
   if(!['TAB', 'PAGE', 'BUTTON', 'WORKFLOW', 'ENTITY'].includes(row.type)) {
     return
   }
-  const rows: MenuView[] = tableRef.value.getSelectionRows()
+  const rows: MenuView[] = tableRef.value?.getSelectionRows()
   if (!rows.includes(row)) {
     const result = getTreeItemPath(props.menuOptions, 'id', row.id)
-    result.forEach(it => tableRef.value.toggleRowSelection(it, true))
+    result.forEach(it => tableRef.value?.toggleRowSelection(it, true))
   } else {
-    tableRef.value.toggleRowSelection(row, undefined)
+    // @ts-ignore
+    tableRef.value?.toggleRowSelection(row, undefined)
   }
 
 }

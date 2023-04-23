@@ -15,6 +15,7 @@
         row-key="id"
         :row-style="{ cursor: 'pointer' }"
         @row-dblclick="handleRowDbClick"
+        size="small"
       >
         <el-table-column>
           <el-table-column type="index" label="#" width="50" align="center" header-align="center" />

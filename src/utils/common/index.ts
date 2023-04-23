@@ -1,35 +1,26 @@
 import { computed, ComputedRef } from 'vue';
-import { useWindowSize } from "@vueuse/core"
+import { useWindowSize } from "@vueuse/core";
 
 type Device = 'pc' | 'h5' | 'pad'
 
-const { width } = useWindowSize()
+const { width, height } = useWindowSize()
+
+export { width, height }
 
 export function getDeviceType(): ComputedRef<Device> {
   return computed(() => {
-    console.log('width device', width.value);
-
     if (width.value < 425) {
+      console.log('width device', width.value);
       return 'h5'
     }
     if (width.value < 768) {
+      console.log('width device', width.value);
       return 'pad'
     } else {
+      console.log('width device', width.value);
       return 'pc'
     }
   })
-
-  // const ua = navigator.userAgent
-  // if (ua.indexOf('Windows NT') > -1) {
-  //   return 'pc'
-  // }
-  // if (ua.indexOf('iPhone') > -1 || ua.indexOf('Android') > -1) {
-  //   return 'h5'
-  // }
-  // if (ua.indexOf('iPad') > -1) {
-  //   return 'pad'
-  // }
-  // return null
 }
 
 

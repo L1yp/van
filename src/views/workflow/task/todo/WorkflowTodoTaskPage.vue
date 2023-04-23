@@ -5,6 +5,8 @@
         border stripe
         :data="todoTaskPage.data"
         @row-dblclick="handleDblClick"
+        height="100%"
+        size="small"
       >
         <el-table-column type="index" label="#" width="50" align="center" header-align="center" :resizable="false" />
         <el-table-column prop="workflow_type" label="流程类型" width="120" align="center" header-align="center" show-tooltip-when-overflow>

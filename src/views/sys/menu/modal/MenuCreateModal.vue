@@ -2,15 +2,15 @@
   <VDialog
     v-model="visible"
     :title="props.mode === 'create' ? '创建菜单' : '更新菜单'"
-    :width="deviceType === 'h5' ? '360px' : '720px' "
     @cancel="visible = false"
     @confirm="handleConfirm"
     @open="handleOpen"
-    append-to-body
-    draggable
+    width="720px"
+    :full-screen="deviceType === 'h5'"
+    :fixed-body-height="deviceType === 'h5'"
+    use-body-scrolling
   >
-
-  <el-form :model="formData" label-width="100px" :label-position="deviceType === 'pc' ? 'right' : 'top'" scroll-to-error>
+    <el-form :model="formData" label-width="100px" :label-position="deviceType === 'pc' ? 'right' : 'top'" scroll-to-error>
     <ElRow>
       <ElCol :span="24">
         <ElFormItem label="类型" prop="type" v-if="deviceType === 'pc'">

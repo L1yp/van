@@ -3,6 +3,7 @@
     v-model="visible"
     :fullscreen="fullScreen"
     :show-close="false"
+    :draggable="draggable"
     :class="!!fixedBodyHeight ? null : 'flex-body'"
     v-bind="$attrs"
   >
@@ -74,6 +75,8 @@ interface Props {
    * 固定对话框body高度
    */
   fixedBodyHeight?: boolean
+
+  draggable?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -82,6 +85,7 @@ const props = withDefaults(defineProps<Props>(), {
   disableFooter: false,
   useBodyScrolling: true,
   fixedBodyHeight: false,
+  draggable: true,
 })
 
 if (props.showFullScreen && props.fullScreen === undefined) {

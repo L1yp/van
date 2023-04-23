@@ -3,14 +3,14 @@ import { getDeviceType } from "@/utils/common";
 import { useThemeStore } from "@/store/theme";
 import { TagInfo } from "@/layouts/components/tag";
 
-
 const deviceType = getDeviceType()
-const theme = useThemeStore()
 
 let startIndex = 1000
 function incPageFullScreenZIndex() {
   return ++startIndex
 }
+
+const theme = useThemeStore()
 
 export const useLayoutStore = defineStore('layout', {
   state: () => ({
@@ -24,7 +24,7 @@ export const useLayoutStore = defineStore('layout', {
   getters: {
     asideWidth(state): string {
       if (deviceType.value === 'h5') {
-        return '0'
+        return '0px'
       }
       return this.asideOpened ? `${theme.asideWidth}px` : '64px'
     },
