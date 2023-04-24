@@ -312,8 +312,9 @@ defineExpose({
   stroke: red !important;
 }
 
-:deep(.highlight-red.djs-connection path) {
+:deep(.highlight-red.djs-connection > path) {
   marker-end: url(#sequenceflow-arrow-normal-red) !important;
+  stroke-width: 2 !important;
 }
 
 :deep(.conditional-flow.highlight-red .djs-visual > :nth-child(1)) {

@@ -3,6 +3,7 @@
     <el-table
       border stripe
       :data="tableData"
+      size="small"
     >
       <el-table-column type="index" width="50" label="#" align="center" header-align="center" />
       <el-table-column prop="activity_name" label="节点" min-width="150" show-overflow-tooltip />

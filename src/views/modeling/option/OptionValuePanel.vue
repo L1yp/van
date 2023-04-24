@@ -1,6 +1,6 @@
 <template>
   <div v-loading="loading" style="width: 100%; height: 100%; background-color: var(--el-bg-color); ">
-    <div style="padding: 6px; box-sizing: border-box; border-top: 1px solid var(--el-border-color); ">
+    <div style="box-sizing: border-box; padding: 6px; background-color: var(--toolbar-bg-color); ">
       <el-button v-if="isView && !isConfig" @click="isView = false">编辑</el-button>
       <el-button v-if="!isView" @click="isView = true">取消</el-button>
       <el-button v-if="!isView" type="primary" plain @click="handleConfirm">确定</el-button>
@@ -10,7 +10,7 @@
       <el-button v-if="isConfig" @click="isConfig = false">取消</el-button>
 
     </div>
-    <div style="width: 100%; height: calc(100% - 32px - 12px - 1px); box-sizing: border-box; padding: 6px; border: 1px solid var(--el-border-color);">
+    <div style="width: 100%; height: calc(100% - 32px - 12px - 1px); box-sizing: border-box; padding: 6px; ">
       <el-form v-if="!isConfig" :model="formData" ref="formRef" label-width="80px" style="width: 100%; max-width: 800px;">
         <el-form-item prop="name" label="名称" required>
           <el-input v-model="formData.name" v-if="!isView" />
@@ -21,8 +21,8 @@
           <div v-if="isView" v-text="formData.remark"></div>
         </el-form-item>
       </el-form>
-      <div v-else style="width: 100%; height: 100%; display: flex; flex-direction: row;">
-        <div style="width: 50%; height: 100%;">
+      <div v-else id="value-panel-container" style="width: 100%; height: 100%; display: flex; flex-direction: row; overflow-x: scroll">
+        <div style="width: 50%; min-width: 300px; height: 100%;">
           <el-table
             v-loading="loading"
             :data="modelingOptionValues"
@@ -34,12 +34,12 @@
             :row-style="handleRowStyle"
             @row-click="handleRowClick"
           >
-            <el-table-column type="index" label="#" align="center" header-align="center" />
+            <el-table-column type="index" label="#" width="60" align="center" header-align="center" />
             <el-table-column prop="name" label="名称"/>
-            <el-table-column prop="order_no" label="排序" width="80" align="center" header-align="center" />
+            <el-table-column prop="order_no" label="排序" width="60" align="center" header-align="center" />
           </el-table>
         </div>
-        <div style="width: 50%; height: 100%; display: flex;">
+        <div style="width: 50%; min-width: 300px; height: 100%; display: flex;">
           <div style="display: flex; align-items: center; box-sizing: border-box; padding: 0 10px; border: 1px solid var(--el-border-color);">
             <div>
               <div>
@@ -249,6 +249,10 @@ function handleRowStyle(params) {
 
 :deep(table.el-table__body tr.el-table__row td:first-child span.el-table__placeholder) {
   display: none;
+}
+
+#value-panel-container::-webkit-scrollbar {
+  width: 0;
 }
 
 </style>

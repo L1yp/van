@@ -6,7 +6,7 @@
     </div>
     <div style="width: calc(100% - 12px); max-width: 800px; height: calc(100% - 32px - 12px); padding: 6px;">
       <el-scrollbar always>
-        <el-form ref="formRef" :model="formData" label-width="100px" status-icon style="width: 100%">
+        <el-form ref="formRef" :model="formData" label-width="100px" :label-position="formLabelPosition" status-icon style="width: 100%">
           <el-divider content-position="left">基本信息</el-divider>
           <el-form-item prop="field" label="字段" required :rules="{ pattern: /^[a-zA-Z_][a-zA-Z0-9_]*$/, message: '必须以字母或下划线开头' }">
             <el-input v-model="formData.field" />
@@ -54,6 +54,7 @@ import DateSchemeConfig from "./form/DateSchemeConfig.vue";
 import DateRangeSchemeConfig from "./form/DateRangeSchemeConfig.vue";
 import { useModelingFieldApi } from "@/service/modeling/field";
 import {useFieldStore} from "@/store/field-config";
+import { formLabelPosition } from "@/store/layout";
 
 interface Emits {
   (e: 'close'): void

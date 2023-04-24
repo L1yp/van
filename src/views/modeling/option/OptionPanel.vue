@@ -13,14 +13,14 @@
       >
         <el-table-column type="index" label="#" align="center" header-align="center" />
         <el-table-column prop="name" label="名称" width="200" align="center" header-align="center" />
-        <el-table-column prop="remark" label="说明" />
+        <el-table-column prop="remark" label="说明" min-width="200" />
       </el-table>
 
     </div>
-    <mask-window v-model="visible">
+    <mask-window v-model="visible" teleport-to="#option-container">
       <option-add-panel v-bind="$props" @close="visible = false" @success="findModelingOptionTypes(param)" />
     </mask-window>
-    <mask-window v-model="valuePanelVisible">
+    <mask-window v-model="valuePanelVisible" teleport-to="#option-container">
       <option-value-panel :from-type="fromType" @close="valuePanelVisible = false" />
     </mask-window>
   </div>

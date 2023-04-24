@@ -22,7 +22,7 @@
     <div style="width: 100%; max-width: 800px; height: calc(100% - 32px - 12px)">
       <el-scrollbar always>
         <el-divider content-position="left">基本信息</el-divider>
-        <el-form :model="formData" label-width="80px" ref="formRef" :rules="rules" status-icon>
+        <el-form :model="formData" label-width="80px" :label-position="formLabelPosition" ref="formRef" :rules="rules" status-icon>
           <el-form-item label="标识" prop="mkey">
             <div v-text="entity.mkey"></div>
           </el-form-item>
@@ -56,6 +56,7 @@ import {
 import { inject, ref } from "vue";
 import { useEntityApi } from "@/service/modeling/entity";
 import { modelingEntityKey } from "../../keys";
+import { formLabelPosition } from "@/store/layout";
 
 interface Emits {
   (e: 'close'): void
@@ -63,7 +64,7 @@ interface Emits {
 
 const emits = defineEmits<Emits>()
 
-const entity = inject(modelingEntityKey)
+const entity = inject(modelingEntityKey)!
 
 const loading = ref<boolean>(false)
 

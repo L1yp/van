@@ -13,6 +13,7 @@
     </el-tab-pane>
     <el-tab-pane label="数据源">
       <OptionPanel :mkey="entityRow.mkey" scope="ENTITY_PRIVATE" />
+      <div id="option-container"></div>
     </el-tab-pane>
     <el-tab-pane label="实例页面">
       <EntityPageConfig module="ENTITY" :mkey="entityRow.mkey" />

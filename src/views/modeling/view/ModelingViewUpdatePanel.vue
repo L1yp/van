@@ -5,7 +5,7 @@
       <el-button @click="handleConfirm" type="primary" plain>确定</el-button>
     </div>
     <div style="width: calc(100% - 12px); height: calc(100% - 32px - 12px); padding: 6px;">
-      <el-form ref="formRef" :model="formData" label-width="100px" :rules="formRules" style="width: 100%; height: 100%">
+      <el-form ref="formRef" :model="formData" label-width="100px" :label-position="formLabelPosition" :rules="formRules" style="width: 100%; height: 100%">
         <div style="height: 270px">
           <el-scrollbar always style="max-width: 500px">
             <ModelingViewBasic :form-data="formData" :fields="props.fields" />
@@ -27,6 +27,7 @@ import ModelingViewBasic from "@/views/modeling/view/ModelingViewBasic.vue";
 import { ElForm, FormRules, ElButton, ElScrollbar, ElFormItem } from "element-plus";
 import { useViewApi } from "@/service/modeling/view";
 import ModelingViewColumnConfig from "@/views/modeling/view/ModelingViewColumnConfig.vue";
+import { formLabelPosition } from "@/store/layout";
 
 interface Props {
   src: ModelingViewSimpleInfo

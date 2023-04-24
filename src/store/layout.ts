@@ -2,8 +2,11 @@ import { defineStore } from "pinia";
 import { getDeviceType } from "@/utils/common";
 import { useThemeStore } from "@/store/theme";
 import { TagInfo } from "@/layouts/components/tag";
+import { computed } from "vue";
 
 const deviceType = getDeviceType()
+
+export const formLabelPosition = computed(() => deviceType.value === 'h5' ? 'top' : 'right')
 
 let startIndex = 1000
 function incPageFullScreenZIndex() {

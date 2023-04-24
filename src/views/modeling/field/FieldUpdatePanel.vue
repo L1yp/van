@@ -6,7 +6,7 @@
     </div>
     <div style="width: calc(100% - 12px); max-width: 800px; height: calc(100% - 32px - 12px); padding: 6px;">
       <el-scrollbar always>
-        <el-form ref="formRef" :model="formData" label-width="100px" status-icon style="width: 100%">
+        <el-form ref="formRef" :model="formData" label-width="100px" :label-position="formLabelPosition" status-icon style="width: 100%">
           <el-form-item prop="field" label="字段">
             <div v-text="props.field.field"></div>
           </el-form-item>
@@ -45,6 +45,7 @@ import TextSchemeConfig from "./form/TextSchemeConfig.vue";
 import OptionSchemeConfig from "./form/OptionSchemeConfig.vue";
 import UserSchemeConfig from "./form/UserSchemeConfig.vue";
 import DeptSchemeConfig from "./form/DeptSchemeConfig.vue";
+import { formLabelPosition } from "@/store/layout";
 
 const schemeConfigComponentMap = {
   number: markRaw(NumberSchemeConfig),

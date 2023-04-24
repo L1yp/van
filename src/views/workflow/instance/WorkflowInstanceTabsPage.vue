@@ -2,7 +2,7 @@
   <el-tabs v-loading="loading" v-model="activeTab" @tab-change="changeTab" type="border-card" class="wf-instance-tabs" >
     <el-tab-pane name="basic" label="基本信息">
       <div style="width: 100%; height: 100%; position: relative;">
-        <div style="box-sizing: border-box; width: 100%; height: 40px; padding: 4px;">
+        <div style="box-sizing: border-box; width: 100%; height: 40px; padding: 4px; box-shadow: 0 1px 1px rgba(0, 0, 0, 0.12)">
           <el-button v-if="route.name === 'workflow-instance'" @click="$router.back()" >返回</el-button>
           <el-button v-if="route.name !== 'workflow-instance'" @click="handleCopyUrl">复制链接</el-button>
           <el-button v-for="outcome in (detailInfo?.outcomes || [])" :key="outcome.name" @click="handleClickOutcome(outcome)" >{{ outcome.name }}</el-button>

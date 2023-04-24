@@ -8,7 +8,7 @@
     <div style="width: 100%; max-width: 800px; height: calc(100% - 32px - 12px)">
       <el-scrollbar always>
         <el-divider content-position="left">基本信息</el-divider>
-        <el-form :model="formData" label-width="80px" ref="formRef" :rules="rules" status-icon>
+        <el-form :model="formData" label-width="80px" :label-position="formLabelPosition" ref="formRef" :rules="rules" status-icon>
 
           <el-form-item label="标识" prop="mkey">
             <el-input v-model="formData.mkey" />
@@ -32,6 +32,7 @@
 import { ElForm, ElFormItem, ElInput, ElButton, ElDivider, FormRules, ElScrollbar } from "element-plus";
 import { ref } from "vue";
 import { useEntityApi } from "@/service/modeling/entity";
+import { formLabelPosition } from "@/store/layout";
 
 interface Emits {
   (e: 'close'): void

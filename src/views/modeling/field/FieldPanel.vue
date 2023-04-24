@@ -7,23 +7,23 @@
         <span style="color: red; font-weight: bold; margin-left: 10px;">右键编辑字段</span>
       </div>
       <div v-else>
-        <el-button plain type="primary" @click="handleConfirmRef">确定</el-button>
         <el-button @click="refVisible = false">取消</el-button>
+        <el-button plain type="primary" @click="handleConfirmRef">确定</el-button>
       </div>
     </div>
     <div style="width: 100%; height: calc(100% - 44px); ">
       <el-tabs v-if="!refVisible" type="border-card" style="height: 100%">
         <el-tab-pane label="私有字段">
-          <field-table-ag-grid @edit="handleEditField" @delete="handleDeleteField" :loading="loading" :data="privateFields" />
+          <field-table @edit="handleEditField" @delete="handleDeleteField" :loading="loading" :data="privateFields" />
         </el-tab-pane>
         <el-tab-pane label="公共字段">
-          <field-table-ag-grid @edit="handleEditGlobalField" @delete="handleUnrefField" :loading="loading" :data="selectedGlobalFields" />
+          <field-table @edit="handleEditGlobalField" @delete="handleUnrefField" :loading="loading" :data="selectedGlobalFields" />
         </el-tab-pane>
         <el-tab-pane label="默认字段">
-          <field-table-ag-grid @edit="ElMessage.warning('默认字段不允许编辑')" @delete="ElMessage.error('默认字段不允许删除')" :loading="loading" :data="defaultFields" />
+          <field-table @edit="ElMessage.warning('默认字段不允许编辑')" @delete="ElMessage.error('默认字段不允许删除')" :loading="loading" :data="defaultFields" />
         </el-tab-pane>
       </el-tabs>
-      <div v-else>
+      <div v-else style="margin-top: 10px">
         <el-form ref="formRef" :model="formData" label-width="100px">
           <el-form-item prop="field_id" label="全局字段" required>
             <el-select v-model="formData.field_id">
@@ -60,7 +60,6 @@ import { useModelingFieldApi } from '@/service/modeling/field';
 import FieldTable from '@/views/modeling/field/FieldTable.vue';
 import FieldUpdatePanel from '@/views/modeling/field/FieldUpdatePanel.vue';
 import {useFieldStore} from "@/store/field-config";
-import FieldTableAgGrid from "@/views/modeling/field/FieldTableAgGrid.vue";
 
 
 const loading = ref<boolean>(false)

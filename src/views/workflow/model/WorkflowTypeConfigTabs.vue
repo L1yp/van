@@ -13,6 +13,7 @@
     </el-tab-pane>
     <el-tab-pane label="数据源">
       <OptionPanel :mkey="workflowDef.key" scope="WORKFLOW_PRIVATE" />
+      <div id="option-container"></div>
     </el-tab-pane>
   </el-tabs>
 

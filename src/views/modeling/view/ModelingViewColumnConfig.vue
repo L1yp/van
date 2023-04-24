@@ -1,13 +1,13 @@
 <template>
-  <div style="width: 100%; height: 100%; display: flex; flex-direction: row; gap: 10px">
-    <div style="width: 400px; height: 100%">
+  <div id="column-config-container" style="width: 100%; height: 100%; display: flex; flex-direction: row; gap: 10px; overflow: auto">
+    <div style="min-width: 400px; width: 400px; height: 100%">
       <ag-grid-vue
         :grid-options="candidateGridOptions"
         style="width: 100%; height: 100%"
         :class="store.dark ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'"
       />
     </div>
-    <div style="width: calc(100% - 400px); height: 100%">
+    <div style="min-width: 1080px; width: calc(100% - 400px); height: 100%">
       <ag-grid-vue
         :grid-options="targetGridOptions"
         style="width: 100%; height: 100%"
@@ -18,7 +18,7 @@
 </template>
 
 <script lang="ts" setup>
-import {computed, reactive, shallowRef} from "vue";
+import { computed, reactive, shallowRef } from "vue";
 import {
   ColDef,
   ColumnApi,
@@ -27,8 +27,9 @@ import {
   GridReadyEvent,
   RowDragEndEvent, RowDragEvent,
 } from "ag-grid-community";
-import {AgGridVue} from "ag-grid-vue3";
-import {useSystemStore} from "@/store/sys-config";
+import { AgGridVue } from "ag-grid-vue3";
+import { useSystemStore } from "@/store/sys-config";
+import { ElScrollbar } from 'element-plus'
 
 interface Props {
   fields: ModelingFieldDefView[]
@@ -315,5 +316,7 @@ function toColumnConfig(row: ModelingFieldDefView) {
 </script>
 
 <style scoped>
-
+#column-config-container::-webkit-scrollbar {
+  width: 0;
+}
 </style>

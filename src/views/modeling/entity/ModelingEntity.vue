@@ -1,8 +1,10 @@
 <template>
   <div style="width: 100%; height: 100%;">
-    <div>
+    <div style="height: 32px; display: flex">
       <el-button :icon="Plus" type="primary" @click="handleAdd">新增</el-button>
-      <span style="color: red; font-weight: bold; margin-left: 10px;">双击进入配置</span>
+      <el-scrollbar style="margin-left: 10px" wrap-style="display: flex; align-items: center">
+        <div style="white-space: nowrap; color: red; font-weight: bold; ">双击进入配置</div>
+      </el-scrollbar>
     </div>
 
     <div style="width: 100%; height: calc(100% - 32px - 10px - 36px); margin-top: 10px">
@@ -77,7 +79,7 @@
 <script lang="ts" setup>
 import { useEntityApi } from "@/service/modeling/entity";
 import { computed, inject, onBeforeMount, provide, ref} from "vue";
-import { ElTable, ElTableColumn, ElInput, ElButton, ElPagination } from "element-plus";
+import { ElTable, ElTableColumn, ElInput, ElButton, ElPagination, ElScrollbar } from "element-plus";
 import { Plus } from "@element-plus/icons-vue";
 import UserSelectorInput from '@/components/common/selector/user/UserSelectorInput.vue'
 import EntityAddPanel from "./config/EntityAddPanel.vue";

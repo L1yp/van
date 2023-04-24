@@ -1,15 +1,15 @@
 <template>
   <div style="width: 100%; height: 100%;">
-    <div style="box-sizing: border-box; padding: 6px 0; border-top: 1px solid var(--el-border-color); ">
+    <div style="box-sizing: border-box; padding: 6px; background-color: var(--toolbar-bg-color); ">
       <el-button @click="emits('close')">取消</el-button>
-      <el-button type="primary" plain @click="handleConfirm" >确定</el-button>
+      <el-button @click="handleConfirm" plain type="primary">确定</el-button>
     </div>
 
     <el-form
       ref="formRef"
       :model="formData"
       label-width="80px"
-      style="padding: 10px; width: 100%; max-width: 800px; height: calc(100% - 32px - 12px - 1px); box-sizing: border-box; border: 1px solid var(--el-border-color);"
+      style="padding: 10px; width: 100%; max-width: 800px; height: calc(100% - 32px - 12px - 1px); box-sizing: border-box; "
     >
       <el-form-item prop="name" label="名称" required>
         <el-input v-model="formData.name" />
