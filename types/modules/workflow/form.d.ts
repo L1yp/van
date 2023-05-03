@@ -14,6 +14,18 @@ declare type InputFormatter = (value: string | number) => string
  */
 declare type InputParser = (source: string) => string
 
+type DataSourceType = 'option' | 'http'
+
+declare interface DataSource {
+  type: DataSourceType
+}
+
+declare interface OptionDataSource extends DataSource {
+
+}
+
+
+
 
 declare interface FormScheme {
   name: string // map to modelValue
@@ -33,6 +45,7 @@ declare interface VFormScheme {
   style: string
   mode: FormFieldMode
   children: ComponentConfig[]
+
 }
 
 

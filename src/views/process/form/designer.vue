@@ -79,7 +79,7 @@
       <div style="margin-top: 16px"></div>
 
       <v-form-render ref="formRenderRef" :scheme="formScheme" :form-data="dialogInfo.formData"></v-form-render>
-      <div>
+      <div style="margin-top: 6px; margin-bottom: 6px">
         <el-scrollbar always>
           <pre> {{ JSON.stringify(dialogInfo.formData) }} </pre>
         </el-scrollbar>

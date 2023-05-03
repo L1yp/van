@@ -338,6 +338,9 @@ div {
   border: 1px dashed gray;
 }
 
+html.dark .widget-item {
+  background-color: #0c151e4d;
+}
 .widget-item + .widget-item {
   margin-top: 4px;
 }
@@ -382,7 +385,7 @@ div {
   height: 20px;
   padding: 2px;
   color: white;
-  background-color: #ffa500;
+  background-color: #8db2b4;
   display: flex;
   align-items: center;
   cursor: move;
@@ -395,7 +398,7 @@ div {
   height: 20px;
   padding: 2px;
   color: white;
-  background-color: #ffa50080;
+  background-color: #8db2b480;
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -410,7 +413,7 @@ div {
   position: absolute;
   right: 0;
   bottom: 0;
-  background-color: orange;
+  background-color: #8db2b4;
   cursor: pointer;
   height: 24px;
   padding: 4px;

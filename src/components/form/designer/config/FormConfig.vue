@@ -42,12 +42,12 @@
 
 <script lang="ts" setup>
 import {
-  ElForm, ElFormItem, ElRadioGroup, ElRadioButton, ElInput, ElSelect, ElOption, 
+  ElForm, ElFormItem, ElRadioGroup, ElRadioButton, ElInput, ElSelect, ElOption,
 } from 'element-plus'
 import { inject } from "vue";
 import { vFormSchemeKey } from '../../state.key';
 
-const formScheme = inject(vFormSchemeKey)
+const formScheme = inject(vFormSchemeKey)!
 
 </script>
 

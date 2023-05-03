@@ -1,11 +1,13 @@
 <template>
-  <el-form 
+  <el-form
     ref="formRef"
-    :model="props.formData" 
-    :size="props.scheme.size" 
+    :model="props.formData"
+    :size="props.scheme.size"
     :label-width="props.scheme.labelWidth"
     :label-position="labelPosition"
     v-bind="$attrs"
+    :show-message="false"
+    class="vform-render"
   >
     <v-form-nested-item
       v-for="item in props.scheme.children"
@@ -17,7 +19,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ElForm } from 'element-plus'
+import { ElForm, FormInstance } from 'element-plus'
 import { computed, provide, ref } from "vue";
 import VFormNestedItem from "@/components/form/designer/VFormNestedItem.vue";
 import { formModeKey } from "@/components/form/state.key";
@@ -30,11 +32,12 @@ interface Props {
 }
 
 const props = defineProps<Props>()
+console.log('==============',props)
 
 const mode = computed<FormFieldMode>(() => props.scheme.mode)
 provide(formModeKey, mode)
 
-const formRef = ref<InstanceType<typeof ElForm>>()
+const formRef = ref<FormInstance>()
 
 const deviceType = getDeviceType()
 const labelPosition = computed(() => {
@@ -52,5 +55,40 @@ defineExpose({
 </script>
 
 <style scoped>
+.vform-render :deep(.el-select:hover:not(.el-select-disabled) .el-input__wrapper) {
+  box-shadow: none !important;
+}
+
+.vform-render :deep(.el-select .el-input__wrapper.is-focus) {
+  box-shadow: none !important;
+}
+
+.vform-render :deep(.el-form-item.is-error .el-input__wrapper) {
+  box-shadow: none !important;
+}
+
+.vform-render :deep(.el-input__wrapper:hover) {
+  box-shadow: none !important;
+}
+
+.vform-render :deep(.el-input__wrapper) {
+  box-shadow: none !important;
+}
+
+.vform-render :deep(.el-select .el-input.is-focus .el-input__wrapper) {
+  box-shadow: none !important;
+}
+
+.vform-render :deep(.el-form-item--default) {
+  margin-bottom: 3px;
+}
+
+.vform-render :deep(.el-form-item) {
+  border: 1px solid var(--el-border-color);
+}
+
+.vform-render :deep(.el-form-item__label) {
+  border-right: 1px solid var(--el-border-color);
+}
 
 </style>

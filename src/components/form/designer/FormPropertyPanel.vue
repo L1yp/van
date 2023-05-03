@@ -68,6 +68,8 @@ import DateRangeConfig from "@/components/form/designer/config/DateRangeConfig.v
 import UserSelectorInputConfig from "@/components/form/designer/config/UserSelectorInputConfig.vue";
 import DeptSelectorInputConfig from "@/components/form/designer/config/DeptSelectorInputConfig.vue";
 import FormConfig from "@/components/form/designer/config/FormConfig.vue";
+import LabelField from "@/components/form/components/display/LabelField.vue";
+import LabelFieldConfig from "@/components/form/designer/config/LabelFieldConfig.vue";
 
 
 const vFormSelectElem = inject(vFormActiveElementKey)
@@ -86,6 +88,7 @@ const configMap = {
   'dept-select': markRaw(DeptSelectorInputConfig),
   'el-row': markRaw(RowConfig),
   'el-col': markRaw(ColConfig),
+  'label-field': markRaw(LabelFieldConfig),
 }
 
 </script>
