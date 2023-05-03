@@ -4,14 +4,14 @@
       <el-button @click="handleCancel">取消</el-button>
       <el-button @click="handleConfirm" type="primary" plain>确定</el-button>
     </div>
-    <div style="width: calc(100% - 12px); height: calc(100% - 32px - 12px); padding: 6px;">
+    <div id="view-container" style="width: calc(100% - 12px); height: calc(100% - 32px - 12px); padding: 6px;">
       <el-form ref="formRef" :model="formData" label-width="100px" :label-position="formLabelPosition" :rules="formRules" style="width: 100%; height: 100%">
         <div style="height: 270px">
           <el-scrollbar always style="max-width: 500px">
             <ModelingViewBasic :form-data="formData" :fields="props.fields" />
           </el-scrollbar>
         </div>
-        <div style="height: calc(100% - 270px)">
+        <div style="height: calc(100% - 270px); min-height: 500px">
           <ModelingViewColumnConfig :fields="props.fields" :form-data="formData" />
         </div>
       </el-form>
@@ -140,5 +140,11 @@ async function handleConfirm() {
 </script>
 
 <style scoped>
+#view-container {
+  overflow: auto;
+}
 
+#view-container::-webkit-scrollbar {
+  width: 0;
+}
 </style>

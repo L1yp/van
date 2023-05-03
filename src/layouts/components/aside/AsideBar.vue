@@ -50,7 +50,7 @@ div.aside-header {
 }
 
 div.menu-wrapper {
-  height: calc(100vh - v-bind(headerHeight));
+  height: calc(100dvh - v-bind(headerHeight));
 }
 
 

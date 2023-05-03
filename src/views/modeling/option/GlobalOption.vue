@@ -1,6 +1,7 @@
 <template>
   <div style="width: 100%; height: 100%;">
     <OptionPanel scope="GLOBAL" />
+    <div id="option-container"></div>
   </div>
 </template>
 

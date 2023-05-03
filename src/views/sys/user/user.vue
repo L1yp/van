@@ -50,7 +50,7 @@
             <template #header>
               <el-input v-model="formData.nickname" @change="reloadPage"></el-input>
             </template>
-            <el-table-column prop="nickname" label="昵称"/>
+            <el-table-column prop="nickname" label="昵称" min-width="150"/>
           </el-table-column>
           <el-table-column class-name="floating-filter">
             <template #header>
@@ -62,7 +62,7 @@
             <template #header>
               <el-input v-model="formData.email" @change="reloadPage"></el-input>
             </template>
-            <el-table-column prop="email" label="邮箱" width="150"/>
+            <el-table-column prop="email" label="邮箱" width="200"/>
           </el-table-column>
           <el-table-column class-name="floating-filter">
             <template #header>

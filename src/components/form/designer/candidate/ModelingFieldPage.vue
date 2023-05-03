@@ -225,11 +225,11 @@ function toComponentConfig(field: ModelingFieldDefView): Partial<ComponentConfig
   background-color: var(--el-bg-color);
   cursor: move;
   border-radius: 8px;
-  outline: 1px dashed orange;
+  outline: 1px solid #8db2b4;
 }
 
 .component-item:hover {
-  outline: 2px solid orange;
+  outline: 2px solid #8db2b4;
 }
 
 :deep(.el-collapse-item__content) {

@@ -10,7 +10,7 @@
     :fixed-body-height="deviceType === 'h5'"
     use-body-scrolling
   >
-    <el-form :model="formData" label-width="100px" :label-position="deviceType === 'pc' ? 'right' : 'top'" scroll-to-error>
+    <el-form :model="formData" label-width="100px" :label-position="formLabelPosition" scroll-to-error>
     <ElRow>
       <ElCol :span="24">
         <ElFormItem label="类型" prop="type" v-if="deviceType === 'pc'">
@@ -50,6 +50,7 @@ import PageForm from './form/PageForm.vue'
 import ProcessForm from './form/ProcessForm.vue'
 import ButtonForm from './form/ButtonForm.vue'
 import { getDeviceType } from '@/utils/common';
+import { formLabelPosition } from "@/store/layout";
 
 const deviceType = getDeviceType()
 

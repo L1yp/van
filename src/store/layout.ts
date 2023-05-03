@@ -35,7 +35,7 @@ export const useLayoutStore = defineStore('layout', {
       return state.pageScreen ? '100vw' : `calc(100vw - ${this.asideWidth})`
     },
     mainHeight(state): string {
-      return state.pageScreen ? '100vh' : `calc(100vh - ${theme.headerHeight + theme.tagBarHeight + theme.footerHeight}px)`
+      return state.pageScreen ? '100dvh' : `calc(100dvh - ${theme.headerHeight + theme.tagBarHeight + theme.footerHeight}px)`
     }
   },
   actions: {

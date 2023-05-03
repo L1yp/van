@@ -1,27 +1,25 @@
 <template>
   <div style="width: 100%; height: 100%;">
     <div class="op-line">
-      <el-scrollbar always :native="deviceType !== 'pc'">
-        <div style="display: flex; ">
-          <div>
-            <el-input style="width: 200px" size="default" placeholder="菜单名称" v-model="menuTitleKey"></el-input>
-          </div>
-
-          <el-button size="default" plain style="vertical-align: middle; margin-left: 12px" type="info" @click="expendMenu">
-            <SVGIcon style="width: 1em; height: 1em" name="Expand" /><span style="margin-left: 4px">展开</span>
-          </el-button>
-          <el-button size="default" plain style="vertical-align: middle" type="info" @click="shrinkMenu">
-            <SVGIcon style="width: 1em; height: 1em" name="Shrink" /><span style="margin-left: 4px" >收缩</span>
-          </el-button>
-          <el-button size="default" plain style="vertical-align: middle" type="primary" @click="addMenu" :icon="Plus">新增</el-button>
-          <el-popconfirm title="确定删除?" confirmButtonText="确定" cancelButtonText="取消" @confirm="batchDeleteMenu">
-            <template #reference>
-              <el-button size="default" plain style="vertical-align: middle" type="danger" :disabled="selectedMenus.length === 0" :icon="Delete">删除</el-button>
-            </template>
-          </el-popconfirm>
-          <el-button size="default" plain style="vertical-align: middle" type="warning" @click="exportMenu" :icon="Download">导出</el-button>
+      <div style="display: flex; overflow: auto">
+        <div>
+          <el-input style="width: 200px" size="default" placeholder="菜单名称" v-model="menuTitleKey"></el-input>
         </div>
-      </el-scrollbar>
+
+        <el-button size="default" plain style="vertical-align: middle; margin-left: 12px" type="info" @click="expendMenu">
+          <SVGIcon style="width: 1em; height: 1em" name="Expand" /><span style="margin-left: 4px">展开</span>
+        </el-button>
+        <el-button size="default" plain style="vertical-align: middle" type="info" @click="shrinkMenu">
+          <SVGIcon style="width: 1em; height: 1em" name="Shrink" /><span style="margin-left: 4px" >收缩</span>
+        </el-button>
+        <el-button size="default" plain style="vertical-align: middle" type="primary" @click="addMenu" :icon="Plus">新增</el-button>
+        <el-popconfirm title="确定删除?" confirmButtonText="确定" cancelButtonText="取消" @confirm="batchDeleteMenu">
+          <template #reference>
+            <el-button size="default" plain style="vertical-align: middle" type="danger" :disabled="selectedMenus.length === 0" :icon="Delete">删除</el-button>
+          </template>
+        </el-popconfirm>
+        <el-button size="default" plain style="vertical-align: middle" type="warning" @click="exportMenu" :icon="Download">导出</el-button>
+      </div>
     </div>
 
     <div class="data-table">
@@ -222,6 +220,10 @@ async function batchDeleteMenu() {
 .op-line {
   box-sizing: border-box;
   height: 32px;
+}
+
+.op-line::-webkit-scrollbar {
+  width: 0;
 }
 
 .data-table {

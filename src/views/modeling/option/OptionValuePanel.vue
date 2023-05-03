@@ -10,8 +10,8 @@
       <el-button v-if="isConfig" @click="isConfig = false">取消</el-button>
 
     </div>
-    <div style="width: 100%; height: calc(100% - 32px - 12px - 1px); box-sizing: border-box; padding: 6px; ">
-      <el-form v-if="!isConfig" :model="formData" ref="formRef" label-width="80px" style="width: 100%; max-width: 800px;">
+    <div style="width: 100%; height: calc(100% - 32px - 12px - 1px); box-sizing: border-box; ">
+      <el-form v-if="!isConfig" :model="formData" ref="formRef" label-width="80px" style="width: 100%; max-width: 800px; padding-top: 6px">
         <el-form-item prop="name" label="名称" required>
           <el-input v-model="formData.name" v-if="!isView" />
           <div v-if="isView" v-text="formData.name"></div>

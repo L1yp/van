@@ -13,8 +13,8 @@
 
 </template>
 
-<script lang="ts">
-import { defineComponent, onMounted, PropType, ref } from 'vue'
+<script lang="ts" setup>
+import { onMounted, ref } from 'vue'
 import { ElSelect, ElOption } from "element-plus";
 import { CellEditorParams, AG_EDITOR_SELECT } from "@/components/ag-grid/editor/index";
 
@@ -27,45 +27,37 @@ interface SelectCellEditorParam extends CellEditorParams {
   disabledValue: string | number | boolean
 }
 
-export default defineComponent({
-  components: {
-    ElSelect, ElOption,
-  },
-  props: {
-    params: Object as PropType<SelectCellEditorParam>,
-  },
-  methods: {
-    /**
-     * the final value to send to the grid, on completion of editing
-     */
-    getValue() {
-      return this.selectedValue
-    },
-    // 开始编辑之前 是否需要取消编辑
-    /**
-     * Gets called once before editing starts, to give editor a chance to cancel the editing before it even starts.
-     */
-    isCancelBeforeStart() {
-      return false
-    },
-    /**
-     * Gets called once when editing is finished (eg if Enter is pressed). If you return true, then the result of the edit will be ignored.
-     */
-    isCancelAfterEnd() {
-      return false
-    }
-  },
-  setup(props, ctx) {
-    const selectedValue = ref<string>('')
-    onMounted(() => {
-      selectedValue.value = props.params?.value
-    })
+interface Props {
+  params: SelectCellEditorParam
+}
 
+const props = defineProps<Props>()
 
-    return {
-      selectedValue, AG_EDITOR_SELECT,
-    }
-  },
-
+const selectedValue = ref(null)
+onMounted(() => {
+  selectedValue.value = props.params?.value
 })
+
+/**
+ * the final value to send to the grid, on completion of editing
+ */
+function getValue() {
+  return selectedValue.value
+}
+
+// 开始编辑之前 是否需要取消编辑
+/**
+ * Gets called once before editing starts, to give editor a chance to cancel the editing before it even starts.
+ */
+function isCancelBeforeStart() {
+  return false
+}
+
+/**
+ * Gets called once when editing is finished (eg if Enter is pressed). If you return true, then the result of the edit will be ignored.
+ */
+function isCancelAfterEnd() {
+  return false
+}
+
 </script>

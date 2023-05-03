@@ -10,7 +10,7 @@
     @cancel="visible = false"
     @confirm="handleConfirm"
   >
-    <el-form :model="formData" label-width="100px" :label-position="deviceType === 'pc' ? 'right' : 'top'" scroll-to-error>
+    <el-form :model="formData" label-width="100px" :label-position="formLabelPosition" scroll-to-error>
       <el-row>
         <el-col :span="12" :xl="12" :xs="24">
           <el-form-item label="用户名" prop="username">
@@ -101,6 +101,7 @@ import { ElForm, ElFormItem, ElRow, ElCol, ElInput, ElRadioGroup, ElRadioButton,
 import DeptSelectorInput from "@/components/common/selector/dept/DeptSelectorInput.vue";
 import { useRole } from "@/service/system/role";
 import { getDeviceType } from "@/utils/common";
+import { formLabelPosition } from "@/store/layout";
 
 
 interface Props {

@@ -1,5 +1,5 @@
 <template>
-  <el-form ref="formRef" :model="props.formData" :label-position="deviceType === 'pc' ? 'right' : 'top'" :label-width="80" v-loading="props.loading">
+  <el-form ref="formRef" :model="props.formData" :label-position="formLabelPosition" :label-width="80" v-loading="props.loading">
     <el-row>
       <el-col :span="12" :xs="24">
         <el-form-item label="名称" prop="title" required>
@@ -71,6 +71,7 @@ import UserSelectorInput from '@/components/common/selector/user/UserSelectorInp
 import { inject, ref } from "vue";
 import { userMapKey } from "@/config/app.keys";
 import { getDeviceType } from "@/utils/common";
+import { formLabelPosition } from "@/store/layout";
 
 const deviceType = getDeviceType()
 

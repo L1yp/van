@@ -60,14 +60,14 @@
 <script lang="ts" setup>
 import { onMounted, ref, watch, watchEffect } from "vue"
 import { ElContainer, ElHeader, ElAside, ElMain, ElFooter, ElDrawer } from "element-plus"
-import {HeaderBar} from "./components/header"
-import {AsideBar} from "./components/aside"
-import {TagBar} from "./components/tag"
-import {RouterView} from "vue-router"
+import { HeaderBar } from "./components/header"
+import { AsideBar } from "./components/aside"
+import { TagBar } from "./components/tag"
+import { RouterView } from "vue-router"
 import SVGIcon from "@/components/common/SVGIcon.vue";
 import { getDeviceType } from "@/utils/common"
 import { useKeepAliveStore } from "@/store/keep-alive";
-import { useLayoutStore, width } from "@/store/layout";
+import { useLayoutStore } from "@/store/layout";
 import { useThemeStore } from "@/store/theme";
 
 

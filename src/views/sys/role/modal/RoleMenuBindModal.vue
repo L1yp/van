@@ -2,7 +2,7 @@
   <VDialog
     v-model="visible"
     title="绑定菜单及权限"
-    :width="deviceType === 'h5' ? '360px' : '720px'"
+    :width="deviceType === 'h5' ? '360px' : '900px'"
     :full-screen="deviceType === 'h5'"
     fixed-body-height
     :use-body-scrolling="false"

@@ -1,5 +1,5 @@
 <template>
-  <el-checkbox v-model="props.params.data[props.params.column.getColId()]" />
+  <el-checkbox v-model="props.params.data[props.params.column?.getColId()]" />
 </template>
 <script lang="ts" setup>
 import { ElCheckbox } from 'element-plus'

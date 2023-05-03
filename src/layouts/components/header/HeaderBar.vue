@@ -25,9 +25,7 @@
         </el-dropdown-menu>
       </template>
     </el-dropdown>
-    <div>
-      <el-switch v-model="themeStore.dark" :active-icon="DarkIcon" :inactive-icon="LightIcon" inline-prompt />
-    </div>
+    <el-button :icon="themeStore.dark ? DarkIcon : LightIcon" @click.stop="themeStore.dark = !themeStore.dark" circle style="width: 40px; height: 40px"/>
     <el-dropdown :hide-on-click="false" @command="handleCommand">
       <span class="el-dropdown-link">
         <el-avatar

@@ -122,9 +122,9 @@ function requestFullScreen() {
 const bodyHeight = computed(() => {
   if (props.fullScreen) {
     // footerHeight=52,headerHeight=44,padding=32
-    return `calc(100vh - 52px - 44px - 32px)`
+    return `calc(100dvh - 52px - 44px - 32px)`
   } else {
-    return `calc(70vh - 52px - 44px - 32px)`
+    return `calc(70dvh - 52px - 44px - 32px)`
   }
 })
 
@@ -145,7 +145,6 @@ function handleCloseClick() {
 </script>
 
 <style>
-
 .el-dialog__footer {
   padding: 10px;
   /*border-top: 1px solid var(--el-border-color);*/
@@ -156,7 +155,7 @@ function handleCloseClick() {
 
 .el-dialog {
   box-sizing: border-box;
-  margin: 15vh auto;
+  margin: 15dvh auto;
 }
 
 .el-dialog.is-fullscreen {
@@ -179,17 +178,17 @@ function handleCloseClick() {
 }
 
 .el-dialog.is-fullscreen .el-dialog__body {
-  height: calc(100vh - 44px - 52px);
-  max-height: calc(100vh - 44px - 52px);
+  height: calc(100dvh - 44px - 52px);
+  max-height: calc(100dvh - 44px - 52px);
 }
 
 .el-dialog .el-dialog__body {
-  height: calc(70vh - 44px - 52px);
+  height: calc(70dvh - 44px - 52px);
 }
 
-.el-dialog.flex-body .el-dialog__body {
+.el-dialog.flex-body:not(.is-fullscreen) .el-dialog__body {
   height: initial;
-  max-height: calc(70vh - 44px - 52px);
+  max-height: calc(70dvh - 44px - 52px);
 }
 /*
 1. flexBody: 弹性高度，

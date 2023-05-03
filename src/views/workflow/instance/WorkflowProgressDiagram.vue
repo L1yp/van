@@ -129,14 +129,14 @@ async function initViewerDiagram(xml: string) {
 
 }
 
-const hoverElem = shallowRef<HTMLElement>()
+const hoverElem = shallowRef<SVGGElement | null>()
 function attachHoverEventListener() {
-  viewer.value.on('element.hover', function (e) {
+  viewer.value.on('element.hover', function (e: any) {
     const { element } = e
     if (element.type === 'bpmn:UserTask') {
       props.activityList
       if (props.activityList.some(it => it.activity_id === element.id)) {
-        hoverElem.value = document.querySelector(`g[data-element-id=${element.id}]`)
+        hoverElem.value = document.querySelector<SVGGElement>(`g[data-element-id=${element.id}]`)
       } else {
         hoverElem.value = null
       }

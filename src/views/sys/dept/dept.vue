@@ -1,31 +1,29 @@
 <template>
   <div style="width: 100%; height: 100%;">
     <div class="op-line">
-      <el-scrollbar always :native="deviceType !== 'pc'">
-        <div style="display: flex; ">
-          <div>
-            <el-input style="width: 200px;" placeholder="部门名称" v-model="deptTitleKey"></el-input>
-          </div>
-          <el-button plain style="vertical-align: middle; margin-left: 12px;" type="info" @click="expand">
-            <SVGIcon style="width: 1em; height: 1em" name="Expand" /><span style="margin-left: 4px;">展开</span>
-          </el-button>
-          <el-button plain style="vertical-align: middle;" type="info" @click="shrink">
-            <SVGIcon style="width: 1em; height: 1em" name="Shrink" /><span style="margin-left: 4px;">收缩</span>
-          </el-button>
-          <el-button plain type="primary" @click="addItem" :icon="Plus">新增</el-button>
-          <el-popconfirm
-            title="确定删除?"
-            confirmButtonText="确定"
-            cancelButtonText="取消"
-            @confirm="batchDelete"
-          >
-            <template #reference>
-              <el-button plain type="danger" :icon="Delete">删除</el-button>
-            </template>
-          </el-popconfirm>
-          <el-button plain type="warning" @click="exportTable" :icon="Download">导出</el-button>
+      <div style="display: flex; overflow: auto">
+        <div>
+          <el-input style="width: 200px;" placeholder="部门名称" v-model="deptTitleKey"></el-input>
         </div>
-      </el-scrollbar>
+        <el-button plain style="vertical-align: middle; margin-left: 12px;" type="info" @click="expand">
+          <SVGIcon style="width: 1em; height: 1em" name="Expand" /><span style="margin-left: 4px;">展开</span>
+        </el-button>
+        <el-button plain style="vertical-align: middle;" type="info" @click="shrink">
+          <SVGIcon style="width: 1em; height: 1em" name="Shrink" /><span style="margin-left: 4px;">收缩</span>
+        </el-button>
+        <el-button plain type="primary" @click="addItem" :icon="Plus">新增</el-button>
+        <el-popconfirm
+          title="确定删除?"
+          confirmButtonText="确定"
+          cancelButtonText="取消"
+          @confirm="batchDelete"
+        >
+          <template #reference>
+            <el-button plain type="danger" :icon="Delete">删除</el-button>
+          </template>
+        </el-popconfirm>
+        <el-button plain type="warning" @click="exportTable" :icon="Download">导出</el-button>
+      </div>
     </div>
 
     <div class="data-table">
@@ -84,7 +82,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, nextTick, inject, Ref, ComputedRef, onBeforeMount, provide, toRaw } from "vue";
+import { ref, computed, nextTick, onBeforeMount, provide, toRaw } from "vue";
 import SVGIcon from "@/components/common/SVGIcon.vue";
 import {
   ElTable,
@@ -92,21 +90,17 @@ import {
   ElInput, ElTag,
   ElButton,
   ElPopconfirm,
-  ElMessage, ElScrollbar,
+  ElMessage,
 } from "element-plus";
-import {filterDataWithTitle, getDeviceType} from "@/utils/common"
+import { filterDataWithTitle } from "@/utils/common"
 import { Plus, Delete, Download, Edit } from "@element-plus/icons-vue";
 import DeptModal from "./modal/DeptModal.vue";
 import { useDeptInfo } from "@/service/system/dept";
 import UserViewer from '@/components/common/viewer/user/UserViewer.vue'
 import { userMapKey } from '@/config/app.keys'
 
-const deviceType = getDeviceType()
 
 const tableRef = ref<InstanceType<typeof ElTable>>();
-
-
-
 
 const loading = ref<boolean>(false)
 const { userMap, tableData, loadDept, deleteDept } = useDeptInfo(loading)
@@ -184,6 +178,9 @@ function batchDelete() {
 .op-line {
   box-sizing: border-box;
   height: 32px;
+}
+.op-line::-webkit-scrollbar {
+  width: 0;
 }
 
 .data-table {

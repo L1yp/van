@@ -15,7 +15,6 @@
           <el-scrollbar always>
             <VFormRender ref="postFormRef" :scheme="postPageScheme" :form-data="postFormData" style="margin-top: 10px" />
           </el-scrollbar>
-
         </MaskWindow>
       </div>
 

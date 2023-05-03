@@ -1,3 +1,3 @@
 import HeaderBar from "./HeaderBar.vue"
 
-export {HeaderBar}
+export { HeaderBar }
