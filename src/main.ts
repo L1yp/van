@@ -1,18 +1,18 @@
 import { createApp, ref } from 'vue'
 import App from './App.vue'
-import {isReady, setupRouter} from './router'
+import { isReady, setupRouter } from './router'
 import 'virtual:svg-icons-register'
 import 'element-plus/dist/index.css';
 import 'element-plus/theme-chalk/dark/css-vars.css'
 import { ElLoading, ClickOutside } from 'element-plus';
-import {setupAxios} from "./config/axios.http"
+import { setupAxios } from "./config/axios.http"
 import * as UserApi from "@/api/sys/user"
-import {remove} from "./utils/storage"
-import {menuOptionsKey, userInfoKey, userMapKey} from "./config/app.keys"
-import {permission} from "@/directives/permission"
+import { remove } from "./utils/storage"
+import { menuOptionsKey, userInfoKey, userMapKey } from "./config/app.keys"
+import { permission } from "@/directives/permission"
 import VXETable from 'vxe-table'
 import 'vxe-table/lib/style.css'
-import {toTree} from "@/utils/common";
+import { toTree } from "@/utils/common";
 import { varOptions } from '@/components/permission/components/condition'
 import './styles/index.css'
 import { createPinia } from "pinia";

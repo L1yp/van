@@ -49,13 +49,12 @@
 </template>
 
 <script lang="ts" setup>
-import { inject } from "vue"
 import { ElAvatar, ElButton, ElDropdown, ElDropdownItem, ElDropdownMenu, ElSwitch } from "element-plus"
 import { useRouter} from "vue-router";
 import { uninstallLayoutContentRoute } from "@/router";
 import SVGIcon from "@/components/common/SVGIcon.vue";
 import { remove } from "@/utils/storage"
-import { userInfoKey } from "@/config/app.keys";
+import { useUserInfo } from "@/config/app.keys";
 import { useIcon } from "@/components/common/util";
 import { useLayoutStore } from "@/store/layout";
 import { useThemeStore } from "@/store/theme";
@@ -70,7 +69,7 @@ const router = useRouter();
 const layoutStore = useLayoutStore()
 
 
-const userInfo = inject(userInfoKey)!
+const userInfo = useUserInfo()
 console.log("userInfo", userInfo)
 
 

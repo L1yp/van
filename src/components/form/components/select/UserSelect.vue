@@ -19,8 +19,8 @@
 import { computed, inject, nextTick } from "vue";
 import { formModeKey } from "@/components/form/state.key";
 import UserSelectorInput from "@/components/common/selector/user/UserSelectorInput.vue";
-import { userMapKey } from "@/config/app.keys";
 import { ElTag } from 'element-plus'
+import { useUserMap } from "@/config/app.hooks";
 
 interface Props {
   mode?: FormFieldMode
@@ -34,7 +34,7 @@ interface Emits {
   (e: 'update:value', v: string): void
 }
 
-const userMap = inject(userMapKey)
+const userMap = useUserMap()
 
 const props = defineProps<Props>()
 const emits = defineEmits<Emits>()
@@ -46,8 +46,9 @@ const val = computed({
         return props.value.split(',')
       }
       if (props.defaultValue) {
-        nextTick(() => emits('update:value', props.defaultValue))
-        return props.defaultValue?.split(',')
+        const defaultValue = props.defaultValue
+        nextTick(() => emits('update:value', defaultValue))
+        return props.defaultValue?.split(',') || []
       }
       return []
     } else {
@@ -55,7 +56,8 @@ const val = computed({
         return props.value
       }
       if (props.defaultValue) {
-        nextTick(() => emits('update:value', props.defaultValue))
+        const defaultValue = props.defaultValue
+        nextTick(() => emits('update:value', defaultValue))
         return props.defaultValue
       }
       return ''

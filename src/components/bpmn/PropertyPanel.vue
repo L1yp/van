@@ -145,18 +145,19 @@ import {
   ElSelect, ElOption, ElButton,
   ElInput, ElDescriptions, ElDescriptionsItem,
 } from "element-plus"
-import {computed, inject, onUnmounted, provide, ref, toRaw} from "vue";
+import { computed, inject, onUnmounted, provide, ref, toRaw } from "vue";
 import ExecutionListener from "@/components/bpmn/form/ExecutionListener.vue";
 import TaskListener from "@/components/bpmn/form/TaskListener.vue";
 import SVGIcon from "@/components/common/SVGIcon.vue";
-import {bpmnModelerKey, bpmnSelectedElemKey, propertyPanelOpenedKey} from "@/config/app.keys";
+import { propertyPanelOpenedKey } from "@/config/app.keys";
 import SeqFlowConfig from "@/components/bpmn/form/SeqFlowConfig.vue";
 import PageConfig from "@/components/bpmn/form/PageConfig.vue";
 import BasicSetting from "@/components/bpmn/form/BasicSetting.vue";
 import ApproverConfig from "@/components/bpmn/form/ApproverConfig.vue";
 import VDialog from "@/components/dialog/VDialog.vue";
-import {useIcon} from "@/components/common/util";
+import { useIcon } from "@/components/common/util";
 import emitter, { BpmnElementChanged } from '@/event/mitt'
+import { useBpmnModeler, useBpmnSelectedElem } from "@/config/app.hooks";
 
 const plusIcon = useIcon('Plus')
 
@@ -171,8 +172,8 @@ function open(key: string) {
 provide(propertyPanelOpenedKey, expand)
 
 
-const bpmnSelectedElem = inject(bpmnSelectedElemKey)
-const bpmnModeler = inject(bpmnModelerKey)
+const bpmnSelectedElem = useBpmnSelectedElem()
+const bpmnModeler = useBpmnModeler()
 
 const showConditionSeqFlow = computed<boolean>(() => {
   const selectedElem = toRaw(bpmnSelectedElem.value)

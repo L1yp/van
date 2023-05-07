@@ -19,20 +19,21 @@
 
 <script lang="ts" setup>
 import { ref, inject, computed, toRaw, onUnmounted } from "vue"
-import { ElRow, ElCol, ElInput, ElMessage, ElButton, ElSelect, ElOption } from "element-plus"
-import {bpmnModelerKey, bpmnSelectedElemKey, modelingPageKey, workflowVerKey} from "@/config/app.keys";
+import { ElMessage, ElButton, ElSelect, ElOption } from "element-plus"
+import { modelingPageKey, workflowVerKey } from "@/config/app.keys";
 import { Plus, Setting, Refresh } from '@element-plus/icons-vue'
 import { BpmnUtil } from "@/components/bpmn/form/util";
 import emitter, { BpmnElementChanged } from '@/event/mitt'
-import {useModelingPageApi} from "@/service/modeling/page";
+import { useModelingPageApi } from "@/service/modeling/page";
 import MaskWindow from "@/components/dialog/MaskWindow.vue";
 import FormDesigner from '@/views/process/form/designer.vue'
+import { useBpmnModeler, useBpmnSelectedElem } from "@/config/app.hooks";
 
 
-const bpmnSelectedElem = inject(bpmnSelectedElemKey);
-const bpmnModeler = inject(bpmnModelerKey)
+const bpmnSelectedElem = useBpmnSelectedElem()
+const bpmnModeler = useBpmnModeler()
 const modulePageList = inject(modelingPageKey)
-const workflowTypeVer = inject(workflowVerKey)
+const workflowTypeVer = inject(workflowVerKey)!
 
 const bpmnUtil = new BpmnUtil(bpmnModeler)
 

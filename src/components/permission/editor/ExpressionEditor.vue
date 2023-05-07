@@ -58,8 +58,8 @@
 </template>
 
 <script lang="ts" setup>
-import {inject, onBeforeMount, onMounted, onUnmounted, ref, shallowRef, toRaw} from "vue";
-import {Viewer, ViewOptions,} from '@textbus/browser'
+import { inject, onMounted, onUnmounted, ref, shallowRef, toRaw } from "vue";
+import { Viewer, ViewOptions, } from '@textbus/browser'
 
 import {
   Content,
@@ -72,19 +72,19 @@ import {
   popoverElem,
 } from "@/components/permission/editor/components/ExpressionBlock"
 
-import {ExpressionRoot, expressionRootLoader} from '@/components/permission/editor/components/ExpressionRoot'
-import {ElIcon, ElPopover} from 'element-plus'
-import {Commander, ExtractComponentInstanceType, RootComponentRef, Slot} from "@textbus/core";
+import { ExpressionRoot, expressionRootLoader } from '@/components/permission/editor/components/ExpressionRoot'
+import { ElIcon, ElPopover } from 'element-plus'
+import { Commander, ExtractComponentInstanceType, RootComponentRef, Slot } from "@textbus/core";
 import FieldExpressionPanel from "@/components/permission/components/FieldExpressionPanel.vue";
-import {NopCommander} from "@/components/permission/editor/components/NopCommander";
-import {computed} from "@vue/reactivity";
-import {Plus} from '@element-plus/icons-vue'
-import {varDptOptions} from "../components/condition";
-import {useDeptInfo} from "@/service/system/dept";
-import {findTreeItemById, flattenTree} from "@/utils/common";
-import {useModelingFieldApi} from "@/service/modeling/field";
-import {useModelingOptionApi} from "@/service/modeling/option";
-import {userInfoKey, userMapKey} from "@/config/app.keys";
+import { NopCommander } from "@/components/permission/editor/components/NopCommander";
+import { computed } from "@vue/reactivity";
+import { Plus } from '@element-plus/icons-vue'
+import { varDptOptions } from "../components/condition";
+import { useDeptInfo } from "@/service/system/dept";
+import { findTreeItemById, flattenTree } from "@/utils/common";
+import { useModelingFieldApi } from "@/service/modeling/field";
+import { useModelingOptionApi } from "@/service/modeling/option";
+import { useUserInfo } from "@/config/app.hooks";
 import dayjs from "dayjs";
 import { useModelingPermissionApi } from "@/service/modeling/permission";
 import { listByIdList } from "@/api/sys/user";
@@ -99,7 +99,7 @@ const loading = ref(false)
 const { tableData, loadDept } = useDeptInfo(loading)
 const { modelingFields, findModelingFields } = useModelingFieldApi(loading)
 const { permissionContent, getPermissionContent } = useModelingPermissionApi(loading)
-const userInfo = inject(userInfoKey)
+const userInfo = useUserInfo()
 const userMap = inject(userMapKey)!
 
 

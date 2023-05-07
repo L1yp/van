@@ -29,19 +29,18 @@
 
 <script lang="ts" setup>
 // 会签配置
-import {ref, watch, computed, inject, toRaw, nextTick, onUnmounted} from "vue"
-import { ElSelect, ElOption, ElInput, ElForm, ElFormItem, ElSwitch, ElRadioGroup, ElRadioButton } from "element-plus"
+import { computed, inject, toRaw, onUnmounted } from "vue"
+import { ElSelect, ElOption, ElForm, ElFormItem, ElSwitch, ElRadioGroup, ElRadioButton } from "element-plus"
 import {
-  bpmnModelerKey,
-  bpmnSelectedElemKey,
   modelingFieldKey,
 } from "@/config/app.keys";
 import { BpmnUtil } from "@/components/bpmn/form/util";
 import emitter, { BpmnElementChanged } from "@/event/mitt";
+import { useBpmnModeler, useBpmnSelectedElem } from "@/config/app.hooks";
 
-const modelingFields = inject(modelingFieldKey)
-const bpmnSelectedElem = inject(bpmnSelectedElemKey)
-const bpmnModeler = inject(bpmnModelerKey)
+const modelingFields = inject(modelingFieldKey)!
+const bpmnSelectedElem = useBpmnSelectedElem()
+const bpmnModeler = useBpmnModeler()
 const userFields = computed(() => modelingFields.value.filter(it => it.type === 'user'))
 
 

@@ -44,12 +44,9 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, inject, onMounted, Ref, ref,  } from "vue"
-import { userInfoKey } from "@/config/app.keys";
+import { computed, onMounted, ref,  } from "vue"
 import {
-  ElTable, ElTableColumn, ElButton, ElPopconfirm, ElTooltip, ElDialog, ElForm, ElFormItem,
-  ElRadioGroup, ElRadio, ElMessage, ElInputNumber, ElInput, ElRow, ElCol, ElSelect, ElOption,
-  ElCascader,
+  ElTable, ElTableColumn, ElButton, ElFormItem,
 } from "element-plus"
 import * as ProcessApi from "@/api/sys/process"
 import SVGIcon from "@/components/common/SVGIcon.vue"

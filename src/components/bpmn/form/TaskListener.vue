@@ -33,17 +33,18 @@
 </template>
 
 <script lang="ts" setup>
-import {computed, inject, onUnmounted, toRaw, ref, shallowRef} from "vue"
-import {ElTable, ElTableColumn, ElDivider, ElButton, ElMessage} from "element-plus"
-import { bpmnModelerKey, bpmnSelectedElemKey } from "@/config/app.keys";
+import { computed, onUnmounted, toRaw, ref, shallowRef } from "vue"
+import { ElTable, ElTableColumn, ElDivider, ElButton, ElMessage } from "element-plus"
 import emitter, { BpmnElementChanged } from '@/event/mitt'
 import MaskWindow from "@/components/dialog/MaskWindow.vue";
 import TaskListenerForm from './TaskListenerForm.vue'
 import { BpmnUtil } from "@/components/bpmn/form/util";
 import { Plus } from '@element-plus/icons-vue'
+import { useBpmnModeler, useBpmnSelectedElem } from "@/config/app.hooks";
 
-const bpmnModeler = inject(bpmnModelerKey)
-const bpmnSelectedElem = inject(bpmnSelectedElemKey)
+
+const bpmnModeler = useBpmnModeler()
+const bpmnSelectedElem = useBpmnSelectedElem()
 
 const loading = ref(false)
 const formRef = ref<InstanceType<typeof TaskListenerForm>>()
@@ -92,7 +93,7 @@ const tableData = computed<TaskListenerObject[]>(() => {
           }
           fields.push({
             name: field.name,
-            type: fieldType,
+            type: fieldType as ExecutionListenerFieldType,
             value: fieldVal
           })
         }

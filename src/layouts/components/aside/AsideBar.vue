@@ -23,13 +23,13 @@ import { inject, computed } from "vue"
 import { ElMenu, ElScrollbar } from "element-plus";
 import NestedMenu from "./NestedMenu.vue";
 import { useRoute } from "vue-router";
-import { menuOptionsKey } from "@/config/app.keys";
+import { useMenuOptions } from "@/config/app.hooks";
 import { useThemeStore } from "@/store/theme";
 import { useLayoutStore } from "@/store/layout";
 import { getDeviceType } from "@/utils/common";
 
 const route = useRoute();
-const menuOptions = inject(menuOptionsKey)
+const menuOptions = useMenuOptions()
 
 const layoutStore = useLayoutStore()
 const themeStore = useThemeStore()

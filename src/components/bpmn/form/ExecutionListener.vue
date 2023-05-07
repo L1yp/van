@@ -35,15 +35,16 @@
 <script lang="ts" setup>
 import {computed, inject, onUnmounted, toRaw, ref, shallowRef} from "vue"
 import {ElTable, ElTableColumn, ElDivider, ElButton, ElMessage} from "element-plus"
-import { bpmnModelerKey, bpmnSelectedElemKey } from "@/config/app.keys";
 import emitter, { BpmnElementChanged } from '@/event/mitt'
 import MaskWindow from "@/components/dialog/MaskWindow.vue";
 import ExecutionListenerForm from './ExecutionListenerForm.vue'
 import { BpmnUtil } from "@/components/bpmn/form/util";
 import { Plus } from '@element-plus/icons-vue'
+import { useBpmnModeler, useBpmnSelectedElem } from "@/config/app.hooks";
 
-const bpmnModeler = inject(bpmnModelerKey)
-const bpmnSelectedElem = inject(bpmnSelectedElemKey)
+
+const bpmnSelectedElem = useBpmnSelectedElem()
+const bpmnModeler = useBpmnModeler()
 
 const loading = ref(false)
 const formRef = ref<InstanceType<typeof ExecutionListenerForm>>()

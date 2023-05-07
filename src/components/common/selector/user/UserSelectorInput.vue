@@ -15,7 +15,7 @@
       :remote-method="handleSearch"
       :loading="loading"
       tag-type="success"
-      :placeholder="placeholder"
+      :placeholder="props.placeholder"
       value-key="id"
       :disabled="props.disabled"
       ref="selectRef"
@@ -42,7 +42,7 @@ import { ElSelect, ElOption, ElMessage } from "element-plus";
 import { computed, inject, ref, toRaw, watch } from "vue";
 import UserSelectorModal from "./UserSelectorModal.vue";
 import { useUserData } from "@/service/system/user";
-import { userMapKey } from "@/config/app.keys";
+import { useUserMap } from "@/config/app.hooks";
 
 interface Props {
   multiple?: boolean
@@ -54,7 +54,7 @@ interface Props {
 
 interface Emits {
   (e: 'update:modelValue', val: string | string[]): void
-  (e: 'change', val: string | string[])
+  (e: 'change', val: string | string[]): void
 }
 
 const selectRef = ref<InstanceType<typeof ElSelect>>()
@@ -65,7 +65,7 @@ const props = withDefaults(defineProps<Props>(), {
 })
 const emits = defineEmits<Emits>()
 
-const userMap = inject(userMapKey)
+const userMap = useUserMap()
 
 const selectedElems = computed<UserView[]>({
   get: () => {

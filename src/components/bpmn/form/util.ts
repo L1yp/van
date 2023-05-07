@@ -14,17 +14,18 @@ export class BpmnUtil {
   }
 
   public updateProperty(element: any, properties: Record<string, any>) {
-    const modeling = unref(this.bpmnModeler).get("modeling")
+    const modeling = unref(this.bpmnModeler).get("modeling") as any
     modeling.updateProperties(unref(element), properties)
   }
 
   public updateModelingProperty(element: any, attrInstance: any, properties: Record<string, any>) {
-    const modeling = this.bpmnModeler.value.get("modeling")
+    const modeling = this.bpmnModeler.value.get("modeling") as any
     modeling.updateModdleProperties(unref(element), attrInstance, properties)
   }
 
   public getProcessKey(): string {
-    const registry = unref(this.bpmnModeler).get("elementRegistry")
+    const registry = unref(this.bpmnModeler).get("elementRegistry") as any
+    // @ts-ignore
     const root = registry.find(it => it.type === 'bpmn:Process')
     return root.id
   }

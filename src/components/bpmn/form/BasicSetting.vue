@@ -17,14 +17,14 @@
 
 <script lang="ts" setup>
 import {computed, inject, onUnmounted} from "vue";
-import { bpmnModelerKey, bpmnSelectedElemKey } from "@/config/app.keys";
 import { ElInput, ElForm, ElFormItem } from "element-plus"
 import { BpmnUtil} from "./util"
 import emitter, {BpmnElementChanged} from "@/event/mitt";
+import { useBpmnModeler, useBpmnSelectedElem } from "@/config/app.hooks";
 
 
-const bpmnSelectedElem = inject(bpmnSelectedElemKey)
-const bpmnModeler = inject(bpmnModelerKey)
+const bpmnSelectedElem = useBpmnSelectedElem()
+const bpmnModeler = useBpmnModeler()
 
 const bpmnUtil = new BpmnUtil(bpmnModeler)
 

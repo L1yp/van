@@ -26,10 +26,19 @@
 </template>
 
 <script lang="ts" setup>
-import {ElScrollbar, ElForm, ElFormItem, ElRadioGroup, ElRadioButton, ElInput, ElButton, ElMessage} from 'element-plus'
-import {inject, ref} from "vue";
-import {bpmnSelectedElemKey} from "@/config/app.keys";
+import {
+  ElScrollbar,
+  ElForm,
+  ElFormItem,
+  ElRadioGroup,
+  ElRadioButton,
+  ElInput,
+  ElButton,
+  ElMessage
+} from 'element-plus'
+import { ref } from "vue";
 import ListenerFieldInject from "@/components/bpmn/form/ListenerFieldInject.vue";
+import { useBpmnModeler, useBpmnSelectedElem } from "@/config/app.hooks";
 
 interface Props {
   listener: ExecutionListenerObject
@@ -37,15 +46,16 @@ interface Props {
 
 const props = defineProps<Props>()
 
-const selectedElem = inject(bpmnSelectedElemKey)
+
+const selectedElem = useBpmnSelectedElem()
+const bpmnModeler = useBpmnModeler()
 
 const formRef = ref<InstanceType<typeof ElForm>>()
 const fieldRef = ref<InstanceType<typeof ListenerFieldInject>>()
 
-
 async function validate() {
   await fieldRef.value.validate()
-  await formRef.value.validate()
+  await formRef.value?.validate()
 }
 
 defineExpose({

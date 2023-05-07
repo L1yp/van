@@ -47,15 +47,15 @@ declare interface UserView {
   id: string
   username: string;
   dept_id: number
-  nickname?: string;
-  phone?: string;
-  email?: string;
-  avatar?: string;
-  status?: number;
-  update_by?: string;
-  label?: string;
-  pt_dept_ids?: string[]
-  role_ids?: string[]
+  nickname: string;
+  phone: string;
+  email: string;
+  avatar: string;
+  status: number;
+  update_by: string;
+  label: string;
+  pt_dept_ids: string[]
+  role_ids: string[]
 }
 
 declare interface UserPageAdditional {

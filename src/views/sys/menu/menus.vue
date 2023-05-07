@@ -98,12 +98,12 @@ import {
 } from "element-plus";
 import * as MenuApi from "@/api/sys/menu";
 import {filterDataWithTitle, getDeviceType, toTree} from "@/utils/common";
-import { menuOptionsKey } from "@/config/app.keys";
 import { useMenuData } from "@/service/system/menu";
 import { Plus, Edit, Delete, Download, } from "@element-plus/icons-vue";
 import MenuCreateModal from "./modal/MenuCreateModal.vue";
 import {installLayoutContentRoute, uninstallLayoutContentRoute} from "@/router";
 import * as UserApi from "@/api/sys/user";
+import { useMenuOptions } from "@/config/app.hooks";
 
 const deviceType = getDeviceType()
 
@@ -145,7 +145,7 @@ function editMenu(menu: MenuView) {
   createModalVisible.value = true
 }
 
-const menus = inject(menuOptionsKey)!
+const menus = useMenuOptions()
 async function handleConfirm(param: MenuAddParam | MenuUpdateParam) {
   try {
     loading.value = true

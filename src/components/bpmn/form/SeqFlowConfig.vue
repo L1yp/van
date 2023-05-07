@@ -21,15 +21,16 @@
 
 <script lang="ts" setup>
 // TODO: 设置 连线类型：默认流转 条件流程 无
-import {inject, onUnmounted, computed, toRaw} from "vue"
+import { onUnmounted, computed, toRaw } from "vue"
 import { ElForm, ElFormItem, ElInput, ElInputNumber, ElRadioGroup, ElRadioButton } from "element-plus"
-import { bpmnModelerKey, bpmnSelectedElemKey } from "@/config/app.keys";
 import emitter, { BpmnElementChanged } from "@/event/mitt";
 import { BpmnUtil } from "@/components/bpmn/form/util";
-import {Connection, ElementRegistry} from "bpmn-js";
+import { useBpmnModeler, useBpmnSelectedElem } from "@/config/app.hooks";
 
-const bpmnModeler = inject(bpmnModelerKey)
-const bpmnSelectedElem = inject(bpmnSelectedElemKey)
+const bpmnModeler = useBpmnModeler()
+const bpmnSelectedElem = useBpmnSelectedElem()
+
+
 const bpmnUtil = new BpmnUtil(bpmnModeler)
 const expression = computed({
   get() {
@@ -44,7 +45,7 @@ const expression = computed({
       conditionExpression.body = v
       bpmnUtil.updateProperty(bpmnSelectedElem, { conditionExpression })
     }
-    expression.effect.scheduler()
+    expression.effect?.scheduler?.()
   }
 })
 
