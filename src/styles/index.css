@@ -52,3 +52,7 @@ body {
 .el-popper.form-item-tooltip code {
     background-color: #f5f7fa;
 }
+
+.el-tree-node__content>label.el-checkbox {
+    height: 100%;
+}

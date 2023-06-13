@@ -63,6 +63,8 @@
       v-model="dialogInfo.visible"
       draggable
       title="预览表单"
+      :fixed-body-height="false"
+      use-body-scrolling
       width="600px"
       @cancel="dialogInfo.visible = false"
       @confirm="dialogInfo.visible = false"
@@ -136,7 +138,7 @@ const containerHeight = computed<string>(() => `calc(${layoutStore.mainHeight} -
 
 const designerContainerHeight = computed<string>(() => `calc(${containerHeight.value} - 40px)`)
 
-const vFormActiveElement = ref<ComponentConfig>()
+const vFormActiveElement = ref<ComponentConfig | null>(null)
 provide(vFormActiveElementKey, vFormActiveElement)
 
 const mode = computed<FormFieldMode>(() => 'design')

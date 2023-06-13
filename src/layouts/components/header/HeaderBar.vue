@@ -49,15 +49,16 @@
 </template>
 
 <script lang="ts" setup>
-import { ElAvatar, ElButton, ElDropdown, ElDropdownItem, ElDropdownMenu, ElSwitch } from "element-plus"
+import { ElAvatar, ElButton, ElDropdown, ElDropdownItem, ElDropdownMenu } from "element-plus"
 import { useRouter} from "vue-router";
 import { uninstallLayoutContentRoute } from "@/router";
 import SVGIcon from "@/components/common/SVGIcon.vue";
 import { remove } from "@/utils/storage"
-import { useUserInfo } from "@/config/app.keys";
+import { useUserInfo } from "@/config/app.hooks";
 import { useIcon } from "@/components/common/util";
 import { useLayoutStore } from "@/store/layout";
 import { useThemeStore } from "@/store/theme";
+import { useKeepAliveStore } from "@/store/keep-alive";
 
 const themeStore = useThemeStore()
 
@@ -72,12 +73,15 @@ const layoutStore = useLayoutStore()
 const userInfo = useUserInfo()
 console.log("userInfo", userInfo)
 
+const keepAliveStore = useKeepAliveStore()
+
 
 function handleCommand(command: string) {
   if (command === "profile") {
     router.push({path: "/user/profile"});
   }
   else if (command === "logout") {
+    keepAliveStore.keepAliveNames = []
     uninstallLayoutContentRoute();
     remove("isLogin");
     remove("tags");

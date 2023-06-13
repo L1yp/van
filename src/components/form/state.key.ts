@@ -4,5 +4,5 @@ export const formModeKey = Symbol("formModeKey") as InjectionKey<ComputedRef<For
 
 export const formDataKey = Symbol('formDataKey') as InjectionKey<Ref<object>>
 
-export const vFormActiveElementKey = Symbol('vFormActiveElementKey') as InjectionKey<Ref<ComponentConfig>>
+export const vFormActiveElementKey = Symbol('vFormActiveElementKey') as InjectionKey<Ref<ComponentConfig | null>>
 export const vFormSchemeKey = Symbol('vFormSchemeKey') as InjectionKey<Ref<VFormScheme>>

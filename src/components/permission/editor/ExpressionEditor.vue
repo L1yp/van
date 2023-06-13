@@ -84,7 +84,7 @@ import { useDeptInfo } from "@/service/system/dept";
 import { findTreeItemById, flattenTree } from "@/utils/common";
 import { useModelingFieldApi } from "@/service/modeling/field";
 import { useModelingOptionApi } from "@/service/modeling/option";
-import { useUserInfo } from "@/config/app.hooks";
+import { useUserInfo, useUserMap } from "@/config/app.hooks";
 import dayjs from "dayjs";
 import { useModelingPermissionApi } from "@/service/modeling/permission";
 import { listByIdList } from "@/api/sys/user";
@@ -100,7 +100,7 @@ const { tableData, loadDept } = useDeptInfo(loading)
 const { modelingFields, findModelingFields } = useModelingFieldApi(loading)
 const { permissionContent, getPermissionContent } = useModelingPermissionApi(loading)
 const userInfo = useUserInfo()
-const userMap = inject(userMapKey)!
+const userMap = useUserMap()
 
 
 

@@ -69,8 +69,8 @@ declare interface ComponentConfig extends Tree {
    */
   category: 'form-item' | 'layout' | 'display'
   icon?: string
-  formItemAttrs?: Record<string, any>
-  attrs?: Record<string, any>,
+  formItemAttrs: Record<string, any>
+  attrs: Record<string, any>,
   key: number
 }
 

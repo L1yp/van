@@ -18,8 +18,8 @@ declare interface TableData<T> {
 }
 
 declare interface PageData<T, D = any> {
-  page_idx?: number
-  page_size?: number
+  page_idx: number
+  page_size: number
   total: number
   data: T[]
   additional?: D
@@ -42,3 +42,5 @@ declare interface DialogInfo<T> {
 declare interface Tree {
   children?: this[]
 }
+
+declare type FunctionParams<T> = T extends (params: infer P) => any ? P : never;

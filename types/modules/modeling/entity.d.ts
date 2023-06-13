@@ -46,6 +46,7 @@ declare interface ModelingEntityInstanceUpdateParam {
 }
 
 declare interface ModelingEntityInstanceFindParam {
+  module: ModelingModule
   mkey: string
   id: string
 }

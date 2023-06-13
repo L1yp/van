@@ -10,7 +10,7 @@
           handle="div.component-item"
           item-key="id"
           :sort="false"
-          :clone="dragFieldToDesigner"
+          :clone="modelingFieldToComponent"
         >
           <template #item="{ element }">
             <div class="component-item">
@@ -30,7 +30,7 @@
           handle="div.component-item"
           item-key="id"
           :sort="false"
-          :clone="dragFieldToDesigner"
+          :clone="modelingFieldToComponent"
         >
           <template #item="{ element }">
             <div class="component-item">
@@ -50,14 +50,12 @@
           handle="div.component-item"
           item-key="id"
           :sort="false"
-          :clone="dragFieldToDesigner"
+          :clone="modelingFieldToComponent"
         >
           <template #item="{ element }">
             <div class="component-item">
               <div style="display: flex; justify-content: flex-start; padding: 3px">
-                <div style="display: flex; justify-content: flex-start; padding: 3px">
-                  <div style="font-size: 16px" v-text="element.label"></div>
-                </div>
+                <div style="font-size: 16px" v-text="element.label"></div>
               </div>
             </div>
           </template>
@@ -73,6 +71,7 @@ import {onBeforeMount, onUnmounted, ref} from "vue";
 import { ElScrollbar, ElCollapse, ElCollapseItem } from "element-plus";
 import Draggable from "vuedraggable";
 import emitter, {FormDesignerFieldDeleteEvent} from "@/event/mitt";
+import { modelingFieldToComponent } from "@/components/form/designer/candidate/index";
 
 interface Props {
   module: ModelingModule
@@ -115,102 +114,6 @@ onBeforeMount(async () => {
   globalFields.value = modelingFields.value.filter(it => it.scope === `GLOBAL`) || []
 })
 
-function dragFieldToDesigner(field: ModelingFieldDefView): ComponentConfig {
-  console.log('field', field);
-  const item: ComponentConfig = {
-    id: field.field,
-    component: '',
-    category: 'form-item',
-    formItemAttrs: {},
-    attrs: {},
-    key: 1,
-    ...toComponentConfig(field)
-  }
-  return item
-}
-
-function toComponentConfig(field: ModelingFieldDefView): Partial<ComponentConfig> {
-  const scheme = field.scheme
-  const config: Partial<ComponentConfig> = { formItemAttrs: {}, attrs: {} }
-  config.formItemAttrs.label = field.label
-  config.attrs.style = `width: 100%`
-  if (scheme.type === 'date') {
-    config.component = 'date-picker'
-    config.attrs.dateType = scheme.dateType
-    config.attrs.format = scheme.format
-    config.attrs.valueFormat = scheme.valueFormat
-  }
-  else if (scheme.type === 'daterange') {
-    config.component = 'date-range-picker'
-    config.attrs.dateRangeType = scheme.dateRangeType
-    config.attrs.format = scheme.format
-    config.attrs.valueFormat = scheme.valueFormat
-  }
-  else if (scheme.type === 'dept') {
-    config.component = 'dept-select'
-    config.attrs.multiple = scheme.multiple
-  }
-  else if (scheme.type === 'user') {
-    config.component = 'user-select'
-    config.attrs.multiple = scheme.multiple
-  }
-  else if (scheme.type === 'text') {
-    config.component = 'text-input'
-    config.attrs.defaultValue = scheme.defaultValue
-  }
-  else if (scheme.type === 'number') {
-    config.component = 'number-input'
-    config.attrs.defaultValue = scheme.defaultValue
-    config.attrs.min = scheme.min
-    config.attrs.max = scheme.max
-    config.attrs.formatter = scheme.formatter
-    config.attrs.parser = scheme.parser
-  }
-  else if (scheme.type === 'option') {
-    if (scheme.multiple) {
-      config.component = 'multi-select'
-      config.attrs.options = []
-      if (scheme.optionComponent === 'checkbox') {
-          config.attrs.expand = true
-          config.attrs.buttonOption = false
-      } else if (scheme.optionComponent === 'checkbox-button') {
-        config.attrs.expand = true
-        config.attrs.buttonOption = true
-      } else {
-        config.attrs.expand = false
-        config.attrs.buttonOption = false
-      }
-      config.attrs.optionTypeId = scheme.optionTypeId
-      config.attrs.defaultValue = scheme.optionDefaultValue
-      config.attrs.fitInputWidth = true
-      config.attrs.clearable = true
-      config.attrs.filterable = true
-    } else {
-      config.component = 'single-select'
-      config.attrs.options = []
-      if (scheme.optionComponent) {
-        if (scheme.optionComponent === 'radio') {
-          config.attrs.expand = true
-          config.attrs.buttonOption = false
-        } else if (scheme.optionComponent === 'radio-button') {
-          config.attrs.expand = true
-          config.attrs.buttonOption = true
-        } else {
-          config.attrs.expand = false
-          config.attrs.buttonOption = false
-        }
-      }
-      config.attrs.optionTypeId = scheme.optionTypeId
-      config.attrs.defaultValue = scheme.optionDefaultValue?.[0]
-      config.attrs.fitInputWidth = true
-      config.attrs.clearable = true
-      config.attrs.filterable = true
-    }
-
-  }
-  return config
-}
-
 </script>
 
 <style scoped>
@@ -224,7 +127,7 @@ function toComponentConfig(field: ModelingFieldDefView): Partial<ComponentConfig
   width: 119px;
   background-color: var(--el-bg-color);
   cursor: move;
-  border-radius: 8px;
+  border-radius: 4px;
   outline: 1px solid #8db2b4;
 }
 

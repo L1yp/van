@@ -55,39 +55,39 @@ defineExpose({
 </script>
 
 <style scoped>
-.vform-render :deep(.el-select:hover:not(.el-select-disabled) .el-input__wrapper) {
+.vform-render:not(.el-form--label-top) :deep(.el-select:hover:not(.el-select-disabled) .el-input__wrapper) {
   box-shadow: none !important;
 }
 
-.vform-render :deep(.el-select .el-input__wrapper.is-focus) {
+.vform-render:not(.el-form--label-top) :deep(.el-select .el-input__wrapper.is-focus) {
   box-shadow: none !important;
 }
 
-.vform-render :deep(.el-form-item.is-error .el-input__wrapper) {
+.vform-render:not(.el-form--label-top) :deep(.el-form-item.is-error .el-input__wrapper) {
   box-shadow: none !important;
 }
 
-.vform-render :deep(.el-input__wrapper:hover) {
+.vform-render:not(.el-form--label-top) :deep(.el-input__wrapper:hover) {
   box-shadow: none !important;
 }
 
-.vform-render :deep(.el-input__wrapper) {
+.vform-render:not(.el-form--label-top) :deep(.el-input__wrapper) {
   box-shadow: none !important;
 }
 
-.vform-render :deep(.el-select .el-input.is-focus .el-input__wrapper) {
+.vform-render:not(.el-form--label-top) :deep(.el-select .el-input.is-focus .el-input__wrapper) {
   box-shadow: none !important;
 }
 
-.vform-render :deep(.el-form-item--default) {
+.vform-render:not(.el-form--label-top) :deep(.el-form-item--default) {
   margin-bottom: 3px;
 }
 
-.vform-render :deep(.el-form-item) {
+.vform-render:not(.el-form--label-top) :deep(.el-form-item) {
   border: 1px solid var(--el-border-color);
 }
 
-.vform-render :deep(.el-form-item__label) {
+.vform-render:not(.el-form--label-top) :deep(.el-form-item__label) {
   border-right: 1px solid var(--el-border-color);
 }
 

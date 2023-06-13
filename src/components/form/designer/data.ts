@@ -1,4 +1,4 @@
-import {genId} from "@/components/form/designer/util/common";
+import { genId } from "@/components/form/designer/util/common";
 
 export const DisplayComponents: CandidateComponentConfig[] = [
   {

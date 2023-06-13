@@ -61,12 +61,25 @@
         </div>
         <div style="width: 100%; height: calc(100% - 32px - 1px - 12px - 10px); margin-top: 10px">
           <el-scrollbar always>
-            <v-form-render v-if="viewerMode" :scheme="viewPageInfo!.page_scheme" :form-data="instanceInfo || {}" />
-            <v-form-render v-if="!viewerMode" ref="updateFormRenderRef" :scheme="updatePageInfo!.page_scheme" :form-data="instanceInfo || {}" />
+            <template v-if="props.module === 'ENTITY'">
+              <v-form-render v-if="viewerMode" :scheme="viewPageInfo!.page_scheme" :form-data="instanceInfo || {}" />
+              <v-form-render  ref="updateFormRenderRef" :scheme="updatePageInfo!.page_scheme" :form-data="instanceInfo || {}" />
+            </template>
+            <template v-else>
+              <v-form-render v-if="viewerMode" :scheme="viewPageInfo!.page_scheme" :form-data="instanceInfo || {}" />
+            </template>
           </el-scrollbar>
         </div>
       </div>
-
+    </MaskWindow>
+    <MaskWindow
+      v-model="workflowUpdatePanelVisible"
+      :teleport-to="teleportTo"
+      show-toolbar
+      @cancel="workflowUpdatePanelVisible = false"
+      @confirm=""
+    >
+      <v-form-render v-if="!!workflowUpdateScheme" :scheme="workflowUpdateScheme" :form-data="instanceInfo || {}" />
     </MaskWindow>
     <MaskWindow v-model="viewConfigVisible" :teleport-to="teleportTo">
       <ModelingViewUpdatePanel :src="activeView" :fields="modelingFields" @close="viewConfigVisible = false" @success="initPage" />
@@ -110,7 +123,7 @@ import {
   ColDef,
   ColGroupDef,
   ValueFormatterParams,
-  CellDoubleClickedEvent, CellContextMenuEvent, CellClickedEvent, SortChangedEvent
+  CellDoubleClickedEvent, CellContextMenuEvent, SortChangedEvent
 } from "ag-grid-community";
 import * as PageApi from '@/api/modeling/page'
 import * as WorkflowApi from "@/api/workflow";
@@ -123,6 +136,7 @@ import { varUserOptions, varDeptOptions } from "@/views/modeling/filter";
 import { MenuOption, Point } from "@/components/menu";
 import DropdownMenu from "@/components/menu/DropdownMenu.vue";
 import Clipboard from "clipboard";
+import { modelingFieldToComponent } from "@/components/form/designer/candidate";
 
 
 interface Props {
@@ -153,15 +167,14 @@ const pageInfo = ref<ModelingPageView>()
 const viewPageInfo = ref<ModelingPageView>()
 const updatePageInfo = ref<ModelingPageView>()
 const startFormScheme = ref<ModelingPageView>()
+const workflowUpdateScheme = ref<VFormScheme>()
+const workflowUpdatePanelVisible = ref(false)
 
 const viewSimpleInfoList = ref<ModelingViewSimpleInfo[]>([])
 
 const startForm = computed(() => props.module === 'ENTITY' ? pageInfo.value?.page_scheme : startFormScheme.value?.page_scheme)
 
 const autoSizeColumnKeys = ref<string[]>([])
-
-
-onMounted(initPage)
 
 const optionFieldValueMap = new Map<string, ModelingOptionValueView[]>()
 
@@ -429,7 +442,7 @@ function gotoSummaryPage(row: any) {
       return
     }
     loading.value = true
-    getInstance({ mkey: props.mkey, id: row.id })
+    getInstance({ module: props.module, mkey: props.mkey, id: row.id})
       .then(() => (viewPanelVisible.value = true, viewerMode.value = true))
       .finally(() => loading.value = false)
   } else if (props.module === 'WORKFLOW') {
@@ -473,8 +486,63 @@ function handleMenuClick(option: MenuOption, ev: PointerEvent) {
 
   }
   else if (option.command === 'edit') {
-    viewerMode.value = false
-    viewPanelVisible.value = true
+    if (props.module === 'ENTITY') {
+      viewerMode.value = false
+      viewPanelVisible.value = true
+    }
+    else if (props.module === 'WORKFLOW') {
+      loadWorkflowUpdatePageScheme(contextmenuContext.value?.data.id)
+    }
+
+  }
+}
+
+async function loadWorkflowUpdatePageScheme(id: string) {
+  try {
+    if (!modelingFields.value?.length) {
+      await findModelingFields(props.module, props.mkey)
+    }
+    await getInstance({ module: props.module, mkey: props.mkey, id})
+
+    const scheme: VFormScheme = {
+      labelPosition: 'auto',
+      labelWidth: '120px',
+      size: 'default',
+      style: '',
+      mode: 'edit',
+      children: []
+    }
+
+    let i = 0
+    for (let field of modelingFields.value) {
+      const item = modelingFieldToComponent(field);
+
+      if (['id', 'process_instance_id', 'code', 'create_by', 'create_time', 'update_by', 'update_time'].includes(item.id)) {
+        item.attrs.mode = 'read'
+      } else {
+        if (item.formItemAttrs.class) {
+          item.formItemAttrs.class = item.formItemAttrs.class + " edit-form-item"
+        } else {
+          item.formItemAttrs.class = "edit-form-item"
+        }
+      }
+
+      if (i % 2 !== 0) {
+        if (item.formItemAttrs.class) {
+          item.formItemAttrs.class = item.formItemAttrs.class + " form-item-stripe"
+        } else {
+          item.formItemAttrs.class = "form-item-stripe"
+        }
+      }
+
+      scheme.children.push(item)
+      i++
+    }
+
+    workflowUpdateScheme.value = scheme
+    workflowUpdatePanelVisible.value = true
+  } catch (e) {
+    ElMessage.error((e as Error)?.message || '加载失败')
   }
 }
 
@@ -539,12 +607,18 @@ function handleConfirmAdd() {
 const updateFormRenderRef = ref<InstanceType<typeof VFormRender>>()
 
 function handleCancelUpdate() {
-  updateFormRenderRef.value.formRef.resetFields()
-  viewerMode.value = true
+  if (props.module === 'ENTITY') {
+    updateFormRenderRef.value?.formRef?.resetFields()
+    viewerMode.value = true
+  }
+  else if (props.module === 'WORKFLOW') {
+
+  }
+
 }
 
 function handleConfirmUpdate() {
-  loading.value =true
+  loading.value = true
   updateFormRenderRef.value.formRef.validate()
     .then(() => updateInstance({
       mkey: props.mkey,
@@ -577,14 +651,13 @@ async function handleConfigView() {
 
 </script>
 <style scoped>
-.menu-item {
-  padding: 6px 12px;
-  border-bottom: 1px solid var(--el-border-color);
-  cursor: pointer;
+
+:deep(.edit-form-item .el-form-item__label) {
+  //background-color: #ededed;
 }
 
-.menu-item:hover {
-  background-color: var(--el-menu-hover-bg-color);
+:deep(.form-item-stripe .el-form-item__label) {
+  //background-color: var(--el-border-color);
 }
 
 </style>

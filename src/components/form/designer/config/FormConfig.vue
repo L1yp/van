@@ -6,7 +6,7 @@
     style="padding: 5px;"
   >
     <el-form-item prop="labelPosition" label="标签位置" required>
-      <el-select v-model="formScheme.labelPosition">
+      <el-select v-model="formScheme.labelPosition" style="width: 100%">
         <el-option label="左对齐" value="left" />
         <el-option label="右对齐" value="right" />
         <el-option label="上对齐" value="top" />

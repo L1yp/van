@@ -32,10 +32,11 @@
         row-key="id"
         stripe border
         :tree-props="{ children: 'children' }"
+        @cell-click="handleCellClick"
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" align="center" header-align="center" width="60"/>
-        <el-table-column prop="name" align="left" header-align="left" label="标题" width="150"/>
+        <el-table-column prop="name" align="left" header-align="left" label="标题" width="150" class-name="expand-column" />
         <el-table-column align="center" header-align="center" label="#" type="index" width="50"/>
         <el-table-column prop="icon" align="center" header-align="center" label="图标" width="60">
           <template #default="scope">
@@ -94,7 +95,7 @@ import {
   ElPopconfirm,
   ElTable,
   ElTableColumn,
-  ElTag, ElScrollbar,
+  ElTag, ElScrollbar, TableColumnCtx,
 } from "element-plus";
 import * as MenuApi from "@/api/sys/menu";
 import {filterDataWithTitle, getDeviceType, toTree} from "@/utils/common";
@@ -214,6 +215,17 @@ async function batchDeleteMenu() {
   const ids: string[] = selectionRows.map((it) => it.id);
   console.log("selected ids", ids);
 }
+
+
+function handleCellClick(row: MenuView, column: TableColumnCtx<MenuView>, cell: string | number, event: PointerEvent) {
+  if (column.property === 'name') {
+    tableRef.value?.toggleRowExpansion(row, undefined)
+  } else {
+    // @ts-ignore
+    tableRef.value?.toggleRowSelection(row, undefined)
+  }
+}
+
 </script>
 
 <style scoped>
@@ -232,7 +244,7 @@ async function batchDeleteMenu() {
   height: calc(100% - 32px - 10px);
 }
 
-:deep(div.el-table__header-wrapper .el-table-column--selection div.cell) {
-  display: none;
+:deep(td.expand-column) {
+  cursor: pointer;
 }
 </style>

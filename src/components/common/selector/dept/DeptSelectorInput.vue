@@ -37,7 +37,6 @@
         v-model="selectedElems"
         :data="varTableOptions"
         :multiple="props.multiple"
-        @confirm="handleConfirm"
       />
     </template>
 
@@ -110,34 +109,24 @@ function handleDblClick() {
   modalVisible.value = true
 }
 
-function handleConfirm() {
-  // const varOps = props.varOptions || []
-  // const varDeptIds = new Set<string>(varOps.map(it => it.id))
-  // options.value = [
-  //   ...varOps,
-  //   ...toRaw(selectedElems.value).filter(it => !varDeptIds.has(it.id)),
-  // ]
-}
+const modalVisible = ref(false)
 
-const modalVisible = ref<boolean>(false)
-
-const selectedOptions = computed(() => {
+const selectedOptions = computed<DeptView[]>(() => {
   if (props.multiple && Array.isArray(props.modelValue)) {
-    const options = props.modelValue.map(it => findTreeItemById(tableData.value, 'id', it)).filter(it => !!it)
-    return options?.length ? options : []
+    const list: DeptView[] = []
+    for (let optionId of props.modelValue) {
+      const option = findTreeItemById(tableData.value, 'id', optionId)
+      if (!!option) {
+        list.push(option)
+      }
+    }
+    return list
   } else {
     const option = findTreeItemById(tableData.value, 'id', props.modelValue as string)
-    return option ? [option] : []
+    return !!option ? [option] : []
   }
 })
 
-// const displayValue = computed(() => {
-//   if (Array.isArray(props.modelValue)) {
-//     return props.modelValue.map(it => findTreeItemById(tableData.value, 'id', it)).filter(it => !!it).map(it => it.title).join(', ')
-//   } else {
-//     return findTreeItemById(tableData.value, 'id', props.modelValue)?.title || props.modelValue
-//   }
-// })
 
 </script>
 

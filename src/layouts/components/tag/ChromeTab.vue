@@ -47,16 +47,12 @@ const tagItemHeight = computed(() => `${themeStore.tagBarHeight - 1}px`)
   display: flex;
   margin-left: 3px;
   border-radius: 50%;
-  width: 0;
+  width: 18px;
   height: 18px;
   padding: 2px;
 }
 
-.tag-item.active .close-icon,
-.tag-item:hover .close-icon
-{
-  width: 18px;
-}
+
 
 .tag-item:hover .close-icon:hover {
   background-color: var(--tag-item-text-color);

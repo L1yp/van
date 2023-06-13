@@ -96,13 +96,14 @@
 
 <script lang="ts" setup>
 import VDialog from '@/components/dialog/VDialog.vue';
-import {computed, inject, ref, toRaw} from 'vue';
+import { computed, ref, toRaw } from 'vue';
 import {
   ElTable, ElTableColumn, ElRadio, ElInput, ElScrollbar, ElTag,
   ElIcon,
 } from "element-plus";
 import { Plus, Minus } from "@element-plus/icons-vue";
 import { filterDataWithTitle, findTreeItemById, isArray, flattenTree } from '@/utils/common'
+import { CellCls } from "element-plus/es/components/table/src/table/defaults";
 
 interface Props {
   multiple?: boolean
@@ -115,7 +116,6 @@ interface Props {
 interface Emits {
   (e: 'update:visible', val: boolean): void
   (e: 'update:modelValue', val: string | string[]): void
-  (e: 'confirm'): void
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -132,10 +132,12 @@ const visible = computed<boolean>({
 
 const loading = ref<boolean>(false)
 
-function handleCellClassName({ column, columnIndex }): string | undefined {
-  if (columnIndex === 0) {
+
+function handleCellClassName(params: FunctionParams<CellCls<DeptView>>): string {
+  if (params.columnIndex === 0) {
     return 'column-index-no-place-holder'
   }
+  return ''
 
 }
 
@@ -148,20 +150,12 @@ function handleRowClick(row: DeptView) {
 function handleRowDbClick(row: DeptView) {
   if (!props.multiple) {
     selectedIds.value = row.id
-    emits('confirm')
-    visible.value = false
+    handleConfirm()
   }
 
 }
 
-const selectedIds = computed<string | string[]>({
-  get: () => {
-    return props.modelValue
-  },
-  set: v => {
-    emits('update:modelValue', v)
-  }
-})
+const selectedIds = ref<string | string[]>('')
 
 const selectedIdMap = computed<Set<string>>(() => new Set<string>(selectedIds.value))
 
@@ -173,18 +167,9 @@ const selectedElems = computed<DeptView[]>(() => {
   } else return []
 })
 
-
-
 const isAllAdd = computed<boolean>(() => flatDataIds.value.filter(it => !selectedIdMap.value.has(it)).length === 0)
 
-const bodyHeight = 'calc(70vh - 54px - 44px - 32px)'
-const selectedBoxHeight = 100
-
 const tableRef = ref<InstanceType<typeof ElTable>>()
-const tableHeight = computed<string>(() => {
-  const selectedContainerHeight = props.multiple ? (selectedBoxHeight + 10) : 0 // marginTop
-  return `calc(${bodyHeight} - ${selectedContainerHeight}px)`
-})
 
 const flatData = computed<DeptView[]>(() => flattenTree(props.data))
 const flatDataIds = computed(() => flatData.value.map(it => it.id))
@@ -206,7 +191,7 @@ function handleOpened() {
 }
 
 function handleConfirm() {
-  emits('confirm')
+  emits('update:modelValue', selectedIds.value)
   visible.value = false
 }
 

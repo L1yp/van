@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue'
+import { defineOptions, onMounted, ref } from 'vue'
 import { ElInput } from "element-plus";
 import { CellEditorParams } from "@/components/ag-grid/editor/index";
 
@@ -21,6 +21,7 @@ const text = ref('')
  * Gets called once before editing starts, to give editor a chance to cancel the editing before it even starts.
  */
 function getValue() {
+  console.log('input editor getValue', text.value)
   return text.value
 }
 
@@ -29,6 +30,7 @@ function getValue() {
  * Gets called once before editing starts, to give editor a chance to cancel the editing before it even starts.
  */
 function isCancelBeforeStart() {
+  console.log('input editor isCancelBeforeStart')
   return false
 }
 
@@ -36,12 +38,9 @@ function isCancelBeforeStart() {
  * Gets called once when editing is finished (eg if Enter is pressed). If you return true, then the result of the edit will be ignored.
  */
 function isCancelAfterEnd() {
+  console.log('input editor isCancelAfterEnd')
   return false
 }
-
-onMounted(() => {
-  text.value = props.params?.value
-})
 
 defineExpose({
   getValue,
@@ -49,4 +48,7 @@ defineExpose({
   isCancelAfterEnd,
 })
 
+onMounted(() => {
+  text.value = props.params?.value
+})
 </script>

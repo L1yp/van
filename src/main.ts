@@ -19,6 +19,8 @@ import { createPinia } from "pinia";
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 
+import '@/components/dialog/dialog.css'
+
 import TextFilter from '@/components/ag-grid/filter/components/TextFilter.vue'
 import OptionFilter from '@/components/ag-grid/filter/components/OptionFilter.vue'
 import UserFilter from '@/components/ag-grid/filter/components/UserFilter.vue'

@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, defineComponent, PropType } from 'vue'
 import { ElSelect, ElOption } from "element-plus";
 import { CellEditorParams, AG_EDITOR_SELECT } from "@/components/ag-grid/editor/index";
 
@@ -30,6 +30,7 @@ interface SelectCellEditorParam extends CellEditorParams {
 interface Props {
   params: SelectCellEditorParam
 }
+
 
 const props = defineProps<Props>()
 
@@ -59,5 +60,11 @@ function isCancelBeforeStart() {
 function isCancelAfterEnd() {
   return false
 }
+
+defineExpose({
+  getValue,
+  isCancelBeforeStart,
+  isCancelAfterEnd,
+})
 
 </script>

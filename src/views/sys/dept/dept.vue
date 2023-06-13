@@ -19,7 +19,7 @@
           @confirm="batchDelete"
         >
           <template #reference>
-            <el-button plain type="danger" :icon="Delete">删除</el-button>
+            <el-button plain type="danger" :icon="Delete" :disabled="selectedDeptList.length === 0">删除</el-button>
           </template>
         </el-popconfirm>
         <el-button plain type="warning" @click="exportTable" :icon="Download">导出</el-button>
@@ -36,9 +36,11 @@
         row-key="id"
         stripe border
         :tree-props="{ children: 'children' }"
+        @cell-click="handleCellClick"
+        @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" align="center" header-align="center" />
-        <el-table-column prop="simple_name" align="left" header-align="left" label="简称" min-width="200" />
+        <el-table-column prop="simple_name" align="left" header-align="left" label="简称" min-width="200" class-name="expand-column" />
         <el-table-column type="index" align="center" header-align="center" label="#" width="60" />
         <el-table-column prop="ident" align="center" header-align="center" label="编号" width="100" />
         <el-table-column prop="order_no" align="center" header-align="center" label="排序" width="60" />
@@ -75,14 +77,14 @@
       </el-table>
     </div>
 
-    <DeptModal v-model="modalVisible" :mode="modalMode" :init-data="editDept" @confirm="loadDept" />
+    <DeptModal v-model="modalVisible" :mode="modalMode" :init-data="editDept!" @confirm="loadDept" />
 
   </div>
 
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, nextTick, onBeforeMount, provide, toRaw } from "vue";
+import { ref, computed, nextTick, onBeforeMount, provide, toRaw, Ref } from "vue";
 import SVGIcon from "@/components/common/SVGIcon.vue";
 import {
   ElTable,
@@ -90,7 +92,7 @@ import {
   ElInput, ElTag,
   ElButton,
   ElPopconfirm,
-  ElMessage,
+  ElMessage, TableColumnCtx,
 } from "element-plus";
 import { filterDataWithTitle } from "@/utils/common"
 import { Plus, Delete, Download, Edit } from "@element-plus/icons-vue";
@@ -160,7 +162,7 @@ function shrink() {
 function expandOrShrinkAll(list: DeptView[], expanded: boolean) {
   for (let item of list) {
     if (item.children && item.children.length > 0) {
-      tableRef.value.toggleRowExpansion(item, expanded);
+      tableRef.value?.toggleRowExpansion(item, expanded);
       if (item.children && item.children.length > 0) {
         expandOrShrinkAll(item.children, expanded);
       }
@@ -168,8 +170,21 @@ function expandOrShrinkAll(list: DeptView[], expanded: boolean) {
   }
 }
 
+const selectedDeptList = ref<DeptView[]>([])
+function handleSelectionChange(list: DeptView[]) {
+  selectedDeptList.value = list
+}
 function batchDelete() {
 
+}
+
+function handleCellClick(row: DeptView, column: TableColumnCtx<DeptView>, cell: string | number, event: PointerEvent) {
+  if (column.property === 'simple_name') {
+    tableRef.value?.toggleRowExpansion(row, undefined)
+  } else {
+    // @ts-ignore
+    tableRef.value?.toggleRowSelection(row, undefined)
+  }
 }
 
 </script>
@@ -189,7 +204,8 @@ function batchDelete() {
   height: calc(100% - 32px - 10px);
 }
 
-:deep(div.el-table__header-wrapper .el-table_1_column_1 div.cell) {
-  display: none;
+:deep(td.expand-column) {
+  cursor: pointer;
 }
+
 </style>

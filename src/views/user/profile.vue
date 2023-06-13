@@ -43,7 +43,10 @@ const gridOptions: GridOptions = {
       editable: true,
       cellEditor: SelectEditor,
       // cellEditorPopup: true,
-      valueFormatter: params => ['隐藏', '男', '女'][params.value],
+      valueFormatter: params => {
+        console.log('sex format', params)
+        return ['隐藏', '男', '女'][params.value]
+      },
       cellEditorParams: {
         options: [
           { label: '隐藏', value: 0 },
