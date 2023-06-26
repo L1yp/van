@@ -1,10 +1,12 @@
-import {Base, ElementRegistry} from "bpmn-js";
+import { ElementLike } from "diagram-js/lib/model/Types";
+import ElementRegistry from 'diagram-js/lib/core/ElementRegistry'
+import { Root, Shape } from "bpmn-js/lib/model/Types";
 
 export class BpmnLintError {
-  public element: Base
+  public element: ElementLike | null
   public message: string
 
-  constructor(element, message) {
+  constructor(element: ElementLike | null, message: string) {
     this.element = element
     this.message = message
   }
@@ -18,16 +20,18 @@ export class BpmnLintError {
 abstract class BpmnLintBase {
 
   protected registry: ElementRegistry
+  protected root: Shape
 
-  protected constructor(registry) {
+  protected constructor(registry: ElementRegistry, root: Shape) {
     this.registry = registry
+    this.root = root
   }
 
   public abstract validate(): boolean
 
-  protected error: BpmnLintError
+  protected error: BpmnLintError | undefined
 
-  public getError(): BpmnLintError {
+  public getError(): BpmnLintError | undefined {
     return this.error
   }
 
@@ -38,8 +42,8 @@ abstract class BpmnLintBase {
  */
 class NoLabelUserTaskValidator extends BpmnLintBase {
 
-  public constructor(registry) {
-    super(registry)
+  public constructor(registry: ElementRegistry, root: Shape) {
+    super(registry, root)
   }
 
   validate(): boolean {
@@ -66,8 +70,8 @@ class NoLabelUserTaskValidator extends BpmnLintBase {
  */
 class WorkflowOutcomeValidator extends BpmnLintBase {
 
-  public constructor(registry) {
-    super(registry)
+  public constructor(registry: ElementRegistry, root: Shape) {
+    super(registry, root)
   }
 
   validate(): boolean {
@@ -95,8 +99,8 @@ class WorkflowOutcomeValidator extends BpmnLintBase {
  */
 class GatewayOutgoingValidator extends BpmnLintBase {
 
-  public constructor(registry) {
-    super(registry)
+  public constructor(registry: ElementRegistry, root: Shape) {
+    super(registry, root)
   }
 
   validate(): boolean {
@@ -115,8 +119,8 @@ class GatewayOutgoingValidator extends BpmnLintBase {
  * 多实例任务校验
  */
 class MultiUserTaskValidator extends BpmnLintBase {
-  public constructor(registry) {
-    super(registry)
+  public constructor(registry: ElementRegistry, root: Shape) {
+    super(registry, root)
   }
 
   validate(): boolean {
@@ -141,19 +145,20 @@ class MultiUserTaskValidator extends BpmnLintBase {
  * 表单校验
  */
 class FormValidator extends BpmnLintBase {
-  public constructor(registry) {
-    super(registry)
+  public constructor(registry: ElementRegistry, root: Shape) {
+    super(registry, root)
   }
 
   validate(): boolean {
     const startEvents = this.registry.filter(it => it.type === 'bpmn:StartEvent')
+    console.log('startEvents', startEvents)
     if (startEvents?.length === 1) {
       const startEvent = startEvents[0]
       if (!startEvent.businessObject.formKey) {
         this.error = new BpmnLintError(startEvent, '启动节点未配置表单')
         return false
       }
-    } else {
+    } else if (startEvents.every(it => it.parent === this.root)) {
       this.error = new BpmnLintError(null, '必须存在有且一个启动节点')
       return false
     }
@@ -175,13 +180,13 @@ class FormValidator extends BpmnLintBase {
 
 }
 
-export function validate(registry: ElementRegistry): BpmnLintError | undefined {
+export function validate(registry: ElementRegistry, root: Shape): BpmnLintError | undefined {
   const validators = [
-    new NoLabelUserTaskValidator(registry),
-    new WorkflowOutcomeValidator(registry),
-    new GatewayOutgoingValidator(registry),
-    new MultiUserTaskValidator(registry),
-    new FormValidator(registry),
+    new NoLabelUserTaskValidator(registry, root),
+    new WorkflowOutcomeValidator(registry, root),
+    new GatewayOutgoingValidator(registry, root),
+    new MultiUserTaskValidator(registry, root),
+    new FormValidator(registry, root),
   ]
   for (let validator of validators) {
     if (!validator.validate()) {

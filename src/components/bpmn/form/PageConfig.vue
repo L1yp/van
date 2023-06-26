@@ -12,7 +12,7 @@
     <el-button text circle v-else :icon="Plus" @click="handleAddPage" />
     <el-button text circle :icon="Refresh" @click="handleRefreshPageList" />
     <mask-window v-model="visible" teleport-to="#workflow-mask-panel">
-      <FormDesigner module="WORKFLOW" :mkey="workflowTypeVer.key" :name="pageName" />
+      <FormDesigner module="WORKFLOW" :mkey="workflowTypeVer!.key" :name="pageName" />
     </mask-window>
   </div>
 </template>
@@ -32,7 +32,7 @@ import { useBpmnModeler, useBpmnSelectedElem } from "@/config/app.hooks";
 
 const bpmnSelectedElem = useBpmnSelectedElem()
 const bpmnModeler = useBpmnModeler()
-const modulePageList = inject(modelingPageKey)
+const modulePageList = inject(modelingPageKey)!
 const workflowTypeVer = inject(workflowVerKey)!
 
 const bpmnUtil = new BpmnUtil(bpmnModeler)
@@ -54,6 +54,9 @@ const boundPageId = computed({
 const loading = ref(false)
 const { pageList, findModulePages } = useModelingPageApi(loading)
 function handleRefreshPageList() {
+  if (!workflowTypeVer.value) {
+    return
+  }
   findModulePages({ module: 'WORKFLOW', mkey: workflowTypeVer.value.key })
     .then(() => {
       modulePageList.value = pageList.value
@@ -79,11 +82,10 @@ function handleUpdatePage() {
 }
 
 function handleElementChanged(event: BpmnElementChanged) {
-  boundPageId.effect.scheduler()
+  boundPageId?.effect?.scheduler?.()
 }
 
 emitter.on('bpmnElementChanged', handleElementChanged)
-
 onUnmounted(() => emitter.off('bpmnElementChanged', handleElementChanged))
 </script>
 

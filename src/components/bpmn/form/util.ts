@@ -1,10 +1,12 @@
 import BpmnModeler from "bpmn-js/lib/Modeler";
 import { ShallowRef, unref } from "vue";
+import Modeling from "bpmn-js/lib/features/modeling/Modeling";
+import ElementRegistry from 'diagram-js/lib/core/ElementRegistry'
 
 export class BpmnUtil {
-  private bpmnModeler: ShallowRef<BpmnModeler>;
+  private bpmnModeler: ShallowRef<BpmnModeler | undefined>;
 
-  constructor(bpmnModeler: ShallowRef<BpmnModeler>) {
+  constructor(bpmnModeler: ShallowRef<BpmnModeler | undefined>) {
     this.bpmnModeler = bpmnModeler;
   }
 
@@ -14,20 +16,19 @@ export class BpmnUtil {
   }
 
   public updateProperty(element: any, properties: Record<string, any>) {
-    const modeling = unref(this.bpmnModeler).get("modeling") as any
-    modeling.updateProperties(unref(element), properties)
+    const modeling = unref(this.bpmnModeler)?.get<Modeling>("modeling")
+    modeling?.updateProperties(unref(element), properties)
   }
 
   public updateModelingProperty(element: any, attrInstance: any, properties: Record<string, any>) {
-    const modeling = this.bpmnModeler.value.get("modeling") as any
-    modeling.updateModdleProperties(unref(element), attrInstance, properties)
+    const modeling = this.bpmnModeler.value?.get<Modeling>("modeling")
+    modeling?.updateModdleProperties(unref(element), attrInstance, properties)
   }
 
   public getProcessKey(): string {
-    const registry = unref(this.bpmnModeler).get("elementRegistry") as any
-    // @ts-ignore
-    const root = registry.find(it => it.type === 'bpmn:Process')
-    return root.id
+    const registry = unref(this.bpmnModeler)?.get<ElementRegistry>("elementRegistry")
+    const root = registry?.find(it => it.type === 'bpmn:Process')
+    return root?.id || ''
   }
 
 }

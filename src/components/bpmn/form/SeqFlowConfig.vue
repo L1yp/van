@@ -26,6 +26,9 @@ import { ElForm, ElFormItem, ElInput, ElInputNumber, ElRadioGroup, ElRadioButton
 import emitter, { BpmnElementChanged } from "@/event/mitt";
 import { BpmnUtil } from "@/components/bpmn/form/util";
 import { useBpmnModeler, useBpmnSelectedElem } from "@/config/app.hooks";
+import ElementRegistry from 'diagram-js/lib/core/ElementRegistry'
+import { Connection } from "bpmn-js/lib/model/Types";
+import BpmnFactory from "bpmn-js/lib/features/modeling/BpmnFactory";
 
 const bpmnModeler = useBpmnModeler()
 const bpmnSelectedElem = useBpmnSelectedElem()
@@ -40,8 +43,8 @@ const expression = computed({
     if (bpmnSelectedElem.value?.businessObject?.conditionExpression) {
       bpmnSelectedElem.value.businessObject.conditionExpression.body = v
     } else {
-      const bpmnFactory = bpmnModeler.value.get("bpmnFactory")
-      const conditionExpression = bpmnFactory.create('bpmn:FormalExpression')
+      const bpmnFactory = bpmnModeler.value?.get<BpmnFactory>("bpmnFactory")
+      const conditionExpression = bpmnFactory?.create('bpmn:FormalExpression')
       conditionExpression.body = v
       bpmnUtil.updateProperty(bpmnSelectedElem, { conditionExpression })
     }
@@ -103,49 +106,53 @@ const completionExpression = computed({
 })
 
 function refreshState(e: BpmnElementChanged) {
-  expression.effect.scheduler()
-  orderNo.effect.scheduler()
-  completionRule.effect.scheduler()
-  completionExpression.effect.scheduler()
+  expression?.effect?.scheduler?.()
+  orderNo?.effect?.scheduler?.()
+  completionRule?.effect?.scheduler?.()
+  completionExpression?.effect?.scheduler?.()
 
 
-  // 修改线条类型 或 修改label
-  if (e.element.type === 'bpmn:SequenceFlow' || e.element.type === 'label') {
-    let connection = e.element as Connection
-    if (e.element.type === 'label' && e.element.businessObject.$type === 'bpmn:SequenceFlow') {
-      connection = e.element.labelTarget
+  if (e.element.type === 'label') {
+    let connection = e.element.labelTarget
+    if (!connection) {
+      // label被清空 删除条件
+      const registry = bpmnModeler.value?.get<ElementRegistry>("elementRegistry")
+      const flowId = e.element.businessObject.id
+      connection = registry?.get(flowId) as Connection
       if (!connection) {
-        // label被清空 删除条件
-        const registry: ElementRegistry = bpmnModeler.value.get("elementRegistry")
-        const flowId = e.element.businessObject.id
-        connection = registry.get(flowId) as Connection
-
-        const expression = connection.businessObject.conditionExpression
-        const resetBody = '${outcome == ""}'
-        if (expression.body !== resetBody) {
-          expression.body = resetBody
-          bpmnUtil.updateProperty(connection, { conditionExpression: expression })
-          console.log('label cleared, reset condition now')
-        }
-
-        return
-
+        // delete flow
+        return;
       }
-    }
 
+      const expression = connection.businessObject.conditionExpression
+      const resetBody = '${outcome == ""}'
+      if (expression.body !== resetBody) {
+        expression.body = resetBody
+        bpmnUtil.updateProperty(connection, { conditionExpression: expression })
+        console.log('label cleared, reset condition now')
+      }
+
+      return
+
+    }
+  }
+
+  // 修改线条类型
+  if (e.element.type === 'bpmn:SequenceFlow') {
+    let connection = e.element as Connection
     // 用户任务出口流转线
-    if (e.element.businessObject.$type === 'bpmn:SequenceFlow' && connection.source.type === 'bpmn:UserTask') {
+    if (e.element.businessObject.$type === 'bpmn:SequenceFlow' && connection.source?.type === 'bpmn:UserTask') {
       // 条件流且label存在 自动设置 expression
       if (connection.businessObject.conditionExpression && connection.businessObject.name) {
         const body = '${outcome == "' + connection.businessObject.name + '"}'
         if (body === connection.businessObject.conditionExpression.body) {
           return
         }
-        const bpmnFactory = bpmnModeler.value.get("bpmnFactory")
-        const conditionExpression = bpmnFactory.create('bpmn:FormalExpression')
+        const bpmnFactory = bpmnModeler.value?.get<BpmnFactory>("bpmnFactory")
+        const conditionExpression = bpmnFactory?.create('bpmn:FormalExpression')
         conditionExpression.body = '${outcome == "' + connection.businessObject.name + '"}'
         bpmnUtil.updateProperty(connection, { conditionExpression })
-        console.log('auto set outcome expression')
+        console.log('auto set outcome expression', connection)
       }
     }
 

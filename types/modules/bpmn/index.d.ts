@@ -1,23 +1,6 @@
-declare interface Documentation {
-  $type: string;
-  text: string;
-  $attrs: Record<string, string>
-  $parent: any;
-  di: any;
-}
 
-declare interface BusinessObject {
-  $type: string;
-  documentation: Documentation[];
-  id: string;
-  name: string;
-  $attrs: Record<string, string>;
-  $parent: any;
-  di: any;
-  initiator?: string
-}
 
-declare type ExecutionListenerEvent = 'start' | 'end'
+declare type ExecutionListenerEvent = 'start' | 'end' | undefined
 declare type ListenerValueType = 'class' | 'expression' | 'delegateExpression'
 
 declare interface ExecutionListenerObject {
@@ -36,8 +19,17 @@ declare interface ListenerField {
 
 declare type TaskListenerEvent = 'create' | 'assignment' | 'complete' | 'delete'
 declare interface TaskListenerObject {
-  event: TaskListenerEvent
+  event?: TaskListenerEvent
   type: ListenerValueType
   value: string
   fields?: ListenerField[]
+}
+
+
+declare interface SelectionChangedEvent {
+  newSelection: import('bpmn-js/lib/model/Types').Element[]
+}
+
+declare interface ElementChangedEvent {
+  element: import('bpmn-js/lib/model/Types').Element
 }

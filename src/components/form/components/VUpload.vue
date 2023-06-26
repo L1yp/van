@@ -62,7 +62,7 @@ const uploadRef = ref<InstanceType<typeof ElUpload>>()
 function handlePictureCardPreview(file: UploadFile) {}
 function handleDownload(file: UploadFile) {}
 function handleRemove(file: UploadFile) {
-  uploadRef.value.handleRemove(file)
+  uploadRef.value?.handleRemove(file)
 }
 
 function getFileSuffix(file: UploadFile): string {

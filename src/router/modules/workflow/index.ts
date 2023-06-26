@@ -13,7 +13,8 @@ const routes: RouteRecordRaw[] = [
       icon: 'Apple',
       title: '流程实例详情',
       componentName: 'WorkflowInstanceTabsPage',
-    }
+    },
+    children: [],
   },
   {
     name: 'workflow-instance-list',
@@ -26,7 +27,22 @@ const routes: RouteRecordRaw[] = [
       closeable: true,
       title: '流程实例列表',
       componentName: 'ModelingViewContainer',
-    }
+    },
+    children: [],
+  },
+  {
+    name: 'workflow-ver-design',
+    path: '/workflow/ver/design/:verId',
+    component: () => import('@/views/workflow/bpmn/designer.vue'),
+    redirect: '',
+    props: true,
+    meta: {
+      keepAlive: true,
+      closeable: true,
+      title: '流程版本设计',
+      componentName: 'designer', // 文件名
+    },
+    children: [],
   }
 ]
 

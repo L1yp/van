@@ -37,6 +37,7 @@ import {
 import { BpmnUtil } from "@/components/bpmn/form/util";
 import emitter, { BpmnElementChanged } from "@/event/mitt";
 import { useBpmnModeler, useBpmnSelectedElem } from "@/config/app.hooks";
+import BpmnFactory from "bpmn-js/lib/features/modeling/BpmnFactory";
 
 const modelingFields = inject(modelingFieldKey)!
 const bpmnSelectedElem = useBpmnSelectedElem()
@@ -58,7 +59,10 @@ const openMultiInstance = computed({
     return !!elem.businessObject?.loopCharacteristics
   },
   set(v) {
-    const bpmnFactory = bpmnModeler.value.get("bpmnFactory")
+    if (!bpmnModeler.value) {
+      return
+    }
+    const bpmnFactory = bpmnModeler.value.get<BpmnFactory>("bpmnFactory")
     if (v) {
       const multiInstanceLoopCharacteristics = bpmnFactory.create('bpmn:MultiInstanceLoopCharacteristics')
       multiInstanceLoopCharacteristics.isSequential = true
@@ -181,12 +185,12 @@ const multipleLimit = computed(() => {
 function refreshState(e: BpmnElementChanged) {
   const elem = e.element
   if (elem.type === 'bpmn:UserTask') {
-    multipleLimit.effect.scheduler()
-    isSequential.effect.scheduler()
-    openMultiInstance.effect.scheduler()
+    multipleLimit.effect.scheduler?.()
+    isSequential.effect.scheduler?.()
+    openMultiInstance.effect.scheduler?.()
 
-    assigneeType.effect.scheduler()
-    assigneeValue.effect.scheduler()
+    assigneeType.effect.scheduler?.()
+    assigneeValue.effect.scheduler?.()
   }
 }
 

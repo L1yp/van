@@ -37,8 +37,8 @@ import {
   ElMessage
 } from 'element-plus'
 import { ref } from "vue";
-import ListenerFieldInject from "@/components/bpmn/form/ListenerFieldInject.vue";
 import { useBpmnModeler, useBpmnSelectedElem } from "@/config/app.hooks";
+import ListenerFieldInject from "@/components/bpmn/form/ListenerFieldInject.vue";
 
 interface Props {
   listener: ExecutionListenerObject
@@ -54,8 +54,8 @@ const formRef = ref<InstanceType<typeof ElForm>>()
 const fieldRef = ref<InstanceType<typeof ListenerFieldInject>>()
 
 async function validate() {
-  await fieldRef.value.validate()
   await formRef.value?.validate()
+  await fieldRef.value.validate()
 }
 
 defineExpose({

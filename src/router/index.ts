@@ -20,7 +20,9 @@ console.log('moduleRoutes', moduleRoutes);
 const staticModuleRoutes: RouteRecordRaw[] = []
 const keys = Object.keys(moduleRoutes)
 for (const key of keys) {
+  // @ts-ignore
   if (moduleRoutes?.[key].default) {
+    // @ts-ignore
     Array.prototype.push.apply(staticModuleRoutes, moduleRoutes?.[key].default)
   }
 }
@@ -152,6 +154,7 @@ function transMenuToRoute(options: MenuView[]) {
         name: menuOption.name,
         component: routeToView(menuOption.component),
         redirect: "",
+        children: [],
         // props: route => ({ ...route.query }),
         meta: {
           icon,

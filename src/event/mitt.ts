@@ -1,5 +1,4 @@
 import mitt from "mitt";
-import {Base} from "bpmn-js";
 
 export type SelectMultipleChangedEvent = {
   prop: string
@@ -11,12 +10,12 @@ export type FormDesignerFieldDeleteEvent = {
 }
 
 export type BpmnElementChanged = {
-  element: Base
+  element: import('bpmn-js/lib/model/Types').Element
 }
 
 
 export type BpmnSelectionChanged = {
-  element: any
+  element: import('bpmn-js/lib/model/Types').Element
 }
 
 export type Events = {

@@ -59,6 +59,15 @@ export function updateXml(data: WorkflowTypeVerUpdateXmlParam) {
   })
 }
 
+export function copyVer(data: WorkflowTypeVerCopyParam) {
+  return request<void>({
+    url: `/workflow/type/ver/copy`,
+    method: 'POST',
+    data,
+  })
+}
+
+
 export function activeVer(data: WorkflowTypeVerActiveParam) {
   return request<void>({
     url: `/workflow/type/ver/active`,

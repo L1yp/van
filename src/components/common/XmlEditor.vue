@@ -1,95 +1,106 @@
 <template>
   <v-dialog
-    v-model="visible" 
+    v-model="visible"
     title="预览XML"
-    @opened="handleDialogOpened" 
-    draggable append-to-body
+    @opened="handleDialogOpened"
+    append-to-body
+    :fixed-body-height="true"
+    :use-body-scrolling="false"
     @cancel="visible = false"
+    @confirm="emits('confirm', view?.state?.doc?.toString())"
   >
-    <div ref="editorRef"></div>
+    <div ref="editorContainer" style="height: 100%; width: 100%;" class="editor-container">
+      <div ref="editorRef"></div>
+    </div>
   </v-dialog>
 </template>
 
-<script lang="ts">
-import {basicSetup, EditorView} from "codemirror"
-import {EditorState, Compartment} from "@codemirror/state"
-import {xml} from "@codemirror/lang-xml"
-import { ref, shallowRef, toRaw, watch, defineComponent, PropType, computed } from "vue";
+<script lang="ts" setup>
+import { basicSetup, EditorView } from "codemirror"
+import { EditorState, Compartment } from "@codemirror/state"
+import { xml } from "@codemirror/lang-xml"
+import { shallowRef, toRaw, computed } from "vue";
 import VDialog from "@/components/dialog/VDialog.vue";
 
+interface Props {
+  modelValue: boolean
+  code: string
+}
 
-export default defineComponent({
-  props: {
-    modelValue: Boolean as PropType<boolean>,
-    code: String as PropType<string>,
-  },
-  emits: ["update:modelValue"],
-  components: {
-    VDialog
-  },
-  setup(props, ctx) {
-
-    const {emit: emits} = ctx
-
-    let language = new Compartment, tabSize = new Compartment
-    const editorRef = shallowRef<HTMLDivElement>()
-    const state = shallowRef<EditorState>(null)
-    const view = shallowRef<EditorView>(null)
-
-    const visible = computed({
-      get() { return props.modelValue },
-      set(v) {
-        emits('update:modelValue', v)
-      }
-    })
-
-    function handleDialogOpened() {
-      if(view.value) {
-        view.value.destroy()
-      }
-
-      state.value = EditorState.create({
-        doc: props.code,
-        extensions: [
-          basicSetup,
-          language.of(xml()),
-          tabSize.of(EditorState.tabSize.of(4))
-        ]
-      })
-      view.value = new EditorView({
-        state: toRaw(state.value),
-        parent: editorRef.value
-      })
-
-    }
+const props = defineProps<Props>()
+const emits = defineEmits<{
+  (e: 'update:modelValue', val: boolean): void
+  (e: 'confirm', val: string): void
+}>()
 
 
-    return {
-      props, state, view,
-      editorRef, visible, 
-      handleDialogOpened
-    }
+let language = new Compartment, tabSize = new Compartment
+const editorRef = shallowRef<HTMLDivElement>()
+const state = shallowRef<EditorState>()
+const view = shallowRef<EditorView>()
+const visible = computed({
+  get() { return props.modelValue },
+  set(v) {
+    emits('update:modelValue', v)
   }
 })
 
+
+const editorContainer = shallowRef<HTMLDivElement>()
+function handleDialogOpened() {
+  if(view.value) {
+    view.value.destroy()
+  }
+
+  state.value = EditorState.create({
+    doc: props.code,
+    extensions: [
+      EditorView.editable.of(true),
+      basicSetup,
+      language.of(xml()),
+      tabSize.of(EditorState.tabSize.of(4))
+    ]
+  })
+  view.value = new EditorView({
+    state: toRaw(state.value),
+    parent: editorRef.value
+  })
+
+  if (!editorContainer.value) {
+    return
+  }
+
+  const resizeObserver = new ResizeObserver(entries => {
+    if (!view.value) {
+      return
+    }
+    for (const entry of entries) {
+      const { height } = entry.contentRect;
+      view.value.dom.style.height = `${height}px`;
+      view.value.requestMeasure();
+    }
+  });
+  resizeObserver.observe(editorContainer.value)
+}
 </script>
 
 <style scoped>
-div.btn {
+.editor-container ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.editor-container ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.editor-container ::-webkit-scrollbar-thumb {
+  background: #bfc6d2;
+  border-radius: 3px;
+}
+
+.editor-container ::-webkit-scrollbar-thumb:hover {
+  background: #6e85ad;
   cursor: pointer;
-}
-
-div.btn + div.btn {
-  cursor: pointer;
-  margin-left: 10px;
-}
-
-div.btn:hover {
-  color: var(--el-color-primary)
-}
-
-.dialog-footer {
-  display: flex;
-  justify-content: space-around;
 }
 </style>

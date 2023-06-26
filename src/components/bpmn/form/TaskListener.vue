@@ -26,7 +26,7 @@
       @cancel="handleCancel"
       @confirm="handleConfirm"
     >
-      <TaskListenerForm ref="formRef" :listener="listenerObject"/>
+      <TaskListenerForm ref="formRef" :listener="listenerObject!"/>
     </mask-window>
   </div>
 
@@ -35,7 +35,7 @@
 <script lang="ts" setup>
 import { computed, onUnmounted, toRaw, ref, shallowRef } from "vue"
 import { ElTable, ElTableColumn, ElDivider, ElButton, ElMessage } from "element-plus"
-import emitter, { BpmnElementChanged } from '@/event/mitt'
+import emitter, { BpmnElementChanged, BpmnSelectionChanged } from '@/event/mitt'
 import MaskWindow from "@/components/dialog/MaskWindow.vue";
 import TaskListenerForm from './TaskListenerForm.vue'
 import { BpmnUtil } from "@/components/bpmn/form/util";
@@ -61,28 +61,31 @@ const tableData = computed<TaskListenerObject[]>(() => {
   if (!listeners || listeners.length === 0) {
     return []
   }
-  const data = []
+  const data: TaskListenerObject[] = []
   if (listeners && listeners.length > 0) {
     for (let listener of listeners) {
       if (!listener.$type.endsWith("TaskListener")) {
         continue
       }
-      let type = null;
+      let type: ListenerValueType | undefined = undefined;
       let val = null;
       if (listener.class) {
         type = "class"
         val = listener.class
-      } else if (listener.expression) {
+      }
+      else if (listener.expression) {
         type = "expression"
         val = listener.expression
       } else if (listener.delegateExpression) {
         type = "delegateExpression"
         val = listener.delegateExpression
+      } else {
+        continue
       }
       const fields: ListenerField[] = []
       if (listener.fields?.length) {
         for (const field of listener.fields) {
-          let fieldType = null
+          let fieldType: ExecutionListenerFieldType | undefined = undefined
           let fieldVal = null
           if (field.string) {
             fieldType = 'string'
@@ -90,10 +93,12 @@ const tableData = computed<TaskListenerObject[]>(() => {
           } else if (field.expression) {
             fieldType = 'expression'
             fieldVal = field.expression
+          } else {
+            continue
           }
           fields.push({
             name: field.name,
-            type: fieldType as ExecutionListenerFieldType,
+            type: fieldType,
             value: fieldVal
           })
         }
@@ -113,7 +118,7 @@ const tableData = computed<TaskListenerObject[]>(() => {
 const originalListenerObject = shallowRef<TaskListenerObject>()
 const listenerObject = ref<TaskListenerObject>()
 const editPanelVisible = ref(false)
-function handleEditListener(listener) {
+function handleEditListener(listener: TaskListenerObject) {
   listenerObject.value = listener
   originalListenerObject.value = JSON.parse(JSON.stringify(toRaw(listener)))
   editPanelVisible.value = true
@@ -135,10 +140,21 @@ async function handleConfirm() {
   try {
     await formRef.value.validate()
   } catch (e) {
+    // @ts-ignore
+    const message = e.value?.map((it, idx) => `<div style="margin-bottom: ${idx === e.value.length - 1 ? '0' : '4'}px">${it.message}</div>`).join('')
+    ElMessage.error({
+      dangerouslyUseHTMLString: true,
+      duration: 6000,
+      message,
+    })
     console.error(e)
     return
   } finally {
     loading.value = false
+  }
+
+  if (!listenerObject.value || !originalListenerObject.value) {
+    return
   }
 
   const type = listenerObject.value.type
@@ -181,11 +197,9 @@ async function handleConfirm() {
   }
   // bo.$model.create('bpmn:Documentation', { text: val })
   const values: Array<any> = extensionElements.values
-  let index = -1
-  if (originalListenerObject.value) {
-    index = values.findIndex(it => it.$type === 'flowable:TaskListener' && it.event === originalListenerObject.value.event && it[originalListenerObject.value.type] === originalListenerObject.value.value)
-  }
 
+  const originalObj = originalListenerObject.value
+  const index = values.findIndex(it => it.$type === 'flowable:TaskListener' && it.event === originalObj.event && it[originalObj.type] === originalObj.value)
 
   let fields = undefined
   if (listenerObject.value?.fields?.length) {
@@ -222,7 +236,7 @@ async function handleConfirm() {
 }
 
 function handleCancel() {
-  tableData.effect.scheduler()
+  tableData?.effect?.scheduler?.()
   editPanelVisible.value = false
 }
 
@@ -243,17 +257,17 @@ function handleDeleteListener(listener: TaskListenerObject) {
   const idx = listeners.filter(it => it.$type.endsWith('TaskListener')).findIndex(it => it.event === listener.event && it[listener.type] === listener.value)
   if (idx !== -1) {
     listeners.splice(idx, 1)
-    tableData.effect.scheduler()
+    tableData?.effect?.scheduler?.()
   }
 
 
 }
 
 function handleElementChanged(event: BpmnElementChanged) {
-  tableData.effect.scheduler()
+  tableData?.effect?.scheduler?.()
 }
 
-function handleSelectionChanged(event) {
+function handleSelectionChanged(event: BpmnSelectionChanged) {
   editPanelVisible.value = false
 }
 

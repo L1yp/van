@@ -42,8 +42,8 @@ const formRef = ref<InstanceType<typeof ElForm>>()
 const fieldRef = ref<InstanceType<typeof ListenerFieldInject>>()
 
 async function validate() {
-  await fieldRef.value.validate()
-  await formRef.value.validate()
+  await fieldRef.value?.validate()
+  await formRef.value?.validate()
 }
 
 defineExpose({

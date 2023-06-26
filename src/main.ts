@@ -10,15 +10,13 @@ import * as UserApi from "@/api/sys/user"
 import { remove } from "./utils/storage"
 import { menuOptionsKey, userInfoKey, userMapKey } from "./config/app.keys"
 import { permission } from "@/directives/permission"
-import VXETable from 'vxe-table'
-import 'vxe-table/lib/style.css'
+
 import { toTree } from "@/utils/common";
 import { varOptions } from '@/components/permission/components/condition'
 import './styles/index.css'
 import { createPinia } from "pinia";
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
-
 import '@/components/dialog/dialog.css'
 
 import TextFilter from '@/components/ag-grid/filter/components/TextFilter.vue'
@@ -50,7 +48,6 @@ async function startup() {
 
     app.use(ElLoading)
 
-    app.use(VXETable)
     app.directive('click-outside', ClickOutside)
     app.directive("permission", permission)
 

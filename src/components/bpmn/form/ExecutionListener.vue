@@ -26,7 +26,7 @@
       @cancel="handleCancel"
       @confirm="handleConfirm"
     >
-      <ExecutionListenerForm ref="formRef" :listener="listenerObject"/>
+      <ExecutionListenerForm ref="formRef" :listener="listenerObject!"/>
     </mask-window>
   </div>
 
@@ -35,7 +35,7 @@
 <script lang="ts" setup>
 import {computed, inject, onUnmounted, toRaw, ref, shallowRef} from "vue"
 import {ElTable, ElTableColumn, ElDivider, ElButton, ElMessage} from "element-plus"
-import emitter, { BpmnElementChanged } from '@/event/mitt'
+import emitter, { BpmnElementChanged, BpmnSelectionChanged } from '@/event/mitt'
 import MaskWindow from "@/components/dialog/MaskWindow.vue";
 import ExecutionListenerForm from './ExecutionListenerForm.vue'
 import { BpmnUtil } from "@/components/bpmn/form/util";
@@ -61,13 +61,13 @@ const tableData = computed<ExecutionListenerObject[]>(() => {
   if (!listeners || listeners.length === 0) {
     return []
   }
-  const data = []
+  const data: ExecutionListenerObject[] = []
   if (listeners && listeners.length > 0) {
     for (let listener of listeners) {
       if (!listener.$type.endsWith("ExecutionListener")) {
         continue
       }
-      let type = null;
+      let type: ListenerValueType | null = null;
       let val = null;
       if (listener.class) {
         type = "class"
@@ -78,11 +78,13 @@ const tableData = computed<ExecutionListenerObject[]>(() => {
       } else if (listener.delegateExpression) {
         type = "delegateExpression"
         val = listener.delegateExpression
+      } else {
+        continue
       }
       const fields: ListenerField[] = []
       if (listener.fields?.length) {
         for (const field of listener.fields) {
-          let fieldType = null
+          let fieldType: ExecutionListenerFieldType | null = null
           let fieldVal = null
           if (field.string) {
             fieldType = 'string'
@@ -90,6 +92,8 @@ const tableData = computed<ExecutionListenerObject[]>(() => {
           } else if (field.expression) {
             fieldType = 'expression'
             fieldVal = field.expression
+          } else {
+            continue
           }
           fields.push({
             name: field.name,
@@ -107,13 +111,13 @@ const tableData = computed<ExecutionListenerObject[]>(() => {
     }
   }
   console.log('execution listeners', data)
-  return  data
+  return data
 })
 
 const originalListenerObject = shallowRef<ExecutionListenerObject>()
 const listenerObject = ref<ExecutionListenerObject>()
 const editPanelVisible = ref(false)
-function handleEditListener(listener) {
+function handleEditListener(listener: ExecutionListenerObject) {
   listenerObject.value = listener
   originalListenerObject.value = JSON.parse(JSON.stringify(toRaw(listener)))
   editPanelVisible.value = true
@@ -134,17 +138,32 @@ async function handleConfirm() {
   loading.value = true
   try {
     await formRef.value.validate()
-  } catch (e) {
+  }
+  catch (e) {
+    // @ts-ignore
+    const message = e.value?.map((it, idx) => `<div style="margin-bottom: ${idx === e.value.length - 1 ? '0' : '4'}px">${it.message}</div>`).join('')
+    ElMessage.error({
+      dangerouslyUseHTMLString: true,
+      duration: 6000,
+      message,
+    })
     console.error(e)
     return
-  } finally {
+  }
+  finally {
     loading.value = false
   }
+
+  if (!listenerObject.value || !originalListenerObject.value) {
+    return
+  }
+
 
   const type = listenerObject.value.type
   if (type !== 'class') {
     listenerObject.value.fields = []
-  } else {
+  }
+  else {
     const names = new Set(listenerObject.value.fields?.map(it => it.name) || [])
     if (listenerObject.value.fields && names.size !== listenerObject.value.fields.length) {
       ElMessage.error('字段名不允许重复')
@@ -177,14 +196,13 @@ async function handleConfirm() {
   const bo = bpmnSelectedElem.value.businessObject
   let extensionElements = bo.extensionElements
   if (!extensionElements) {
-    extensionElements = bo.$model.create('bpmn:ExtensionElements', { values: []})
+    extensionElements = bo.$model.create('bpmn:ExtensionElements', { values: [] })
   }
   // bo.$model.create('bpmn:Documentation', { text: val })
   const values: Array<any> = extensionElements.values
-  let index = -1
-  if (originalListenerObject.value) {
-    index = values.findIndex(it => it.$type === 'flowable:ExecutionListener' && it.event === originalListenerObject.value.event && it[originalListenerObject.value.type] === originalListenerObject.value.value)
-  }
+
+  const listenerObj = originalListenerObject.value
+  const index = values.findIndex(it => it.$type === 'flowable:ExecutionListener' && it.event === listenerObj.event && it[listenerObj.type] === listenerObj.value)
 
 
   let fields = undefined
@@ -222,7 +240,7 @@ async function handleConfirm() {
 }
 
 function handleCancel() {
-  tableData.effect.scheduler()
+  tableData?.effect?.scheduler?.()
   editPanelVisible.value = false
 }
 
@@ -243,17 +261,17 @@ function handleDeleteListener(listener: ExecutionListenerObject) {
   const idx = listeners.filter(it => it.$type.endsWith('ExecutionListener')).findIndex(it => it.event === listener.event && it[listener.type] === listener.value)
   if (idx !== -1) {
     listeners.splice(idx, 1)
-    tableData.effect.scheduler()
+    tableData?.effect?.scheduler?.()
   }
 
 
 }
 
 function handleElementChanged(event: BpmnElementChanged) {
-  tableData.effect.scheduler()
+  tableData?.effect?.scheduler?.()
 }
 
-function handleSelectionChanged(event) {
+function handleSelectionChanged(event: BpmnSelectionChanged) {
   editPanelVisible.value = false
 }
 

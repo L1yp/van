@@ -1,5 +1,5 @@
-import {ref, Ref, toRaw} from "vue";
-import {ElMessage} from "element-plus";
+import { ref, Ref, toRaw } from "vue";
+import { ElMessage } from "element-plus";
 import * as WorkflowApi from "@/api/workflow";
 
 
@@ -121,9 +121,56 @@ export function useWorkflowApi(loading?: Ref<boolean>) {
   }
 
 
+  async function copyVer(id: string) {
+    try {
+      loading && (loading.value = true)
+      await WorkflowApi.copyVer({ id })
+      ElMessage.success('复制成功')
+      return true
+    } catch (e) {
+      console.error(e)
+      ElMessage.error((e as Error)?.message || '复制失败')
+      return false
+    } finally {
+      loading && (loading.value = false)
+    }
+  }
+
+  async function activeVer(id: string, remark: string) {
+    try {
+      loading && (loading.value = true)
+      await WorkflowApi.activeVer({ id, remark })
+      ElMessage.success('启用成功')
+      return true
+    } catch (e) {
+      console.error(e)
+      ElMessage.error((e as Error)?.message || '启用失败')
+      return false
+    } finally {
+      loading && (loading.value = false)
+    }
+  }
+
+
+  async function pendingVer(id: string) {
+    try {
+      loading && (loading.value = true)
+      await WorkflowApi.pendingVer({ id })
+      ElMessage.success('停用成功')
+      return true
+    } catch (e) {
+      console.error(e)
+      ElMessage.error((e as Error)?.message || '停用失败')
+      return false
+    } finally {
+      loading && (loading.value = false)
+    }
+  }
+
 
   return {
-    pageData, loadPage, loadPageWithoutVer, workflowDef, findDefById, updateDefById, addDef
+    pageData, loadPage, loadPageWithoutVer, workflowDef, findDefById, updateDefById, addDef,
+    copyVer, activeVer, pendingVer,
   }
 }
 

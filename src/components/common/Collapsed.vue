@@ -67,7 +67,7 @@ const toggleBarLeftStyle = computed<StyleValue>(() => {
       width: '38px',
       height: '4px',
       'border-radius': '2px',
-      transition: 'background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
       'transform': '0.3s cubic-bezier(0.4, 0, 0.2, 1)'
     }
   }
@@ -80,7 +80,7 @@ const toggleBarLeftStyle = computed<StyleValue>(() => {
       width: '38px',
       height: '4px',
       'border-radius': '2px',
-      transition: 'background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
       'transform': '0.3s cubic-bezier(0.4, 0, 0.2, 1)'
     }
   }
@@ -93,7 +93,7 @@ const toggleBarLeftStyle = computed<StyleValue>(() => {
       width: '4px',
       height: '38px',
       'border-radius': '2px',
-      transition: 'background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
       'transform': '0.3s cubic-bezier(0.4, 0, 0.2, 1)'
     }
   }
@@ -106,7 +106,7 @@ const toggleBarLeftStyle = computed<StyleValue>(() => {
       width: '4px',
       height: '38px',
       'border-radius': '2px',
-      transition: 'background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
       'transform': '0.3s cubic-bezier(0.4, 0, 0.2, 1)'
     }
   }
@@ -123,7 +123,7 @@ const toggleBarRightStyle = computed<StyleValue>(() => {
       width: '38px',
       height: '4px',
       'border-radius': '2px',
-      transition: 'background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+      transition: 'all0.3s cubic-bezier(0.4, 0, 0.2, 1)',
       'transform': '0.3s cubic-bezier(0.4, 0, 0.2, 1)'
     }
   }
@@ -137,7 +137,7 @@ const toggleBarRightStyle = computed<StyleValue>(() => {
       width: '38px',
       height: '4px',
       'border-radius': '2px',
-      transition: 'background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
       'transform': '0.3s cubic-bezier(0.4, 0, 0.2, 1)'
     }
   }
@@ -151,7 +151,7 @@ const toggleBarRightStyle = computed<StyleValue>(() => {
       width: '4px',
       height: '38px',
       'border-radius': '2px',
-      transition: 'background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
       'transform': '0.3s cubic-bezier(0.4, 0, 0.2, 1)'
     }
   }
@@ -165,7 +165,7 @@ const toggleBarRightStyle = computed<StyleValue>(() => {
       width: '4px',
       height: '38px',
       'border-radius': '2px',
-      transition: 'background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
       'transform': '0.3s cubic-bezier(0.4, 0, 0.2, 1)'
     }
   }

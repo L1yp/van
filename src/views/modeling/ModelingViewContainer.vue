@@ -650,14 +650,44 @@ async function handleConfigView() {
 }
 
 </script>
+
 <style scoped>
 
-:deep(.edit-form-item .el-form-item__label) {
-  //background-color: #ededed;
+
+
+.ag-theme-alpine ::-webkit-scrollbar,
+.ag-theme-alpine-dark ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
 }
 
-:deep(.form-item-stripe .el-form-item__label) {
-  //background-color: var(--el-border-color);
+.ag-theme-alpine ::-webkit-scrollbar-track,
+.ag-theme-alpine-dark ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.ag-theme-alpine ::-webkit-scrollbar-thumb {
+  background-color: #909399;
+  border-radius: 3px;
+  opacity: 0.3;
+}
+
+.ag-theme-alpine-dark ::-webkit-scrollbar-thumb {
+  background-color: #A3A6AD;
+  border-radius: 3px;
+  opacity: 0.3;
+}
+
+.ag-theme-alpine ::-webkit-scrollbar-thumb:hover {
+  background-color: #909399;
+  opacity: 0.3;
+  cursor: pointer;
+}
+
+.ag-theme-alpine-dark ::-webkit-scrollbar-thumb:hover {
+  background-color: #A3A6AD;
+  opacity: 0.3;
+  cursor: pointer;
 }
 
 </style>

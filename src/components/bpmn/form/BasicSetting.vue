@@ -76,15 +76,15 @@ const elementDescription = computed({
     } else {
       docs[0].text = v
     }
-    elementDescription?.effect?.scheduler()
+    elementDescription?.effect?.scheduler?.()
   }
 })
 
 function refreshState(e: BpmnElementChanged) {
-  elementType?.effect?.scheduler()
-  elementId?.effect?.scheduler()
-  elementName?.effect?.scheduler()
-  elementDescription?.effect?.scheduler()
+  elementType?.effect?.scheduler?.()
+  elementId?.effect?.scheduler?.()
+  elementName?.effect?.scheduler?.()
+  elementDescription?.effect?.scheduler?.()
 }
 
 emitter.on('bpmnElementChanged', refreshState)

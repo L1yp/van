@@ -85,6 +85,9 @@ declare interface WorkflowTypeVerPendingParam {
   id: string
 }
 
+declare interface WorkflowTypeVerCopyParam {
+  id: string
+}
 
 declare interface WorkflowInstanceStartParam {
   mkey: string

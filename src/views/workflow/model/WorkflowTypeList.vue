@@ -16,7 +16,9 @@
         row-key="id"
         :tree-props="{ children: 'children' }"
         :row-style="{ cursor: 'pointer' }"
+        @cell-click="handleCellClick"
         @row-dblclick="handleRowDbClick"
+        @cell-contextmenu="handleContextMenu"
         size="small"
       >
         <el-table-column>
@@ -34,6 +36,13 @@
             <el-input v-model="param.remark" @change="loadPage(param)" />
           </template>
           <el-table-column prop="remark" label="备注" :resizable="false" min-width="200" show-overflow-tooltip />
+        </el-table-column>
+        <el-table-column>
+          <el-table-column prop="status" label="状态" :resizable="false" width="80" align="center" header-align="center">
+            <template #default="scope">
+              <el-tag>{{ scope.row.status === 0 ? '停用' : '启用' }}</el-tag>
+            </template>
+          </el-table-column>
         </el-table-column>
         <el-table-column>
           <template #header>
@@ -72,26 +81,48 @@
       <WorkflowTypeConfigTabs />
     </MaskWindow>
     <MaskWindow v-model="verMaskVisible">
-      <WorkflowVerDesigner :ver-id="srcRow.id" />
+      <WorkflowVerDesigner :ver-id="srcRow!.id" />
     </MaskWindow>
     <MaskWindow v-model="addPanelVisible">
       <DefAddPanel @success="loadPage(param)" @close="addPanelVisible = false" />
     </MaskWindow>
+
+    <dropdown-menu
+      ref="menuRef"
+      v-click-outside="handleClickMenuOutside"
+      @item-click="handleMenuClick"
+      :x="position.x"
+      :y="position.y"
+      :options="items"
+    />
+
   </div>
 </template>
 
 <script lang="ts" setup>
 import { useWorkflowApi } from "@/service/workflow";
-import {computed, inject, onBeforeMount, provide, ref} from "vue";
-import { ElTable, ElTableColumn, ElInput, ElButton, ElPagination, ElScrollbar } from "element-plus";
-import { Plus } from "@element-plus/icons-vue";
+import { markRaw, onBeforeMount, provide, reactive, ref } from "vue";
+import {
+  ElTable,
+  ElTableColumn,
+  ElInput,
+  ElButton,
+  ElPagination,
+  ElScrollbar,
+  TableInstance,
+  ElTag,
+  ElMessageBox,
+} from "element-plus";
+import { CopyDocument, Delete, Edit, Plus, Setting, User, VideoPause, VideoPlay } from "@element-plus/icons-vue";
 import WorkflowTypeConfigTabs from "@/views/workflow/model/WorkflowTypeConfigTabs.vue";
 import WorkflowVerDesigner from "@/views/workflow/bpmn/designer.vue";
 import UserSelectorInput from '@/components/common/selector/user/UserSelectorInput.vue'
 import DefAddPanel from "./type/DefAddPanel.vue";
 import { workflowDefKey } from "./keys";
 import MaskWindow from "@/components/dialog/MaskWindow.vue";
-import {useFieldStore} from "@/store/field-config";
+import { useFieldStore } from "@/store/field-config";
+import DropdownMenu from "@/components/menu/DropdownMenu.vue";
+import { MenuOption, Point } from "@/components/menu";
 
 interface Props {
   name?: string
@@ -107,7 +138,7 @@ const param = ref<WorkflowTypeDefPageParam>({
   remark: '',
 })
 
-const { pageData, loadPage } = useWorkflowApi(loading)
+const { pageData, loadPage, copyVer, activeVer, pendingVer } = useWorkflowApi(loading)
 onBeforeMount(() => loadPage(param.value))
 
 function formatUser(row: WorkflowTypeDefView, column: any, cellValue: string | number, index: number) {
@@ -122,10 +153,12 @@ provide(workflowDefKey, srcRow)
 
 const store = useFieldStore()
 
-function handleRowDbClick(row: WorkflowTypeDefView | WorkflowTypeVerView) {
-  /** @ts-ignore */
+const handleCellClick: TableCellClickEvent<WorkflowTypeDefView & WorkflowTypeVerView> = (row, column, cell, event) => {
+  tableRef.value?.toggleRowExpansion(row, undefined)
+}
+
+function handleRowDbClick(row: WorkflowTypeDefView & WorkflowTypeVerView) {
   if (row.children?.length) {
-    const item = row as WorkflowTypeDefView
     srcRow.value = row
 
     store.scope = 'WORKFLOW_PRIVATE'
@@ -133,7 +166,6 @@ function handleRowDbClick(row: WorkflowTypeDefView | WorkflowTypeVerView) {
     store.mkey = row.key
 
     typeMaskVisible.value = true
-
   } else {
     srcRow.value = row
     verMaskVisible.value = true
@@ -145,7 +177,75 @@ function handleAdd() {
   addPanelVisible.value = true
 }
 
-const tableRef = ref<InstanceType<typeof ElTable>>()
+const tableRef = ref<TableInstance>()
+
+const position = reactive<Point>({
+  x: 0,
+  y: 0,
+})
+const items = ref<MenuOption[]>([
+  { icon: markRaw(CopyDocument), text: '复制', command: 'copy' },
+  { icon: markRaw(Edit), text: '编辑', command: 'edit' },
+  { icon: markRaw(VideoPlay), text: '发布', command: 'enable' },
+  { icon: markRaw(VideoPause), text: '停用', command: 'disable' },
+  { icon: markRaw(Delete), text: '删除', command: 'delete' },
+
+])
+const contextMenuRow = ref<WorkflowTypeVerView>()
+const menuRef = ref<InstanceType<typeof DropdownMenu>>()
+const handleContextMenu: TableContextMenuEvent<WorkflowTypeDefView & WorkflowTypeVerView> = (row, column, clickEl, event) => {
+  if (!!row.code_gen_rule) {
+    return
+  }
+  contextMenuRow.value = row
+  event.preventDefault()
+  position.x = event.clientX
+  position.y = event.clientY
+  console.log('position', position, event)
+  menuRef.value?.show()
+}
+
+function handleClickMenuOutside() {
+  menuRef.value?.hide()
+
+}
+
+async function handleMenuClick(option: MenuOption, ev: PointerEvent) {
+  if (!contextMenuRow.value) {
+    return
+  }
+  try {
+    let result = false
+    if (option.command === 'copy') {
+      result = await copyVer(contextMenuRow.value.id)
+    }
+    else if (option.command === 'enable') {
+      let remark = undefined
+      try {
+        const inputMessage = await ElMessageBox.prompt('请输入部署说明', '部署说明', {
+          confirmButtonText: '发布',
+          cancelButtonText: '取消',
+        })
+        console.log('input message', inputMessage)
+        remark = inputMessage.value
+      } catch (ignored) {
+        return
+      }
+      result = await activeVer(contextMenuRow.value.id, remark)
+    }
+    else if (option.command === 'disable') {
+      result = await pendingVer(contextMenuRow.value.id)
+    }
+    if (result) {
+      await loadPage(param.value)
+    }
+  } catch (e) {
+    console.error((e as Error)?.message || '处理菜单事件发生错误')
+  }
+
+}
+
+
 
 </script>
 
