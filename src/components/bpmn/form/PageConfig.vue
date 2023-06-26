@@ -26,7 +26,7 @@ import { BpmnUtil } from "@/components/bpmn/form/util";
 import emitter, { BpmnElementChanged } from '@/event/mitt'
 import { useModelingPageApi } from "@/service/modeling/page";
 import MaskWindow from "@/components/dialog/MaskWindow.vue";
-import FormDesigner from '@/views/process/form/designer.vue'
+import FormDesigner from '@/views/modeling/form/designer.vue'
 import { useBpmnModeler, useBpmnSelectedElem } from "@/config/app.hooks";
 
 

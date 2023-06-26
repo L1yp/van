@@ -14,7 +14,7 @@
 
 <script lang="ts" setup>
 import { ElTabs, ElTabPane } from "element-plus";
-import FormDesigner from '@/views/process/form/designer.vue'
+import FormDesigner from '@/views/modeling/form/designer.vue'
 
 interface Props {
   module: ModelingModule
