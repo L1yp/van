@@ -178,7 +178,7 @@ async function validate() {
       errorList.push({ field: 'type', fieldValue: rowNode.data.type, message: `第${index + 1}行类型不能为空` })
       // throw new Error(`第${index + 1}行请选择字段类型`)
     }
-    if (!/^[a-zA-Z_\\$]+\w?$/.test(rowNode.data.name)) {
+    if (!/^[a-zA-Z_$][\w$]*$/.test(rowNode.data.name)) {
       errorList.push({ field: 'name', fieldValue: rowNode.data.name, message: `第${index + 1}行字段名不符合规则: 字母或下划线开头` })
       // throw new Error(`第${index + 1}行字段名不符合规则: 字母或下划线开头`)
     }

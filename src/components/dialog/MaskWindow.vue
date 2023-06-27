@@ -4,7 +4,7 @@
       class="mask-root-window"
       :style="rootStyle"
     >
-      <transition name="fade" mode="out-in" appear>
+      <template v-if="mode === 'dev'">
         <div class="mask-window-wrapper">
           <slot v-if="showToolbar" name="toolbar">
             <div style="box-sizing: border-box; padding: 6px;  background-color: var(--toolbar-bg-color);">
@@ -14,7 +14,20 @@
           </slot>
           <slot></slot>
         </div>
-      </transition>
+      </template>
+      <template v-else>
+        <transition name="fade" mode="out-in" appear>
+          <div class="mask-window-wrapper">
+            <slot v-if="showToolbar" name="toolbar">
+              <div style="box-sizing: border-box; padding: 6px;  background-color: var(--toolbar-bg-color);">
+                <el-button @click="emits('cancel')" v-text="cancelText" ></el-button>
+                <el-button @click="emits('confirm')" type="primary" plain v-text="confirmText"></el-button>
+              </div>
+            </slot>
+            <slot></slot>
+          </div>
+        </transition>
+      </template>
 
       <div
         title="关闭蒙版"
@@ -35,9 +48,11 @@ import { ElButton } from 'element-plus'
 import { useLayoutStore } from "@/store/layout";
 import { useThemeStore } from "@/store/theme";
 
+const mode = import.meta.env.MODE
+
 interface Props {
   modelValue: boolean
-  teleportTo?: string | RendererElement | null | undefined
+  teleportTo?: string | HTMLElement | null
   showToolbar?: boolean
   confirmText?: string
   confirmButtonProps?: Record<string, any>
@@ -60,7 +75,6 @@ const emits = defineEmits<Emits>()
 
 
 const layoutStore = useLayoutStore()
-const themeStore = useThemeStore()
 const zIndex = layoutStore.incrementZIndex()
 
 const rootStyle = computed(() => {
@@ -80,13 +94,13 @@ const rootStyle = computed(() => {
   }
 })
 
-const toElem = computed(() => {
+const toElem = computed<string | HTMLElement>(() => {
   const defaultContainer = layoutStore.maskContainerRef!
-  const inputContainer = props.teleportTo
   if (!props.teleportTo) {
     return defaultContainer
+  } else {
+    return props.teleportTo
   }
-  return inputContainer
 })
 
 const visible = computed({
