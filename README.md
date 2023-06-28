@@ -1,52 +1,43 @@
-[文档地址](./docs/README.MD)
+# 一. 3分钟上手
 
-TODO: 补充图片示例
+## 1. [点我](https://admin.l1yp.com/process/model)  → 创建流程模型
+![wf-models.png](docs%2Fget-started%2Fimages%2Fwf-models.png)
 
-# 系统介绍
+## 2. 配置流程字段
+> 双击流程模型进入配置界面
 
-## 用户模块
+![wf-fields.png](docs%2Fget-started%2Fimages%2Fwf-fields.png)
 
-## 部门模块
+## 3. 设计流程图
+> 创建流程模型后会默认创建一个初始的流程图V1，双击流程图版本即可进入设计
 
-## 菜单模块
+![wf-diagram-designer.png](docs%2Fget-started%2Fimages%2Fwf-diagram-designer.png)
 
-### 菜单类型
+## 4. 发布流程图
+![wf-ver-publish.png](docs%2Fget-started%2Fimages%2Fwf-ver-publish.png)
+
+## 5. 配置流程实例列表
+> 流程实例列表是系统抽象的，可通过配置实现，无需单独开发。
+
+### 5.1 创建菜单TAB容器
+![page-container.png](docs%2Fget-started%2Fimages%2Fpage-container.png)
+
+### 5.2 创建 流程列表 页面
+![wf-tab.png](docs%2Fget-started%2Fimages%2Fwf-tab.png)
+
+## 5.3 配置流程实例列表视图
+> 流程列表视图: 配置展示哪些字段，哪些字段需要筛选、排序等
+
+![wf-view-cfg.png](docs%2Fget-started%2Fimages%2Fwf-view-cfg.png)
+
+## 6. 效果展示
+![preview.png](docs%2Fget-started%2Fimages%2Fpreview.png)
 
 
-1. 文件夹
-> 左侧菜单栏的目录
-2. 页面容器
-> 将一个业务的多个功能归类到一个Tabs容器下
-3. 页面
-> 普通页面
-4. 流程
-> 指定流程的实例列表页面：如请假流程的实例列表，可视化配置生成列表页面
-5. 实体
-> 指定实体的实例列表页面：如项目实体的实例列表，可视化配置生成列表页面
-6. 按钮
-> 页面的子元素，用于前端控制按钮权限
+# 二、基于角色实现的字段级表达式权限管理
 
-## 角色模块
+## 2.1 选择角色
+![roles.png](docs%2Fget-started%2Fimages%2Froles.png)
 
-### 菜单权限
-
-> 角色直接绑定菜单条目
-
-### 实体权限
-
-> 通过 自定义表达式 实现 字段级列表控制。
-
-### 流程权限
-
-> 通过 自定义表达式 实现 字段级列表控制。
-
-## 低代码模块
-
-### 流程模型
-
-### 实体模型
-
-### 全局字段
-
-### 全局选项
-
+## 2.2 选择流程 & 权限表达式配置
+![perm-expr.png](docs%2Fget-started%2Fimages%2Fperm-expr.png)

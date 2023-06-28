@@ -3,7 +3,7 @@
     <div style="height: 32px; display: flex">
       <el-button :icon="Plus" type="primary" @click="handleAdd">新增</el-button>
       <el-scrollbar style="margin-left: 10px" wrap-style="display: flex; align-items: center">
-        <div style="white-space: nowrap; color: red; font-weight: bold; ">双击进入配置(双击流程版本设计流程图)</div>
+        <div style="white-space: nowrap; color: red; font-weight: bold; ">双击进入配置(双击流程版本设计流程图，右键操作流程版本)</div>
       </el-scrollbar>
     </div>
     <div style="width: 100%; height: calc(100% - 32px - 10px - 36px); margin-top: 10px;">
