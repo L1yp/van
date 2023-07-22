@@ -1,6 +1,6 @@
 <template>
-  <div v-loading="loading" style="background-color: #FFFFFF; padding: 10px; height: 100%; box-sizing: border-box;">
-    <div style="background-color: #F5F7FA; box-sizing: border-box; padding: 6px;">
+  <div v-loading="loading" style="background-color: var(--el-bg-color); padding: 10px; height: 100%; box-sizing: border-box;">
+    <div style="background-color:  var(--toolbar-bg-color); box-sizing: border-box; padding: 6px;">
       <el-button @click="handleCancel">取消</el-button>
       <el-button @click="handleConfirm" type="primary" plain>确定</el-button>
     </div>
