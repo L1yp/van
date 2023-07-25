@@ -10,7 +10,7 @@
   >
     <template #header>
       <slot name="header">
-        <div style="height: 24px; display: flex; justify-content: center; align-content: center; box-sizing: border-box; font-weight: bold; color: rgb(118 131 164); position: relative">
+        <div style="height: 24px; display: flex; justify-content: center; align-items: center; box-sizing: border-box; font-weight: bold; color: rgb(118 131 164); position: relative">
           <div v-text="props.title"></div>
           <div style="display: flex; flex-direction: row; justify-content: center; position: absolute; right: 0">
             <el-button v-if="props.showFullScreen" :icon="fullScreen ? FullScreenMinimize : FullScreenMaximize" link @click="requestFullScreen" class="header-btn"></el-button>

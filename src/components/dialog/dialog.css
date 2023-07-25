@@ -20,6 +20,8 @@ html.dark .v-dialog {
     /*border-bottom: 1px solid var(--el-border-color);*/
     box-sizing: border-box;
     background-color: var(--header-bg-color);
+    position: relative; /* 防止被表单覆盖底部 */
+    z-index: calc(var(--el-index-normal) + 1);
 }
 
 .v-dialog.el-dialog {
