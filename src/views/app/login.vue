@@ -29,14 +29,14 @@
 </template>
 
 <script lang="ts" setup>
-import {inject, Ref, ref} from "vue";
+import { ref } from "vue";
 import * as UserApi from "@/api/sys/user";
 import SparkMD5 from "spark-md5";
-import {installLayoutContentRoute} from "@/router"
-import {useRoute, useRouter} from "vue-router";
-import {read, write} from "@/utils/storage";
-import {useTitle} from "@vueuse/core";
-import {toTree} from "@/utils/common";
+import { installLayoutContentRoute } from "@/router"
+import { useRoute, useRouter } from "vue-router";
+import { write } from "@/utils/storage";
+import { useTitle } from "@vueuse/core";
+import { toTree } from "@/utils/common";
 import { useMenuOptions, useUserInfo } from "@/config/app.hooks";
 
 const title = useTitle()

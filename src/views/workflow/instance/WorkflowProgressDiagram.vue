@@ -45,11 +45,11 @@ import 'bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css';
 import 'diagram-js-minimap/assets/diagram-js-minimap.css'
 import { computed, inject, onMounted, ref, shallowRef } from 'vue';
 import { InternalEvent } from 'diagram-js/lib/core/EventBus';
-import { ElementRegistry } from 'bpmn-js';
 import { userMapKey } from '@/config/app.keys';
 import { ElButtonGroup, ElButton, ElPopover, ElDescriptions, ElDescriptionsItem, ElTag } from "element-plus";
 import UserViewer from '@/components/common/viewer/user/UserViewer.vue'
 import { Plus, Minus } from "@element-plus/icons-vue";
+import GridLineModule from 'diagram-js-grid-bg'
 
 interface Props {
   xml: string
@@ -76,7 +76,7 @@ async function initViewer() {
     viewer.value = new BpmnViewer({
       container: canvasRef.value,
       additionalModules: [
-        ImportModule, MiniMapModule, DrawModule,
+        ImportModule, MiniMapModule, DrawModule, GridLineModule,
       ],
       minimap: {
         open: false

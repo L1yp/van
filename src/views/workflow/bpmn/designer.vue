@@ -69,9 +69,10 @@ import { useModelingPageApi } from "@/service/modeling/page";
 import ElementRegistry from 'diagram-js/lib/core/ElementRegistry'
 import { validate } from './bpmnlint'
 import Canvas from "diagram-js/lib/core/Canvas";
-import { Root, Shape } from 'bpmn-js/lib/model/Types'
+import { Shape } from 'bpmn-js/lib/model/Types'
 import InitBPMNXml from '@/assets/bpmn/init.bpmn20.xml?raw'
 import { useRoute, useRouter } from "vue-router";
+import GridLineModule from 'diagram-js-grid-bg'
 
 const route = useRoute()
 console.log('route', route, route.name)
@@ -118,6 +119,7 @@ function initDiagram() {
       },
       miniMapModule,
       CustomModdle,
+      GridLineModule,
     ],
     moddleExtensions: {
       flowable: flowableDescriptor
