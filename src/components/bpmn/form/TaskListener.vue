@@ -153,7 +153,7 @@ async function handleConfirm() {
     loading.value = false
   }
 
-  if (!listenerObject.value || !originalListenerObject.value) {
+  if (!listenerObject.value) {
     return
   }
 
@@ -198,8 +198,6 @@ async function handleConfirm() {
   // bo.$model.create('bpmn:Documentation', { text: val })
   const values: Array<any> = extensionElements.values
 
-  const originalObj = originalListenerObject.value
-  const index = values.findIndex(it => it.$type === 'flowable:TaskListener' && it.event === originalObj.event && it[originalObj.type] === originalObj.value)
 
   let fields = undefined
   if (listenerObject.value?.fields?.length) {
@@ -219,15 +217,21 @@ async function handleConfirm() {
     fields,
   })
 
-  if (index === -1) {
+  if (originalListenerObject.value) {
+    const originalObj = originalListenerObject.value
+    const index = values.findIndex(it => it.$type === 'flowable:TaskListener' && it.event === originalObj.event && it[originalObj.type] === originalObj.value)
+    if (index === -1) {
+      throw new Error("找不到源监听器对象")
+    }
+    values[index] = executionListener
+  } else {
     values.push(executionListener)
     bpmnUtil.updateProperty(bpmnSelectedElem, {
       extensionElements
     })
-
-  } else {
-    values[index] = executionListener
   }
+
+
 
 
   bpmnUtil.updateModelingProperty(bpmnSelectedElem, extensionElements, { values })
