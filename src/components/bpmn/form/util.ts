@@ -2,6 +2,7 @@ import BpmnModeler from "bpmn-js/lib/Modeler";
 import { ShallowRef, unref } from "vue";
 import Modeling from "bpmn-js/lib/features/modeling/Modeling";
 import ElementRegistry from 'diagram-js/lib/core/ElementRegistry'
+import BpmnFactory from "bpmn-js/lib/features/modeling/BpmnFactory";
 
 export class BpmnUtil {
   private bpmnModeler: ShallowRef<BpmnModeler | undefined>;
@@ -29,6 +30,17 @@ export class BpmnUtil {
     const registry = unref(this.bpmnModeler)?.get<ElementRegistry>("elementRegistry")
     const root = registry?.find(it => it.type === 'bpmn:Process')
     return root?.id || ''
+  }
+
+  public createElement(elementType: string, properties: Record<string, any>, parent: any) {
+    const bpmnFactory = this.bpmnModeler.value!.get<BpmnFactory>("bpmnFactory")
+    const element = bpmnFactory.create(elementType, properties);
+
+    if (parent) {
+      element.$parent = parent;
+    }
+
+    return element;
   }
 
 }

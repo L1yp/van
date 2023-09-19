@@ -40,7 +40,7 @@
         <el-table-column>
           <el-table-column prop="status" label="状态" :resizable="false" width="80" align="center" header-align="center">
             <template #default="scope">
-              <el-tag>{{ scope.row.status === 0 ? '停用' : '启用' }}</el-tag>
+              <el-tag :type="scope.row.status === 0 ? 'danger' : 'success'">{{ scope.row.status === 0 ? '停用' : '启用' }}</el-tag>
             </template>
           </el-table-column>
         </el-table-column>

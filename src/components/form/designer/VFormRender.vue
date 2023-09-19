@@ -55,6 +55,7 @@ defineExpose({
 </script>
 
 <style scoped>
+/*
 .vform-render:not(.el-form--label-top) :deep(.el-select:hover:not(.el-select-disabled) .el-input__wrapper) {
   box-shadow: none !important;
 }
@@ -90,5 +91,5 @@ defineExpose({
 .vform-render:not(.el-form--label-top) :deep(.el-form-item__label) {
   border-right: 1px solid var(--el-border-color);
 }
-
+*/
 </style>

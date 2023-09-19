@@ -52,6 +52,15 @@
         </template>
         <page-config/>
       </el-collapse-item>
+      <el-collapse-item name="boundaryEvent" v-show="['bpmn:BoundaryEvent'].includes(bpmnSelectedElem?.type)">
+        <template #title>
+          <div class="collapse-title">
+            <s-v-g-icon style="width: 1em; height: 1em" name="Page" />
+            <span style="margin-left: 6px">边界事件</span>
+          </div>
+        </template>
+        <boundary-event-config/>
+      </el-collapse-item>
     </el-collapse>
     <v-dialog
       v-model="executionDialogInfo.visible"
@@ -158,6 +167,7 @@ import VDialog from "@/components/dialog/VDialog.vue";
 import { useIcon } from "@/components/common/util";
 import emitter, { BpmnElementChanged } from '@/event/mitt'
 import { useBpmnModeler, useBpmnSelectedElem } from "@/config/app.hooks";
+import BoundaryEventConfig from "@/components/bpmn/form/BoundaryEventConfig.vue";
 
 const plusIcon = useIcon('Plus')
 

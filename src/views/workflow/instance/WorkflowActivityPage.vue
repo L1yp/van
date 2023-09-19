@@ -1,9 +1,11 @@
 <template>
-  <div>
+  <div style="width: 100%; height: 100%;">
     <el-table
       border stripe
       :data="tableData"
       size="small"
+      height="100%"
+      scrollbar-always-on
     >
       <el-table-column type="index" width="50" label="#" align="center" header-align="center" />
       <el-table-column prop="activity_name" label="节点" min-width="150" show-overflow-tooltip />
@@ -30,10 +32,10 @@ const props = defineProps<Props>()
 
 const tableData = computed(() => props.activityList.filter(it => it.activity_type === 'userTask' && !!it.end_time))
 
-const userMap = inject(userMapKey)
+const userMap = inject(userMapKey)!
 
 function formatUser(row: WorkflowActivityInfo, column: any, cellValue: string, index: number) {
-  return userMap.get(cellValue).nickname
+  return userMap.get(cellValue)?.nickname || ''
 }
 
 function formatDuration(row: WorkflowActivityInfo, column: any, cellValue: number, index: number) {

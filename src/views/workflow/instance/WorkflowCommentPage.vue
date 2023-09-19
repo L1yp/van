@@ -4,6 +4,8 @@
       border stripe
       :data="props.commentList"
       size="small"
+      height="100%"
+      scrollbar-always-on
     >
       <el-table-column type="index" label="#" width="50" align="center" header-align="center" />
       <el-table-column prop="user_id" label="用户" width="120" align="center" header-align="center" :formatter="formatUser" />
