@@ -3,7 +3,7 @@
     <ag-grid-vue
       :grid-options="gridOptions"
       style="width: 100%; height: 100%"
-      :class="store.dark ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'"
+      :class="store.AGGridClass"
     />
     <dropdown-menu
       ref="menuRef"

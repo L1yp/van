@@ -4,14 +4,14 @@
       <ag-grid-vue
         :grid-options="candidateGridOptions"
         style="width: 100%; height: 100%"
-        :class="store.dark ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'"
+        :class="store.AGGridClass"
       />
     </div>
     <div style="min-width: 1080px; width: calc(100% - 400px); height: 100%">
       <ag-grid-vue
         :grid-options="targetGridOptions"
         style="width: 100%; height: 100%"
-        :class="store.dark ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'"
+        :class="store.AGGridClass"
       />
     </div>
   </div>
@@ -30,6 +30,7 @@ import {
 import { AgGridVue } from "ag-grid-vue3";
 import { useSystemStore } from "@/store/sys-config";
 import { ElScrollbar } from 'element-plus'
+import { useThemeStore } from "@/store/theme";
 
 interface Props {
   fields: ModelingFieldDefView[]
@@ -37,7 +38,7 @@ interface Props {
 }
 
 const props = defineProps<Props>()
-const store = useSystemStore()
+const store = useThemeStore()
 
 const candidateColumnDefs: ColDef<ModelingFieldDefView>[] = [
   {
