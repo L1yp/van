@@ -204,7 +204,7 @@ function coloring() {
 
 function createMarkerStartCondition(): SVGMarkerElement {
   const marker: SVGMarkerElement = document.createElementNS("http://www.w3.org/2000/svg", 'marker')
-  const markerAttrs = {
+  const markerAttrs: Record<string, string> = {
     id: 'conditional-flow-marker-red',
     viewBox: '0 0 20 20',
     refX: '-1',
