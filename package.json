@@ -5,7 +5,7 @@
     "postinstall": "patch-package",
     "dev": "vite --mode dev",
     "front": "vite --mode front",
-    "build": "vite build --mode prod && ssh root@43.139.123.133 rm -f /usr/share/nginx/html/admin/assets/* && scp -r ./dist/assets/* root@43.139.123.133:/usr/share/nginx/html/admin/assets/ && scp ./dist/index.html root@43.139.123.133:/usr/share/nginx/html/admin/index.html",
+    "build": "vite build --mode prod && ssh root@43.139.88.95 rm -f /usr/share/nginx/html/admin/assets/* && scp -r ./dist/assets/* root@43.139.88.95:/usr/share/nginx/html/admin/assets/ && scp ./dist/index.html root@43.139.88.95:/usr/share/nginx/html/admin/index.html",
     "preview": "vite preview --port 5050"
   },
   "dependencies": {
