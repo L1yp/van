@@ -33,7 +33,7 @@
           </template>
           <template v-else>
             <transition name="fade" mode="out-in" appear>
-              <keep-alive>
+              <keep-alive :include="keepAliveStore.keepAliveNames">
                 <component :is="Component" :key="route.fullPath" v-if="keepAliveStore.refreshComponent" />
               </keep-alive>
             </transition>
