@@ -16,7 +16,7 @@
         </el-table-column>
         <el-table-column>
           <template #header>
-            <el-input v-model="param.name" clearable @change="listTodoTask(param)" />
+            <el-input v-model="param.name" clearable @change="listDoneTask(param)" />
           </template>
           <el-table-column prop="process_instance_name" label="标题" min-width="150">
             <template #default="scope">
