@@ -191,7 +191,7 @@ const tableHeight = computed<string>(() => {
   const padding = 32
   return `calc((calc(100vh - 44px - 54px)) - ${selectedContainerHeight + pagerHeight + padding}px)`
 })
-onMounted(() => tableHeight.effect.scheduler())
+onMounted(() => tableHeight?.effect?.scheduler?.())
 
 
 const { pageData, loadUserPageList } = useUserData(loading)
