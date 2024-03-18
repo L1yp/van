@@ -44,10 +44,8 @@ import { computed, ref } from "vue";
 import { ElDialog, ElButton, ElScrollbar } from "element-plus"
 import { DialogEmits, DialogProps } from './dialog'
 import { Close } from '@element-plus/icons-vue'
-import { useIcon } from "@/components/common/util";
-
-const FullScreenMaximize = useIcon('FullScreenMaximize')
-const FullScreenMinimize = useIcon('FullScreenMinimize')
+import FullScreenMaximize from '@/assets/icons/FullScreenMaximize.svg'
+import FullScreenMinimize from '@/assets/icons/FullScreenMinimize.svg'
 
 const props = withDefaults(defineProps<DialogProps>(), {
   fullScreen: undefined,

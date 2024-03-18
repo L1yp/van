@@ -57,7 +57,7 @@
     </div>
 
 
-    <JsonEditor v-model:visible="editorInfo.visible" :code="editorInfo.code"></JsonEditor>
+    <JsonEditor v-model="editorInfo.visible" :code="editorInfo.code"></JsonEditor>
 
     <v-dialog
       v-model="dialogInfo.visible"
@@ -94,7 +94,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, inject, ref, provide, onBeforeMount } from "vue";
+import { computed, ref, provide, onBeforeMount } from "vue";
 import { ElForm, ElScrollbar, ElTabs, ElTabPane, ElButton, ElRadioGroup, ElRadioButton, ElInput } from "element-plus"
 import NestedDragItem from "@/components/form/designer/NestedDragItem.vue";
 import FormPropertyPanel from "@/components/form/designer/FormPropertyPanel.vue"
