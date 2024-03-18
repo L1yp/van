@@ -20,17 +20,17 @@
 
     <el-form-item prop="size" label="尺寸" required>
       <el-radio-group v-model="formScheme.size">
-        <el-radio-button label="small">偏小</el-radio-button>
-        <el-radio-button label="default">默认</el-radio-button>
-        <el-radio-button label="large">偏大</el-radio-button>
+        <el-radio-button value="small">偏小</el-radio-button>
+        <el-radio-button value="default">默认</el-radio-button>
+        <el-radio-button value="large">偏大</el-radio-button>
       </el-radio-group>
     </el-form-item>
 
     <el-form-item prop="mode" label="模式">
       <el-radio-group v-model="formScheme.mode" :min="0" :max="1">
-        <el-radio-button label="design">设计</el-radio-button>
-        <el-radio-button label="read">只读</el-radio-button>
-        <el-radio-button label="edit">编辑</el-radio-button>
+        <el-radio-button value="design">设计</el-radio-button>
+        <el-radio-button value="read">只读</el-radio-button>
+        <el-radio-button value="edit">编辑</el-radio-button>
       </el-radio-group>
     </el-form-item>
 

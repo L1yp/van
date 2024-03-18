@@ -19,15 +19,15 @@
               </el-form-item>
               <el-form-item prop="hiddenLabel" label="隐藏标签">
                 <el-radio-group v-model="vFormSelectElem.formItemAttrs.hiddenLabel">
-                  <el-radio-button :label="true">是</el-radio-button>
-                  <el-radio-button :label="false">否</el-radio-button>
+                  <el-radio-button :value="true">是</el-radio-button>
+                  <el-radio-button :value="false">否</el-radio-button>
                 </el-radio-group>
               </el-form-item>
               <el-divider content-position="left">数据校验</el-divider>
               <el-form-item prop="required" label="是否必填">
                 <el-radio-group v-model="vFormSelectElem.formItemAttrs.required">
-                  <el-radio-button :label="true">是</el-radio-button>
-                  <el-radio-button :label="false">否</el-radio-button>
+                  <el-radio-button :value="true">是</el-radio-button>
+                  <el-radio-button :value="false">否</el-radio-button>
                 </el-radio-group>
               </el-form-item>
               <el-form-item v-if="vFormSelectElem.formItemAttrs.required" prop="requiredMessage" label="未填提示">

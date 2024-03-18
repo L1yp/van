@@ -25,7 +25,7 @@
           <el-radio-button
             v-for="option in flattenOptions"
             :key="option[props.valueField]"
-            :label="option[props.valueField]"
+            :value="option[props.valueField]"
             :disabled="option[props.disabledField]"
           >{{ option[props.labelField] }}</el-radio-button>
         </template>
@@ -44,7 +44,7 @@
         :node-key="props.valueField"
         :props="{ label: props.labelField, children: 'children', disabled: props.disabledField }"
         :data="options"
-        
+
       />
       <el-radio-group v-model="val" v-bind="$attrs" v-if="props.expand === true">
         <template v-if="props.buttonOption === false">
@@ -59,7 +59,7 @@
           <el-radio-button
             v-for="option in flattenOptions"
             :key="option[props.valueField]"
-            :label="option[props.valueField]"
+            :value="option[props.valueField]"
             :disabled="option[props.disabledField]"
           >{{ option[props.labelField] }}</el-radio-button>
         </template>

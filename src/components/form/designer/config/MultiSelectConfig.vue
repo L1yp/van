@@ -15,8 +15,8 @@
         />
       </template>
       <el-radio-group v-model="vFormSelectElem.attrs.expand" @change="v => v === false ? (vFormSelectElem.attrs.buttonOption = false) : (vFormSelectElem.attrs.buttonOption = true)">
-        <el-radio-button :label="true">是</el-radio-button>
-        <el-radio-button :label="false">否</el-radio-button>
+        <el-radio-button :value="true">是</el-radio-button>
+        <el-radio-button :value="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
     <el-form-item prop="buttonOption" label="按钮样式">
@@ -27,22 +27,22 @@
         />
       </template>
       <el-radio-group v-model="vFormSelectElem.attrs.buttonOption" :disabled="vFormSelectElem.attrs.expand === false">
-        <el-radio-button :label="true">是</el-radio-button>
-        <el-radio-button :label="false">否</el-radio-button>
+        <el-radio-button :value="true">是</el-radio-button>
+        <el-radio-button :value="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
 
     <el-form-item prop="clearable" label="可清空">
       <el-radio-group v-model="vFormSelectElem.attrs.clearable">
-        <el-radio-button :label="true">是</el-radio-button>
-        <el-radio-button :label="false">否</el-radio-button>
+        <el-radio-button :value="true">是</el-radio-button>
+        <el-radio-button :value="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
 
     <el-form-item prop="checkStrictly" label="父子不关联">
       <el-radio-group v-model="vFormSelectElem.attrs.checkStrictly">
-        <el-radio-button :label="true">是</el-radio-button>
-        <el-radio-button :label="false">否</el-radio-button>
+        <el-radio-button :value="true">是</el-radio-button>
+        <el-radio-button :value="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
     <el-form-item prop="multipleLimit" label="多选条数限制">

@@ -2,8 +2,8 @@
   <div style="width: 100%; " v-loading="loading">
     <el-form-item label="边界事件类型">
       <el-radio-group v-model="eventType">
-        <el-radio-button label="bpmn:TimerEventDefinition">定时器事件</el-radio-button>
-        <el-radio-button label="bpmn:ErrorEventDefinition">错误事件</el-radio-button>
+        <el-radio-button value="bpmn:TimerEventDefinition">定时器事件</el-radio-button>
+        <el-radio-button value="bpmn:ErrorEventDefinition">错误事件</el-radio-button>
       </el-radio-group>
     </el-form-item>
     <template v-if="eventType === 'bpmn:TimerEventDefinition'">

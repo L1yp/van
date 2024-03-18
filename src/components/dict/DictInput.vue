@@ -7,7 +7,7 @@
     </template>
     <template v-else>
       <el-radio-group v-model="val">
-        <el-radio-button :label="option.value" v-for="option in dictItem.options" :key="option.value">{{ option.label }}</el-radio-button>
+        <el-radio-button :value="option.value" v-for="option in dictItem.options" :key="option.value">{{ option.label }}</el-radio-button>
       </el-radio-group>
     </template>
   </template>

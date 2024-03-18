@@ -3,13 +3,13 @@
     <el-scrollbar height="300px" always>
       <el-radio-group v-model="val.data_type">
         <div>
-          <div class="field-wrapper"><el-radio label="DAY" size="small">今天</el-radio></div>
-          <div class="field-wrapper"><el-radio label="WEEK" size="small">本周</el-radio></div>
-          <div class="field-wrapper"><el-radio label="MONTH" size="small">本月</el-radio></div>
-          <div class="field-wrapper"><el-radio label="QUARTER" size="small">本季度</el-radio></div>
-          <div class="field-wrapper"><el-radio label="YEAR" size="small">今年</el-radio></div>
+          <div class="field-wrapper"><el-radio value="DAY" size="small">今天</el-radio></div>
+          <div class="field-wrapper"><el-radio value="WEEK" size="small">本周</el-radio></div>
+          <div class="field-wrapper"><el-radio value="MONTH" size="small">本月</el-radio></div>
+          <div class="field-wrapper"><el-radio value="QUARTER" size="small">本季度</el-radio></div>
+          <div class="field-wrapper"><el-radio value="YEAR" size="small">今年</el-radio></div>
           <div class="field-wrapper">
-            <el-radio label="FIXED" size="small">固定</el-radio>
+            <el-radio value="FIXED" size="small">固定</el-radio>
             <date-range-picker
               :disabled="val.data_type !== 'FIXED'"
               style="width: 250px;"

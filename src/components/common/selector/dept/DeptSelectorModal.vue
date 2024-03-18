@@ -58,7 +58,7 @@
                   </template>
                 </template>
                 <template v-else>
-                  <el-radio class="dept-selector" name="dept-selector" :label="scope.row.id" v-model="selectedIds"></el-radio>
+                  <el-radio class="dept-selector" name="dept-selector" :value="scope.row.id" v-model="selectedIds"></el-radio>
                 </template>
 
               </template>

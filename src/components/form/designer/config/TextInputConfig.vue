@@ -18,8 +18,8 @@
 
     <el-form-item prop="showWordLimit" label="展示字数统计">
       <el-radio-group v-model="vFormSelectElem.attrs.showWordLimit">
-        <el-radio-button :label="true">是</el-radio-button>
-        <el-radio-button :label="false">否</el-radio-button>
+        <el-radio-button :value="true">是</el-radio-button>
+        <el-radio-button :value="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
     <el-form-item prop="placeholder" label="占位文本">
@@ -27,16 +27,16 @@
     </el-form-item>
     <el-form-item prop="clearable" label="是否可清空">
       <el-radio-group v-model="vFormSelectElem.attrs.clearable">
-        <el-radio-button :label="true">是</el-radio-button>
-        <el-radio-button :label="false">否</el-radio-button>
+        <el-radio-button :value="true">是</el-radio-button>
+        <el-radio-button :value="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
 
 
     <el-form-item prop="type" label="多行文本">
       <el-radio-group v-model="vFormSelectElem.attrs.type" @change="handleChangeTextType" >
-        <el-radio-button label="textarea">是</el-radio-button>
-        <el-radio-button label="text">否</el-radio-button>
+        <el-radio-button value="textarea">是</el-radio-button>
+        <el-radio-button value="text">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
 
@@ -48,8 +48,8 @@
 
       <el-form-item prop="autoresize" label="高度自适应">
         <el-radio-group v-model="vFormSelectElem.attrs.autoresize">
-          <el-radio-button :label="true">是</el-radio-button>
-          <el-radio-button :label="false">否</el-radio-button>
+          <el-radio-button :value="true">是</el-radio-button>
+          <el-radio-button :value="false">否</el-radio-button>
         </el-radio-group>
       </el-form-item>
 
@@ -66,8 +66,8 @@
 
     <el-form-item prop="autofocus" label="自动获取焦点">
       <el-radio-group v-model="vFormSelectElem.attrs.autofocus">
-        <el-radio-button :label="true">是</el-radio-button>
-        <el-radio-button :label="false">否</el-radio-button>
+        <el-radio-button :value="true">是</el-radio-button>
+        <el-radio-button :value="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
 

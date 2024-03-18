@@ -52,7 +52,7 @@
           </el-table-column>
           <el-table-column width="40" align="center" header-align="center" :resizable="false" v-if="!props.multiple">
             <template #default="scope">
-              <el-radio class="user-selector" name="user-selector" :label="scope.row.id" v-model="selectedRowId"></el-radio>
+              <el-radio class="user-selector" name="user-selector" :value="scope.row.id" v-model="selectedRowId"></el-radio>
             </template>
           </el-table-column>
           <el-table-column>

@@ -8,8 +8,8 @@
     </el-form-item>
     <el-form-item label="模式" v-if="openMultiInstance">
       <el-radio-group v-model="isSequential">
-        <el-radio-button :label="true">串行</el-radio-button>
-        <el-radio-button :label="false">并行</el-radio-button>
+        <el-radio-button :value="true">串行</el-radio-button>
+        <el-radio-button :value="false">并行</el-radio-button>
       </el-radio-group>
     </el-form-item>
     <el-form-item label="类型">

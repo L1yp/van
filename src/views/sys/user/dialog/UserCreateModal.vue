@@ -45,8 +45,8 @@
         <el-col :span="12" :xl="12" :xs="24">
           <el-form-item label="状态" prop="status">
             <el-radio-group v-model="formData.status">
-              <el-radio-button :label="0">正常</el-radio-button>
-              <el-radio-button :label="1">禁用</el-radio-button>
+              <el-radio-button :value="0">正常</el-radio-button>
+              <el-radio-button :value="1">禁用</el-radio-button>
             </el-radio-group>
           </el-form-item>
         </el-col>

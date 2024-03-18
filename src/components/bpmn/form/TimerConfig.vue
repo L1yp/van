@@ -1,9 +1,9 @@
 <template>
   <el-form-item label="定时器类型">
     <el-radio-group v-model="timerType">
-      <el-radio-button label="timeDate">指定时间</el-radio-button>
-      <el-radio-button label="timeDuration">等待时长</el-radio-button>
-      <el-radio-button label="timeCycle">重复周期</el-radio-button>
+      <el-radio-button value="timeDate">指定时间</el-radio-button>
+      <el-radio-button value="timeDuration">等待时长</el-radio-button>
+      <el-radio-button value="timeCycle">重复周期</el-radio-button>
     </el-radio-group>
   </el-form-item>
   <el-form-item v-if="timerType === 'timeDate'" label="指定时间">

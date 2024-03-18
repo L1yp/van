@@ -7,8 +7,8 @@
   </el-form-item>
   <el-form-item label="状态" prop="status" required>
     <el-radio-group v-model="props.formData.status">
-      <el-radio-button :label="true">正常</el-radio-button>
-      <el-radio-button :label="false">禁用</el-radio-button>
+      <el-radio-button :value="true">正常</el-radio-button>
+      <el-radio-button :value="false">禁用</el-radio-button>
     </el-radio-group>
   </el-form-item>
   <el-form-item label="排序规则" prop="collation">

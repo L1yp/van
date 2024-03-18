@@ -14,15 +14,15 @@
 
     <el-form-item prop="multiple" label="多选">
       <el-radio-group v-model="formData.multiple" @change="handleChangeMultiple">
-        <el-radio-button :label="true">是</el-radio-button>
-        <el-radio-button :label="false">否</el-radio-button>
+        <el-radio-button :value="true">是</el-radio-button>
+        <el-radio-button :value="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
 
     <el-form-item prop="disabled" label="禁用">
       <el-radio-group v-model="vFormSelectElem.attrs.disabled">
-        <el-radio-button :label="true">是</el-radio-button>
-        <el-radio-button :label="false">否</el-radio-button>
+        <el-radio-button :value="true">是</el-radio-button>
+        <el-radio-button :value="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
 
@@ -32,16 +32,16 @@
 
     <el-form-item prop="size" label="大小">
       <el-radio-group v-model="vFormSelectElem.attrs.size">
-        <el-radio-button label="large">大</el-radio-button>
-        <el-radio-button label="default">默认</el-radio-button>
-        <el-radio-button label="small">小</el-radio-button>
+        <el-radio-button value="large">大</el-radio-button>
+        <el-radio-button value="default">默认</el-radio-button>
+        <el-radio-button value="small">小</el-radio-button>
       </el-radio-group>
     </el-form-item>
 
     <el-form-item v-show="!vFormSelectElem.attrs.multiple" prop="clearable" label="是否可清空">
       <el-radio-group v-model="vFormSelectElem.attrs.clearable">
-        <el-radio-button :label="true">是</el-radio-button>
-        <el-radio-button :label="false">否</el-radio-button>
+        <el-radio-button :value="true">是</el-radio-button>
+        <el-radio-button :value="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
 
@@ -53,8 +53,8 @@
         />
       </template>
       <el-radio-group v-model="vFormSelectElem.attrs.collapseTags">
-        <el-radio-button :label="true">是</el-radio-button>
-        <el-radio-button :label="false">否</el-radio-button>
+        <el-radio-button :value="true">是</el-radio-button>
+        <el-radio-button :value="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
 
@@ -319,7 +319,7 @@ import { vFormActiveElementKey } from "@/components/form/state.key";
 import FormItemTooltip from "../../FormItemTooltip.vue"
 import emitter from "@/event/mitt";
 
-const vFormSelectElem = inject(vFormActiveElementKey)
+const vFormSelectElem = inject(vFormActiveElementKey)!
 
 interface FormData {
   multiple: boolean
@@ -329,10 +329,13 @@ const formData = ref<FormData>({
   multiple: vFormSelectElem.value?.attrs?.multiple
 })
 
-function handleChangeMultiple(val: boolean) {
+function handleChangeMultiple(val: string | number | boolean | undefined) {
+  if (!vFormSelectElem.value) {
+    return
+  }
   console.log('handleChangeMultiple', val, vFormSelectElem.value.key)
   emitter.emit('selectMultipleChanged', {
-    multiple: val,
+    multiple: val as boolean,
     prop: vFormSelectElem.value.id
   })
 

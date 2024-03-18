@@ -36,8 +36,8 @@
           </el-form-item>
           <el-form-item label="状态" prop="status">
             <el-radio-group v-model="formData.status" :disabled="mode === 'view'">
-              <el-radio-button :label="0">正常</el-radio-button>
-              <el-radio-button :label="1">禁用</el-radio-button>
+              <el-radio-button :value="0">正常</el-radio-button>
+              <el-radio-button :value="1">禁用</el-radio-button>
             </el-radio-group>
           </el-form-item>
         </el-form>

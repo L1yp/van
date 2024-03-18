@@ -71,9 +71,9 @@
     >
       <div style="display: flex; align-items: center; gap: 6px;">
         <el-radio-group v-model="formScheme.mode">
-          <el-radio-button label="design">设计</el-radio-button>
-          <el-radio-button label="edit">编辑</el-radio-button>
-          <el-radio-button label="read">预览</el-radio-button>
+          <el-radio-button value="design">设计</el-radio-button>
+          <el-radio-button value="edit">编辑</el-radio-button>
+          <el-radio-button value="read">预览</el-radio-button>
         </el-radio-group>
         <el-button @click="handleClickValidateForm">校验表单</el-button>
       </div>

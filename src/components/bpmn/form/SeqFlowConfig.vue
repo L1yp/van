@@ -8,9 +8,9 @@
     </el-form-item>
     <el-form-item label="流转规则" v-if="completionRule">
       <el-radio-group v-model="completionRule">
-        <el-radio-button label="dynamic">动态</el-radio-button>
-        <el-radio-button label="any">或签</el-radio-button>
-        <el-radio-button label="all">全签</el-radio-button>
+        <el-radio-button value="dynamic">动态</el-radio-button>
+        <el-radio-button value="any">或签</el-radio-button>
+        <el-radio-button value="all">全签</el-radio-button>
       </el-radio-group>
     </el-form-item>
     <el-form-item label="表达式" v-if="completionRule === 'dynamic'">

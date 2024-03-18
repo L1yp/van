@@ -3,17 +3,17 @@
     <el-form ref="formRef" :model="listener" label-width="100px" style="margin-top: 6px">
       <el-form-item prop="event" label="事件" required>
         <el-radio-group v-model="listener.event">
-          <el-radio-button label="assignment">指派</el-radio-button>
-          <el-radio-button label="create">创建</el-radio-button>
-          <el-radio-button label="complete">完成</el-radio-button>
-          <el-radio-button label="delete">删除</el-radio-button>
+          <el-radio-button value="assignment">指派</el-radio-button>
+          <el-radio-button value="create">创建</el-radio-button>
+          <el-radio-button value="complete">完成</el-radio-button>
+          <el-radio-button value="delete">删除</el-radio-button>
         </el-radio-group>
       </el-form-item>
       <el-form-item prop="type" label="类型" required>
         <el-radio-group v-model="listener.type">
-          <el-radio-button label="class">Java类</el-radio-button>
-          <el-radio-button label="expression">表达式</el-radio-button>
-          <el-radio-button label="delegateExpression" disabled>委托表达式</el-radio-button>
+          <el-radio-button value="class">Java类</el-radio-button>
+          <el-radio-button value="expression">表达式</el-radio-button>
+          <el-radio-button value="delegateExpression" disabled>委托表达式</el-radio-button>
         </el-radio-group>
       </el-form-item>
       <el-form-item prop="value" label="值" required>

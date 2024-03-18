@@ -42,14 +42,14 @@
     </el-form-item>
     <el-form-item label="可清空" prop="clearable">
       <el-radio-group v-model="vFormSelectElem.attrs.clearable">
-        <el-radio-button :label="true">是</el-radio-button>
-        <el-radio-button :label="false">否</el-radio-button>
+        <el-radio-button :value="true">是</el-radio-button>
+        <el-radio-button :value="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
     <el-form-item label="可编辑" prop="editable">
       <el-radio-group v-model="vFormSelectElem.attrs.editable">
-        <el-radio-button :label="true">是</el-radio-button>
-        <el-radio-button :label="false">否</el-radio-button>
+        <el-radio-button :value="true">是</el-radio-button>
+        <el-radio-button :value="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
     <el-form-item prop="defaultValue" label="默认值">

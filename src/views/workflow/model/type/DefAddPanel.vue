@@ -20,8 +20,8 @@
           </el-form-item>
           <el-form-item label="状态" prop="status">
             <el-radio-group v-model="formData.status">
-              <el-radio-button :label="0">正常</el-radio-button>
-              <el-radio-button :label="1">禁用</el-radio-button>
+              <el-radio-button :value="0">正常</el-radio-button>
+              <el-radio-button :value="1">禁用</el-radio-button>
             </el-radio-group>
           </el-form-item>
 
@@ -30,8 +30,8 @@
         <el-form :model="formData.code_gen_rule" label-width="80px" ref="formRuleRef" :rules="codeRules" status-icon>
           <el-form-item label="类型">
             <el-radio-group v-model="formData.code_gen_rule.type">
-              <el-radio-button label="fixed">固定</el-radio-button>
-              <el-radio-button label="class">Java类</el-radio-button>
+              <el-radio-button value="fixed">固定</el-radio-button>
+              <el-radio-button value="class">Java类</el-radio-button>
             </el-radio-group>
           </el-form-item>
           <template v-if="formData.code_gen_rule.type === 'fixed'">

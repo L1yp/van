@@ -15,8 +15,8 @@
         />
       </template>
       <el-radio-group v-model="vFormSelectElem.attrs.expand" @change="v => v === false ? (vFormSelectElem.attrs.buttonOption = false) : (vFormSelectElem.attrs.buttonOption = true)">
-        <el-radio-button :label="true">是</el-radio-button>
-        <el-radio-button :label="false">否</el-radio-button>
+        <el-radio-button :value="true">是</el-radio-button>
+        <el-radio-button :value="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
 
@@ -28,8 +28,8 @@
         />
       </template>
       <el-radio-group v-model="vFormSelectElem.attrs.buttonOption" :disabled="vFormSelectElem.attrs.expand === false">
-        <el-radio-button :label="true">是</el-radio-button>
-        <el-radio-button :label="false">否</el-radio-button>
+        <el-radio-button :value="true">是</el-radio-button>
+        <el-radio-button :value="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
 
@@ -46,9 +46,9 @@
 
     <el-form-item prop="size" label="大小">
       <el-radio-group v-model="vFormSelectElem.attrs.size">
-        <el-radio-button label="large">大</el-radio-button>
-        <el-radio-button label="default">默认</el-radio-button>
-        <el-radio-button label="small">小</el-radio-button>
+        <el-radio-button value="large">大</el-radio-button>
+        <el-radio-button value="default">默认</el-radio-button>
+        <el-radio-button value="small">小</el-radio-button>
       </el-radio-group>
     </el-form-item>
 
