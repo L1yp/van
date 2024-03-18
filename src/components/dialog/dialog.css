@@ -27,6 +27,7 @@ html.dark .v-dialog {
 .v-dialog.el-dialog {
     box-sizing: border-box;
     margin: 15dvh auto;
+    padding: 0;
 }
 
 .v-dialog.el-dialog.is-fullscreen {
