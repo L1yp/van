@@ -14,7 +14,7 @@ const Layout: Component = () => import("../layouts/TopLeft.vue");
  */
 const viewModules = import.meta.glob("../views/**/*.vue")
 
-const moduleRoutes = import.meta.globEager("./modules/**/*.ts")
+const moduleRoutes = import.meta.glob("./modules/**/*.ts", { eager: true })
 console.log('moduleRoutes', moduleRoutes);
 
 const staticModuleRoutes: RouteRecordRaw[] = []
