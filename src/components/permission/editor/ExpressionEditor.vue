@@ -58,7 +58,7 @@
 </template>
 
 <script lang="ts" setup>
-import { inject, onMounted, onUnmounted, ref, shallowRef, toRaw } from "vue";
+import { computed, onMounted, onUnmounted, ref, shallowRef, toRaw } from "vue";
 import { Viewer, ViewOptions, } from '@textbus/browser'
 
 import {
@@ -77,7 +77,6 @@ import { ElIcon, ElPopover } from 'element-plus'
 import { Commander, ExtractComponentInstanceType, RootComponentRef, Slot } from "@textbus/core";
 import FieldExpressionPanel from "@/components/permission/components/FieldExpressionPanel.vue";
 import { NopCommander } from "@/components/permission/editor/components/NopCommander";
-import { computed } from "@vue/reactivity";
 import { Plus } from '@element-plus/icons-vue'
 import { varDptOptions } from "../components/condition";
 import { useDeptInfo } from "@/service/system/dept";

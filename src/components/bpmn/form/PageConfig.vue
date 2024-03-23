@@ -1,5 +1,5 @@
 <template>
-  <div style="padding: 10px" v-loading="loading">
+  <div style="padding: 10px; display: flex" v-loading="loading">
     <el-select v-model="boundPageId" clearable>
       <el-option
         v-for="page in modulePageList"

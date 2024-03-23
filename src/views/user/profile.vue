@@ -14,7 +14,7 @@
 <script lang="ts" setup>
 import { onUnmounted, ref, shallowRef, } from "vue"
 import { AgGridVue } from "ag-grid-vue3";
-import { GridApi, GridOptions, GridReadyEvent, RowEditingStoppedEvent } from "ag-grid-community";
+import { GridApi, GridOptions, GridReadyEvent } from "ag-grid-community";
 import InputEditor from "@/components/ag-grid/editor/InputEditor.vue";
 import { useThemeStore } from "@/store/theme";
 import SelectEditor from "@/components/ag-grid/editor/SelectEditor.vue";
