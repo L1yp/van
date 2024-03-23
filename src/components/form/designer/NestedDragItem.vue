@@ -23,9 +23,9 @@
               @click.stop="handleClickElement(item)"
               class="widget-col-item"
               :class="vFormActiveElement === item ? 'active' : ''"
-              style="min-height: 80px; padding: 6px; "
+              style="padding: 6px; "
             >
-              <nested-drag-item style="width: 100%; height: 100%; background-color: #fff; " :children="item.children"></nested-drag-item>
+              <nested-drag-item style="width: 100%; height: 100%; min-height: 80px; background-color: #fff; " :children="item.children"></nested-drag-item>
               <div v-if="vFormActiveElement === item" class="field-id">
                 <span v-text="item.id"></span>
               </div>
