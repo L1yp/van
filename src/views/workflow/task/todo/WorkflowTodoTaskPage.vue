@@ -37,6 +37,7 @@
         :total="todoTaskPage.total"
         v-model:current-page="param.pageIdx"
         v-model:page-size="param.pageSize"
+        @current-change="listTodoTask(param)"
       />
     </div>
   </div>
