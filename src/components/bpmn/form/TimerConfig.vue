@@ -45,8 +45,10 @@ const bpmnSelectedElem = useBpmnSelectedElem()
 const bpmnUtil = new BpmnUtil(bpmnModeler)
 
 const loading = ref(false)
+const eventTypeKey = ref(1)
 const eventType = computed({
   get() {
+    const depKey = eventTypeKey.value
     const elem = bpmnSelectedElem.value
     if (!elem || !elem.businessObject?.eventDefinitions?.length) {
       return ''
@@ -63,12 +65,19 @@ const eventType = computed({
         timer
       ]
     })
+    eventTypeKey.value++
   }
 })
 
+const timerTypeKey = ref(1)
+const timeDataKey = ref(1)
+const timeDurationKey = ref(1)
+const timeCycleKey = ref(1)
+const timeCycleEndDateKey = ref(1)
 type TimerType = 'timeDate' | 'timeDuration' | 'timeCycle'
 const timerType = computed<TimerType | undefined>({
   get() {
+    const depKey = timerTypeKey.value
     const elem = bpmnSelectedElem.value
     const bo = elem.businessObject
     const definition = bo.eventDefinitions[0]
@@ -86,6 +95,7 @@ const timerType = computed<TimerType | undefined>({
     if (!val) {
       return
     }
+    timerTypeKey.value++
     console.log('timeDate setter', val)
     const elem = bpmnSelectedElem.value
     const bo = elem.businessObject
@@ -109,6 +119,7 @@ const timerType = computed<TimerType | undefined>({
 })
 const timeDate = computed({
   get() {
+    const depKey = timeDataKey.value
     return bpmnSelectedElem.value?.businessObject?.eventDefinitions?.[0]?.timeDate?.body
   },
   set(v) {
@@ -122,13 +133,16 @@ const timeDate = computed({
     bpmnUtil.updateModelingProperty(elem, timer, {
       timeDate: expression
     })
+    timeDataKey.value++
   }
 })
 const timeDuration = computed({
   get() {
+    const depKey = timeDurationKey.value
     return bpmnSelectedElem.value?.businessObject?.eventDefinitions?.[0]?.timeDuration?.body?.substring(1)
   },
   set(v) {
+    timeDurationKey.value++
     console.log('timeDuration setter', v)
     const elem = bpmnSelectedElem.value
     const bo = elem.businessObject
@@ -143,9 +157,11 @@ const timeDuration = computed({
 })
 const timeCycle = computed({
   get() {
+    const depKey = timeCycleKey.value
     return bpmnSelectedElem.value?.businessObject?.eventDefinitions?.[0]?.timeCycle?.body?.substring(1)
   },
   set(v) {
+    timeCycleKey.value++
     console.log('timeCycle setter', v)
     const elem = bpmnSelectedElem.value
     const bo = elem.businessObject
@@ -165,9 +181,11 @@ const timeCycle = computed({
 
 const timeCycleEndDate = computed({
   get() {
+    const depKey = timeCycleEndDateKey.value
     return bpmnSelectedElem.value?.businessObject?.eventDefinitions?.[0]?.timeCycle?.$attrs?.['flowable:endDate']
   },
   set(v) {
+    timeCycleEndDateKey.value++
     console.log('timeCycle setter', v)
     const elem = bpmnSelectedElem.value
     const bo = elem.businessObject
@@ -188,12 +206,12 @@ const timeCycleEndDate = computed({
 
 
 function handleElementChanged(event: BpmnElementChanged) {
-  eventType.effect?.scheduler?.()
-  timerType.effect?.scheduler?.()
-  timeDate.effect?.scheduler?.()
-  timeDuration.effect?.scheduler?.()
-  timeCycle.effect?.scheduler?.()
-  timeCycleEndDate.effect?.scheduler?.()
+  eventTypeKey.value++
+  timerTypeKey.value++
+  timeDataKey.value++
+  timeDurationKey.value++
+  timeCycleKey.value++
+  timeCycleEndDateKey.value++
 }
 
 emitter.on('bpmnElementChanged', handleElementChanged)

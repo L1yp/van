@@ -48,7 +48,10 @@ const bpmnSelectedElem = useBpmnSelectedElem()
 
 const loading = ref(false)
 const formRef = ref<InstanceType<typeof TaskListenerForm>>()
+
+const tableKey = ref(1)
 const tableData = computed<TaskListenerObject[]>(() => {
+  const depKey = tableKey.value
   const selectedElem = toRaw(bpmnSelectedElem.value)
   if (!selectedElem) {
     return []
@@ -240,7 +243,7 @@ async function handleConfirm() {
 }
 
 function handleCancel() {
-  tableData?.effect?.scheduler?.()
+  tableKey.value++
   editPanelVisible.value = false
 }
 
@@ -261,14 +264,14 @@ function handleDeleteListener(listener: TaskListenerObject) {
   const idx = listeners.filter(it => it.$type.endsWith('TaskListener')).findIndex(it => it.event === listener.event && it[listener.type] === listener.value)
   if (idx !== -1) {
     listeners.splice(idx, 1)
-    tableData?.effect?.scheduler?.()
+    tableKey.value++
   }
 
 
 }
 
 function handleElementChanged(event: BpmnElementChanged) {
-  tableData?.effect?.scheduler?.()
+  tableKey.value++
 }
 
 function handleSelectionChanged(event: BpmnSelectionChanged) {

@@ -21,7 +21,7 @@
 
 <script lang="ts" setup>
 // TODO: 设置 连线类型：默认流转 条件流程 无
-import { onUnmounted, computed, toRaw } from "vue"
+import { onUnmounted, computed, toRaw, ref } from "vue"
 import { ElForm, ElFormItem, ElInput, ElInputNumber, ElRadioGroup, ElRadioButton } from "element-plus"
 import emitter, { BpmnElementChanged } from "@/event/mitt";
 import { BpmnUtil } from "@/components/bpmn/form/util";
@@ -35,11 +35,15 @@ const bpmnSelectedElem = useBpmnSelectedElem()
 
 
 const bpmnUtil = new BpmnUtil(bpmnModeler)
+
+const expressionKey = ref(1)
 const expression = computed({
   get() {
+    const depKey = expressionKey.value
     return bpmnSelectedElem.value?.businessObject?.conditionExpression?.body || ''
   },
   set(v) {
+    expressionKey.value++
     if (bpmnSelectedElem.value?.businessObject?.conditionExpression) {
       bpmnSelectedElem.value.businessObject.conditionExpression.body = v
     } else {
@@ -52,15 +56,19 @@ const expression = computed({
   }
 })
 
+const orderNoKey = ref(1)
 const orderNo = computed({
   get() {
+    const depKey = orderNoKey.value
     return parseInt(bpmnSelectedElem.value?.businessObject?.order || '0') || 0
   },
   set(order) {
+    orderNoKey.value++
     bpmnUtil.updateProperty(bpmnSelectedElem, { order })
   }
 })
 
+const lineTypeKey = ref(1)
 const lineType = computed(() => {
   if (bpmnSelectedElem.value?.type !== 'bpmn:SequenceFlow') {
     return null
@@ -74,8 +82,10 @@ const lineType = computed(() => {
   return null
 })
 
+const completionRuleKey = ref(1)
 const completionRule = computed({
   get() {
+    const depKey = completionRuleKey.value
     const elem = toRaw(bpmnSelectedElem.value)
     if (!elem) {
       return null
@@ -86,12 +96,14 @@ const completionRule = computed({
     bpmnUtil.updateProperty(bpmnSelectedElem, {
       completionRule: v
     })
+    completionRuleKey.value++
   }
 })
 
-
+const completionExpressionKey = ref(1)
 const completionExpression = computed({
   get() {
+    const depKey = completionExpressionKey.value
     const elem = toRaw(bpmnSelectedElem.value)
     if (!elem) {
       return null
@@ -102,16 +114,11 @@ const completionExpression = computed({
     bpmnUtil.updateProperty(bpmnSelectedElem, {
       completionExpression: v
     })
+    completionExpressionKey.value++
   }
 })
 
 function refreshState(e: BpmnElementChanged) {
-  expression?.effect?.scheduler?.()
-  orderNo?.effect?.scheduler?.()
-  completionRule?.effect?.scheduler?.()
-  completionExpression?.effect?.scheduler?.()
-
-
   if (e.element.type === 'label') {
     let connection = e.element.labelTarget
     if (!connection) {

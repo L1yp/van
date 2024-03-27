@@ -55,7 +55,7 @@ const fieldRef = ref<InstanceType<typeof ListenerFieldInject>>()
 
 async function validate() {
   await formRef.value?.validate()
-  await fieldRef.value.validate()
+  await fieldRef.value?.validate()
 }
 
 defineExpose({

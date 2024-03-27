@@ -29,13 +29,12 @@
 
 <script lang="ts" setup>
 // 会签配置
-import { computed, inject, toRaw, onUnmounted } from "vue"
+import { computed, inject, toRaw, ref } from "vue"
 import { ElSelect, ElOption, ElForm, ElFormItem, ElSwitch, ElRadioGroup, ElRadioButton } from "element-plus"
 import {
   modelingFieldKey,
 } from "@/config/app.keys";
 import { BpmnUtil } from "@/components/bpmn/form/util";
-import emitter, { BpmnElementChanged } from "@/event/mitt";
 import { useBpmnModeler, useBpmnSelectedElem } from "@/config/app.hooks";
 import BpmnFactory from "bpmn-js/lib/features/modeling/BpmnFactory";
 
@@ -49,9 +48,10 @@ type AssigneeType = 'user' | 'dept' | 'role'
 
 const bpmnUtil = new BpmnUtil(bpmnModeler)
 
-
+const openMultiInstanceKey = ref(1)
 const openMultiInstance = computed({
   get() {
+    const depKey = openMultiInstanceKey.value
     const elem = toRaw(bpmnSelectedElem.value)
     if (!elem || !elem.businessObject) {
       return false
@@ -62,6 +62,8 @@ const openMultiInstance = computed({
     if (!bpmnModeler.value) {
       return
     }
+    multipleLimitKey.value++
+    openMultiInstanceKey.value++
     const bpmnFactory = bpmnModeler.value.get<BpmnFactory>("bpmnFactory")
     if (v) {
       const multiInstanceLoopCharacteristics = bpmnFactory.create('bpmn:MultiInstanceLoopCharacteristics')
@@ -101,8 +103,10 @@ const openMultiInstance = computed({
   }
 })
 
+const isSequentialKey = ref(1)
 const isSequential = computed({
   get() {
+    const depKey = isSequentialKey.value
     const elem = toRaw(bpmnSelectedElem!.value)
     if (!elem || !elem.businessObject) {
       return false
@@ -114,30 +118,34 @@ const isSequential = computed({
     bpmnUtil.updateModelingProperty(bpmnSelectedElem, elem.businessObject.loopCharacteristics, {
       isSequential: v
     })
+    isSequentialKey.value++
   }
 })
 
-
+const assigneeTypeKey = ref(1)
 const assigneeType = computed<AssigneeType>({
   get() {
+    const depKey = assigneeTypeKey.value
     const elem = toRaw(bpmnSelectedElem!.value)
     // FIXME: unsupported other type
     if (true || !elem || !elem.businessObject || bpmnUtil.isMultiInstanceUserTask(bpmnSelectedElem)) {
       return 'user'
     }
     const bo = elem.businessObject
-
     return bo.assigneeType
   },
   set(v) {
+    assigneeTypeKey.value++
     bpmnUtil.updateProperty(bpmnSelectedElem!.value, {
       assigneeType: v
     })
   }
 })
 
+const assigneeValueKey = ref(1)
 const assigneeValue = computed<string[]>({
   get() {
+    const depKey = assigneeValueKey.value
     const elem = toRaw(bpmnSelectedElem!.value)
     if (!elem || !elem.businessObject) {
       return []
@@ -150,6 +158,7 @@ const assigneeValue = computed<string[]>({
     return fields.split(',')
   },
   set(v) {
+    assigneeValueKey.value++
     bpmnUtil.updateProperty(bpmnSelectedElem, {
       assigneeFields: v.join(',')
     })
@@ -168,7 +177,9 @@ const assigneeValue = computed<string[]>({
   }
 })
 
+const multipleLimitKey = ref(1)
 const multipleLimit = computed(() => {
+  const depKey = multipleLimitKey.value
   const elem = toRaw(bpmnSelectedElem.value)
   if(!elem) {
     return 1
@@ -181,22 +192,6 @@ const multipleLimit = computed(() => {
   }
   return 1
 })
-
-function refreshState(e: BpmnElementChanged) {
-  const elem = e.element
-  if (elem.type === 'bpmn:UserTask') {
-    multipleLimit.effect.scheduler?.()
-    isSequential.effect.scheduler?.()
-    openMultiInstance.effect.scheduler?.()
-
-    assigneeType.effect.scheduler?.()
-    assigneeValue.effect.scheduler?.()
-  }
-}
-
-emitter.on('bpmnElementChanged', refreshState)
-
-onUnmounted(() => emitter.off('bpmnElementChanged', refreshState))
 </script>
 
 <style scoped>

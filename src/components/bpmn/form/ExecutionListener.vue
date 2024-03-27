@@ -48,7 +48,10 @@ const bpmnModeler = useBpmnModeler()
 
 const loading = ref(false)
 const formRef = ref<InstanceType<typeof ExecutionListenerForm>>()
+
+const tableKey = ref(1)
 const tableData = computed<ExecutionListenerObject[]>(() => {
+  const depKey = tableKey.value
   const selectedElem = toRaw(bpmnSelectedElem.value)
   if (!selectedElem) {
     return []
@@ -137,7 +140,7 @@ const bpmnUtil = new BpmnUtil(bpmnModeler)
 async function handleConfirm() {
   loading.value = true
   try {
-    await formRef.value.validate()
+    await formRef.value?.validate()
   }
   catch (e) {
     // @ts-ignore
@@ -235,12 +238,13 @@ async function handleConfirm() {
   }
 
   bpmnUtil.updateModelingProperty(bpmnSelectedElem, extensionElements, { values })
+  tableKey.value++
 
   editPanelVisible.value = false
 }
 
 function handleCancel() {
-  tableData?.effect?.scheduler?.()
+  tableKey.value++
   editPanelVisible.value = false
 }
 
@@ -261,14 +265,14 @@ function handleDeleteListener(listener: ExecutionListenerObject) {
   const idx = listeners.filter(it => it.$type.endsWith('ExecutionListener')).findIndex(it => it.event === listener.event && it[listener.type] === listener.value)
   if (idx !== -1) {
     listeners.splice(idx, 1)
-    tableData?.effect?.scheduler?.()
+    tableKey.value++
   }
 
 
 }
 
 function handleElementChanged(event: BpmnElementChanged) {
-  tableData?.effect?.scheduler?.()
+  tableKey.value++
 }
 
 function handleSelectionChanged(event: BpmnSelectionChanged) {

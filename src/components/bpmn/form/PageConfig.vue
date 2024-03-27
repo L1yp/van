@@ -18,12 +18,11 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, inject, computed, toRaw, onUnmounted } from "vue"
+import { ref, inject, computed, toRaw } from "vue"
 import { ElMessage, ElButton, ElSelect, ElOption } from "element-plus"
 import { modelingPageKey, workflowVerKey } from "@/config/app.keys";
 import { Plus, Setting, Refresh } from '@element-plus/icons-vue'
 import { BpmnUtil } from "@/components/bpmn/form/util";
-import emitter, { BpmnElementChanged } from '@/event/mitt'
 import { useModelingPageApi } from "@/service/modeling/page";
 import MaskWindow from "@/components/dialog/MaskWindow.vue";
 import FormDesigner from '@/views/modeling/form/designer.vue'
@@ -37,8 +36,10 @@ const workflowTypeVer = inject(workflowVerKey)!
 
 const bpmnUtil = new BpmnUtil(bpmnModeler)
 
+const pageIdKey = ref(1)
 const boundPageId = computed({
   get() {
+    const depKey = pageIdKey.value
     const elem = toRaw(bpmnSelectedElem.value)
     if (!elem) {
       return null
@@ -48,6 +49,7 @@ const boundPageId = computed({
   },
   set(formKey) {
     bpmnUtil.updateProperty(bpmnSelectedElem, { formKey })
+    pageIdKey.value++
   }
 })
 
@@ -80,13 +82,6 @@ function handleUpdatePage() {
   visible.value = true
 
 }
-
-function handleElementChanged(event: BpmnElementChanged) {
-  boundPageId?.effect?.scheduler?.()
-}
-
-emitter.on('bpmnElementChanged', handleElementChanged)
-onUnmounted(() => emitter.off('bpmnElementChanged', handleElementChanged))
 </script>
 
 <style scoped>

@@ -16,10 +16,9 @@
 </template>
 
 <script lang="ts" setup>
-import {computed, inject, onUnmounted} from "vue";
+import { computed, ref } from "vue";
 import { ElInput, ElForm, ElFormItem } from "element-plus"
 import { BpmnUtil} from "./util"
-import emitter, {BpmnElementChanged} from "@/event/mitt";
 import { useBpmnModeler, useBpmnSelectedElem } from "@/config/app.hooks";
 
 
@@ -43,22 +42,27 @@ const elementId = computed(() => {
   return bpmnSelectedElem.value?.id || ''
 })
 
+const elementNameKey = ref(1)
 const elementName = computed({
   get() {
+    const depKey = elementNameKey.value
     if (!bpmnSelectedElem.value) {
       return ''
     }
     return bpmnSelectedElem.value.businessObject?.name || ''
   },
   set(v) {
+    elementNameKey.value++
     bpmnUtil.updateProperty(bpmnSelectedElem, {
       name: v
     })
   }
 })
 
+const elementDescriptionKey = ref(1)
 const elementDescription = computed({
   get() {
+    const depKey = elementDescriptionKey.value
     if (!bpmnSelectedElem.value) {
       return ''
     }
@@ -67,6 +71,7 @@ const elementDescription = computed({
     return docs?.[0]?.text || ''
   },
   set(v) {
+    elementDescriptionKey.value++
     const bo = bpmnSelectedElem.value.businessObject
     const docs = bo.get("documentation")
     console.log("docs", docs)
@@ -79,17 +84,6 @@ const elementDescription = computed({
     elementDescription?.effect?.scheduler?.()
   }
 })
-
-function refreshState(e: BpmnElementChanged) {
-  elementType?.effect?.scheduler?.()
-  elementId?.effect?.scheduler?.()
-  elementName?.effect?.scheduler?.()
-  elementDescription?.effect?.scheduler?.()
-}
-
-emitter.on('bpmnElementChanged', refreshState)
-
-onUnmounted(() => emitter.off('bpmnElementChanged', refreshState))
 </script>
 
 <style scoped>
