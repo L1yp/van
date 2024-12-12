@@ -55,7 +55,7 @@
             <el-tag>{{ scope.row.status === 0 ? '正常' : '禁用' }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="操作" fixed="right" width="190">
+        <el-table-column label="操作" width="190">
           <template #default="scope">
             <el-button plain text @click="editItem(scope.row)" :icon="Edit">编辑</el-button>
             <el-popconfirm

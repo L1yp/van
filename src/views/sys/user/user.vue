@@ -79,13 +79,13 @@
             </template>
             <el-table-column prop="status" label="状态" align="center" header-align="center" width="100">
               <template #default="scope">
-                <el-tag :type="scope.row.status === 0 ? '' : 'danger'"
+                <el-tag :type="scope.row.status === 0 ? undefined : 'danger'"
                         v-text="scope.row.status === 0 ? '正常' : '禁用'"></el-tag>
               </template>
             </el-table-column>
           </el-table-column>
 
-          <el-table-column label="操作" fixed="right" width="190">
+          <el-table-column label="操作" width="190">
             <template #default="scope">
               <el-button plain style="vertical-align: middle" text @click.stop="editUser(scope.row)" :icon="Edit">编辑
               </el-button>
