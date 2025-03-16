@@ -439,4 +439,9 @@ defineExpose({
 :deep(.djs-shape text) {
   fill: var(--shape-text-color) !important;
 }
+
+
+:deep(.djs-minimap) {
+  background-color: unset;
+}
 </style>
