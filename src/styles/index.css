@@ -8,6 +8,13 @@
 
     --tag-item-gap-color: rgb(0 0 0 / 25%);
 
+
+    --connection-line-color: rgb(34, 36, 42);
+    --shape-text-color: rgb(34, 36, 42);
+
+    --shape-fill-color: white;
+
+    --connection-arrow: url(#sequenceflow-arrow-normal);
 }
 
 
@@ -19,6 +26,12 @@ html.dark ::after {
     --tag-item-bg-hover-color: #3a4957e0;
     --tag-item-bg-active-color: #2d4153;
     --tag-item-gap-color: rgb(255 255 255 / 25%);
+
+    --connection-line-color: rgb(90 95 110);
+    --shape-text-color: rgb(178 181 191);
+    --shape-fill-color: #1d1e1f;
+
+    --connection-arrow: url(#sequenceflow-arrow-normal-dark);
 
 }
 

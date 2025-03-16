@@ -119,6 +119,12 @@ async function initViewerDiagram(xml: string) {
     defs.appendChild(markerEnd)
     const conditionalMarker = createMarkerStartCondition()
     defs.appendChild(conditionalMarker)
+
+    const normalMarkerEnd = createNormalMarkerEnd()
+    defs.appendChild(normalMarkerEnd)
+
+    const conditionFlowStart = createConditionFlowMarkerStart()
+    defs.appendChild(conditionFlowStart)
   }
 
   const canvas2 = viewer.value.get("canvas");
@@ -264,6 +270,68 @@ function createMarkerEnd(): SVGMarkerElement {
   return marker
 }
 
+function createNormalMarkerEnd(): SVGMarkerElement {
+  const marker: SVGMarkerElement = document.createElementNS("http://www.w3.org/2000/svg", 'marker')
+  const markerAttrs = {
+    id: 'sequenceflow-arrow-normal',
+    viewBox: '0 0 20 20',
+    refX: '11',
+    refY: '10',
+    markerWidth: '10',
+    markerHeight: '10',
+    orient: 'auto',
+  }
+
+  const keys = Object.keys(markerAttrs)
+  for (let key of keys) {
+    marker.setAttribute(key, markerAttrs[key])
+  }
+
+  const path: SVGPathElement = document.createElementNS("http://www.w3.org/2000/svg", 'path')
+  const pathAttrs = {
+    d: 'M 1 5 L 11 10 L 1 15 Z',
+    style: 'fill: var(--connection-line-color); stroke-width: 1px; stroke-linecap: round; stroke-dasharray: 10000, 1; stroke: var(--connection-line-color);'
+  }
+  const pathKeys = Object.keys(pathAttrs)
+  for (let key of pathKeys) {
+    path.setAttribute(key, pathAttrs[key])
+  }
+
+  marker.appendChild(path)
+  return marker
+}
+
+function createConditionFlowMarkerStart(): SVGMarkerElement {
+  const marker: SVGMarkerElement = document.createElementNS("http://www.w3.org/2000/svg", 'marker')
+  const markerAttrs = {
+    id: 'conditional-flow-marker',
+    viewBox: '0 0 20 20',
+    refX: '-1',
+    refY: '10',
+    markerWidth: '10',
+    markerHeight: '10',
+    orient: 'auto',
+  }
+
+  const keys = Object.keys(markerAttrs)
+  for (let key of keys) {
+    marker.setAttribute(key, markerAttrs[key])
+  }
+
+  const path: SVGPathElement = document.createElementNS("http://www.w3.org/2000/svg", 'path')
+  const pathAttrs = {
+    d: 'M 0 10 L 8 6 L 16 10 L 8 14 Z',
+    // style: 'fill: var(--connection-line-color); stroke-width: 1px; stroke-linecap: round; stroke-dasharray: 10000, 1; stroke: var(--connection-line-color);'
+    style: 'stroke-linecap: round; stroke-linejoin: round; stroke: var(--connection-line-color); stroke-width: 2px; fill: var(--shape-fill-color);'
+  }
+  const pathKeys = Object.keys(pathAttrs)
+  for (let key of pathKeys) {
+    path.setAttribute(key, pathAttrs[key])
+  }
+
+  marker.appendChild(path)
+  return marker
+}
 
 function handleZoomReset() {
   const canvas = viewer.value.get('canvas')
@@ -335,5 +403,40 @@ defineExpose({
 
 :deep(.bjs-powered-by) {
   /*display: none;*/
+}
+
+
+:deep(.djs-connection:not(.highlight-red) .djs-visual>path) {
+  stroke: var(--connection-line-color) !important;
+  marker-start: url(#conditional-flow-marker) !important;
+  marker-end: url(#sequenceflow-arrow-normal) !important;
+}
+
+/* 网关北京 */
+:deep(.djs-shape .djs-visual>polygon) {
+  stroke: var(--connection-line-color) !important;
+  fill: var(--shape-fill-color) !important;
+}
+
+:deep(.djs-shape .djs-visual>path:nth-last-of-type(3)),
+:deep(.djs-shape .djs-visual>path:nth-last-of-type(2)),
+:deep(.djs-shape .djs-visual>path[data-marker=sequential]) {
+  fill: var(--shape-fill-color) !important;
+  stroke: var(--connection-line-color) !important;
+}
+
+:deep(.djs-shape .djs-visual>path:nth-last-of-type(1)) {
+  fill: var(--shape-text-color) !important;
+  stroke: var(--connection-line-color) !important;
+}
+
+:deep(.djs-shape g.djs-visual>rect), :deep(.djs-shape g.djs-visual>circle) {
+  fill: var(--shape-fill-color) !important;
+  stroke: var(--connection-line-color) !important;
+}
+
+
+:deep(.djs-shape text) {
+  fill: var(--shape-text-color) !important;
 }
 </style>
